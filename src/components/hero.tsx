@@ -9,7 +9,7 @@ import { Button } from "~/components/ui/button";
 
 export default function Hero() {
   return (
-    <section className="pt-24 md:pt-24">
+    <section className="pt-16 md:pt-16">
       {" "}
       {/* Added padding to move the hero down */}
       <LampContainer>
@@ -36,7 +36,8 @@ export default function Hero() {
           className="mx-auto mt-6 max-w-2xl text-center text-lg text-gray-700 dark:text-slate-300"
         >
           Effortlessly find your way back to websites, articles, and resources
-          you've visited. Your digital breadcrumbs, always at your fingertips.
+          you&apos;ve visited. Your digital breadcrumbs, always at your
+          fingertips.
         </motion.div>
         <motion.div
           initial={{ opacity: 0, y: 100 }}
@@ -53,6 +54,7 @@ export default function Hero() {
             placeholder="Enter your email"
             className="rounded-full border-gray-300 bg-white text-gray-900 placeholder-gray-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:placeholder-slate-400"
           />
+          {/* TODO: Decide whether to use cyan-blue or cyan-green color for these buttons*/}
           <Button className="group rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 px-8 py-2 font-medium text-white transition-all duration-300 ease-in-out hover:scale-105 hover:opacity-90 hover:shadow-lg">
             Get Started
             <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />

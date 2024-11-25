@@ -4,7 +4,13 @@ import { Zap, Code, Users } from "lucide-react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 
-const features = [
+type Feature = {
+  icon: JSX.Element;
+  title: string;
+  description: string;
+};
+
+const features: Feature[] = [
   {
     icon: <Zap className="h-10 w-10 text-cyan-500" />,
     title: "Smart Bookmarking",
@@ -25,7 +31,13 @@ const features = [
   },
 ];
 
-const FeatureCard = ({ feature, index }) => {
+const FeatureCard = ({
+  feature,
+  index,
+}: {
+  feature: Feature;
+  index: number;
+}) => {
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,

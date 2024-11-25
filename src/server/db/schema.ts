@@ -1,7 +1,8 @@
 // Example model schema from the Drizzle docs
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
-import { sql, InferSelectModel } from "drizzle-orm";
+import type { InferSelectModel } from "drizzle-orm";
+import { sql } from "drizzle-orm/sql";
 import {
   index,
   serial,
@@ -24,7 +25,7 @@ export const users = createTable(
     id: serial("id").primaryKey(),
     googleId: text("google_id").unique(),
     email: text("email").unique().notNull(),
-    passwordHash: varchar("password_hash", { length: 256 }).notNull(),
+    passwordHash: varchar("password_hash", { length: 256 }),
     emailVerified: boolean("email_verified").default(false).notNull(),
     totpKey: varchar("totp_code"),
     recoveryCode: varchar("recovery_code").notNull(),
@@ -46,8 +47,8 @@ export const sessions = createTable("session", {
   twoFactorVerified: boolean("two_factor_verified").default(false).notNull(),
 });
 
-export type User = InferSelectModel<typeof users>;
-export type Session = InferSelectModel<typeof sessions>;
+export type UserSchema = InferSelectModel<typeof users>;
+export type SessionSchema = InferSelectModel<typeof sessions>;
 
 export interface SessionFlags {
   twoFactorVerified: boolean;

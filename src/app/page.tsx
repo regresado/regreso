@@ -140,7 +140,15 @@ export default function LandingPage() {
   );
 }
 
-function FeatureCard({ icon, title, description }) {
+function FeatureCard({
+  icon,
+  title,
+  description,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}) {
   return (
     <div className="rounded-lg bg-slate-800 p-6">
       <div className="mb-4">{icon}</div>

@@ -66,7 +66,7 @@ export async function GET(request: Request): Promise<Response> {
   }
 
   // TODO: Replace this with your own DB query.
-  const user = await createUser(googleUserId, username);
+  const user = await createUser(username, username, null, googleUserId);
 
   const sessionToken = generateSessionToken();
   const session = await createSession(sessionToken, user.id, {

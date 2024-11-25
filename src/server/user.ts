@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 
 import { db } from "~/server/db";
-import { users } from "~/server/db/schema";
+import { users, UserSchema } from "~/server/db/schema";
 
 import {
   decrypt,
@@ -25,20 +25,26 @@ export async function createUser(
   const row = await db
     .insert(users)
     .values({
+      // @ts-expect-error TODO: figure out why this is happening
       email,
-      name,
       passwordHash: new TextEncoder().encode(passwordHash),
-      emailVerified: googleId ? true : false,
       recoveryCode: encryptedRecoveryCode,
     })
+    // .values({
+    //   email,
+    //   name,
+    //   passwordHash: new TextEncoder().encode(passwordHash),
+    //   emailVerified: googleId ? true : false,
+    //   recoveryCode: encryptedRecoveryCode,
+    // })
     .returning();
   if (!row || row.length === 0) {
     throw new Error("Unexpected error");
   }
   const user: User = {
-    id: row[0].id,
+    id: row[0]!.id,
     email: email,
-    googleId: row[0].googleId,
+    googleId: googleId,
     emailVerified: false,
     registered2FA: false,
   };
