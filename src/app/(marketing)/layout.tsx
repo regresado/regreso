@@ -1,4 +1,6 @@
 import Navigation from "~/components/navigation";
+import { Toaster } from "~/components/ui/toaster";
+
 export default function MarketingSiteLayout({
   children,
 }: {
@@ -16,6 +18,7 @@ export default function MarketingSiteLayout({
           {children}
         </div>
       </main>
+      <Toaster />
     </div>
   );
 }

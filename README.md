@@ -1,23 +1,33 @@
-# 🏕️ Regreso - Find your way back
+# 🗺️ Regreso - Find your way back
 
 ## ⚙️ Tech Stack:
 
-This project uses an adapted [T3 Stack](https://create.t3.gg/) and is bootstrapped with `create-t3-app`.
+This project uses the [T3 Webdev Stack](https://create.t3.gg/) made by Theo Browne:
 
 - [Next.js](https://nextjs.org/) App Router
-  - [React](https://react.dev/)
-- [Drizzle](https://orm.drizzle.team/) to interact with Postgres DB
+  - [React](https://react.dev/) frontend library
+  - [Geist](https://vercel.com/font) Font Typeface
+- [Typescript](https://www.typescriptlang.org/)
+- [Drizzle](https://orm.drizzle.team/) ORM to interact with Postgres DB (instead of Prisma)
   - [Postgres](https://www.postgresql.org/) SQL database
 - [Tailwind CSS](https://tailwindcss.com/)
+  - [PostCSS](https://postcss.org/) to install and handle Tailwind
 - [tRPC](https://trpc.io/) for typesafe APIs
+  - [Zod](https://zod.dev/) for schema validation
+  - [Superjson](https://www.npmjs.com/package/superjson) to safely serialize expressions
+  - [Server Only](https://www.npmjs.com/package/server-only/) for marking modules
 - [ESLint](https://eslint.org/) and [Prettier](https://prettier.io) for linting/formatting
 
 - [Docker](https://docker.com/) to manage database
 
-With custom additions of:
+**With my own custom additions of:**
 
-- [Shadcn](https://ui.shadcn.com/)
+- [Shadcn](https://ui.shadcn.com/) copy-pasted components
   - [Radix UI](https://https://www.radix-ui.com/) is relied on by many components
+  - [React Day Picker](https://www.npmjs.com/package/react-day-picker) calendar selection UI
+  - [React Hook Form](https://react-hook-form.com/) for form validation
+  - [Tailwind CSS Animate](https://www.npmjs.com/package/tailwindcss-animate/) easy animation
+  - [Next Themes](https://www.npmjs.com/package/next-themes/) simple themes abstraction
   - [Aceternity UI](https://ui.aceternity.com/) for the attractive animated UI animations on the landing page.
 - [Motion](https://motion.dev/) for page and component animations
 - [Lucide](https://lucide.dev/) Icons
@@ -25,4 +35,5 @@ With custom additions of:
 - [Custom Lucia Auth](https://lucia-auth.com/) to replace Next Auth in T3 stack
   - [Arctic](https://arcticjs.dev/) for OAuth 2.0 Providers
   - [Oslo](https://oslojs.dev/) for Cryptography/Encoding functions
-- [UploadThing](https://uploadthing.com/) (also developed by Theo and works really well with t3 stack!)
+  - [Node-RS/Argon2](https://node-rs.dev/) Node bindings for Argon2 in Rust
+- [UploadThing](https://uploadthing.com/) for handling user file uplaods

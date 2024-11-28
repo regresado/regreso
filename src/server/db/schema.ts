@@ -25,6 +25,8 @@ export const users = createTable(
     id: serial("id").primaryKey(),
     googleId: text("google_id").unique(),
     email: text("email").unique().notNull(),
+    displayName: text("display_name").default("Anonymous").notNull(),
+    name: varchar("name", { length: 32 }).unique().notNull(),
     passwordHash: varchar("password_hash", { length: 256 }),
     emailVerified: boolean("email_verified").default(false).notNull(),
     totpKey: varchar("totp_code"),

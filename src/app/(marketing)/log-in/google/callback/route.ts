@@ -55,7 +55,9 @@ export async function GET(request: Request): Promise<Response> {
 
   if (existingUser !== null) {
     const sessionToken = generateSessionToken();
-    const session = await createSession(sessionToken, existingUser.id);
+    const session = await createSession(sessionToken, existingUser.id, {
+      twoFactorVerified: false,
+    });
     await setSessionTokenCookie(sessionToken, session.expiresAt);
     return new Response(null, {
       status: 302,
@@ -66,7 +68,9 @@ export async function GET(request: Request): Promise<Response> {
   }
 
   // TODO: Replace this with your own DB query.
-  const user = await createUser(username, username, null, googleUserId);
+  // const user = await createUser(username, username, null, googleUserId);
+  const user = await createUser("", "", username, null, googleUserId);
+  // get email from google
 
   const sessionToken = generateSessionToken();
   const session = await createSession(sessionToken, user.id, {

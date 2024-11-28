@@ -7,6 +7,7 @@
  * need to use are documented accordingly near the end.
  */
 import { initTRPC } from "@trpc/server";
+// import { OpenApiMeta } from "trpc-to-openapi";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
@@ -38,6 +39,7 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
  * ZodErrors so that you get typesafety on the frontend if your procedure fails due to validation
  * errors on the backend.
  */
+// const t = initTRPC.meta<OpenApiMeta>().create({
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
   errorFormatter({ shape, error }) {

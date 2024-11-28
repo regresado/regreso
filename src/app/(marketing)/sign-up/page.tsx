@@ -23,5 +23,6 @@ export default async function Page() {
     }
     return redirect("/dashboard");
   }
+
   return <SignupForm />;
 }

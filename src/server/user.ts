@@ -1,34 +1,41 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 import { db } from "~/server/db";
-import { users, UserSchema } from "~/server/db/schema";
+import { users } from "~/server/db/schema";
 
-import {
-  decrypt,
-  decryptToString,
-  encrypt,
-  encryptString,
-} from "~/server/encryption";
+import { decryptToString, encryptString } from "~/server/encryption";
 import { hashPassword } from "./password";
 import { generateRandomRecoveryCode } from "./utils";
 
+export function verifyUsernameInput(username: string): boolean {
+  return (
+    username.length > 3 && username.length < 32 && username.trim() === username
+  );
+}
+
 export async function createUser(
   email: string,
+  displayName: string,
   name: string,
-  password: string,
+  password: string | null,
   googleId: string | null,
 ): Promise<User> {
-  const passwordHash = await hashPassword(password);
+  const passwordHash = password ? await hashPassword(password) : null;
   const recoveryCode = generateRandomRecoveryCode();
   const encryptedRecoveryCode = encryptString(recoveryCode);
 
   const row = await db
     .insert(users)
+    // @ts-expect-error - this is a bug
     .values({
-      // @ts-expect-error TODO: figure out why this is happening
+      // TODO: figure out why this is happening
       email,
-      passwordHash: new TextEncoder().encode(passwordHash),
-      recoveryCode: encryptedRecoveryCode,
+      name,
+      displayName,
+      passwordHash: passwordHash
+        ? new TextEncoder().encode(passwordHash)
+        : null,
+      recoveryCode: Buffer.from(encryptedRecoveryCode).toString("base64"),
     })
     // .values({
     //   email,
@@ -43,8 +50,10 @@ export async function createUser(
   }
   const user: User = {
     id: row[0]!.id,
-    email: email,
-    googleId: googleId,
+    email,
+    displayName: displayName,
+    name,
+    googleId,
     emailVerified: false,
     registered2FA: false,
   };
@@ -67,6 +76,8 @@ export async function getUserFromGoogleId(
   const user: User = {
     id: userProfile.id,
     email: userProfile.email,
+    name: userProfile.name,
+    displayName: userProfile.displayName,
     emailVerified: userProfile.emailVerified,
     googleId: userProfile.googleId,
     registered2FA: !!userProfile.totpKey,
@@ -85,6 +96,75 @@ export async function getUserPasswordHash(userId: number): Promise<string> {
   return user?.passwordHash;
 }
 
+export async function updateUserPassword(
+  userId: number,
+  password: string,
+): Promise<void> {
+  const passwordHash = await hashPassword(password);
+  db.update(users)
+    .set({
+      passwordHash,
+    })
+    .where(eq(users.id, userId));
+}
+
+export function updateUserEmailAndSetEmailAsVerified(
+  userId: number,
+  email: string,
+): void {
+  db.update(users)
+    .set({
+      email,
+    })
+    .where(eq(users.id, userId));
+}
+
+export async function setUserAsEmailVerifiedIfEmailMatches(
+  userId: number,
+  email: string,
+): Promise<boolean> {
+  const updatedVerification: { emailVerified: boolean }[] = await db
+    .update(users)
+    .set({
+      emailVerified: true,
+    })
+    .where(and(eq(users.id, userId), eq(users.email, email)))
+    .returning({ emailVerified: users.emailVerified });
+
+  return updatedVerification[0]?.emailVerified !== undefined;
+}
+
+export async function getUserRecoverCode(userId: number): Promise<string> {
+  const result = await db.query.users.findFirst({
+    where: eq(users.id, userId),
+  });
+  if (!result) {
+    throw new Error("Invalid user ID");
+  }
+  if (!result?.recoveryCode) {
+    throw new Error("Invalid recovery code");
+  }
+  return decryptToString(
+    Uint8Array.from(
+      atob(result.recoveryCode)
+        .split("")
+        .map((char) => char.charCodeAt(0)),
+    ),
+  );
+}
+
+export function resetUserRecoveryCode(userId: number): string {
+  const recoveryCode = generateRandomRecoveryCode();
+  const encrypted = encryptString(recoveryCode);
+  db.update(users)
+    .set({
+      recoveryCode: Buffer.from(encrypted).toString("base64"),
+    })
+    .where(eq(users.id, userId));
+
+  return recoveryCode;
+}
+
 export async function getUserFromEmail(email: string): Promise<User | null> {
   const userResult = await db.query.users.findFirst({
     where: eq(users.email, email),
@@ -97,6 +177,8 @@ export async function getUserFromEmail(email: string): Promise<User | null> {
   const user: User = {
     id: userResult.id,
     email: userResult.email,
+    name: userResult.name,
+    displayName: userResult.displayName,
     googleId: userResult.googleId,
     emailVerified: userResult.emailVerified,
     registered2FA: !!userResult.totpKey,
@@ -107,7 +189,9 @@ export async function getUserFromEmail(email: string): Promise<User | null> {
 export interface User {
   id: number;
   email: string;
-  googleId: string | null;
+  name: string;
+  displayName: string;
+  googleId?: string | null;
   emailVerified: boolean;
   registered2FA: boolean;
 }

@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 
 import { LoginForm } from "~/components/login-form";
+import { loginAction } from "~/app/(marketing)/log-in/actions";
 import { getCurrentSession } from "~/server/session";
 
 import { globalGETRateLimit } from "~/server/request";
@@ -23,5 +24,11 @@ export default async function Page() {
     }
     return redirect("/dashboard");
   }
+  await loginAction(
+    {
+      message: "",
+    },
+    new FormData(),
+  );
   return <LoginForm />;
 }

@@ -5,6 +5,7 @@ import { posts } from "~/server/db/schema";
 
 export const postRouter = createTRPCRouter({
   hello: publicProcedure
+    // .meta({ /* 👉 */ openapi: { method: "GET", path: "/api/say-hello" } })
     .input(z.object({ text: z.string() }))
     .query(({ input }) => {
       return {

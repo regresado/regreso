@@ -25,6 +25,8 @@ export async function validateSessionToken(
   const user = {
     id: result[0]!.user.id,
     email: result[0]!.user.email,
+    displayName: result[0]!.user.displayName,
+    name: result[0]!.user.name,
     emailVerified: result[0]!.user.emailVerified,
     googleId: result[0]!.user.googleId,
     registered2FA: !!result[0]!.user.totpKey,

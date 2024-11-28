@@ -2,7 +2,7 @@
 
 import { Zap, Code, Users } from "lucide-react";
 import { motion } from "framer-motion";
-import { useInView } from "react-intersection-observer";
+// import { useInView } from "react-intersection-observer";
 
 type Feature = {
   icon: JSX.Element;
@@ -38,10 +38,10 @@ const FeatureCard = ({
   feature: Feature;
   index: number;
 }) => {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  });
+  // const [ref, inView] = useInView({
+  //   triggerOnce: true,
+  //   threshold: 0.1,
+  // });
 
   const cardVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -57,7 +57,7 @@ const FeatureCard = ({
         duration: 0.3,
         ease: "easeInOut",
       }}
-      ref={ref}
+      // ref={ref}
       // initial="hidden"
       // animate={inView ? "visible" : "hidden"}
       variants={cardVariants}

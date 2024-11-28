@@ -11,9 +11,16 @@ export const metadata: Metadata = {
   description: "Regreso is an app that helps you find your way back.",
   icons: [
     // { rel: "icon", url: "/favicon.ico", sizes: "any" },
-    { rel: "icon", url: "/favicon.svg", type: "image/svg+xml" },
+    { rel: "icon", url: "/favicon2.svg", type: "image/svg+xml" },
   ],
 };
+
+// TODO: Reenable this once issues with next dev --turbo are understood
+// const geistSans = Geist({
+//   subsets: ["latin"],
+//   display: "swap",
+//   adjustFontFallback: false,
+// });
 
 export default function RootLayout({
   children,
