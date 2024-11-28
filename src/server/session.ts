@@ -5,7 +5,8 @@ import {
   encodeBase32LowerCaseNoPadding,
 } from "@oslojs/encoding";
 import { users, sessions } from "~/server/db/schema";
-import type { User } from "~/server/user";
+import type { User, Session, SessionFlags } from "~/server/models";
+
 import { cookies } from "next/headers";
 import { cache } from "react";
 import { sha256 } from "@oslojs/crypto/sha2";
@@ -111,16 +112,6 @@ export const getCurrentSession = cache(
     return result;
   },
 );
-
-export interface SessionFlags {
-  twoFactorVerified: boolean;
-}
-
-export interface Session extends SessionFlags {
-  id: string;
-  expiresAt: Date;
-  userId: number;
-}
 
 type SessionValidationResult =
   | { session: Session; user: User }

@@ -23,6 +23,7 @@ import { TeamSwitcher } from "~/components/team-switcher";
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarHeader,
   SidebarRail,
 } from "~/components/ui/sidebar";
@@ -53,38 +54,22 @@ const data = {
       icon: Search,
     },
     {
-      title: "Ask AI",
-      url: "#",
-      icon: Sparkles,
-    },
-    {
       title: "Home",
       url: "#",
       icon: Home,
       isActive: true,
     },
     {
-      title: "Inbox",
-      url: "#",
-      icon: Inbox,
-      badge: "10",
-    },
-  ],
-  navSecondary: [
-    {
       title: "Calendar",
       url: "#",
       icon: Calendar,
     },
+  ],
+  navSecondary: [
     {
       title: "Settings",
       url: "#",
       icon: Settings2,
-    },
-    {
-      title: "Templates",
-      url: "#",
-      icon: Blocks,
     },
     {
       title: "Trash",
@@ -270,8 +255,10 @@ export function SidebarLeft({
       <SidebarContent>
         <NavFavorites favorites={data.favorites} />
         <NavWorkspaces workspaces={data.workspaces} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
+      <SidebarFooter>
+        <NavSecondary items={data.navSecondary} className="mt-auto" />
+      </SidebarFooter>
       <SidebarRail />
     </Sidebar>
   );

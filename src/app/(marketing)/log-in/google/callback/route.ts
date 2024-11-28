@@ -50,7 +50,6 @@ export async function GET(request: Request): Promise<Response> {
   const googleUserId = claims.sub;
   const username = claims.name;
 
-  // TODO: Replace this with your own DB query.
   const existingUser = await getUserFromGoogleId(googleUserId);
 
   if (existingUser !== null) {
@@ -67,7 +66,7 @@ export async function GET(request: Request): Promise<Response> {
     });
   }
 
-  // TODO: Replace this with your own DB query.
+  // TODO: Get email, display name from google
   // const user = await createUser(username, username, null, googleUserId);
   const user = await createUser("", "", username, null, googleUserId);
   // get email from google

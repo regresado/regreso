@@ -11,41 +11,9 @@ import {
 import { Separator } from "~/components/ui/separator";
 import { SidebarTrigger } from "~/components/ui/sidebar";
 
-import type { User } from "~/server/user";
-import { getCurrentSession } from "~/server/session";
-
-import type { Session } from "~/server/session";
-
 import { api } from "~/trpc/server";
-// app/api/page.tsx
-import { redirect } from "next/navigation";
 
-// TODO: Make sure the redirect method is correct.
-
-export default function Page() {
-  const [currentUser, setUser] = useState<User | null>({
-    id: -1,
-    displayName: "John Doe",
-    email: "",
-    name: "johndoe",
-    emailVerified: false,
-    registered2FA: false,
-  });
-  const [currentSession, setSession] = useState<Session | null>(null);
-  // TODO: Consider how to implement offline
-  useEffect(() => {
-    async function getUser() {
-      const { session, user } = await getCurrentSession();
-      if (user !== null) {
-        setUser(user);
-      }
-      if (session !== null) {
-        setSession(session);
-      }
-    }
-    void getUser();
-  }, []);
-
+const Page: React.FC = () => {
   return (
     <>
       <header className="sticky top-0 flex h-14 shrink-0 items-center gap-2 bg-background">
@@ -69,4 +37,6 @@ export default function Page() {
       </div>
     </>
   );
-}
+};
+
+export default Page;

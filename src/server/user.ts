@@ -6,6 +6,7 @@ import { users } from "~/server/db/schema";
 import { decryptToString, encryptString } from "~/server/encryption";
 import { hashPassword } from "./password";
 import { generateRandomRecoveryCode } from "./utils";
+import type { User, Session, SessionFlags } from "~/server/models";
 
 export function verifyUsernameInput(username: string): boolean {
   return (
@@ -184,14 +185,4 @@ export async function getUserFromEmail(email: string): Promise<User | null> {
     registered2FA: !!userResult.totpKey,
   };
   return user;
-}
-
-export interface User {
-  id: number;
-  email: string;
-  name: string;
-  displayName: string;
-  googleId?: string | null;
-  emailVerified: boolean;
-  registered2FA: boolean;
 }

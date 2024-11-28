@@ -18,7 +18,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { globalPOSTRateLimit } from "~/server/request";
 
-import type { SessionFlags } from "~/server/session";
+import type { SessionFlags } from "~/server/models";
 
 const ipBucket = new RefillingTokenBucket<string>(3, 10);
 
