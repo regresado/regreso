@@ -1,5 +1,4 @@
 import { redirect } from "next/navigation";
-import Link from "next/link";
 
 import { LoginForm } from "~/components/login-form";
 import { getCurrentSession } from "~/server/session";
@@ -24,11 +23,5 @@ export default async function Page() {
     }
     return redirect("/dashboard");
   }
-  return (
-    <div className="flex h-screen w-full items-center justify-center px-4">
-      <LoginForm />
-      <Link href="/signup">Create an account</Link>
-      <Link href="/forgot-password">Forgot password?</Link>
-    </div>
-  );
+  return <LoginForm />;
 }

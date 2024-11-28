@@ -18,34 +18,20 @@ import { api, HydrateClient } from "~/trpc/server";
 import { redirect } from "next/navigation";
 import { getCurrentSession } from "~/server/session";
 
-// async function Page() {
-//   const { user } = await getCurrentSession();
-//   if (user === null) {
-//     return redirect("/login");
-//   }
-
-//   async function action() {
-//     "use server";
-//     const { user } = await getCurrentSession();
-//     if (user === null) {
-//       return redirect("/login");
-//     }
-//     // ...
-//   }
-//   // ...
-// }
+// TODO: Make sure the redirect method is correct.
 
 export default async function Page() {
-  const { user } = await getCurrentSession();
-  if (user === null) {
-    return redirect("/login");
-  }
+  // TODO: Consider how to implement offline functionality
+  // const { user } = await getCurrentSession();
+  // if (user === null) {
+  //   return redirect("/log-in");
+  // }
   return (
     <HydrateClient>
       <SidebarProvider>
         <SidebarLeft />
         <SidebarInset>
-          <header className="bg-background sticky top-0 flex h-14 shrink-0 items-center gap-2">
+          <header className="sticky top-0 flex h-14 shrink-0 items-center gap-2 bg-background">
             <div className="flex flex-1 items-center gap-2 px-3">
               <SidebarTrigger />
               <Separator orientation="vertical" className="mr-2 h-4" />
@@ -61,8 +47,8 @@ export default async function Page() {
             </div>
           </header>
           <div className="flex flex-1 flex-col gap-4 p-4">
-            <div className="bg-muted/50 mx-auto h-24 w-full max-w-3xl rounded-xl" />
-            <div className="bg-muted/50 mx-auto h-[100vh] w-full max-w-3xl rounded-xl" />
+            <div className="mx-auto h-24 w-full max-w-3xl rounded-xl bg-muted/50" />
+            <div className="mx-auto h-[100vh] w-full max-w-3xl rounded-xl bg-muted/50" />
           </div>
         </SidebarInset>
         <SidebarRight />

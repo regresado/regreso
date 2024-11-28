@@ -50,11 +50,18 @@ const FeatureCard = ({
 
   return (
     <motion.div
+      initial={{ opacity: 0.5, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{
+        delay: 0,
+        duration: 0.3,
+        ease: "easeInOut",
+      }}
       ref={ref}
-      initial="hidden"
-      animate={inView ? "visible" : "hidden"}
+      // initial="hidden"
+      // animate={inView ? "visible" : "hidden"}
       variants={cardVariants}
-      transition={{ duration: 0.5, delay: index * 0.2 }}
+      // transition={{ duration: 0.5, delay: index * 0.2 }}
       className="relative overflow-hidden rounded-lg bg-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:bg-gray-800"
     >
       <div className="p-6">
