@@ -4,6 +4,7 @@ export interface User {
   name: string;
   displayName: string;
   googleId?: string | null;
+  githubId?: number | null;
   emailVerified: boolean;
   registered2FA: boolean;
 }

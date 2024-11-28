@@ -10,14 +10,6 @@ export default async function Page() {
   }
 
   const { session, user } = await getCurrentSession();
-  if (session === null || user === null) {
-    return redirect("/login");
-  }
-  if (user.emailVerified) {
-    return redirect("/dashboard");
-  }
-  if (user.registered2FA) {
-    return redirect("/dashboard");
-  }
+
   return <></>;
 }

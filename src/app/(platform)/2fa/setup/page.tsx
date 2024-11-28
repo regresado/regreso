@@ -9,16 +9,6 @@ export default async function Page() {
     return "Too many requests";
   }
 
-  const { session, user } = await getCurrentSession();
-  if (session === null || user === null) {
-    return redirect("/login");
-  }
-  if (!user.emailVerified) {
-    return redirect("/verify-email");
-  }
-  if (user.registered2FA) {
-    return redirect("/dashboard");
-  }
   return (
     <>
       <h1>Set up two-factor authentication</h1>

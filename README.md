@@ -31,6 +31,7 @@ This project uses the [T3 Webdev Stack](https://create.t3.gg/) made by Theo Brow
   - [Aceternity UI](https://ui.aceternity.com/) for the attractive animated UI animations on the landing page.
 - [Motion](https://motion.dev/) for page and component animations
 - [Lucide](https://lucide.dev/) Icons
+- [Boring](https://boringavatars.com/) Default Avatars
 
 - [Custom Lucia Auth](https://lucia-auth.com/) to replace Next Auth in T3 stack
   - [Arctic](https://arcticjs.dev/) for OAuth 2.0 Providers

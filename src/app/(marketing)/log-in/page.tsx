@@ -14,6 +14,7 @@ export default async function Page() {
   if (session !== null) {
     // TODO: Redirect to the correct page based on the user's state
     if (!user.emailVerified) {
+      console.log("login page redirecting");
       return redirect("/verify-email");
     }
     if (user.registered2FA && !session.twoFactorVerified) {

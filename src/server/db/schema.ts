@@ -24,6 +24,7 @@ export const users = createTable(
   {
     id: serial("id").primaryKey(),
     googleId: text("google_id").unique(),
+    githubId: integer("github_id").unique(),
     email: text("email").unique().notNull(),
     displayName: text("display_name").default("Anonymous").notNull(),
     name: varchar("name", { length: 32 }).unique().notNull(),
@@ -34,6 +35,8 @@ export const users = createTable(
   },
   (user) => ({
     emailIndex: index("email_index").on(user.email),
+    googleIdIndex: index("google_id_index").on(user.googleId),
+    githubIdIndex: index("github_id_index").on(user.githubId),
   }),
 );
 

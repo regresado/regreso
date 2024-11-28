@@ -1,3 +1,4 @@
+// client-layout.tsx
 "use client";
 
 import { useState } from "react";
@@ -21,7 +22,7 @@ export function ClientLayout({ children, user, session }: ClientLayoutProps) {
     <SidebarProvider>
       <SidebarLeft />
       <SidebarInset>{children}</SidebarInset>
-      <SidebarRight />
+      <SidebarRight user={currentUser} />
     </SidebarProvider>
   );
 }

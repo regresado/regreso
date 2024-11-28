@@ -6,11 +6,28 @@ import { users } from "~/server/db/schema";
 import { decryptToString, encryptString } from "~/server/encryption";
 import { hashPassword } from "./password";
 import { generateRandomRecoveryCode } from "./utils";
-import type { User, Session, SessionFlags } from "~/server/models";
+import type { User } from "~/server/models";
 
 export function verifyUsernameInput(username: string): boolean {
+  const reservedUsernames = [
+    "admin",
+    "administrator",
+    "mod",
+    "moderator",
+    "staff",
+    "owner",
+    "developer",
+    "dev",
+    "support",
+    "help",
+    "contact",
+    "anonymous",
+  ];
   return (
-    username.length > 3 && username.length < 32 && username.trim() === username
+    username.length > 3 &&
+    username.length < 32 &&
+    username.trim() === username &&
+    !reservedUsernames.includes(username)
   );
 }
 
@@ -20,6 +37,7 @@ export async function createUser(
   name: string,
   password: string | null,
   googleId: string | null,
+  githubId: number | null,
 ): Promise<User> {
   const passwordHash = password ? await hashPassword(password) : null;
   const recoveryCode = generateRandomRecoveryCode();
@@ -32,29 +50,25 @@ export async function createUser(
       // TODO: figure out why this is happening
       email,
       name,
+      googleId,
+      githubId,
       displayName,
       passwordHash: passwordHash
         ? new TextEncoder().encode(passwordHash)
         : null,
       recoveryCode: Buffer.from(encryptedRecoveryCode).toString("base64"),
     })
-    // .values({
-    //   email,
-    //   name,
-    //   passwordHash: new TextEncoder().encode(passwordHash),
-    //   emailVerified: googleId ? true : false,
-    //   recoveryCode: encryptedRecoveryCode,
-    // })
-    .returning();
+    .returning({ id: users.id });
   if (!row || row.length === 0) {
     throw new Error("Unexpected error");
   }
   const user: User = {
     id: row[0]!.id,
     email,
-    displayName: displayName,
+    displayName,
     name,
     googleId,
+    githubId,
     emailVerified: false,
     registered2FA: false,
   };
@@ -81,6 +95,33 @@ export async function getUserFromGoogleId(
     displayName: userProfile.displayName,
     emailVerified: userProfile.emailVerified,
     googleId: userProfile.googleId,
+    githubId: userProfile.githubId,
+    registered2FA: !!userProfile.totpKey,
+  };
+  return user;
+}
+
+export async function getUserFromGitHubId(
+  githubId: number,
+): Promise<User | null> {
+  if (!githubId) {
+    return null;
+  }
+
+  const userProfile = await db.query.users.findFirst({
+    where: eq(users.githubId, githubId),
+  });
+  if (!userProfile) {
+    return null;
+  }
+  const user: User = {
+    id: userProfile.id,
+    email: userProfile.email,
+    name: userProfile.name,
+    displayName: userProfile.displayName,
+    emailVerified: userProfile.emailVerified,
+    googleId: userProfile.googleId,
+    githubId: userProfile.githubId,
     registered2FA: !!userProfile.totpKey,
   };
   return user;
@@ -181,6 +222,7 @@ export async function getUserFromEmail(email: string): Promise<User | null> {
     name: userResult.name,
     displayName: userResult.displayName,
     googleId: userResult.googleId,
+    githubId: userResult.githubId,
     emailVerified: userResult.emailVerified,
     registered2FA: !!userResult.totpKey,
   };

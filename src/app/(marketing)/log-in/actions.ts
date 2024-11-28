@@ -27,7 +27,7 @@ export async function loginAction(
       message: "Too many requests",
     };
   }
-  // TODO: Assumes X-Forwarded-For is always included.
+  // FIXME: Assumes X-Forwarded-For is always included.
   const clientIP = (await headers()).get("X-Forwarded-For");
   if (clientIP !== null && !ipBucket.check(clientIP, 1)) {
     return {

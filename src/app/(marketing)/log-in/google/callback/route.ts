@@ -1,35 +1,47 @@
+// TODO: Figure out why this is necessary for ObjectParser
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   generateSessionToken,
   createSession,
   setSessionTokenCookie,
 } from "~/server/session";
-import { createUser } from "~/server/user";
 import { google } from "~/server/oauth";
-import { getUserFromGoogleId } from "~/server/user";
 import { cookies } from "next/headers";
-import { decodeIdToken } from "arctic";
+import { createUser, getUserFromGoogleId } from "~/server/user";
+import { ObjectParser } from "@pilcrowjs/object-parser";
+import { globalGETRateLimit } from "~/server/request";
 
-import type { OAuth2Tokens } from "arctic";
+import crypto from "node:crypto";
+
+import { decodeIdToken, type OAuth2Tokens } from "arctic";
 
 export async function GET(request: Request): Promise<Response> {
+  if (!(await globalGETRateLimit())) {
+    return new Response("Too many requests", {
+      status: 429,
+    });
+  }
   const url = new URL(request.url);
   const code = url.searchParams.get("code");
   const state = url.searchParams.get("state");
-  const cookieStore = await cookies();
-  const storedState = cookieStore.get("google_oauth_state")?.value ?? null;
-  const codeVerifier = cookieStore.get("google_code_verifier")?.value ?? null;
+  const storedState =
+    (await cookies()).get("google_oauth_state")?.value ?? null;
+  const codeVerifier =
+    (await cookies()).get("google_code_verifier")?.value ?? null;
   if (
     code === null ||
     state === null ||
     storedState === null ||
     codeVerifier === null
   ) {
-    return new Response(null, {
+    return new Response("Please restart the process.", {
       status: 400,
     });
   }
   if (state !== storedState) {
-    return new Response(null, {
+    return new Response("Please restart the process.", {
       status: 400,
     });
   }
@@ -37,49 +49,73 @@ export async function GET(request: Request): Promise<Response> {
   let tokens: OAuth2Tokens;
   try {
     tokens = await google.validateAuthorizationCode(code, codeVerifier);
-  } catch (e) {
-    // Invalid code or client credentials
-    return new Response(null, {
+  } catch {
+    return new Response("Please restart the process.", {
       status: 400,
     });
   }
-  const claims = decodeIdToken(tokens.idToken()) as {
-    sub: string;
-    name: string;
-  };
-  const googleUserId = claims.sub;
-  const username = claims.name;
 
-  const existingUser = await getUserFromGoogleId(googleUserId);
+  const claims = decodeIdToken(tokens.idToken());
 
+  if (!claims || typeof claims !== "object") {
+    return new Response("Invalid ID token claims.", {
+      status: 400,
+    });
+  }
+  const claimsParser = new ObjectParser(claims);
+
+  const googleId = claimsParser.getString("sub");
+  if (typeof googleId !== "string") {
+    return new Response("Invalid Google ID.", {
+      status: 400,
+    });
+  }
+  const name = claimsParser.getString("name");
+  if (typeof name !== "string") {
+    return new Response("Invalid name.", {
+      status: 400,
+    });
+  }
+  // const picture = claimsParser.getString("picture");
+  const email = claimsParser.getString("email");
+  if (typeof email !== "string") {
+    return new Response("Invalid name.", {
+      status: 400,
+    });
+  }
+  const existingUser = await getUserFromGoogleId(googleId);
   if (existingUser !== null) {
     const sessionToken = generateSessionToken();
     const session = await createSession(sessionToken, existingUser.id, {
       twoFactorVerified: false,
     });
-    await setSessionTokenCookie(sessionToken, session.expiresAt);
+    void setSessionTokenCookie(sessionToken, session.expiresAt);
     return new Response(null, {
       status: 302,
       headers: {
-        Location: "/",
+        Location: "/dashboard",
       },
     });
   }
 
-  // TODO: Get email, display name from google
-  // const user = await createUser(username, username, null, googleUserId);
-  const user = await createUser("", "", username, null, googleUserId);
-  // get email from google
-
+  // TODO: Handle Avatar (picture)
+  const user = await createUser(
+    email,
+    name,
+    crypto.randomBytes(8).toString("hex"),
+    null,
+    googleId,
+    null,
+  );
   const sessionToken = generateSessionToken();
   const session = await createSession(sessionToken, user.id, {
     twoFactorVerified: false,
   });
-  await setSessionTokenCookie(sessionToken, session.expiresAt);
+  void setSessionTokenCookie(sessionToken, session.expiresAt);
   return new Response(null, {
     status: 302,
     headers: {
-      Location: "/",
+      Location: "/dashboard",
     },
   });
 }

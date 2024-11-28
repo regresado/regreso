@@ -23,13 +23,14 @@ export async function validateSessionToken(
   if (result.length < 1) {
     return { session: null, user: null };
   }
-  const user = {
+  const user: User = {
     id: result[0]!.user.id,
     email: result[0]!.user.email,
     displayName: result[0]!.user.displayName,
     name: result[0]!.user.name,
     emailVerified: result[0]!.user.emailVerified,
     googleId: result[0]!.user.googleId,
+    githubId: result[0]!.user.githubId,
     registered2FA: !!result[0]!.user.totpKey,
   };
   const session = result[0]!.session;

@@ -16,26 +16,17 @@ export default async function DashboardLayout({
     if (session == null) {
       return redirect("/log-in");
     } else {
-      if (!user.emailVerified) {
+      console.log(!user.githubId, session);
+      if (!user.emailVerified && !user.githubId && !user.googleId) {
+        console.log("redirect");
         return redirect("/verify-email");
       }
       if (user.registered2FA && !session.twoFactorVerified) {
         return redirect("/2fa");
       }
-      return redirect("/dashboard");
+      //   return redirect("/dashboard");
     }
   }
-  //   if (!user) {
-  //     return redirect("/log-in");
-  //   }
-
-  //   if (!user.emailVerified) {
-  //     return redirect("/verify-email");
-  //   }
-
-  //   if (user.registered2FA && !session?.twoFactorVerified) {
-  //     return redirect("/2fa");
-  //   }
 
   return (
     <HydrateClient>

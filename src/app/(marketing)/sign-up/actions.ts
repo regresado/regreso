@@ -32,7 +32,7 @@ export async function signupAction(
     };
   }
 
-  // TODO: Assumes X-Forwarded-For is always included.
+  // FIXME: Assumes X-Forwarded-For is always included.
   const clientIP = (await headers()).get("X-Forwarded-For");
   if (clientIP !== null && !ipBucket.check(clientIP, 1)) {
     return {
@@ -92,7 +92,14 @@ export async function signupAction(
       message: "Too many requests",
     };
   }
-  const user = await createUser(email, displayName, username, password, null);
+  const user = await createUser(
+    email,
+    displayName,
+    username,
+    password,
+    null,
+    null,
+  );
   const emailVerificationRequest = await createEmailVerificationRequest(
     user.id,
     user.email,

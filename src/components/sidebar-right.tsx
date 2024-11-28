@@ -4,6 +4,7 @@ import { Plus } from "lucide-react";
 import { Calendars } from "~/components/calendars";
 import { DatePicker } from "~/components/date-picker";
 import { NavUser } from "~/components/nav-user";
+import type { User } from "~/server/models";
 import {
   Sidebar,
   SidebarContent,
@@ -40,16 +41,17 @@ const data = {
 };
 
 export function SidebarRight({
+  user,
   ...props
-}: React.ComponentProps<typeof Sidebar>) {
+}: { user: User | null } & React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar
       collapsible="none"
       className="sticky top-0 hidden h-svh border-l lg:flex"
       {...props}
     >
-      <SidebarHeader className="border-sidebar-border h-16 border-b">
-        <NavUser user={data.user} />
+      <SidebarHeader className="h-16 border-b border-sidebar-border">
+        <NavUser user={user} />
       </SidebarHeader>
       <SidebarContent>
         <DatePicker />
