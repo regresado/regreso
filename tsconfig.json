@@ -36,9 +36,7 @@
     "**/*.tsx",
     "**/*.cjs",
     "**/*.js",
-    ".next/types/**/*.ts",
-    "src/app/page2tsx",
-    "src/app/page2tsx"
+    ".next/types/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }

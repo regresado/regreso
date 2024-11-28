@@ -1,5 +1,7 @@
 # 🗺️ Regreso - Find your way back
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/9186e8eb-17c0-4d34-bdd9-e2add4200741/deploy-status)](https://app.netlify.com/sites/regreso/deploys)
+
 ## ⚙️ Tech Stack:
 
 This project uses the [T3 Webdev Stack](https://create.t3.gg/) made by Theo Browne:
