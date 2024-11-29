@@ -17,6 +17,7 @@ export const env = createEnv({
     EMAIL_USER: z.string(),
     EMAIL_PASSWORD: z.string(),
     UPLOADTHING_TOKEN: z.string(),
+    VERCEL_URL: z.string().url(),
 
     NODE_ENV: z
       .enum(["development", "test", "production"])
@@ -47,6 +48,7 @@ export const env = createEnv({
     EMAIL_USER: process.env.EMAIL_USER,
     EMAIL_PASSWORD: process.env.EMAIL_PASSWORD,
     UPLOADTHING_TOKEN: process.env.UPLOADTHING_TOKEN,
+    VERCEL_URL: process.env.VERCEL_URL,
     NODE_ENV: process.env.NODE_ENV,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
