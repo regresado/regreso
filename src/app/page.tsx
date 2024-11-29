@@ -84,7 +84,7 @@ const DummyContent = () => {
   );
 };
 
-export function MacbookScrollDemo() {
+function MacbookScrollDemo() {
   return (
     <div className="w-full overflow-hidden bg-white dark:bg-[#0B0B0F]">
       <MacbookScroll
