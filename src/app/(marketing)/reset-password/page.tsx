@@ -2,7 +2,6 @@ import { PasswordResetForm } from "~/components/password-reset";
 
 import { redirect } from "next/navigation";
 
-import { Button } from "~/components/ui/button";
 import {
   Card,
   CardContent,
@@ -20,11 +19,11 @@ export default async function Page() {
     return "Too many requests";
   }
 
-  const { session, user } = await getCurrentPasswordResetSession();
+  const { session } = await getCurrentPasswordResetSession();
   if (session === null) {
     return redirect("/forgot-password");
   }
-  if (!session.emailVerified && !user.googleId && !user.githubId) {
+  if (!session.emailVerified) {
     return redirect("/reset-password/verify-email");
   }
 

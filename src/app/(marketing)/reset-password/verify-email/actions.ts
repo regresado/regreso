@@ -59,7 +59,7 @@ export async function verifyPasswordResetEmailAction(
     };
   }
   emailVerificationBucket.reset(resetSession.userId);
-  setPasswordResetSessionAsEmailVerified(resetSession.id);
+  await setPasswordResetSessionAsEmailVerified(resetSession.id);
   const emailMatches = await setUserAsEmailVerifiedIfEmailMatches(
     resetSession.userId,
     resetSession.email,
@@ -74,7 +74,7 @@ export async function verifyPasswordResetEmailAction(
   if (user?.registered2FA && !session?.twoFactorVerified) {
     return redirect("/reset-password/2fa");
   }
-  return redirect("/dashboard");
+  return redirect("/reset-password");
 }
 
 interface ActionResult {

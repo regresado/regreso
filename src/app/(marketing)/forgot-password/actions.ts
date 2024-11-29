@@ -71,7 +71,7 @@ export async function forgotPasswordAction(
   );
 
   void sendPasswordResetEmail(session.email, session.code);
-  void setPasswordResetSessionTokenCookie(sessionToken, session.expiresAt);
+  await setPasswordResetSessionTokenCookie(sessionToken, session.expiresAt);
   return redirect("/reset-password/verify-email");
 }
 

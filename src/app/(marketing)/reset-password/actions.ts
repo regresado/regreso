@@ -70,7 +70,7 @@ export async function resetPasswordAction(
   const session = await createSession(sessionToken, user.id, sessionFlags);
   void setSessionTokenCookie(sessionToken, session.expiresAt);
   void deletePasswordResetSessionTokenCookie();
-  return redirect("/");
+  return redirect("/dashboard");
 }
 
 interface ActionResult {

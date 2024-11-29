@@ -72,14 +72,14 @@ export async function validatePasswordResetSessionToken(
   return { session, user };
 }
 
-export function setPasswordResetSessionAsEmailVerified(
+export async function setPasswordResetSessionAsEmailVerified(
   sessionId: string,
-): void {
+): Promise<void> {
   //   db.execute(
   //     "UPDATE password_reset_session SET email_verified = 1 WHERE id = ?",
   //     [sessionId],
   //   );
-  void db
+  await db
     .update(passwordResetSessions)
     .set({
       emailVerified: true,

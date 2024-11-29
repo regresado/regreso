@@ -80,7 +80,7 @@ export function PasswordResetForm() {
               <FormLabel>Password</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="steve@pelicans.dev"
+                  placeholder="••••••••"
                   type="password"
                   autoComplete="new-password"
                   {...field}

@@ -86,7 +86,7 @@ export async function sendVerificationEmail(
     <strong>The Regreso Team</strong></div>`,
   };
   return new Promise((resolve) => {
-    transporter.sendMail(mailOptions, function (err, info) {
+    transporter.sendMail(mailOptions, function (err) {
       if (err) {
         resolve(err);
       } else {
