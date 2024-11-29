@@ -6,10 +6,13 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
-  BreadcrumbPage,
+  BreadcrumbLink,
 } from "~/components/ui/breadcrumb";
 import { Separator } from "~/components/ui/separator";
+import { WelcomeCard } from "~/components/welcome-card";
 import { SidebarTrigger } from "~/components/ui/sidebar";
+
+import { Home } from "lucide-react";
 
 import { api } from "~/trpc/server";
 
@@ -23,17 +26,41 @@ const Page: React.FC = () => {
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
-                <BreadcrumbPage className="line-clamp-1">
-                  Project Management & Task Tracking
-                </BreadcrumbPage>
+                <Home size="16" />
+                <BreadcrumbLink href="/dashboard">Home</BreadcrumbLink>
               </BreadcrumbItem>
+              {/* <BreadcrumbItem>
+                <BreadcrumbLink href="/dashboard/workspace/">
+                  🖼️ Frontend Development
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage className="line-clamp-1">
+                  🎨 Design Components
+                </BreadcrumbPage>
+              </BreadcrumbItem> */}
             </BreadcrumbList>
           </Breadcrumb>
         </div>
       </header>
       <div className="flex flex-1 flex-col gap-4 p-4">
-        <div className="mx-auto h-24 w-full max-w-3xl rounded-xl bg-muted/50" />
-        <div className="mx-auto h-[100vh] w-full max-w-3xl rounded-xl bg-muted/50" />
+        <div className="grid auto-rows-min gap-4 md:grid-cols-2">
+          <div className="rounded-xl bg-muted/50">
+            <WelcomeCard
+              teams={[
+                {
+                  name: "My Team",
+                  logo: Home,
+                  plan: "Free",
+                },
+              ]}
+              name={"John Doe"}
+            />
+          </div>
+          <div className="rounded-xl bg-muted/50" />
+        </div>
+        <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
       </div>
     </>
   );

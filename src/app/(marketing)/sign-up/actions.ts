@@ -104,10 +104,15 @@ export async function signupAction(
     user.id,
     user.email,
   );
-  sendVerificationEmail(
+  const err = await sendVerificationEmail(
     emailVerificationRequest.email,
     emailVerificationRequest.code,
   );
+  if (err) {
+    return {
+      message: "Failed to send verification email: " + err.message,
+    };
+  }
   void setEmailVerificationRequestCookie(emailVerificationRequest);
 
   const sessionFlags: SessionFlags = {

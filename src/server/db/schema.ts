@@ -96,7 +96,19 @@ export const emailVerificationRequests = createTable(
       .notNull()
       .references(() => users.id),
     code: text("code").notNull(),
-    email: varchar("email", { length: 256 }).notNull(),
+    email: text("email").notNull(),
     expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
   },
 );
+
+export const passwordResetSessions = createTable("password_reset_session", {
+  id: text("id").primaryKey(),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id),
+  code: text("code").notNull(),
+  email: text("email").unique().notNull(),
+  emailVerified: boolean("email_verified").default(false).notNull(),
+  twoFactorVerified: boolean("two_factor_verified").default(false).notNull(),
+  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+});

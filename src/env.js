@@ -13,6 +13,10 @@ export const env = createEnv({
     GITHUB_CLIENT_SECRET: z.string(),
     GOOGLE_CLIENT_ID: z.string(),
     GOOGLE_CLIENT_SECRET: z.string(),
+    SMTP_HOST: z.string(),
+    EMAIL_USER: z.string(),
+    EMAIL_PASSWORD: z.string(),
+    UPLOADTHING_TOKEN: z.string(),
 
     NODE_ENV: z
       .enum(["development", "test", "production"])
@@ -39,6 +43,10 @@ export const env = createEnv({
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
     DATABASE_URL: process.env.DATABASE_URL,
     DB_PASSWORD: process.env.DB_PASSWORD,
+    SMTP_HOST: process.env.SMTP_HOST,
+    EMAIL_USER: process.env.EMAIL_USER,
+    EMAIL_PASSWORD: process.env.EMAIL_PASSWORD,
+    UPLOADTHING_TOKEN: process.env.UPLOADTHING_TOKEN,
     NODE_ENV: process.env.NODE_ENV,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },

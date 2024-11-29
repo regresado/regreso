@@ -27,6 +27,7 @@ This project uses the [T3 Webdev Stack](https://create.t3.gg/) made by Theo Brow
 - [Shadcn](https://ui.shadcn.com/) copy-pasted components
   - [Radix UI](https://https://www.radix-ui.com/) is relied on by many components
   - [React Day Picker](https://www.npmjs.com/package/react-day-picker) calendar selection UI
+  - [Input OTP](https://www.npmjs.com/package/input-otp) UI Element for React
   - [React Hook Form](https://react-hook-form.com/) for form validation
   - [Tailwind CSS Animate](https://www.npmjs.com/package/tailwindcss-animate/) easy animation
   - [Next Themes](https://www.npmjs.com/package/next-themes/) simple themes abstraction
@@ -39,4 +40,5 @@ This project uses the [T3 Webdev Stack](https://create.t3.gg/) made by Theo Brow
   - [Arctic](https://arcticjs.dev/) for OAuth 2.0 Providers
   - [Oslo](https://oslojs.dev/) for Cryptography/Encoding functions
   - [Node-RS/Argon2](https://node-rs.dev/) Node bindings for Argon2 in Rust
+- [Nodemailer](https://nodemailer.com/) to send email verifications
 - [UploadThing](https://uploadthing.com/) for handling user file uplaods

@@ -1,6 +1,11 @@
+import { cache } from "react";
+
+import { and, eq } from "drizzle-orm";
+
+import nodemailer from "nodemailer";
+
 import { generateRandomOTP } from "~/server/utils";
 import { db } from "~/server/db";
-import { and, eq } from "drizzle-orm";
 
 import { emailVerificationRequests } from "~/server/db/schema";
 import { ExpiringTokenBucket } from "~/server/rate-limit";
@@ -58,8 +63,43 @@ export async function deleteUserEmailVerificationRequest(
     .where(eq(emailVerificationRequests.userId, userId));
 }
 
-export function sendVerificationEmail(email: string, code: string): void {
-  console.log(`To ${email}: Your verification code is ${code}`);
+export async function sendVerificationEmail(
+  email: string,
+  code: string,
+): Promise<Error | null> {
+  const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    secure: true,
+    port: 465,
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASSWORD,
+    },
+  });
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: "Verify your Email for Regreso",
+    html: `<p>To ${email}: Your verification code is ${code}</p>
+    <p>Enter this code in the verification form to activate your account.</p>
+    <strong>The Regreso Team</strong>`,
+  };
+  return new Promise((resolve) => {
+    transporter.sendMail(mailOptions, function (err, info) {
+      if (err) {
+        resolve(err);
+        console.log("error sending", err);
+      } else {
+        console.log("Email sent: " + info.response);
+        resolve(null);
+      }
+    });
+    setTimeout(() => {
+      transporter.close();
+      resolve(new Error("Timeout"));
+    }, 1000);
+  });
 }
 
 export async function setEmailVerificationRequestCookie(
@@ -96,6 +136,7 @@ export async function getUserEmailVerificationRequestFromRequest(): Promise<Emai
   if (id === null) {
     return null;
   }
+
   const request = getUserEmailVerificationRequest(user.id, id);
   if (request === null) {
     // TODO: Evaluate whether this is correct or not
@@ -103,6 +144,22 @@ export async function getUserEmailVerificationRequestFromRequest(): Promise<Emai
   }
   return request;
 }
+
+export const getCurrentUserEmailVerificationRequest = cache(async () => {
+  const { user } = await getCurrentSession();
+  if (user === null) {
+    return null;
+  }
+  const id = (await cookies()).get("email_verification")?.value ?? null;
+  if (id === null) {
+    return null;
+  }
+  const request = getUserEmailVerificationRequest(user.id, id);
+  if (request === null) {
+    void deleteEmailVerificationRequestCookie();
+  }
+  return request;
+});
 
 export const sendVerificationEmailBucket = new ExpiringTokenBucket<number>(
   3,

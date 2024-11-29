@@ -53,6 +53,7 @@ export async function createUser(
       googleId,
       githubId,
       displayName,
+      emailVerified: googleId || githubId ? true : false,
       passwordHash: passwordHash
         ? new TextEncoder().encode(passwordHash)
         : null,

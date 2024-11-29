@@ -13,7 +13,7 @@ export default async function Page() {
   const { session, user } = await getCurrentSession();
   if (session !== null) {
     // TODO: Redirect to the correct page based on the user's state
-    if (!user.emailVerified) {
+    if (!user.emailVerified && !user.googleId && !user.githubId) {
       console.log("login page redirecting");
       return redirect("/verify-email");
     }

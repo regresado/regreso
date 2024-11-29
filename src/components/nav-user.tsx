@@ -33,7 +33,7 @@ import {
 
 import type { User } from "~/server/models";
 
-import { logoutAction } from "~/app/(platform)/action";
+import { logoutAction } from "~/app/(platform)/actions";
 
 const initialState = {
   message: "",
@@ -61,10 +61,10 @@ export function NavUser({ user }: { user: User | null }) {
               {/* </AvatarComp> */}
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">
-                  {user?.name ?? "Anonymous"}
+                  {user?.displayName ?? "Anonymous"}
                 </span>
                 <span className="truncate text-xs">
-                  {user?.email ?? "No email provided"}
+                  @{user?.name ?? "anonymous"}
                 </span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
@@ -89,10 +89,10 @@ export function NavUser({ user }: { user: User | null }) {
                 </AvatarComp> */}
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">
-                    {user?.name ?? "Anonymous"}
+                    {user?.displayName ?? "Anonymous"}
                   </span>
                   <span className="truncate text-xs">
-                    {user?.email ?? "Not logged in"}
+                    @{user?.name ?? "Not logged in"}
                   </span>
                 </div>
               </div>

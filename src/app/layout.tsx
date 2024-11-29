@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title: "Regreso | Dashboard",
   description: "Regreso is an app that helps you find your way back.",
   icons: [
-    // { rel: "icon", url: "/favicon.ico", sizes: "any" },
+    { rel: "icon", url: "/favicon.ico", sizes: "any" },
     { rel: "icon", url: "/favicon.svg", type: "image/svg+xml" },
   ],
 };

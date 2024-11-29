@@ -69,7 +69,9 @@ export async function loginAction(
     };
   }
   const passwordHash = await getUserPasswordHash(user.id);
+  console.log(passwordHash, "999", password);
   const validPassword = await verifyPasswordHash(passwordHash, password);
+  console.log(validPassword);
   if (!validPassword) {
     return {
       message: "Invalid password",
