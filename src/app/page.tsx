@@ -11,8 +11,7 @@ import { MacbookScroll } from "~/components/ui/macbook-scroll";
 import React from "react";
 import Image from "next/image";
 import { Tabs } from "~/components/ui/tabs";
-
-export function TabsDemo() {
+function TabsDemo() {
   const tabs = [
     {
       title: "Product",
