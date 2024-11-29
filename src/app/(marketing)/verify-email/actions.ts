@@ -88,12 +88,9 @@ export async function verifyEmailAction(
   }
   void deleteUserEmailVerificationRequest(user.id);
   invalidateUserPasswordResetSessions(user.id);
-  updateUserEmailAndSetEmailAsVerified(user.id, verificationRequest.email);
+  void updateUserEmailAndSetEmailAsVerified(user.id, verificationRequest.email);
   void deleteEmailVerificationRequestCookie();
-  if (!user.registered2FA) {
-    return redirect("/2fa/setup");
-  }
-  return redirect("/");
+  return redirect("/dashboard");
 }
 
 export async function resendEmailVerificationCodeAction(): Promise<ActionResult> {

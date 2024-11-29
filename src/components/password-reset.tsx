@@ -8,13 +8,15 @@ import { z } from "zod";
 
 import { AlertCircle } from "lucide-react";
 
-import {
-  verifyEmailAction,
-  resendEmailVerificationCodeAction,
-} from "~/app/(marketing)/verify-email/actions";
-import { logoutAction } from "~/app/(platform)/actions";
+import { resetPasswordAction } from "~/app/(marketing)/reset-password/actions";
+import { verifyPasswordResetEmailAction } from "~/app/(marketing)/reset-password/verify-email/actions";
+
+const initialPasswordResetEmailVerificationState = {
+  message: "",
+};
 
 import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
 import {
   Form,
   FormControl,
@@ -34,7 +36,7 @@ import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 
 import { toast } from "~/components/hooks/use-toast";
 
-const FormSchema = z.object({
+const VerifyEmailFormSchema = z.object({
   code: z
     .string()
     .min(8, {
@@ -45,21 +47,87 @@ const FormSchema = z.object({
     }),
 });
 
-const emailVerificationInitialState = {
+const FormSchema = z.object({
+  password: z.string().min(8, {
+    message: "Password must be at least 8 characters.",
+  }),
+});
+
+const initialPasswordResetState = {
   message: "",
 };
 
-export function EmailVerificationForm() {
+export function PasswordResetForm() {
   const [state, action] = useActionState(
-    verifyEmailAction,
-    emailVerificationInitialState,
+    resetPasswordAction,
+    initialPasswordResetState,
   );
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
+    defaultValues: {
+      password: "",
+    },
+  });
+  return (
+    <Form {...form}>
+      <form action={action} className="w-full space-y-6">
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="steve@pelicans.dev"
+                  type="password"
+                  autoComplete="new-password"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>
+                New password must be at least 8 characters.
+              </FormDescription>
+            </FormItem>
+          )}
+        />
+        <Button>Reset password</Button>
+        {state.message.length > 0 ? (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>
+              {state.message ?? "An error occurred"}
+            </AlertDescription>
+          </Alert>
+        ) : null}
+      </form>
+    </Form>
+  );
+}
+
+export function PasswordResetEmailVerificationForm() {
+  const [state, action] = useActionState(
+    verifyPasswordResetEmailAction,
+    initialPasswordResetEmailVerificationState,
+  );
+
+  const form = useForm<z.infer<typeof VerifyEmailFormSchema>>({
+    resolver: zodResolver(VerifyEmailFormSchema),
     defaultValues: {
       code: "",
     },
   });
+
+  useEffect(() => {
+    if (state.message.length > 0) {
+      toast({
+        title: "Notice",
+        description: state.message ?? "An error occurred",
+      });
+    }
+  }, [state]);
 
   return (
     <Form {...form}>
@@ -107,43 +175,5 @@ export function EmailVerificationForm() {
         ) : null}
       </form>
     </Form>
-  );
-}
-
-const resendEmailInitialState = {
-  message: "",
-};
-
-const logoutState = {
-  message: "",
-};
-
-export function ResendEmailVerificationCodeForm() {
-  const [state, action] = useActionState(
-    resendEmailVerificationCodeAction,
-    resendEmailInitialState,
-  );
-  useEffect(() => {
-    if (state.message.length > 0) {
-      toast({
-        title: "Notice",
-        description: state.message ?? "An error occurred",
-      });
-    }
-  }, [state]);
-  const [, outAction] = useActionState(logoutAction, logoutState);
-  return (
-    <div className="mt-4 flex justify-end space-x-4">
-      <form action={action}>
-        <Button variant="outline" type="submit">
-          Resend code
-        </Button>
-      </form>
-      <form action={outAction}>
-        <Button variant="destructive" type="submit">
-          Log out
-        </Button>
-      </form>
-    </div>
   );
 }

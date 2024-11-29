@@ -3,14 +3,6 @@ import { sha1 } from "@oslojs/crypto/sha1";
 import { encodeHexLowerCase } from "@oslojs/encoding";
 
 export async function hashPassword(password: string): Promise<string> {
-  console.log(
-    hash(password, {
-      memoryCost: 19456,
-      timeCost: 2,
-      outputLen: 32,
-      parallelism: 1,
-    }),
-  );
   return await hash(password, {
     memoryCost: 19456,
     timeCost: 2,
@@ -23,7 +15,6 @@ export async function verifyPasswordHash(
   hash: string,
   password: string,
 ): Promise<boolean> {
-  console.log("verifying");
   return await verify(hash, password);
 }
 

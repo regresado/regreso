@@ -70,7 +70,6 @@ export async function signupAction(
     };
   }
   const emailAvailable = await checkEmailAvailability(email);
-  console.log(emailAvailable);
   if (!emailAvailable) {
     return {
       message: "Email is already used",

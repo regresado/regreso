@@ -16,9 +16,7 @@ export default async function DashboardLayout({
     if (session == null) {
       return redirect("/log-in");
     } else {
-      console.log(!user.githubId, session);
       if (!user.emailVerified && !user.githubId && !user.googleId) {
-        console.log("redirect");
         return redirect("/verify-email");
       }
       if (user.registered2FA && !session.twoFactorVerified) {

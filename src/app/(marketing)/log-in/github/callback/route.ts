@@ -90,8 +90,6 @@ export async function GET(request: Request): Promise<Response> {
     });
   }
 
-  console.log("creating new user");
-
   const emailListRequest = new Request("https://api.github.com/user/emails");
   emailListRequest.headers.set("Authorization", `Bearer ${githubAccessToken}`);
   const emailListResponse = await fetch(emailListRequest);

@@ -11,6 +11,5 @@ export async function checkEmailAvailability(email: string): Promise<boolean> {
   const result = await db.query.users.findFirst({
     where: eq(users.email, email),
   });
-  console.log(result, result?.email, email);
   return result?.email !== email;
 }

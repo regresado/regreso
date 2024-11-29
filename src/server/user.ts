@@ -151,12 +151,14 @@ export async function updateUserPassword(
     .where(eq(users.id, userId));
 }
 
-export function updateUserEmailAndSetEmailAsVerified(
+export async function updateUserEmailAndSetEmailAsVerified(
   userId: number,
   email: string,
-): void {
-  db.update(users)
+): Promise<void> {
+  await db
+    .update(users)
     .set({
+      emailVerified: true,
       email,
     })
     .where(eq(users.id, userId));

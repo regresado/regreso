@@ -4,7 +4,7 @@
 
 ## ⚙️ Tech Stack:
 
-This project uses the [T3 Webdev Stack](https://create.t3.gg/) made by Theo Browne:
+This project uses the [T3 Webdev Stack](https://create.t3.gg/) made by [@t3gotgg](https://github.com/t3dotgg):
 
 - [Next.js](https://nextjs.org/) App Router
   - [React](https://react.dev/) frontend library

@@ -1,7 +1,7 @@
 // Example model schema from the Drizzle docs
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
-import type { InferSelectModel } from "drizzle-orm";
+import { type InferSelectModel, relations } from "drizzle-orm";
 import { sql } from "drizzle-orm/sql";
 import {
   index,
@@ -107,8 +107,22 @@ export const passwordResetSessions = createTable("password_reset_session", {
     .notNull()
     .references(() => users.id),
   code: text("code").notNull(),
-  email: text("email").unique().notNull(),
+  email: text("email").notNull(),
   emailVerified: boolean("email_verified").default(false).notNull(),
   twoFactorVerified: boolean("two_factor_verified").default(false).notNull(),
   expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
 });
+
+export const usersRelations = relations(users, ({ many }) => ({
+  passwordResetSessions: many(passwordResetSessions),
+}));
+
+export const passwordResetSessionsRelations = relations(
+  passwordResetSessions,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [passwordResetSessions.userId],
+      references: [users.id],
+    }),
+  }),
+);

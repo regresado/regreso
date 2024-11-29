@@ -25,7 +25,8 @@ const initialState = {
   message: "",
 };
 
-// TODO: Move this to main login page
+// TODO: Make this a real form
+
 export function LoginForm() {
   const [state, action] = useActionState(loginAction, initialState);
   return (
@@ -78,7 +79,7 @@ export function LoginForm() {
             ) : null}
             <div className="flex flex-col space-y-4 fill-black dark:fill-white">
               <Label>Login with:</Label>
-              <a
+              <Link
                 className="button group/btn relative flex h-10 w-full items-center justify-start space-x-2 rounded-md bg-gray-50 px-4 font-medium text-black shadow-input dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
                 type="submit"
                 href="/log-in/github"
@@ -97,8 +98,8 @@ export function LoginForm() {
                   GitHub
                 </span>
                 <BottomGradient />
-              </a>
-              <a
+              </Link>
+              <Link
                 className="group/btn relative flex h-10 w-full items-center justify-start space-x-2 rounded-md bg-gray-50 px-4 font-medium text-black shadow-input dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
                 type="submit"
                 href="/log-in/google"
@@ -117,7 +118,7 @@ export function LoginForm() {
                   Google
                 </span>
                 <BottomGradient />
-              </a>
+              </Link>
               <button
                 className="group/btn relative flex h-10 w-full items-center justify-start space-x-2 rounded-md bg-gray-50 px-4 font-medium text-black shadow-input dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
                 type="submit"

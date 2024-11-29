@@ -3,6 +3,8 @@ import { cookies } from "next/headers";
 
 import { eq } from "drizzle-orm";
 
+import nodemailer from "nodemailer";
+
 import { encodeHexLowerCase } from "@oslojs/encoding";
 import { sha256 } from "@oslojs/crypto/sha2";
 
@@ -35,29 +37,13 @@ export async function validatePasswordResetSessionToken(
   token: string,
 ): Promise<PasswordResetSessionValidationResult> {
   const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
-
-  const resetSession = (await db.query.passwordResetSessions.findFirst({
+  console.log("sessionId", sessionId);
+  const resetSession = await db.query.passwordResetSessions.findFirst({
     where: eq(passwordResetSessions.id, sessionId),
     with: {
       user: true,
     },
-  })) as {
-    id: string;
-    userId: number;
-    email: string;
-    code: string;
-    expiresAt: Date;
-    emailVerified: boolean;
-    twoFactorVerified: boolean;
-    user: {
-      id: number;
-      email: string;
-      name: string;
-      displayName: string;
-      emailVerified: boolean;
-      totpKey: string | null;
-    };
-  } | null;
+  });
   console.log("resetSession", resetSession);
   if (!resetSession) {
     return { session: null, user: null };
@@ -125,10 +111,14 @@ export function invalidateUserPasswordResetSessions(userId: number): void {
 
 export const getCurrentPasswordResetSession = cache(async () => {
   const token = (await cookies()).get("password_reset_session")?.value ?? null;
+  console.log("result", token);
+
   if (token === null) {
     return { session: null, user: null };
   }
   const result = await validatePasswordResetSessionToken(token);
+  console.log("result", result);
+
   if (result.session === null) {
     void deletePasswordResetSessionTokenCookie();
   }
@@ -158,8 +148,46 @@ export async function deletePasswordResetSessionTokenCookie(): Promise<void> {
   });
 }
 
-export function sendPasswordResetEmail(email: string, code: string): void {
-  console.log(`To ${email}: Your reset code is ${code}`);
+export function sendPasswordResetEmail(
+  email: string,
+  code: string,
+): Promise<Error | null> {
+  const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    secure: true,
+    port: 465,
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASSWORD,
+    },
+  });
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: "Regreso Password Reset Request",
+    html: `<div><p>To ${email}: A password reset request has been created for your email. Your reset code is ${code}</p>
+    <p>Enter this code in the password reset form to continue restoring accesss to your account.</p>
+    <p>If you have 2-factor auth set up, you may be required to prove your identity using one of these methods as well. 
+    <strong>If you did  not request this, ignore this message.</strong>
+    </p>
+    <strong>The Regreso Team</strong></div>`,
+  };
+  return new Promise((resolve) => {
+    transporter.sendMail(mailOptions, function (err, info) {
+      if (err) {
+        resolve(err);
+        console.log("error sending", err);
+      } else {
+        console.log("Email sent: " + info.response);
+        resolve(null);
+      }
+    });
+    setTimeout(() => {
+      transporter.close();
+      resolve(new Error("Timeout"));
+    }, 1000);
+  });
 }
 
 export interface PasswordResetSession {

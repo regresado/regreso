@@ -36,7 +36,7 @@ export default async function Page() {
     <>
       <Card className="mx-auto max-w-sm">
         <CardHeader>
-          <CardTitle className="text-2xl">Verify Email</CardTitle>
+          <CardTitle className="text-2xl">Verify your Email Address</CardTitle>
           <CardDescription>
             We sent an 8-digit code to{" "}
             {verificationRequest?.email ?? user.email}.

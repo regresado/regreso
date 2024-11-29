@@ -81,17 +81,15 @@ export async function sendVerificationEmail(
     from: process.env.EMAIL_USER,
     to: email,
     subject: "Verify your Email for Regreso",
-    html: `<p>To ${email}: Your verification code is ${code}</p>
+    html: `<div><p>To ${email}: Your verification code is ${code}</p>
     <p>Enter this code in the verification form to activate your account.</p>
-    <strong>The Regreso Team</strong>`,
+    <strong>The Regreso Team</strong></div>`,
   };
   return new Promise((resolve) => {
     transporter.sendMail(mailOptions, function (err, info) {
       if (err) {
         resolve(err);
-        console.log("error sending", err);
       } else {
-        console.log("Email sent: " + info.response);
         resolve(null);
       }
     });
