@@ -1,7 +1,5 @@
 import Link from "next/link";
 
-import { getCurrentSession } from "~/server/session";
-import { redirect } from "next/navigation";
 import { globalGETRateLimit } from "~/server/request";
 
 export default async function Page() {

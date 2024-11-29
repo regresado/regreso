@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, startTransition, useActionState } from "react";
+import { startTransition, useActionState } from "react";
 
 import { redirect } from "next/navigation";
 
@@ -40,7 +40,7 @@ const initialState = {
 };
 
 export function NavUser({ user }: { user: User | null }) {
-  const [selectedOptions, setSelectedOption] = useState<string[]>([]);
+  // const [selectedOptions, setSelectedOption] = useState<[]>([]);
   const { isMobile } = useSidebar();
   const [, action] = useActionState(logoutAction, initialState);
 
@@ -118,7 +118,7 @@ export function NavUser({ user }: { user: User | null }) {
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  onSelect={(event: Event): void => {
+                  onSelect={() => {
                     startTransition(() => {
                       action();
                     });
@@ -131,7 +131,7 @@ export function NavUser({ user }: { user: User | null }) {
             ) : (
               <>
                 <DropdownMenuItem
-                  onSelect={(event: Event): void => {
+                  onSelect={() => {
                     redirect("/log-in");
                   }}
                 >

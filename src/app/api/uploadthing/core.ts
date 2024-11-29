@@ -17,7 +17,7 @@ export const ourFileRouter = {
     },
   })
     // Set permissions and file types for this FileRoute
-    .middleware(async ({ req }) => {
+    .middleware(async () => {
       // get session cookie
 
       const { session, user } = await getCurrentSession();

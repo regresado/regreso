@@ -60,9 +60,7 @@ const data = {
   ],
 };
 
-import { ReactNode } from "react";
-
-export function SettingsDialog({ children }: { children: ReactNode }) {
+export function SettingsDialog() {
   const [open, setOpen] = React.useState(true);
 
   return (

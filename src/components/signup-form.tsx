@@ -30,10 +30,6 @@ import {
 import { BottomGradient } from "~/components/ui/bottom-gradient";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 
-import { useToast } from "~/components/hooks/use-toast";
-
-import { cn } from "~/lib/utils";
-
 import { signupAction } from "~/app/(marketing)/sign-up/actions";
 
 const initialState = {
@@ -67,8 +63,6 @@ const FormSchema = z.object({
 
 export function SignupForm() {
   const [state, action] = useActionState(signupAction, initialState);
-
-  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -261,17 +255,3 @@ export function SignupForm() {
     </Card>
   );
 }
-
-const LabelInputContainer = ({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) => {
-  return (
-    <div className={cn("flex w-full flex-col space-y-2", className)}>
-      {children}
-    </div>
-  );
-};

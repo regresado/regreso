@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 import {
   Breadcrumb,
@@ -14,7 +14,7 @@ import { SidebarTrigger } from "~/components/ui/sidebar";
 
 import { Home } from "lucide-react";
 
-import { api } from "~/trpc/server";
+// import { api } from "~/trpc/server";
 
 const Page: React.FC = () => {
   return (

@@ -31,13 +31,7 @@ const features: Feature[] = [
   },
 ];
 
-const FeatureCard = ({
-  feature,
-  index,
-}: {
-  feature: Feature;
-  index: number;
-}) => {
+const FeatureCard = ({ feature }: { feature: Feature }) => {
   // const [ref, inView] = useInView({
   //   triggerOnce: true,
   //   threshold: 0.1,
@@ -84,7 +78,7 @@ export const FeatureCards = () => {
   return (
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {features.map((feature, index) => (
-        <FeatureCard key={index} feature={feature} index={index} />
+        <FeatureCard key={index} feature={feature} />
       ))}
     </div>
   );
