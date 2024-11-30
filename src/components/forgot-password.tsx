@@ -49,10 +49,25 @@ export function ForgotPasswordForm() {
       email: "",
     },
   });
+  const {
+    trigger,
+    formState: { isValid },
+  } = form;
 
   return (
     <Form {...form}>
-      <form action={action} className="w-full space-y-4">
+      <form
+        action={action}
+        onSubmit={async (e) => {
+          if (!isValid) {
+            e.preventDefault();
+            await trigger();
+            return;
+          }
+          e.currentTarget?.requestSubmit();
+        }}
+        className="w-full space-y-4"
+      >
         <FormField
           control={form.control}
           name="email"
@@ -63,6 +78,7 @@ export function ForgotPasswordForm() {
                 <Input
                   placeholder="steve@pelicans.dev"
                   type="email"
+                  autoComplete="username"
                   {...field}
                 />
               </FormControl>

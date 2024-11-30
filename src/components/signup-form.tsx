@@ -1,15 +1,15 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
-import { useActionState } from "react";
+import React, { useActionState } from "react";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { AlertCircle } from "lucide-react";
 
 import { Label } from "~/components/ui/label";
+import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import {
   Card,
@@ -56,14 +56,11 @@ const FormSchema = z.object({
   email: z.string().email({
     message: "Invalid email address.",
   }),
-  password: z.string().min(8, {
-    message: "Password must be at least 8 characters.",
-  }),
+  password: z.string(),
 });
 
 export function SignupForm() {
   const [state, action] = useActionState(signupAction, initialState);
-
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -73,6 +70,10 @@ export function SignupForm() {
       password: "",
     },
   });
+  const {
+    trigger,
+    formState: { isValid },
+  } = form;
 
   return (
     <Card className="mx-auto max-w-sm">
@@ -86,7 +87,14 @@ export function SignupForm() {
         <Form {...form}>
           <form
             action={action}
-            // onSubmit={form.handleSubmit(onSubmit)}
+            onSubmit={async (e) => {
+              if (!isValid) {
+                e.preventDefault();
+                await trigger();
+                return;
+              }
+              e.currentTarget?.requestSubmit();
+            }}
             className="space-y-3"
           >
             <FormField
@@ -132,9 +140,11 @@ export function SignupForm() {
                     <Input
                       placeholder="steve@pelicans.dev"
                       type="email"
+                      autoComplete="username"
                       {...field}
                     />
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -145,19 +155,24 @@ export function SignupForm() {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input placeholder="••••••••" type="password" {...field} />
+                    <Input
+                      placeholder="••••••••"
+                      type="password"
+                      autoComplete="new-password"
+                      {...field}
+                    />
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
 
-            <button
+            <Button
               className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-indigo-500 to-violet-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
               type="submit"
             >
               Sign up &rarr;
-              <BottomGradient />
-            </button>
+            </Button>
             {state.message.length > 0 ? (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
@@ -172,10 +187,7 @@ export function SignupForm() {
 
             <div className="flex flex-col space-y-4 fill-black dark:fill-white">
               <Label>Login with:</Label>
-              <button
-                className="group/btn relative flex h-10 w-full items-center justify-start space-x-2 rounded-md bg-gray-50 px-4 font-medium text-black shadow-input dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
-                type="submit"
-              >
+              <button className="group/btn relative flex h-10 w-full items-center justify-start space-x-2 rounded-md bg-gray-50 px-4 font-medium text-black shadow-input dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]">
                 <svg
                   role="img"
                   className="h-5 w-5"
@@ -191,10 +203,7 @@ export function SignupForm() {
                 </span>
                 <BottomGradient />
               </button>
-              <button
-                className="group/btn relative flex h-10 w-full items-center justify-start space-x-2 rounded-md bg-gray-50 px-4 font-medium text-black shadow-input dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
-                type="submit"
-              >
+              <button className="group/btn relative flex h-10 w-full items-center justify-start space-x-2 rounded-md bg-gray-50 px-4 font-medium text-black shadow-input dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]">
                 <svg
                   role="img"
                   className="h-5 w-5"
@@ -210,10 +219,7 @@ export function SignupForm() {
                 </span>
                 <BottomGradient />
               </button>
-              <button
-                className="group/btn relative flex h-10 w-full items-center justify-start space-x-2 rounded-md bg-gray-50 px-4 font-medium text-black shadow-input dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
-                type="submit"
-              >
+              <button className="group/btn relative flex h-10 w-full items-center justify-start space-x-2 rounded-md bg-gray-50 px-4 font-medium text-black shadow-input dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]">
                 <svg
                   role="img"
                   className="h-5 w-5"
@@ -229,10 +235,7 @@ export function SignupForm() {
                 </span>
                 <BottomGradient />
               </button>
-              <button
-                className="group/btn relative flex h-10 w-full items-center justify-start space-x-2 rounded-md bg-gray-50 px-4 font-medium text-black shadow-input dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
-                type="submit"
-              >
+              <button className="group/btn relative flex h-10 w-full items-center justify-start space-x-2 rounded-md bg-gray-50 px-4 font-medium text-black shadow-input dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]">
                 <svg
                   role="img"
                   className="h-5 w-5"

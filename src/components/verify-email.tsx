@@ -60,10 +60,25 @@ export function EmailVerificationForm() {
       code: "",
     },
   });
+  const {
+    trigger,
+    formState: { isValid },
+  } = form;
 
   return (
     <Form {...form}>
-      <form action={action} className="w-full space-y-6">
+      <form
+        action={action}
+        onSubmit={async (e) => {
+          if (!isValid) {
+            e.preventDefault();
+            await trigger();
+            return;
+          }
+          e.currentTarget?.requestSubmit();
+        }}
+        className="w-full space-y-6"
+      >
         <FormField
           control={form.control}
           name="code"

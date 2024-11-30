@@ -6,7 +6,7 @@ import { getCurrentSession } from "~/server/session";
 
 import { globalGETRateLimit } from "~/server/request";
 
-export default async function Page() {
+export default async function LogInPage() {
   if (!(await globalGETRateLimit())) {
     return "Too many requests!!";
   }

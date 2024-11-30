@@ -48,9 +48,7 @@ const VerifyEmailFormSchema = z.object({
 });
 
 const FormSchema = z.object({
-  password: z.string().min(8, {
-    message: "Password must be at least 8 characters.",
-  }),
+  password: z.string(),
 });
 
 const initialPasswordResetState = {
@@ -69,9 +67,25 @@ export function PasswordResetForm() {
       password: "",
     },
   });
+  const {
+    trigger,
+    formState: { isValid },
+  } = form;
+
   return (
     <Form {...form}>
-      <form action={action} className="w-full space-y-6">
+      <form
+        action={action}
+        onSubmit={async (e) => {
+          if (!isValid) {
+            e.preventDefault();
+            await trigger();
+            return;
+          }
+          e.currentTarget?.requestSubmit();
+        }}
+        className="w-full space-y-6"
+      >
         <FormField
           control={form.control}
           name="password"
@@ -131,7 +145,18 @@ export function PasswordResetEmailVerificationForm() {
 
   return (
     <Form {...form}>
-      <form action={action} className="w-full space-y-6">
+      <form
+        action={action}
+        onSubmit={async (e) => {
+          if (!form.formState.isValid) {
+            e.preventDefault();
+            await form.trigger();
+            return;
+          }
+          e.currentTarget?.requestSubmit();
+        }}
+        className="w-full space-y-6"
+      >
         <FormField
           control={form.control}
           name="code"

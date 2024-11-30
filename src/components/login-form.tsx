@@ -2,6 +2,10 @@
 
 import Link from "next/link";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
 import { AlertCircle } from "lucide-react";
 
 import { Button } from "~/components/ui/button";
@@ -14,8 +18,15 @@ import {
 } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "~/components/ui/form";
 import { BottomGradient } from "~/components/ui/bottom-gradient";
-
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 
 import { loginAction } from "~/app/(marketing)/log-in/actions";
@@ -25,10 +36,29 @@ const initialState = {
   message: "",
 };
 
-// TODO: Make this a real form
+const FormSchema = z.object({
+  email: z.string().email({
+    message: "Invalid email address.",
+  }),
+  password: z.string(),
+});
 
 export function LoginForm() {
   const [state, action] = useActionState(loginAction, initialState);
+
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const {
+    trigger,
+    formState: { isValid },
+  } = form;
+
   return (
     <Card className="mx-auto max-w-sm">
       <CardHeader>
@@ -38,30 +68,58 @@ export function LoginForm() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form action={action}>
-          <div className="grid gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                name="email"
-                placeholder="steve@pelicans.dev"
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <div className="flex items-center">
-                <Label htmlFor="password">Password</Label>
-                <Link
-                  href="/forgot-password"
-                  className="ml-auto inline-block text-sm underline"
-                >
-                  Forgot your password?
-                </Link>
-              </div>
-              <Input id="password" type="password" name="password" required />
-            </div>
+        <Form {...form}>
+          <form
+            action={action}
+            onSubmit={async (e) => {
+              if (!isValid) {
+                e.preventDefault();
+                await trigger();
+                return;
+              }
+              e.currentTarget?.requestSubmit();
+            }}
+            className="space-y-6"
+          >
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="steve@pelicans.dev"
+                      type="email"
+                      autoComplete="username"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <div className="flex items-center">
+                    <FormLabel htmlFor="password">Password</FormLabel>
+                    <Link
+                      href="/forgot-password"
+                      className="ml-auto inline-block text-sm underline"
+                    >
+                      Forgot your password?
+                    </Link>
+                  </div>
+                  <FormControl>
+                    <Input placeholder="••••••••" type="password" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <Button
               type="submit"
               className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-indigo-500 to-violet-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
@@ -77,11 +135,11 @@ export function LoginForm() {
                 </AlertDescription>
               </Alert>
             ) : null}
+
             <div className="flex flex-col space-y-4 fill-black dark:fill-white">
               <Label>Login with:</Label>
               <Link
                 className="button group/btn relative flex h-10 w-full items-center justify-start space-x-2 rounded-md bg-gray-50 px-4 font-medium text-black shadow-input dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
-                type="submit"
                 href="/log-in/github"
               >
                 <svg
@@ -101,7 +159,6 @@ export function LoginForm() {
               </Link>
               <Link
                 className="group/btn relative flex h-10 w-full items-center justify-start space-x-2 rounded-md bg-gray-50 px-4 font-medium text-black shadow-input dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
-                type="submit"
                 href="/log-in/google"
               >
                 <svg
@@ -119,10 +176,7 @@ export function LoginForm() {
                 </span>
                 <BottomGradient />
               </Link>
-              <button
-                className="group/btn relative flex h-10 w-full items-center justify-start space-x-2 rounded-md bg-gray-50 px-4 font-medium text-black shadow-input dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
-                type="submit"
-              >
+              <button className="group/btn relative flex h-10 w-full items-center justify-start space-x-2 rounded-md bg-gray-50 px-4 font-medium text-black shadow-input dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]">
                 <svg
                   role="img"
                   className="h-5 w-5"
@@ -138,10 +192,7 @@ export function LoginForm() {
                 </span>
                 <BottomGradient />
               </button>
-              <button
-                className="group/btn relative flex h-10 w-full items-center justify-start space-x-2 rounded-md bg-gray-50 px-4 font-medium text-black shadow-input dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
-                type="submit"
-              >
+              <button className="group/btn relative flex h-10 w-full items-center justify-start space-x-2 rounded-md bg-gray-50 px-4 font-medium text-black shadow-input dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]">
                 <svg
                   role="img"
                   className="h-5 w-5"
@@ -158,14 +209,14 @@ export function LoginForm() {
                 <BottomGradient />
               </button>
             </div>
-          </div>
-          <div className="mt-4 text-center text-sm">
-            Don&apos;t have an account?{" "}
-            <Link href="/sign-up" className="underline">
-              Sign up
-            </Link>
-          </div>
-        </form>
+            <div className="mt-4 text-center text-sm">
+              Don&apos;t have an account?{" "}
+              <Link href="/sign-up" className="underline">
+                Sign up
+              </Link>
+            </div>
+          </form>
+        </Form>
       </CardContent>
     </Card>
   );
