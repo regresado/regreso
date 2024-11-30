@@ -11,7 +11,7 @@ import { emailVerificationRequests } from "~/server/db/schema";
 import { ExpiringTokenBucket } from "~/server/rate-limit";
 import { encodeBase32 } from "@oslojs/encoding";
 import { cookies } from "next/headers";
-import { getCurrentSession } from "./session";
+import { getCurrentSession } from "~/server/session";
 
 export async function getUserEmailVerificationRequest(
   userId: number,

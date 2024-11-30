@@ -4,8 +4,8 @@ import { db } from "~/server/db";
 import { users } from "~/server/db/schema";
 
 import { decryptToString, encryptString } from "~/server/encryption";
-import { hashPassword } from "./password";
-import { generateRandomRecoveryCode } from "./utils";
+import { hashPassword } from "~/server/password";
+import { generateRandomRecoveryCode } from "~/server/utils";
 import type { User } from "~/server/models";
 
 export function verifyUsernameInput(username: string): boolean {
