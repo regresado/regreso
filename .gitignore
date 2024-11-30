@@ -47,5 +47,9 @@ yarn-error.log*
 
 # db files
 sqlite.db
+
+# sql migrations
+supabase
+
 # Local Netlify folder
 .netlify
