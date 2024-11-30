@@ -16,14 +16,15 @@ const createContext = async (req: NextRequest) => {
 };
 
 const handler = (req: NextRequest) => {
-  const url =
-    req.url && req.url !== "" ? req.url : "http://localhost:3000/api/trpc";
-
-  // Create a new Request object with a valid URL
-  const request = new Request(url, req);
+  console.log("Environment:", env.NODE_ENV);
+  console.log("Incoming request:", {
+    url: req.url,
+    headers: req.headers,
+    nextUrl: req.nextUrl,
+  });
   return fetchRequestHandler({
-    endpoint: "/api/trpc",
-    req: request,
+    endpoint: req.nextUrl.pathname,
+    req,
     router: appRouter,
     createContext: () => createContext(req),
     onError:
