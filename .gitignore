@@ -47,3 +47,5 @@ yarn-error.log*
 
 # db files
 sqlite.db
+# Local Netlify folder
+.netlify

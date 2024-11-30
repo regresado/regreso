@@ -73,9 +73,10 @@ function TabsDemo() {
 }
 
 const DummyContent = () => {
+  // TODO: Replace with actual content
   return (
     <Image
-      src="/linear.webp"
+      src="https://dummyimage.com/1000x1000/000/fff"
       alt="dummy image"
       width="1000"
       height="1000"
@@ -94,11 +95,11 @@ function MacbookScrollDemo() {
           </span>
         }
         badge={
-          <Link href="https://peerlist.io/manuarora">
+          <Link href="https://google.com">
             <Badge className="h-10 w-10 -rotate-12 transform" />
           </Link>
         }
-        src={`/linear.webp`}
+        src={`https://dummyimage.com/1000x1000/000/fff`}
         showGradient={false}
       />
     </div>
