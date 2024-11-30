@@ -1,6 +1,6 @@
 "use client";
 
-import { Navigation } from "~/components/landing-navigation";
+import { LandingNavigation } from "~/components/landing-navigation";
 import Hero from "~/components/hero";
 import { Button } from "~/components/ui/button";
 import Link from "next/link";
@@ -231,7 +231,7 @@ export default function LandingPage() {
     <>
       <div className="lamding-page min-h-screen bg-white text-gray-900 dark:bg-slate-950 dark:text-white">
         {" "}
-        <Navigation />
+        <LandingNavigation />
         <Hero />
         <MacbookScrollDemo />
         {/* Features Section */}
