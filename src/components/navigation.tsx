@@ -106,13 +106,7 @@ export default function Navigation() {
                 </div>
               </CollapsibleContent>
             </Collapsible>
-            {/* <Link
-              href="#"
-              className="flex w-full items-center py-2 text-lg font-semibold"
-              prefetch={false}
-            >
-              Guide
-            </Link> */}
+
             <Collapsible className="grid gap-4">
               <CollapsibleTrigger className="flex w-full items-center text-lg font-semibold [&[data-state=open]>svg]:rotate-90">
                 Resources{" "}

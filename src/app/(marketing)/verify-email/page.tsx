@@ -43,22 +43,10 @@ export default async function Page() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {/* <p className="mb-4">
-            We sent an 8-digit code to{" "}
-            {verificationRequest?.email ?? user.email}.
-          </p> */}
           <EmailVerificationForm />
           <ResendEmailVerificationCodeForm />
-          {/* <Link href="/settings">Change your email</Link> */}
         </CardContent>
       </Card>
-      {/* <h1>Verify your email address</h1>
-      <p className="mb-4">
-        We sent an 8-digit code to {verificationRequest?.email ?? user.email}.
-      </p>
-      <EmailVerificationForm />
-      <ResendEmailVerificationCodeForm /> */}
-      {/* <Link href="/settings">Change your email</Link> */}
     </>
   );
 }

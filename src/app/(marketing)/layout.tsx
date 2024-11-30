@@ -13,7 +13,6 @@ export default function MarketingSiteLayout({
       </div>
       <main className="flex flex-1 flex-col pt-16">
         {" "}
-        {/* Adjust pt-16 based on your nav height */}
         <div className="mx-auto w-full max-w-screen-xl flex-1 px-4 py-8">
           {children}
         </div>

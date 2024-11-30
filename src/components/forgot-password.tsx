@@ -88,7 +88,6 @@ export function ForgotPasswordForm() {
         <Button variant="default" type="submit">
           Send
         </Button>
-        {/* <p>{state.message}</p> */}
       </form>
     </Form>
   );

@@ -234,7 +234,6 @@ export default function LandingPage() {
         <LandingNavigation />
         <Hero />
         <MacbookScrollDemo />
-        {/* Features Section */}
         <section className="bg-gray-50 py-20 dark:bg-slate-900">
           <div className="container mx-auto px-4">
             <h2 className="mb-12 text-center text-3xl font-bold">
@@ -245,7 +244,6 @@ export default function LandingPage() {
           </div>
         </section>
         <TabsDemo />
-        {/* Open Source Section */}
         <section className="bg-gradient-to-b from-white to-gray-50 py-20 dark:from-slate-950 dark:to-slate-900">
           <div className="container mx-auto px-4 text-center">
             <h2 className="mb-6 text-3xl font-bold">Open Source Power</h2>
@@ -268,7 +266,6 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
-        {/* CTA Section */}
         <section className="bg-gray-50 py-20 dark:bg-slate-900">
           <div className="container mx-auto px-4 text-center">
             <h2 className="mb-6 text-3xl font-bold">
@@ -285,7 +282,6 @@ export default function LandingPage() {
             </Button>
           </div>
         </section>
-        {/* Footer */}
         <footer className="bg-white py-10 dark:bg-slate-950">
           <div className="container mx-auto px-4">
             <div className="flex flex-wrap justify-between">
@@ -303,44 +299,50 @@ export default function LandingPage() {
                 <ul className="space-y-2">
                   <li>
                     <Link
-                      href="/about"
+                      href="/guide"
                       className="text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
                     >
-                      About
+                      Guide
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/blog"
+                      className="text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
+                    >
+                      Blog
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/source-code"
+                      className="text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
+                    >
+                      Source Code
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/credits"
+                      className="text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
+                    >
+                      Credits
                     </Link>
                   </li>
 
                   <li>
                     <Link
-                      href="/team"
+                      href="/privacy"
                       className="text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
                     >
-                      Team
-                    </Link>
-                  </li>
-
-                  <li>
-                    <Link
-                      href="/docs"
-                      className="text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
-                    >
-                      Documentation
-                    </Link>
-                  </li>
-
-                  <li>
-                    <Link
-                      href="/contribute"
-                      className="text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
-                    >
-                      Contribute
+                      Privacy Policy
                     </Link>
                   </li>
                 </ul>
               </div>
 
               <div className="w-full md:w-1/3">
-                <h4 className="mb-4 text-lg font-semibold">Connect</h4>
+                <h4 className="mb-4 text-lg font-semibold">Socials</h4>
 
                 <div className="flex space-x-4">
                   <Link
@@ -349,8 +351,6 @@ export default function LandingPage() {
                   >
                     <Github className="h-6 w-6" />
                   </Link>
-
-                  {/* Add more social icons as needed */}
                 </div>
               </div>
             </div>
