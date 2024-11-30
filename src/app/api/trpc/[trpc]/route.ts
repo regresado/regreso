@@ -16,12 +16,6 @@ const createContext = async (req: NextRequest) => {
 };
 
 const handler = (req: NextRequest) => {
-  console.log("Environment:", env.NODE_ENV);
-  console.log("Incoming request:", {
-    url: req.url,
-    headers: req.headers,
-    nextUrl: req.nextUrl,
-  });
   return fetchRequestHandler({
     endpoint: req.nextUrl.pathname,
     req,

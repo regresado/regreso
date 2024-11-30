@@ -1,5 +1,3 @@
-"use server";
-
 import { cache } from "react";
 import { cookies } from "next/headers";
 
@@ -39,14 +37,12 @@ export async function validatePasswordResetSessionToken(
   token: string,
 ): Promise<PasswordResetSessionValidationResult> {
   const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
-  console.log("sessionId", sessionId);
   const resetSession = await db.query.passwordResetSessions.findFirst({
     where: eq(passwordResetSessions.id, sessionId),
     with: {
       user: true,
     },
   });
-  console.log("resetSession", resetSession);
   if (!resetSession) {
     return { session: null, user: null };
   }
@@ -113,13 +109,11 @@ export function invalidateUserPasswordResetSessions(userId: number): void {
 
 export const getCurrentPasswordResetSession = cache(async () => {
   const token = (await cookies()).get("password_reset_session")?.value ?? null;
-  console.log("result", token);
 
   if (token === null) {
     return { session: null, user: null };
   }
   const result = await validatePasswordResetSessionToken(token);
-  console.log("result", result);
 
   if (result.session === null) {
     void deletePasswordResetSessionTokenCookie();
@@ -179,9 +173,7 @@ export function sendPasswordResetEmail(
     transporter.sendMail(mailOptions, function (err, info) {
       if (err) {
         resolve(err);
-        console.log("error sending", err);
       } else {
-        console.log("Email sent: " + info.response);
         resolve(null);
       }
     });
