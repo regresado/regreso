@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+
 import {
   Card,
   CardContent,
@@ -12,7 +14,6 @@ import {
 } from "~/components/verify-email";
 
 import { getCurrentSession } from "~/server/session";
-import { redirect } from "next/navigation";
 import { getCurrentUserEmailVerificationRequest } from "~/server/email-verification";
 import { globalGETRateLimit } from "~/server/request";
 
@@ -33,20 +34,17 @@ export default async function Page() {
     return redirect("/dashboard");
   }
   return (
-    <>
-      <Card className="mx-auto max-w-sm">
-        <CardHeader>
-          <CardTitle className="text-2xl">Verify your Email Address</CardTitle>
-          <CardDescription>
-            We sent an 8-digit code to{" "}
-            {verificationRequest?.email ?? user.email}.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <EmailVerificationForm />
-          <ResendEmailVerificationCodeForm />
-        </CardContent>
-      </Card>
-    </>
+    <Card className="mx-auto max-w-sm">
+      <CardHeader>
+        <CardTitle className="text-2xl">Verify your Email Address</CardTitle>
+        <CardDescription>
+          We sent an 8-digit code to {verificationRequest?.email ?? user.email}.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <EmailVerificationForm />
+        <ResendEmailVerificationCodeForm />
+      </CardContent>
+    </Card>
   );
 }

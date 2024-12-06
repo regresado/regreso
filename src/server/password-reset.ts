@@ -11,7 +11,7 @@ import { sha256 } from "@oslojs/crypto/sha2";
 import { db } from "~/server/db";
 import { passwordResetSessions } from "~/server/db/schema";
 import { generateRandomOTP } from "~/server/utils";
-import type { User } from "~/server/models";
+import type { User } from "~/server/db/models";
 
 export async function createPasswordResetSession(
   token: string,
@@ -37,10 +37,17 @@ export async function validatePasswordResetSessionToken(
   token: string,
 ): Promise<PasswordResetSessionValidationResult> {
   const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
+
   const resetSession = await db.query.passwordResetSessions.findFirst({
     where: eq(passwordResetSessions.id, sessionId),
     with: {
-      user: true,
+      user: {
+        with: {
+          totpCredentials: true,
+          passkeyCredentials: true,
+          securityKeyCredentials: true,
+        },
+      },
     },
   });
   if (!resetSession) {
@@ -62,8 +69,15 @@ export async function validatePasswordResetSessionToken(
     name: resetSession.user.name,
     emailVerified: resetSession.user.emailVerified,
     registered2FA: false,
+    registeredSecurityKey: resetSession.user.securityKeyCredentials.length > 0,
+    registeredTOTP: resetSession.user.totpCredentials.length > 0,
+    registeredPasskey: resetSession.user.passkeyCredentials.length > 0,
   };
-  if (resetSession.user.totpKey) {
+  if (
+    user.registeredPasskey ||
+    user.registeredSecurityKey ||
+    user.registeredTOTP
+  ) {
     user.registered2FA = true;
   }
 
@@ -87,10 +101,6 @@ export async function setPasswordResetSessionAsEmailVerified(
 }
 
 export function setPasswordResetSessionAs2FAVerified(sessionId: string): void {
-  //   db.execute(
-  //     "UPDATE password_reset_session SET two_factor_verified = 1 WHERE id = ?",
-  //     [sessionId],
-  //   );
   void db
     .update(passwordResetSessions)
     .set({

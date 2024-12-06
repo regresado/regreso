@@ -18,7 +18,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { globalPOSTRateLimit } from "~/server/request";
 
-import type { SessionFlags } from "~/server/models";
+import type { SessionFlags } from "~/server/db/models";
 
 const ipBucket = new RefillingTokenBucket<string>(3, 10);
 
@@ -103,15 +103,16 @@ export async function signupAction(
     user.id,
     user.email,
   );
-  const err = await sendVerificationEmail(
+  await sendVerificationEmail(
     emailVerificationRequest.email,
     emailVerificationRequest.code,
   );
-  if (err) {
-    return {
-      message: "Failed to send verification email: " + err.message,
-    };
-  }
+  // TODO: Evaluate whether error handling is necessary. Most errors are timeouts anyway and the emails get sent anyway...
+  // if (err) {
+  //   return {
+  //     message: "Failed to send verification email: " + err.message,
+  //   };
+  // }
   void setEmailVerificationRequestCookie(emailVerificationRequest);
 
   const sessionFlags: SessionFlags = {
@@ -120,7 +121,7 @@ export async function signupAction(
   const sessionToken = generateSessionToken();
   const session = await createSession(sessionToken, user.id, sessionFlags);
   void setSessionTokenCookie(sessionToken, session.expiresAt);
-  return redirect("/dashboard");
+  return redirect("/2fa/setup");
 }
 
 interface ActionResult {

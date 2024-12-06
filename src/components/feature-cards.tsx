@@ -15,7 +15,7 @@ const features: Feature[] = [
     icon: <Zap className="h-10 w-10 text-cyan-500" />,
     title: "Smart Bookmarking",
     description:
-      "Automatically organize and categorize your visited websites and resources.",
+      "Organize and categorize your visited websites and resources. Search with tags.",
   },
   {
     icon: <Code className="h-10 w-10 text-cyan-500" />,
@@ -25,7 +25,7 @@ const features: Feature[] = [
   },
   {
     icon: <Users className="h-10 w-10 text-cyan-500" />,
-    title: "Collaborative",
+    title: "Collaborative (Coming soon!)",
     description:
       "Share and collaborate on digital trails with your team or community.",
   },

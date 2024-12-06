@@ -114,7 +114,6 @@ export async function GET(request: Request): Promise<Response> {
     });
   }
 
-  // TODO: Use GitHub display name if available
   const user = await createUser(
     email,
     displayName,

@@ -4,8 +4,14 @@ import {
   encodeHexLowerCase,
   encodeBase32LowerCaseNoPadding,
 } from "@oslojs/encoding";
-import { users, sessions } from "~/server/db/schema";
-import type { User, Session, SessionFlags } from "~/server/models";
+import {
+  users,
+  sessions,
+  totpCredentials,
+  passkeyCredentials,
+  securityKeyCredentials,
+} from "~/server/db/schema";
+import type { User, Session, SessionFlags } from "~/server/db/models";
 
 import { cookies } from "next/headers";
 import { cache } from "react";
@@ -16,10 +22,26 @@ export async function validateSessionToken(
 ): Promise<SessionValidationResult> {
   const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
   const result = await db
-    .select({ user: users, session: sessions })
+    .select({
+      user: users,
+      session: sessions,
+      totpCredentials,
+      passkeyCredentials,
+      securityKeyCredentials,
+    })
     .from(sessions)
     .innerJoin(users, eq(sessions.userId, users.id))
+    .leftJoin(totpCredentials, eq(sessions.userId, totpCredentials.userId))
+    .leftJoin(
+      passkeyCredentials,
+      eq(sessions.userId, passkeyCredentials.userId),
+    )
+    .leftJoin(
+      securityKeyCredentials,
+      eq(sessions.userId, securityKeyCredentials.userId),
+    )
     .where(eq(sessions.id, sessionId));
+
   if (result.length < 1) {
     return { session: null, user: null };
   }
@@ -31,7 +53,14 @@ export async function validateSessionToken(
     emailVerified: result[0]!.user.emailVerified,
     googleId: result[0]!.user.googleId,
     githubId: result[0]!.user.githubId,
-    registered2FA: !!result[0]!.user.totpKey,
+    registeredPasskey: !!result[0]!.passkeyCredentials,
+    registeredSecurityKey: !!result[0]!.securityKeyCredentials,
+    registeredTOTP: !!result[0]!.totpCredentials,
+    registered2FA: !!(
+      result[0]!.totpCredentials ??
+      result[0]!.securityKeyCredentials ??
+      result[0]!.passkeyCredentials
+    ),
   };
   const session = result[0]!.session;
   if (Date.now() >= session.expiresAt.getTime()) {
@@ -104,6 +133,15 @@ export async function deleteSessionTokenCookie(): Promise<void> {
     maxAge: 0,
     path: "/",
   });
+}
+
+export async function setSessionAs2FAVerified(
+  sessionId: string,
+): Promise<void> {
+  await db
+    .update(sessions)
+    .set({ twoFactorVerified: true })
+    .where(eq(sessions.id, sessionId));
 }
 
 export const getCurrentSession = cache(

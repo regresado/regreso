@@ -19,7 +19,7 @@ import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 
-import { UploadButton } from "~/lib/uploadthing";
+import { UploadButton } from "~/lib/client/uploadthing";
 
 export default function ProfileEdit() {
   const [displayName, setDisplayName] = useState("John Doe");

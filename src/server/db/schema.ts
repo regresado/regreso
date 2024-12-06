@@ -30,7 +30,6 @@ export const users = createTable(
     name: varchar("name", { length: 32 }).unique().notNull(),
     passwordHash: varchar("password_hash", { length: 256 }),
     emailVerified: boolean("email_verified").default(false).notNull(),
-    totpKey: varchar("totp_code"),
     recoveryCode: varchar("recovery_code").notNull(),
   },
   (user) => ({
@@ -113,8 +112,40 @@ export const passwordResetSessions = createTable("password_reset_session", {
   expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
 });
 
+export const totpCredentials = createTable("totp_credential", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id")
+    .notNull()
+    .unique()
+    .references(() => users.id),
+  key: text("key").notNull(),
+});
+
+export const passkeyCredentials = createTable("passkey_credential", {
+  id: text("id").notNull().primaryKey(),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id),
+  name: text("name").notNull(),
+  algorithm: integer("algorithm").notNull(),
+  publicKey: text("public_key").notNull(),
+});
+
+export const securityKeyCredentials = createTable("security_key_credential", {
+  id: text("id").notNull().primaryKey(),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id),
+  name: text("name").notNull(),
+  algorithm: integer("algorithm").notNull(),
+  publicKey: text("public_key").notNull(),
+});
+
 export const usersRelations = relations(users, ({ many }) => ({
   passwordResetSessions: many(passwordResetSessions),
+  securityKeyCredentials: many(securityKeyCredentials),
+  totpCredentials: many(totpCredentials),
+  passkeyCredentials: many(passkeyCredentials),
 }));
 
 export const passwordResetSessionsRelations = relations(
@@ -122,6 +153,36 @@ export const passwordResetSessionsRelations = relations(
   ({ one }) => ({
     user: one(users, {
       fields: [passwordResetSessions.userId],
+      references: [users.id],
+    }),
+  }),
+);
+
+export const securityKeyCredentialsRelations = relations(
+  securityKeyCredentials,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [securityKeyCredentials.userId],
+      references: [users.id],
+    }),
+  }),
+);
+
+export const totpCredentialsRelations = relations(
+  totpCredentials,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [totpCredentials.userId],
+      references: [users.id],
+    }),
+  }),
+);
+
+export const passkeyCredentialsRelations = relations(
+  passkeyCredentials,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [passkeyCredentials.userId],
       references: [users.id],
     }),
   }),

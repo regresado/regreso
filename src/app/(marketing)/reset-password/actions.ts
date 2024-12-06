@@ -16,7 +16,7 @@ import { updateUserPassword } from "~/server/user";
 import { redirect } from "next/navigation";
 import { globalPOSTRateLimit } from "~/server/request";
 
-import type { SessionFlags } from "~/server/models";
+import type { SessionFlags } from "~/server/db/models";
 
 export async function resetPasswordAction(
   _prev: ActionResult,
@@ -68,8 +68,15 @@ export async function resetPasswordAction(
   };
   const sessionToken = generateSessionToken();
   const session = await createSession(sessionToken, user.id, sessionFlags);
-  void setSessionTokenCookie(sessionToken, session.expiresAt);
+  await setSessionTokenCookie(sessionToken, session.expiresAt);
   void deletePasswordResetSessionTokenCookie();
+  if (
+    typeof window !== "undefined" &&
+    !user.registered2FA &&
+    !localStorage.getItem("disable2FAReminder")
+  ) {
+    return redirect("/2fa/setup");
+  }
   return redirect("/dashboard");
 }
 

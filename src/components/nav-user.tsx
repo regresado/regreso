@@ -4,16 +4,11 @@ import { startTransition, useActionState } from "react";
 
 import { redirect } from "next/navigation";
 
-import {
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
-  CreditCard,
-  LogOut,
-  LogIn,
-} from "lucide-react";
+import { Bell, ChevronsUpDown, CircleUser, LogOut, LogIn } from "lucide-react";
 
-import Avatar from "boring-avatars";
+import BoringAvatar from "boring-avatars";
+
+import { cn } from "~/lib/utils";
 
 import {
   DropdownMenu,
@@ -30,14 +25,46 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "~/components/ui/sidebar";
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 
-import type { User } from "~/server/models";
+import type { User } from "~/server/db/models";
 
 import { logoutAction } from "~/app/(platform)/actions";
 
 const initialState = {
   message: "",
 };
+
+function ProfilePicture({
+  user,
+  borderRadius,
+  className,
+}: {
+  user: User | null;
+  borderRadius?: "sm" | "md" | "lg" | "xl" | "xs";
+  className?: string;
+}) {
+  return user?.githubId ? (
+    <Avatar
+      className={cn(
+        borderRadius ? "rounded-" + borderRadius : "rounded-lg",
+        className,
+      )}
+    >
+      <AvatarImage
+        src={`https://avatars.githubusercontent.com/u/${user.githubId}`}
+        alt={`Avatar for ${user?.name}`}
+      />
+      <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+    </Avatar>
+  ) : (
+    <BoringAvatar
+      name={user?.name ?? "anonymous"}
+      variant="beam"
+      className={className}
+    />
+  );
+}
 
 export function NavUser({ user }: { user: User | null }) {
   // const [selectedOptions, setSelectedOption] = useState<[]>([]);
@@ -54,11 +81,7 @@ export function NavUser({ user }: { user: User | null }) {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               {/* TODO: Replace with user's username or "anonymous" */}
-              <Avatar name="Alice Paul" variant="beam" className="!h-8 !w-8" />
-              {/* <AvatarComp className="h-8 w-8 rounded-lg"> */}
-              {/* <AvatarImage src={user.avatar} alt={user.name} /> */}
-              {/* <AvatarFallback className="rounded-lg">CN</AvatarFallback> */}
-              {/* </AvatarComp> */}
+              <ProfilePicture user={user} className="!h-8 !w-8" />
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">
                   {user?.displayName ?? "Anonymous"}
@@ -78,11 +101,8 @@ export function NavUser({ user }: { user: User | null }) {
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar
-                  name="Alice Paul"
-                  variant="beam"
-                  className="!h-8 !w-8"
-                />
+                <ProfilePicture user={user} className="!h-8 !w-8" />
+
                 {/* <AvatarComp className="h-8 w-8 rounded-lg"> */}
                 {/* <AvatarImage src={user.avatar} alt={user.name} /> */}
                 {/* <AvatarFallback className="rounded-lg">CN</AvatarFallback>
@@ -104,13 +124,10 @@ export function NavUser({ user }: { user: User | null }) {
               <>
                 <DropdownMenuGroup>
                   <DropdownMenuItem>
-                    <BadgeCheck />
+                    <CircleUser />
                     Account
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <CreditCard />
-                    Billing
-                  </DropdownMenuItem>
+
                   <DropdownMenuItem>
                     <Bell />
                     Notifications

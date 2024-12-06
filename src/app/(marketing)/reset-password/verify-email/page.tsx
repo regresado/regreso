@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+
 import {
   Card,
   CardContent,
@@ -9,7 +11,6 @@ import {
 import { PasswordResetEmailVerificationForm } from "~/components/password-reset";
 
 import { getCurrentPasswordResetSession } from "~/server/password-reset";
-import { redirect } from "next/navigation";
 import { globalGETRateLimit } from "~/server/request";
 
 export default async function Page() {
@@ -25,18 +26,16 @@ export default async function Page() {
     return redirect("/reset-password");
   }
   return (
-    <>
-      <Card className="mx-auto max-w-sm">
-        <CardHeader>
-          <CardTitle className="text-2xl">Verify your Email Address</CardTitle>
-          <CardDescription>
-            We sent an 8-digit code to {session.email}.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <PasswordResetEmailVerificationForm />
-        </CardContent>
-      </Card>
-    </>
+    <Card className="mx-auto max-w-sm">
+      <CardHeader>
+        <CardTitle className="text-2xl">Verify your Email Address</CardTitle>
+        <CardDescription>
+          We sent an 8-digit code to {session.email}.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <PasswordResetEmailVerificationForm />
+      </CardContent>
+    </Card>
   );
 }

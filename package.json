@@ -24,6 +24,8 @@
     "@node-rs/argon2": "^2.0.0",
     "@oslojs/crypto": "^1.0.1",
     "@oslojs/encoding": "^1.1.0",
+    "@oslojs/otp": "^1.0.0",
+    "@oslojs/webauthn": "^1.0.0",
     "@pilcrowjs/object-parser": "^0.0.4",
     "@radix-ui/react-avatar": "^1.1.1",
     "@radix-ui/react-collapsible": "^1.1.1",
@@ -65,6 +67,7 @@
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "uploadthing": "^7.3.0",
+    "uqr": "^0.1.2",
     "zod": "^3.23.8"
   },
   "devDependencies": {

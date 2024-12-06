@@ -6,7 +6,7 @@ import { users } from "~/server/db/schema";
 import { decryptToString, encryptString } from "~/server/encryption";
 import { hashPassword } from "~/server/password";
 import { generateRandomRecoveryCode } from "~/server/utils";
-import type { User } from "~/server/models";
+import type { User } from "~/server/db/models";
 
 export function verifyUsernameInput(username: string): boolean {
   const reservedUsernames = [
@@ -45,9 +45,7 @@ export async function createUser(
 
   const row = await db
     .insert(users)
-    // @ts-expect-error - this is a bug
     .values({
-      // TODO: figure out why this is happening
       email,
       name,
       googleId,
@@ -55,7 +53,7 @@ export async function createUser(
       displayName,
       emailVerified: googleId || githubId ? true : false,
       passwordHash: passwordHash
-        ? new TextEncoder().encode(passwordHash)
+        ? Buffer.from(passwordHash).toString("base64")
         : null,
       recoveryCode: Buffer.from(encryptedRecoveryCode).toString("base64"),
     })
@@ -70,9 +68,13 @@ export async function createUser(
     name,
     googleId,
     githubId,
+    registeredTOTP: false,
+    registeredPasskey: false,
+    registeredSecurityKey: false,
     emailVerified: false,
     registered2FA: false,
   };
+
   return user;
 }
 
@@ -85,6 +87,11 @@ export async function getUserFromGoogleId(
 
   const userProfile = await db.query.users.findFirst({
     where: eq(users.googleId, googleId),
+    with: {
+      totpCredentials: true,
+      passkeyCredentials: true,
+      securityKeyCredentials: true,
+    },
   });
   if (!userProfile) {
     return null;
@@ -97,8 +104,18 @@ export async function getUserFromGoogleId(
     emailVerified: userProfile.emailVerified,
     googleId: userProfile.googleId,
     githubId: userProfile.githubId,
-    registered2FA: !!userProfile.totpKey,
+    registeredTOTP: userProfile.totpCredentials.length > 0,
+    registeredPasskey: userProfile.passkeyCredentials.length > 0,
+    registeredSecurityKey: userProfile.securityKeyCredentials.length > 0,
+    registered2FA: false,
   };
+  if (
+    user.registeredPasskey ||
+    user.registeredSecurityKey ||
+    user.registeredTOTP
+  ) {
+    user.registered2FA = true;
+  }
   return user;
 }
 
@@ -111,6 +128,11 @@ export async function getUserFromGitHubId(
 
   const userProfile = await db.query.users.findFirst({
     where: eq(users.githubId, githubId),
+    with: {
+      totpCredentials: true,
+      passkeyCredentials: true,
+      securityKeyCredentials: true,
+    },
   });
   if (!userProfile) {
     return null;
@@ -123,8 +145,18 @@ export async function getUserFromGitHubId(
     emailVerified: userProfile.emailVerified,
     googleId: userProfile.googleId,
     githubId: userProfile.githubId,
-    registered2FA: !!userProfile.totpKey,
+    registeredTOTP: userProfile.totpCredentials.length > 0,
+    registeredPasskey: userProfile.passkeyCredentials.length > 0,
+    registeredSecurityKey: userProfile.securityKeyCredentials.length > 0,
+    registered2FA: false,
   };
+  if (
+    user.registeredPasskey ||
+    user.registeredSecurityKey ||
+    user.registeredTOTP
+  ) {
+    user.registered2FA = true;
+  }
   return user;
 }
 
@@ -136,7 +168,7 @@ export async function getUserPasswordHash(userId: number): Promise<string> {
   if (!user?.passwordHash) {
     throw new Error("Invalid user ID");
   }
-  return user?.passwordHash;
+  return atob(user?.passwordHash);
 }
 
 export async function updateUserPassword(
@@ -213,6 +245,11 @@ export function resetUserRecoveryCode(userId: number): string {
 export async function getUserFromEmail(email: string): Promise<User | null> {
   const userResult = await db.query.users.findFirst({
     where: eq(users.email, email),
+    with: {
+      totpCredentials: true,
+      passkeyCredentials: true,
+      securityKeyCredentials: true,
+    },
   });
 
   if (!userResult) {
@@ -227,7 +264,17 @@ export async function getUserFromEmail(email: string): Promise<User | null> {
     googleId: userResult.googleId,
     githubId: userResult.githubId,
     emailVerified: userResult.emailVerified,
-    registered2FA: !!userResult.totpKey,
+    registeredTOTP: userResult.totpCredentials.length > 0,
+    registeredPasskey: userResult.passkeyCredentials.length > 0,
+    registeredSecurityKey: userResult.securityKeyCredentials.length > 0,
+    registered2FA: false,
   };
+  if (
+    user.registeredPasskey ||
+    user.registeredSecurityKey ||
+    user.registeredTOTP
+  ) {
+    user.registered2FA = true;
+  }
   return user;
 }

@@ -1,7 +1,7 @@
 // client-layout.tsx
 "use client";
 
-import type { User } from "~/server/models";
+import type { User } from "~/server/db/models";
 import { SidebarLeft } from "~/components/sidebar-left";
 import { SidebarRight } from "~/components/sidebar-right";
 

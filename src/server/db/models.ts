@@ -7,6 +7,9 @@ export interface User {
   githubId?: number | null;
   emailVerified: boolean;
   registered2FA: boolean;
+  registeredPasskey: boolean;
+  registeredTOTP: boolean;
+  registeredSecurityKey: boolean;
 }
 
 export interface SessionFlags {

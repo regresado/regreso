@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { ExternalLink } from "lucide-react";
+
 import { Button } from "~/components/ui/button";
 import { Sheet, SheetTrigger, SheetContent } from "~/components/ui/sheet";
 import { ModeToggle } from "~/components/ui/mode-toggle";
@@ -46,7 +48,9 @@ export default function Navigation() {
               className="flex w-full items-center py-2 text-lg font-semibold"
               prefetch={false}
             >
-              Dashboard
+              <span className="mr-2 inline align-middle">Dashboard </span>
+
+              <ExternalLink size="16" className="inline align-middle" />
             </Link>
             <Collapsible className="grid gap-4">
               <CollapsibleTrigger className="flex w-full items-center text-lg font-semibold [&[data-state=open]>svg]:rotate-90">
@@ -197,7 +201,9 @@ export default function Navigation() {
               className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
               prefetch={false}
             >
-              Dashboard
+              <span className="mr-2 inline align-middle">Dashboard </span>
+
+              <ExternalLink size="16" className="inline align-middle" />
             </Link>
           </NavigationMenuLink>
           <NavigationMenuItem>

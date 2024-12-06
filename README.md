@@ -37,9 +37,10 @@ This project uses the [T3 Webdev Stack](https://create.t3.gg/) made by [@t3oss](
 </ul>
 </details>
 </li>
-</ul>
 
-- [Typescript](https://www.typescriptlang.org/)
+<li> <a href="https://www.typescriptlang.org/">Typescript</a> with <a href="https://eslint.org/">ESLint</a> and <a href="https://prettier.io/">Prettier</a> for strong typing, linting, and formatting
+</li>
+</ul>
 
 <ul>
 <li>
@@ -61,6 +62,7 @@ This project uses the [T3 Webdev Stack](https://create.t3.gg/) made by [@t3oss](
 <details>
 <summary> 
 <a href="https://tailwindcss.com/">Tailwind CSS</a>
+
 </summary>
 <ul>
 <li>
@@ -92,15 +94,13 @@ This project uses the [T3 Webdev Stack](https://create.t3.gg/) made by [@t3oss](
 </li>
 </ul>
 
-- [ESLint](https://eslint.org/) and [Prettier](https://prettier.io) for linting/formatting
-
 **With my own custom additions of:**
 
 <ul>
 <li>
 <details>
 <summary> 
-<a href="https://ui.shadcn.com/">Shadcn-UI</a> copy-pasted components
+<a href="https://ui.shadcn.com/">Shadcn-ui</a> copy-pasted components
 </summary>
 <ul>
 <li>
@@ -123,7 +123,7 @@ This project uses the [T3 Webdev Stack](https://create.t3.gg/) made by [@t3oss](
 </li>
 </ul>
 
-- [Motion](https://motion.dev/) dynamic page animations
+- [Motion](https://motion.dev/) page animations
 - [Lucide](https://lucide.dev/) Icons
 - [Boring](https://boringavatars.com/) Avatars
 

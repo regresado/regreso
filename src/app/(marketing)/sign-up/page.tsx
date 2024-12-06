@@ -11,7 +11,6 @@ export default async function Page() {
   }
   const { session, user } = await getCurrentSession();
   if (session !== null) {
-    // TODO: Redirect to the correct page based on the user's state
     if (!user.emailVerified) {
       return redirect("/verify-email");
     }

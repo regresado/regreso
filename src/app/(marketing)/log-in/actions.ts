@@ -1,5 +1,8 @@
 "use server";
 
+import { redirect } from "next/navigation";
+import { headers } from "next/headers";
+
 import { verifyEmailInput } from "~/server/email";
 import { verifyPasswordHash } from "~/server/password";
 import { RefillingTokenBucket, Throttler } from "~/server/rate-limit";
@@ -9,8 +12,7 @@ import {
   setSessionTokenCookie,
 } from "~/server/session";
 import { getUserFromEmail, getUserPasswordHash } from "~/server/user";
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
+import { get2FARedirect } from "~/server/2fa";
 import { globalPOSTRateLimit } from "~/server/request";
 
 import type { SessionFlags } from "~/server/db/schema";
@@ -86,10 +88,14 @@ export async function loginAction(
   if (!user.emailVerified) {
     return redirect("/verify-email");
   }
-  if (!user.registered2FA) {
+  if (
+    typeof window !== "undefined" &&
+    !user.registered2FA &&
+    !localStorage.getItem("disable2FAReminder")
+  ) {
     return redirect("/2fa/setup");
   }
-  return redirect("/2fa");
+  return redirect(get2FARedirect(user));
 }
 
 interface ActionResult {
