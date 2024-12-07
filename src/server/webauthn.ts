@@ -174,10 +174,7 @@ export async function getUserSecurityKeyCredentials(
       publicKey: true,
     },
   });
-  //   const rows = db.query(
-  //     "SELECT id, user_id, name, algorithm, public_key FROM security_key_credential WHERE user_id = ?",
-  //     [userId],
-  //   );
+
   const credentials: WebAuthnUserCredential[] = [];
   for (const row of rows) {
     const credential: WebAuthnUserCredential = {

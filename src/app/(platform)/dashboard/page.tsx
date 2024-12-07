@@ -14,8 +14,6 @@ import { SidebarTrigger } from "~/components/ui/sidebar";
 
 import { Home } from "lucide-react";
 
-// import { api } from "~/trpc/server";
-
 const Page: React.FC = () => {
   return (
     <>

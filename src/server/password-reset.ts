@@ -87,10 +87,6 @@ export async function validatePasswordResetSessionToken(
 export async function setPasswordResetSessionAsEmailVerified(
   sessionId: string,
 ): Promise<void> {
-  //   db.execute(
-  //     "UPDATE password_reset_session SET email_verified = 1 WHERE id = ?",
-  //     [sessionId],
-  //   );
   await db
     .update(passwordResetSessions)
     .set({
@@ -114,7 +110,6 @@ export function invalidateUserPasswordResetSessions(userId: number): void {
   db.delete(passwordResetSessions).where(
     eq(passwordResetSessions.userId, userId),
   );
-  //   db.execute("DELETE FROM password_reset_session WHERE user_id = ?", [userId]);
 }
 
 export const getCurrentPasswordResetSession = cache(async () => {

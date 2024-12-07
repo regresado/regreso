@@ -7,7 +7,6 @@ export function verifyEmailInput(email: string): boolean {
 }
 
 export async function checkEmailAvailability(email: string): Promise<boolean> {
-  // const row = db.queryOne("SELECT COUNT(*) FROM user WHERE email = ?", [email]);
   const result = await db.query.users.findFirst({
     where: eq(users.email, email),
   });

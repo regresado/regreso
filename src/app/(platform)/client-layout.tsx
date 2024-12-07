@@ -1,4 +1,3 @@
-// client-layout.tsx
 "use client";
 
 import type { User } from "~/server/db/models";

@@ -24,7 +24,6 @@ export default async function DashboardLayout({
       if (user.registered2FA && !session.twoFactorVerified) {
         return redirect("/2fa");
       }
-      //   return redirect("/dashboard");
     }
   }
 
