@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 import { Button } from "~/components/ui/button";
 import {
@@ -9,8 +10,8 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { TwoFactorVerificationForm } from "~/components/2fa-verify";
+
 import { getCurrentSession } from "~/server/session";
-import { redirect } from "next/navigation";
 import { globalGETRateLimit } from "~/server/request";
 
 export default async function Page() {

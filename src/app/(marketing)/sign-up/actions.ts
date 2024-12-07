@@ -1,5 +1,7 @@
 "use server";
 
+import { redirect } from "next/navigation";
+
 import { checkEmailAvailability, verifyEmailInput } from "~/server/email";
 import {
   createEmailVerificationRequest,
@@ -15,7 +17,6 @@ import {
 } from "~/server/session";
 import { createUser, verifyUsernameInput } from "~/server/user";
 import { headers } from "next/headers";
-import { redirect } from "next/navigation";
 import { globalPOSTRateLimit } from "~/server/request";
 
 import type { SessionFlags } from "~/server/db/models";

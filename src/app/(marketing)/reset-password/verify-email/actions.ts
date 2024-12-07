@@ -1,5 +1,7 @@
 "use server";
 
+import { redirect } from "next/navigation";
+
 import {
   setPasswordResetSessionAsEmailVerified,
   getCurrentPasswordResetSession,
@@ -7,7 +9,6 @@ import {
 import { ExpiringTokenBucket } from "~/server/rate-limit";
 import { setUserAsEmailVerifiedIfEmailMatches } from "~/server/user";
 import { getCurrentSession } from "~/server/session";
-import { redirect } from "next/navigation";
 import { globalPOSTRateLimit } from "~/server/request";
 
 const emailVerificationBucket = new ExpiringTokenBucket<number>(5, 60 * 30);

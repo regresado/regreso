@@ -1,8 +1,10 @@
 "use server";
 import { redirect } from "next/navigation";
-import { getCurrentSession } from "~/server/session";
+
 import { HydrateClient } from "~/trpc/server";
 import { ClientLayout } from "~/app/(platform)/client-layout";
+
+import { getCurrentSession } from "~/server/session";
 
 export default async function DashboardLayout({
   children,

@@ -1,5 +1,7 @@
 "use server";
 
+import { redirect } from "next/navigation";
+
 import { verifyEmailInput } from "~/server/email";
 import {
   createPasswordResetSession,
@@ -11,7 +13,6 @@ import { RefillingTokenBucket } from "~/server/rate-limit";
 import { generateSessionToken } from "~/server/session";
 import { getUserFromEmail } from "~/server/user";
 import { headers } from "next/headers";
-import { redirect } from "next/navigation";
 import { globalPOSTRateLimit } from "~/server/request";
 
 const passwordResetEmailIPBucket = new RefillingTokenBucket<string>(3, 60);

@@ -1,8 +1,8 @@
 "use server";
 
-import { getCurrentSession, setSessionAs2FAVerified } from "~/server/session";
 import { decodeBase64 } from "@oslojs/encoding";
 import { redirect } from "next/navigation";
+
 import {
   AttestationStatementFormat,
   ClientDataType,
@@ -12,15 +12,6 @@ import {
   parseAttestationObject,
   parseClientDataJSON,
 } from "@oslojs/webauthn";
-import {
-  createSecurityKeyCredential,
-  getUserSecurityKeyCredentials,
-  verifyWebAuthnChallenge,
-} from "~/server/webauthn";
-import { ECDSAPublicKey, p256 } from "@oslojs/crypto/ecdsa";
-import { RSAPublicKey } from "@oslojs/crypto/rsa";
-import { globalPOSTRateLimit } from "~/server/request";
-
 import type {
   AttestationStatement,
   AuthenticatorData,
@@ -28,6 +19,17 @@ import type {
   COSEEC2PublicKey,
   COSERSAPublicKey,
 } from "@oslojs/webauthn";
+import { ECDSAPublicKey, p256 } from "@oslojs/crypto/ecdsa";
+import { RSAPublicKey } from "@oslojs/crypto/rsa";
+
+import {
+  createSecurityKeyCredential,
+  getUserSecurityKeyCredentials,
+  verifyWebAuthnChallenge,
+} from "~/server/webauthn";
+
+import { globalPOSTRateLimit } from "~/server/request";
+import { getCurrentSession, setSessionAs2FAVerified } from "~/server/session";
 import type { WebAuthnUserCredential } from "~/server/webauthn";
 
 export async function registerSecurityKeyAction(

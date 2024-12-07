@@ -1,5 +1,7 @@
 "use server";
 
+import { redirect } from "next/navigation";
+
 import { verifyPasswordStrength } from "~/server/password";
 import {
   deletePasswordResetSessionTokenCookie,
@@ -13,7 +15,6 @@ import {
   setSessionTokenCookie,
 } from "~/server/session";
 import { updateUserPassword } from "~/server/user";
-import { redirect } from "next/navigation";
 import { globalPOSTRateLimit } from "~/server/request";
 
 import type { SessionFlags } from "~/server/db/models";

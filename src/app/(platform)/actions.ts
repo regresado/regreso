@@ -1,11 +1,12 @@
 "use server";
 
+import { redirect } from "next/navigation";
+
 import {
   deleteSessionTokenCookie,
   getCurrentSession,
   invalidateSession,
 } from "~/server/session";
-import { redirect } from "next/navigation";
 import { globalPOSTRateLimit } from "~/server/request";
 
 export async function logoutAction(): Promise<ActionResult> {
