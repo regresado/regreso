@@ -19,7 +19,7 @@ import { createUser, verifyUsernameInput } from "~/server/user";
 import { headers } from "next/headers";
 import { globalPOSTRateLimit } from "~/server/request";
 
-import type { SessionFlags } from "~/server/db/models";
+import type { SessionFlags } from "~/server/models";
 
 const ipBucket = new RefillingTokenBucket<string>(3, 10);
 
@@ -121,7 +121,7 @@ export async function signupAction(
   };
   const sessionToken = generateSessionToken();
   const session = await createSession(sessionToken, user.id, sessionFlags);
-  void setSessionTokenCookie(sessionToken, session.expiresAt);
+  await setSessionTokenCookie(sessionToken, session.expiresAt);
   return redirect("/2fa/setup");
 }
 

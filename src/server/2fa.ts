@@ -11,7 +11,7 @@ import { generateRandomRecoveryCode } from "~/server/utils";
 import { ExpiringTokenBucket } from "~/server/rate-limit";
 import { decryptToString, encryptString } from "~/server/encryption";
 
-import type { User } from "~/server/db/models";
+import type { User } from "~/server/models";
 import { eq } from "drizzle-orm";
 
 export const recoveryCodeBucket = new ExpiringTokenBucket<number>(3, 60 * 60);

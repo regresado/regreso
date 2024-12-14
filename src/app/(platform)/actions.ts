@@ -22,6 +22,7 @@ export async function logoutAction(): Promise<ActionResult> {
       message: "Not authenticated",
     };
   }
+
   void invalidateSession(session.id);
   void deleteSessionTokenCookie();
   return redirect("/log-in");

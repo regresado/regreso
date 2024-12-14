@@ -31,6 +31,8 @@ export const users = createTable(
     passwordHash: varchar("password_hash", { length: 256 }),
     emailVerified: boolean("email_verified").default(false).notNull(),
     recoveryCode: varchar("recovery_code").notNull(),
+    avatarUrl: text("avatar_url"),
+    bio: text("bio").default("Pelicans are epic"),
   },
   (user) => ({
     emailIndex: index("email_index").on(user.email),

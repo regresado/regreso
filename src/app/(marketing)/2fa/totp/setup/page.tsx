@@ -12,7 +12,7 @@ import {
   CardDescription,
   CardTitle,
 } from "~/components/ui/card";
-import { TwoFactorSetUpForm } from "~/components/2fa-setup";
+import { TOTPSetUpForm } from "~/components/totp-setup";
 
 import { getCurrentSession } from "~/server/session";
 import { get2FARedirect } from "~/server/2fa";
@@ -59,7 +59,7 @@ export default async function Page() {
             __html: qrcode,
           }}
         ></div>
-        <TwoFactorSetUpForm encodedTOTPKey={encodedTOTPKey} />
+        <TOTPSetUpForm encodedTOTPKey={encodedTOTPKey} />
       </CardContent>
     </Card>
   );

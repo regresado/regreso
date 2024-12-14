@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 
 import { encodeBase64 } from "@oslojs/encoding";
 
+import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 
 import { Verify2FAWithSecurityKeyButton } from "~/components/verify-security-key";
@@ -47,12 +48,18 @@ export default async function Page() {
             encodeBase64(credential.id),
           )}
         />
-        <Link href="/2fa/reset">Use recovery code</Link>
+        <Button asChild variant="outline" className="mt-4">
+          <Link href="/2fa/reset">Use recovery code</Link>
+        </Button>
         {user.registeredTOTP && (
-          <Link href="/2fa/totp">Use authenticator apps</Link>
+          <Button asChild variant="outline" className="mt-4">
+            <Link href="/2fa/totp">Use authenticator apps</Link>
+          </Button>
         )}
         {user.registeredPasskey && (
-          <Link href="/2fa/passkey">Use passkeys</Link>
+          <Button asChild variant="outline" className="mt-4">
+            <Link href="/2fa/passkey">Use passkeys</Link>
+          </Button>
         )}
       </CardContent>
     </Card>

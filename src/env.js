@@ -8,8 +8,8 @@ export const env = createEnv({
    */
   server: {
     DATABASE_URL: z.string(),
-    GITHUB_CLIENT_ID: z.string(),
-    GITHUB_CLIENT_SECRET: z.string(),
+    GH_CLIENT_ID: z.string(),
+    GH_CLIENT_SECRET: z.string(),
     GOOGLE_CLIENT_ID: z.string(),
     GOOGLE_CLIENT_SECRET: z.string(),
     SMTP_HOST: z.string(),
@@ -37,8 +37,8 @@ export const env = createEnv({
    * middlewares) or client-side so we need to destruct manually.
    */
   runtimeEnv: {
-    GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
-    GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
+    GH_CLIENT_ID: process.env.GH_CLIENT_ID,
+    GH_CLIENT_SECRET: process.env.GH_CLIENT_SECRET,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
     DATABASE_URL: process.env.DATABASE_URL,

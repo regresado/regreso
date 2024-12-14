@@ -11,7 +11,7 @@ import {
   passkeyCredentials,
   securityKeyCredentials,
 } from "~/server/db/schema";
-import type { User, Session, SessionFlags } from "~/server/db/models";
+import type { User, Session, SessionFlags } from "~/server/models";
 
 import { cookies } from "next/headers";
 import { cache } from "react";

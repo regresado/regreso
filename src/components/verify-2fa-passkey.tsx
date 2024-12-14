@@ -16,6 +16,7 @@ import { Alert, AlertTitle, AlertDescription } from "~/components/ui/alert";
 
 export function Verify2FAWithPasskeyButton(props: {
   encodedCredentialIds: string[];
+  redirectUrl?: string;
 }) {
   const router = useRouter();
   const [message, setMessage] = useState("");
@@ -62,7 +63,11 @@ export function Verify2FAWithPasskeyButton(props: {
           if (result.error !== null) {
             setMessage(result.error);
           } else {
-            router.push("/dashboard");
+            if (props.redirectUrl == "/reset-password") {
+              router.push("/reset-password");
+            } else {
+              router.push("/dashboard");
+            }
           }
         }}
       >

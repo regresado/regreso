@@ -3,10 +3,10 @@
 import { createChallenge } from "~/lib/client/webauthn";
 import { decodeBase64, encodeBase64 } from "@oslojs/encoding";
 import { useState } from "react";
-import { useFormState } from "react-dom";
+import { useActionState } from "react";
 import { registerSecurityKeyAction } from "~/app/(marketing)/2fa/security-key/register/actions";
 
-import type { User } from "~/server/db/models";
+import type { User } from "~/server/models";
 
 const initialRegisterSecurityKeyState = {
   message: "",
@@ -23,7 +23,7 @@ export function RegisterSecurityKey(props: {
   const [encodedClientDataJSON, setEncodedClientDataJSON] = useState<
     string | null
   >(null);
-  const [formState, action] = useFormState(
+  const [formState, action] = useActionState(
     registerSecurityKeyAction,
     initialRegisterSecurityKeyState,
   );

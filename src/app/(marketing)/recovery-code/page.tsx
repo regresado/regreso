@@ -22,7 +22,7 @@ export default async function Page() {
 
   const { session, user } = await getCurrentSession();
   if (session === null) {
-    return redirect("/login");
+    return redirect("/log-in");
   }
   if (!user.emailVerified) {
     return redirect("/verify-email");
@@ -40,7 +40,7 @@ export default async function Page() {
         <CardTitle className="text-2xl">Recovery code</CardTitle>
         <CardDescription>
           You can use this recovery code if you lose access to your second
-          factors.
+          factors. Save it in a safe place.
         </CardDescription>
       </CardHeader>
       <CardContent>

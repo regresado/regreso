@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 
 import { verifyPasswordStrength } from "~/server/password";
 import {
@@ -17,7 +18,7 @@ import {
 import { updateUserPassword } from "~/server/user";
 import { globalPOSTRateLimit } from "~/server/request";
 
-import type { SessionFlags } from "~/server/db/models";
+import type { SessionFlags } from "~/server/models";
 
 export async function resetPasswordAction(
   _prev: ActionResult,
@@ -28,6 +29,8 @@ export async function resetPasswordAction(
       message: "Too many requests",
     };
   }
+
+  const cookieStore = await cookies();
 
   const { session: passwordResetSession, user } =
     await getCurrentPasswordResetSession();
@@ -72,9 +75,8 @@ export async function resetPasswordAction(
   await setSessionTokenCookie(sessionToken, session.expiresAt);
   void deletePasswordResetSessionTokenCookie();
   if (
-    typeof window !== "undefined" &&
     !user.registered2FA &&
-    !localStorage.getItem("disable2FAReminder")
+    cookieStore.get("disable2FAReminder")?.value !== "yes"
   ) {
     return redirect("/2fa/setup");
   }

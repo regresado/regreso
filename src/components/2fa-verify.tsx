@@ -9,6 +9,7 @@ import { z } from "zod";
 import { AlertCircle } from "lucide-react";
 
 import { verify2FAAction } from "~/app/(marketing)/2fa/totp/actions";
+import { logoutAction } from "~/app/(platform)/actions";
 
 import { Button } from "~/components/ui/button";
 import {
@@ -42,11 +43,17 @@ const twoFactorVerificationInitialState = {
   message: "",
 };
 
+const logoutState = {
+  message: "",
+};
+
 export function TwoFactorVerificationForm() {
   const [state, action] = useActionState(
     verify2FAAction,
     twoFactorVerificationInitialState,
   );
+  const [, outAction] = useActionState(logoutAction, logoutState);
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -59,58 +66,72 @@ export function TwoFactorVerificationForm() {
   } = form;
 
   return (
-    <Form {...form}>
-      <form
-        action={action}
-        onSubmit={async (e) => {
-          if (!isValid) {
-            e.preventDefault();
-            await trigger();
-            return;
-          }
-          e.currentTarget?.requestSubmit();
-        }}
-        className="w-full space-y-6"
-      >
-        <FormField
-          control={form.control}
-          name="code"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Code</FormLabel>
-              <FormControl>
-                <InputOTP maxLength={8} {...field} autoComplete="one-time-code">
-                  <InputOTPGroup>
-                    <InputOTPSlot index={0} />
-                    <InputOTPSlot index={1} />
-                    <InputOTPSlot index={2} />
-                  </InputOTPGroup>
-                  <InputOTPGroup>
-                    <InputOTPSlot index={3} />
-                    <InputOTPSlot index={4} />
-                    <InputOTPSlot index={5} />
-                  </InputOTPGroup>
-                </InputOTP>
-              </FormControl>
-              <FormDescription>
-                Please enter the code from the app.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+    <>
+      <Form {...form}>
+        <form
+          action={action}
+          onSubmit={async (e) => {
+            if (!isValid) {
+              e.preventDefault();
+              await trigger();
+              return;
+            }
+            e.currentTarget?.requestSubmit();
+          }}
+          className="w-full space-y-6"
+        >
+          <FormField
+            control={form.control}
+            name="code"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Code</FormLabel>
+                <FormControl>
+                  <InputOTP
+                    maxLength={8}
+                    {...field}
+                    autoComplete="one-time-code"
+                  >
+                    <InputOTPGroup>
+                      <InputOTPSlot index={0} />
+                      <InputOTPSlot index={1} />
+                      <InputOTPSlot index={2} />
+                    </InputOTPGroup>
+                    <InputOTPGroup>
+                      <InputOTPSlot index={3} />
+                      <InputOTPSlot index={4} />
+                      <InputOTPSlot index={5} />
+                    </InputOTPGroup>
+                  </InputOTP>
+                </FormControl>
+                <FormDescription>
+                  Please enter the code from the app.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button type="submit">Verify</Button>
 
-        <Button type="submit">Verify</Button>
-        {state.message.length > 0 ? (
-          <Alert variant="destructive">
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>
-              {state.message ?? "An error occurred"}
-            </AlertDescription>
-          </Alert>
-        ) : null}
+          {state.message.length > 0 ? (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>
+                {state.message ?? "An error occurred"}
+              </AlertDescription>
+            </Alert>
+          ) : null}
+        </form>
+      </Form>
+      <div className="mt-4 flex justify-end space-x-4">
+
+      <form action={outAction} className="mt-4">
+        <Button variant="destructive" type="submit">
+          Log out
+        </Button>
       </form>
-    </Form>
+      </div>
+    </>
   );
 }

@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 
 import { LoginForm } from "~/components/login-form";
 
@@ -12,6 +13,9 @@ export default async function LogInPage() {
   if (!(await globalGETRateLimit())) {
     return "Too many requests!!";
   }
+
+  const cookieStore = await cookies();
+
   const { session, user } = await getCurrentSession();
   if (session !== null) {
     if (!user.emailVerified && !user.googleId && !user.githubId) {
@@ -22,9 +26,8 @@ export default async function LogInPage() {
     }
 
     if (
-      typeof window !== "undefined" &&
       !user.registered2FA &&
-      !localStorage.getItem("disable2FAReminder")
+      cookieStore.get("disable2FAReminder")?.value != "yes"
     ) {
       return redirect("/2fa/setup");
     }
@@ -33,6 +36,16 @@ export default async function LogInPage() {
       return redirect(get2FARedirect(user));
     }
     return redirect("/dashboard");
+  }
+
+  if (cookieStore.get("disable2FAReminder")?.value == "yes") {
+    cookieStore.set("disable2FAReminder", "", {
+      httpOnly: true,
+      path: "/",
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 0,
+    });
   }
   await loginAction(
     {

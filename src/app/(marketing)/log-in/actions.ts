@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { headers } from "next/headers";
+import { headers, cookies } from "next/headers";
 
 import { verifyEmailInput } from "~/server/email";
 import { verifyPasswordHash } from "~/server/password";
@@ -29,6 +29,8 @@ export async function loginAction(
       message: "Too many requests",
     };
   }
+
+  const cookieStore = await cookies();
   // FIXME: Assumes X-Forwarded-For is always included.
   const clientIP = (await headers()).get("X-Forwarded-For");
   if (clientIP !== null && !ipBucket.check(clientIP, 1)) {
@@ -89,9 +91,8 @@ export async function loginAction(
     return redirect("/verify-email");
   }
   if (
-    typeof window !== "undefined" &&
     !user.registered2FA &&
-    !localStorage.getItem("disable2FAReminder")
+    cookieStore.get("disable2FAReminder")?.value != "yes"
   ) {
     return redirect("/2fa/setup");
   }

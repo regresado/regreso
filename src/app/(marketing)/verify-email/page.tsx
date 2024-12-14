@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 
 import {
   Card,
@@ -22,8 +23,10 @@ export default async function Page() {
     return "Too many requests";
   }
 
-  const { user } = await getCurrentSession();
-  if (user === null) {
+  const cookieStore = await cookies();
+
+  const { user, session } = await getCurrentSession();
+  if (user === null || session === null) {
     return redirect("/log-in");
   }
 
@@ -31,6 +34,12 @@ export default async function Page() {
   // but we can't set cookies inside server components.
   const verificationRequest = await getCurrentUserEmailVerificationRequest();
   if (verificationRequest === null && user.emailVerified) {
+    if (
+      !user.registered2FA &&
+      cookieStore.get("disable2FAReminder")?.value != "yes"
+    ) {
+      return redirect("/2fa/setup");
+    }
     return redirect("/dashboard");
   }
   return (

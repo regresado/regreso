@@ -2,9 +2,16 @@
 
 import { startTransition, useActionState } from "react";
 
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 
-import { Bell, ChevronsUpDown, CircleUser, LogOut, LogIn } from "lucide-react";
+import {
+  Bell,
+  ChevronsUpDown,
+  CircleUser,
+  LogOut,
+  LogIn,
+  Lock,
+} from "lucide-react";
 
 import BoringAvatar from "boring-avatars";
 
@@ -27,7 +34,7 @@ import {
 } from "~/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 
-import type { User } from "~/server/db/models";
+import type { User } from "~/server/models";
 
 import { logoutAction } from "~/app/(platform)/actions";
 
@@ -70,6 +77,8 @@ export function NavUser({ user }: { user: User | null }) {
   // const [selectedOptions, setSelectedOption] = useState<[]>([]);
   const { isMobile } = useSidebar();
   const [, action] = useActionState(logoutAction, initialState);
+
+  const router = useRouter();
 
   return (
     <SidebarMenu>
@@ -123,12 +132,26 @@ export function NavUser({ user }: { user: User | null }) {
             {user?.name ? (
               <>
                 <DropdownMenuGroup>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem
+                    onSelect={() =>
+                      router.push("/dashboard/settings/notifications")
+                    }
+                  >
                     <CircleUser />
+                    Profile
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onSelect={() => router.push("/dashboard/settings/account")}
+                  >
+                    <Lock />
                     Account
                   </DropdownMenuItem>
 
-                  <DropdownMenuItem>
+                  <DropdownMenuItem
+                    onSelect={() =>
+                      router.push("/dashboard/settings/notifications")
+                    }
+                  >
                     <Bell />
                     Notifications
                   </DropdownMenuItem>

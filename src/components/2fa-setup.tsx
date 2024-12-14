@@ -2,127 +2,48 @@
 
 import { useActionState } from "react";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-import { AlertCircle } from "lucide-react";
-
-import { setup2FAAction } from "~/app/(marketing)/2fa/totp/setup/actions";
+import Link from "next/link";
 
 import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "~/components/ui/form";
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSlot,
-} from "~/components/ui/input-otp";
-import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
+import { Label } from "~/components/ui/label";
 
-const FormSchema = z.object({
-  key: z.string(),
-  code: z
-    .string()
-    .min(6, {
-      message: "Your one-time password must be 6 characters.",
-    })
-    .max(6, {
-      message: "Your one-time password must be 6 characters.",
-    }),
-});
+import { skip2FASetupAction } from "~/app/(marketing)/2fa/setup/actions";
 
-const initial2FASetUpState = {
-  message: "",
+const initialState = {
+  error: "",
 };
 
-export function TwoFactorSetUpForm(props: { encodedTOTPKey: string }) {
-  const [state, action] = useActionState(setup2FAAction, initial2FASetUpState);
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      key: props.encodedTOTPKey,
-      code: "",
-    },
-  });
-  const {
-    trigger,
-    formState: { isValid },
-  } = form;
+export function TwoFactorSetup() {
+  const [, action] = useActionState(skip2FASetupAction, initialState);
 
   return (
-    <Form {...form}>
-      <form
-        action={action}
-        onSubmit={async (e) => {
-          if (!isValid) {
-            e.preventDefault();
-            await trigger();
-            return;
-          }
-          e.currentTarget?.requestSubmit();
-        }}
-        className="w-full space-y-6"
-      >
-        <FormField
-          control={form.control}
-          name="key"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Key</FormLabel>
-              <FormControl>
-                <Input hidden {...field} />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="code"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Code from the app</FormLabel>
-              <FormControl>
-                <InputOTP maxLength={8} {...field} autoComplete="one-time-code">
-                  <InputOTPGroup>
-                    <InputOTPSlot index={0} />
-                    <InputOTPSlot index={1} />
-                    <InputOTPSlot index={2} />
-                  </InputOTPGroup>
-                  <InputOTPGroup>
-                    <InputOTPSlot index={3} />
-                    <InputOTPSlot index={4} />
-                    <InputOTPSlot index={5} />
-                  </InputOTPGroup>
-                </InputOTP>
-              </FormControl>
-              <FormDescription>
-                Please verify the code from the app
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+    <>
+      <p className="text-sm font-medium leading-none">2FA Methods:</p>
+      <ul className="my-4 ml-6 list-disc [&>li]:ml-2">
+        <li>
+          <Button variant="link" asChild>
+            <Link href="/2fa/totp/setup">Authenticator apps</Link>
+          </Button>
+        </li>
+        <li>
+          <Button variant="link" asChild>
+            <Link href="/2fa/passkey/register">Passkeys</Link>
+          </Button>
+        </li>
 
-        <Button type="submit">Save</Button>
-        {state.message.length > 0 ? (
-          <Alert variant="destructive">
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>
-              {state.message ?? "An error occurred"}
-            </AlertDescription>
-          </Alert>
-        ) : null}
+        <li>
+          <Button variant="link" asChild>
+            <Link href="/2fa/security-key/register">Security keys</Link>
+          </Button>
+        </li>
+      </ul>
+      <Label htmlFor="skip" className="text-sm text-muted-foreground">
+        If you do not wish to set up 2fa right now, you can always do so later
+        from your Settings panel!
+      </Label>
+      <form action={action} className="mt-4">
+        <Button type="submit">Skip Setup</Button>
       </form>
-    </Form>
+    </>
   );
 }

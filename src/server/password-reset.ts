@@ -11,7 +11,7 @@ import { sha256 } from "@oslojs/crypto/sha2";
 import { db } from "~/server/db";
 import { passwordResetSessions } from "~/server/db/schema";
 import { generateRandomOTP } from "~/server/utils";
-import type { User } from "~/server/db/models";
+import type { User } from "~/server/models";
 
 export async function createPasswordResetSession(
   token: string,

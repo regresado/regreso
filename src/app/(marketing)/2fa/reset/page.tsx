@@ -34,7 +34,7 @@ export default async function Page() {
   return (
     <Card className="mx-auto max-w-sm">
       <CardHeader>
-        <CardTitle className="text-2xl">Recover your accoun</CardTitle>
+        <CardTitle className="text-2xl">Recover your account</CardTitle>
         <CardDescription>
           Regain access to your account using 2FA methods.
         </CardDescription>
