@@ -132,10 +132,10 @@ export async function getUserPasskeyCredential(
   return credential;
 }
 
-export function createPasskeyCredential(
+export async function createPasskeyCredential(
   credential: WebAuthnUserCredential,
-): void {
-  db.insert(passkeyCredentials).values({
+): Promise<void> {
+  await db.insert(passkeyCredentials).values({
     id: Buffer.from(credential.id).toString("base64"),
     userId: credential.userId,
     name: credential.name,

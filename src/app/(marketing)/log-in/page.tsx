@@ -38,15 +38,6 @@ export default async function LogInPage() {
     return redirect("/dashboard");
   }
 
-  if (cookieStore.get("disable2FAReminder")?.value == "yes") {
-    cookieStore.set("disable2FAReminder", "", {
-      httpOnly: true,
-      path: "/",
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 0,
-    });
-  }
   await loginAction(
     {
       message: "",

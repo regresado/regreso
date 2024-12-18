@@ -74,6 +74,13 @@ export async function resetPasswordAction(
   const session = await createSession(sessionToken, user.id, sessionFlags);
   await setSessionTokenCookie(sessionToken, session.expiresAt);
   void deletePasswordResetSessionTokenCookie();
+  cookieStore.set("disable2FAReminder", "", {
+    httpOnly: true,
+    path: "/",
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: 0,
+  });
   if (
     !user.registered2FA &&
     cookieStore.get("disable2FAReminder")?.value !== "yes"

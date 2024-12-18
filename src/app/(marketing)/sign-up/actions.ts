@@ -16,7 +16,7 @@ import {
   setSessionTokenCookie,
 } from "~/server/session";
 import { createUser, verifyUsernameInput } from "~/server/user";
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { globalPOSTRateLimit } from "~/server/request";
 
 import type { SessionFlags } from "~/server/models";
@@ -32,6 +32,8 @@ export async function signupAction(
       message: "Too many requests",
     };
   }
+
+  const cookieStore = await cookies();
 
   // FIXME: Assumes X-Forwarded-For is always included.
   const clientIP = (await headers()).get("X-Forwarded-For");
@@ -122,6 +124,13 @@ export async function signupAction(
   const sessionToken = generateSessionToken();
   const session = await createSession(sessionToken, user.id, sessionFlags);
   await setSessionTokenCookie(sessionToken, session.expiresAt);
+  cookieStore.set("disable2FAReminder", "", {
+    httpOnly: true,
+    path: "/",
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: 0,
+  });
   return redirect("/2fa/setup");
 }
 

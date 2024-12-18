@@ -86,6 +86,13 @@ export async function loginAction(
   const sessionToken = generateSessionToken();
   const session = await createSession(sessionToken, user.id, sessionFlags);
   await setSessionTokenCookie(sessionToken, session.expiresAt);
+  cookieStore.set("disable2FAReminder", "", {
+    httpOnly: true,
+    path: "/",
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: 0,
+  });
 
   if (!user.emailVerified) {
     return redirect("/verify-email");
