@@ -3,17 +3,9 @@
 import { headers } from "next/headers";
 
 import { RefillingTokenBucket, ExpiringTokenBucket } from "~/server/rate-limit";
-import {
-  createSession,
-  generateSessionToken,
-  getCurrentSession,
-  invalidateUserSessions,
-  setSessionTokenCookie,
-} from "~/server/session";
+import { getCurrentSession } from "~/server/session";
 
 import { globalPOSTRateLimit } from "~/server/request";
-
-import type { SessionFlags } from "~/server/models";
 
 const usernameUpdateBucket = new ExpiringTokenBucket<string>(5, 60 * 30);
 

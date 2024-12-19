@@ -1,27 +1,19 @@
 "use client";
 
+import { createChallenge } from "~/lib/client/webauthn";
+import { decodeBase64, encodeBase64 } from "@oslojs/encoding";
+import { verify2FAWithSecurityKeyAction } from "~/app/(marketing)/reset-password/2fa/security-key/actions";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { decodeBase64, encodeBase64 } from "@oslojs/encoding";
-
-import { AlertCircle } from "lucide-react";
-
-import { createChallenge } from "~/lib/client/webauthn";
-
-import { verify2FAWithPasskeyAction } from "~/app/(marketing)/2fa/passkey/actions";
-
-import { Button } from "~/components/ui/button";
-import { Alert, AlertTitle, AlertDescription } from "~/components/ui/alert";
-
-export function Verify2FAWithPasskeyButton(props: {
+export function Verify2FAWithSecurityKeyButton(props: {
   encodedCredentialIds: string[];
 }) {
   const router = useRouter();
   const [message, setMessage] = useState("");
   return (
     <div>
-      <Button
+      <button
         onClick={async () => {
           const challenge = await createChallenge();
 
@@ -47,7 +39,7 @@ export function Verify2FAWithPasskeyButton(props: {
             throw new Error("Unexpected error");
           }
 
-          const result = await verify2FAWithPasskeyAction({
+          const result = await verify2FAWithSecurityKeyAction({
             credential_id: encodeBase64(new Uint8Array(credential.rawId)),
             signature: encodeBase64(
               new Uint8Array(credential.response.signature),
@@ -62,19 +54,13 @@ export function Verify2FAWithPasskeyButton(props: {
           if (result.error !== null) {
             setMessage(result.error);
           } else {
-            router.push("/dashboard");
+            router.push("/reset-password");
           }
         }}
       >
         Authenticate
-      </Button>
-      {message.length > 0 ? (
-        <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>{message ?? "An error occurred"}</AlertDescription>
-        </Alert>
-      ) : null}
+      </button>
+      <p>{message}</p>
     </div>
   );
 }

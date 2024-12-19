@@ -1,8 +1,8 @@
 "use server";
 
-import { getCurrentSession, setSessionAs2FAVerified } from "~/server/session";
-import { decodeBase64 } from "@oslojs/encoding";
 import { redirect } from "next/navigation";
+
+import { decodeBase64 } from "@oslojs/encoding";
 import {
   AttestationStatementFormat,
   ClientDataType,
@@ -12,15 +12,8 @@ import {
   parseAttestationObject,
   parseClientDataJSON,
 } from "@oslojs/webauthn";
-import {
-  createPasskeyCredential,
-  getUserPasskeyCredentials,
-  verifyWebAuthnChallenge,
-} from "~/server/webauthn";
 import { ECDSAPublicKey, p256 } from "@oslojs/crypto/ecdsa";
 import { RSAPublicKey } from "@oslojs/crypto/rsa";
-import { globalPOSTRateLimit } from "~/server/request";
-
 import type {
   AttestationStatement,
   AuthenticatorData,
@@ -28,6 +21,19 @@ import type {
   COSEEC2PublicKey,
   COSERSAPublicKey,
 } from "@oslojs/webauthn";
+
+import { getBaseUrl, getBaseDomain } from "~/lib/utils";
+
+import { getCurrentSession, setSessionAs2FAVerified } from "~/server/session";
+
+import {
+  createPasskeyCredential,
+  getUserPasskeyCredentials,
+  verifyWebAuthnChallenge,
+} from "~/server/webauthn";
+
+import { globalPOSTRateLimit } from "~/server/request";
+
 import type { WebAuthnUserCredential } from "~/server/webauthn";
 
 export async function registerPasskeyAction(
@@ -97,7 +103,7 @@ export async function registerPasskeyAction(
     };
   }
   // TODO: Update host
-  if (!authenticatorData.verifyRelyingPartyIdHash("localhost")) {
+  if (!authenticatorData.verifyRelyingPartyIdHash(getBaseDomain())) {
     return {
       message: "Invalid data",
     };
@@ -133,7 +139,7 @@ export async function registerPasskeyAction(
     };
   }
   // TODO: Update origin
-  if (clientData.origin !== "http://localhost:3000") {
+  if (clientData.origin !== getBaseUrl()) {
     return {
       message: "Invalid data",
     };
@@ -210,8 +216,7 @@ export async function registerPasskeyAction(
   }
 
   try {
-    console.log("create passkey credential");
-    createPasskeyCredential(credential);
+    await createPasskeyCredential(credential);
   } catch {
     return {
       message: "Internal error",

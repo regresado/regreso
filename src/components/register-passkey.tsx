@@ -66,10 +66,6 @@ export function RegisterPasskeyForm(props: {
       name: "",
     },
   });
-  const {
-    trigger,
-    formState: { isValid },
-  } = form;
   return (
     <>
       <Button

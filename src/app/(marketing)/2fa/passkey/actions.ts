@@ -18,6 +18,13 @@ import {
   p256,
   verifyECDSASignature,
 } from "@oslojs/crypto/ecdsa";
+import {
+  decodePKCS1RSAPublicKey,
+  sha256ObjectIdentifier,
+  verifyRSASSAPKCS1v15Signature,
+} from "@oslojs/crypto/rsa";
+
+import { getBaseUrl, getBaseDomain } from "~/lib/utils";
 
 import { getCurrentSession, setSessionAs2FAVerified } from "~/server/session";
 
@@ -26,11 +33,6 @@ import {
   verifyWebAuthnChallenge,
 } from "~/server/webauthn";
 
-import {
-  decodePKCS1RSAPublicKey,
-  sha256ObjectIdentifier,
-  verifyRSASSAPKCS1v15Signature,
-} from "@oslojs/crypto/rsa";
 import { globalPOSTRateLimit } from "~/server/request";
 
 export async function verify2FAWithPasskeyAction(
@@ -45,7 +47,7 @@ export async function verify2FAWithPasskeyAction(
   const { session, user } = await getCurrentSession();
   if (session === null || user === null) {
     return {
-      error: "Not authenticated",
+      error: "Not authenticated1",
     };
   }
   if (
@@ -101,7 +103,7 @@ export async function verify2FAWithPasskeyAction(
     };
   }
   // TODO: Update host
-  if (!authenticatorData.verifyRelyingPartyIdHash("localhost")) {
+  if (!authenticatorData.verifyRelyingPartyIdHash(getBaseDomain())) {
     return {
       error: "Invalid data",
     };
@@ -132,7 +134,7 @@ export async function verify2FAWithPasskeyAction(
     };
   }
   // TODO: Update origin
-  if (clientData.origin !== "http://localhost:3000") {
+  if (clientData.origin !== getBaseUrl()) {
     return {
       error: "Invalid data",
     };

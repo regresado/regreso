@@ -96,8 +96,10 @@ export async function setPasswordResetSessionAsEmailVerified(
     .returning({ emailVerified: passwordResetSessions.emailVerified });
 }
 
-export function setPasswordResetSessionAs2FAVerified(sessionId: string): void {
-  void db
+export async function setPasswordResetSessionAs2FAVerified(
+  sessionId: string,
+): Promise<void> {
+  await db
     .update(passwordResetSessions)
     .set({
       twoFactorVerified: true,

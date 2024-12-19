@@ -9,7 +9,6 @@ import {
   MessageCircleQuestion,
   Search,
   Settings,
-  Trash2,
 } from "lucide-react";
 
 import { NavFavorites } from "~/components/nav-favorites";

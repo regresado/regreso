@@ -22,6 +22,8 @@ import type {
 import { ECDSAPublicKey, p256 } from "@oslojs/crypto/ecdsa";
 import { RSAPublicKey } from "@oslojs/crypto/rsa";
 
+import { getBaseUrl, getBaseDomain } from "~/lib/utils";
+
 import {
   createSecurityKeyCredential,
   getUserSecurityKeyCredentials,
@@ -99,7 +101,7 @@ export async function registerSecurityKeyAction(
     };
   }
   // TODO: Update host
-  if (!authenticatorData.verifyRelyingPartyIdHash("localhost")) {
+  if (!authenticatorData.verifyRelyingPartyIdHash(getBaseDomain())) {
     return {
       message: "Invalid data",
     };
@@ -135,7 +137,7 @@ export async function registerSecurityKeyAction(
     };
   }
   // TODO: Update origin
-  if (clientData.origin !== "http://localhost:3000") {
+  if (clientData.origin !== getBaseUrl()) {
     return {
       message: "Invalid data",
     };

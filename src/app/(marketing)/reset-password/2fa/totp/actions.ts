@@ -68,7 +68,7 @@ export async function verifyPasswordReset2FAWithTOTPAction(
     };
   }
   totpBucket.reset(session.userId);
-  setPasswordResetSessionAs2FAVerified(session.id);
+  await setPasswordResetSessionAs2FAVerified(session.id);
   return redirect("/reset-password");
 }
 

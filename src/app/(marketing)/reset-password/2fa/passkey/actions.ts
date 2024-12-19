@@ -25,6 +25,8 @@ import {
   verifyRSASSAPKCS1v15Signature,
 } from "@oslojs/crypto/rsa";
 
+import { getBaseUrl, getBaseDomain } from "~/lib/utils";
+
 import {
   getCurrentPasswordResetSession,
   setPasswordResetSessionAs2FAVerified,
@@ -47,7 +49,7 @@ export async function verify2FAWithPasskeyAction(
   const { session, user } = await getCurrentPasswordResetSession();
   if (session === null || user === null) {
     return {
-      error: "Not authenticated",
+      error: "Not authenticated1",
     };
   }
   if (
@@ -99,7 +101,7 @@ export async function verify2FAWithPasskeyAction(
     };
   }
   // TODO: Update host
-  if (!authenticatorData.verifyRelyingPartyIdHash("localhost")) {
+  if (!authenticatorData.verifyRelyingPartyIdHash(getBaseDomain())) {
     return {
       error: "Invalid data",
     };
@@ -130,7 +132,7 @@ export async function verify2FAWithPasskeyAction(
     };
   }
   // TODO: Update origin
-  if (clientData.origin !== "http://localhost:3000") {
+  if (clientData.origin !== getBaseUrl()) {
     return {
       error: "Invalid data",
     };
@@ -179,7 +181,7 @@ export async function verify2FAWithPasskeyAction(
     };
   }
 
-  setPasswordResetSessionAs2FAVerified(session.id);
+  await setPasswordResetSessionAs2FAVerified(session.id);
   return {
     error: null,
   };

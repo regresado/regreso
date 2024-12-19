@@ -5,7 +5,7 @@ import { encodeBase64 } from "@oslojs/encoding";
 
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { Verify2FAWithPasskeyButton } from "~/components/verify-2fa-passkey";
+import { Verify2FAWithPasskeyButton } from "~/components/reset-with-2fa-passkey";
 
 import { getUserPasskeyCredentials } from "~/server/webauthn";
 import { getCurrentPasswordResetSession } from "~/server/password-reset";
@@ -42,7 +42,6 @@ export default async function Page() {
       </CardHeader>
       <CardContent>
         <Verify2FAWithPasskeyButton
-          redirectUrl="/reset-password"
           encodedCredentialIds={credentials.map((credential) =>
             encodeBase64(credential.id),
           )}

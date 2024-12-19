@@ -9,7 +9,6 @@ import {
   updateEmailAction,
   updatePasswordAction,
 } from "~/app/(platform)/dashboard/settings/account/actions";
-import { useFormState } from "react-dom";
 
 const initialUpdatePasswordState = {
   message: "",

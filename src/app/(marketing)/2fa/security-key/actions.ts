@@ -12,10 +12,6 @@ import {
   parseClientDataJSON,
 } from "@oslojs/webauthn";
 import {
-  getUserSecurityKeyCredential,
-  verifyWebAuthnChallenge,
-} from "~/server/webauthn";
-import {
   decodePKIXECDSASignature,
   decodeSEC1PublicKey,
   p256,
@@ -27,9 +23,16 @@ import {
   sha256ObjectIdentifier,
   verifyRSASSAPKCS1v15Signature,
 } from "@oslojs/crypto/rsa";
-import { globalPOSTRateLimit } from "~/server/request";
-
 import type { AuthenticatorData, ClientData } from "@oslojs/webauthn";
+
+import { getBaseUrl, getBaseDomain } from "~/lib/utils";
+
+import {
+  getUserSecurityKeyCredential,
+  verifyWebAuthnChallenge,
+} from "~/server/webauthn";
+
+import { globalPOSTRateLimit } from "~/server/request";
 
 export async function verify2FAWithSecurityKeyAction(
   data: unknown,
@@ -95,7 +98,7 @@ export async function verify2FAWithSecurityKeyAction(
     };
   }
   // TODO: Update host
-  if (!authenticatorData.verifyRelyingPartyIdHash("localhost")) {
+  if (!authenticatorData.verifyRelyingPartyIdHash(getBaseDomain())) {
     return {
       error: "Invalid data",
     };
@@ -126,7 +129,7 @@ export async function verify2FAWithSecurityKeyAction(
     };
   }
   // TODO: Update origin
-  if (clientData.origin !== "http://localhost:3000") {
+  if (clientData.origin !== getBaseUrl()) {
     return {
       error: "Invalid data",
     };

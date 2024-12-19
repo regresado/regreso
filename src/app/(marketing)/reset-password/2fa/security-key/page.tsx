@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 
-import { Verify2FAWithSecurityKeyButton } from "~/components/verify-security-key";
+import { Verify2FAWithSecurityKeyButton } from "~/components/reset-with-security-key";
 
 import { getUserSecurityKeyCredentials } from "~/server/webauthn";
 import { getCurrentPasswordResetSession } from "~/server/password-reset";
@@ -44,7 +44,6 @@ export default async function Page() {
       </CardHeader>
       <CardContent>
         <Verify2FAWithSecurityKeyButton
-          redirectUrl="/reset-password"
           encodedCredentialIds={credentials.map((credential) =>
             encodeBase64(credential.id),
           )}

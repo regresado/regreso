@@ -8,7 +8,6 @@ import { useRouter } from "next/navigation";
 
 export function Verify2FAWithSecurityKeyButton(props: {
   encodedCredentialIds: string[];
-  redirectUrl?: string;
 }) {
   const router = useRouter();
   const [message, setMessage] = useState("");
@@ -55,11 +54,7 @@ export function Verify2FAWithSecurityKeyButton(props: {
           if (result.error !== null) {
             setMessage(result.error);
           } else {
-            if (props.redirectUrl == "/reset-password") {
-              router.push("/reset-password");
-            } else {
-              router.push("/dashboard");
-            }
+            router.push("/dashboard");
           }
         }}
       >

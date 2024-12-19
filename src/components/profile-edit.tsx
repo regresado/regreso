@@ -6,33 +6,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { Loader2 } from "lucide-react";
-
 import type { User } from "~/server/models";
 
-import { useUploadFile } from "~/hooks/use-upload-file";
-
 import { Button } from "~/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-import {
-  Form,
-  FormField,
-  FormLabel,
-  FormMessage,
-  FormControl,
-  FormItem,
-} from "~/components/ui/form";
+import { Form, FormLabel, FormControl, FormItem } from "~/components/ui/form";
 import { UploadButton } from "~/lib/client/uploadthing";
 
 import { toast } from "~/components/hooks/use-toast";
@@ -58,8 +41,6 @@ const initialState = {
 };
 
 export default function ProfileEdit(props: { user: User }) {
-  const [username, setusername] = useState(props.user.name);
-
   const [displayName, setDisplayName] = useState(props.user.displayName);
   const [bio, setBio] = useState(
     "I'm a software developer who loves creating user-friendly interfaces.",
@@ -68,7 +49,7 @@ export default function ProfileEdit(props: { user: User }) {
     "/placeholder.svg?height=100&width=100",
   );
 
-  const [state, action] = useActionState(updateProfileAction, initialState);
+  const [, action] = useActionState(updateProfileAction, initialState);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
