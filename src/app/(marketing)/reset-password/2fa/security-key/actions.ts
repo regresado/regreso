@@ -33,7 +33,7 @@ import {
 
 import type { AuthenticatorData, ClientData } from "@oslojs/webauthn";
 
-import { getBaseUrl, getBaseDomain } from "~/lib/utils";
+import { getBaseOrigin, getBaseHost } from "~/lib/utils";
 
 import { globalPOSTRateLimit } from "~/server/request";
 
@@ -100,8 +100,8 @@ export async function verify2FAWithSecurityKeyAction(
       error: "Invalid data",
     };
   }
-  // TODO: Update host
-  if (!authenticatorData.verifyRelyingPartyIdHash(getBaseDomain())) {
+
+  if (!authenticatorData.verifyRelyingPartyIdHash(getBaseHost())) {
     return {
       error: "Invalid data",
     };
@@ -131,8 +131,8 @@ export async function verify2FAWithSecurityKeyAction(
       error: "Invalid data",
     };
   }
-  // TODO: Update origin
-  if (clientData.origin !== getBaseUrl()) {
+
+  if (clientData.origin !== getBaseOrigin()) {
     return {
       error: "Invalid data",
     };

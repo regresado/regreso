@@ -22,7 +22,7 @@ import type {
 import { ECDSAPublicKey, p256 } from "@oslojs/crypto/ecdsa";
 import { RSAPublicKey } from "@oslojs/crypto/rsa";
 
-import { getBaseUrl, getBaseDomain } from "~/lib/utils";
+import { getBaseOrigin, getBaseHost } from "~/lib/utils";
 
 import {
   createSecurityKeyCredential,
@@ -100,8 +100,8 @@ export async function registerSecurityKeyAction(
       message: "Invalid data",
     };
   }
-  // TODO: Update host
-  if (!authenticatorData.verifyRelyingPartyIdHash(getBaseDomain())) {
+
+  if (!authenticatorData.verifyRelyingPartyIdHash(getBaseHost())) {
     return {
       message: "Invalid data",
     };
@@ -136,8 +136,8 @@ export async function registerSecurityKeyAction(
       message: "Invalid data",
     };
   }
-  // TODO: Update origin
-  if (clientData.origin !== getBaseUrl()) {
+
+  if (clientData.origin !== getBaseOrigin()) {
     return {
       message: "Invalid data",
     };

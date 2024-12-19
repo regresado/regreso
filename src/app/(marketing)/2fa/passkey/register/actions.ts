@@ -22,7 +22,7 @@ import type {
   COSERSAPublicKey,
 } from "@oslojs/webauthn";
 
-import { getBaseUrl, getBaseDomain } from "~/lib/utils";
+import { getBaseOrigin, getBaseHost } from "~/lib/utils";
 
 import { getCurrentSession, setSessionAs2FAVerified } from "~/server/session";
 
@@ -102,8 +102,8 @@ export async function registerPasskeyAction(
       message: "Invalid data: Unsupported attestation format",
     };
   }
-  // TODO: Update host
-  if (!authenticatorData.verifyRelyingPartyIdHash(getBaseDomain())) {
+
+  if (!authenticatorData.verifyRelyingPartyIdHash(getBaseHost())) {
     return {
       message: "Invalid data",
     };
@@ -138,8 +138,8 @@ export async function registerPasskeyAction(
       message: "Invalid data",
     };
   }
-  // TODO: Update origin
-  if (clientData.origin !== getBaseUrl()) {
+
+  if (clientData.origin !== getBaseOrigin()) {
     return {
       message: "Invalid data",
     };

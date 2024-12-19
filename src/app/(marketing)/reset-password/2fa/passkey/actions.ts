@@ -25,7 +25,7 @@ import {
   verifyRSASSAPKCS1v15Signature,
 } from "@oslojs/crypto/rsa";
 
-import { getBaseUrl, getBaseDomain } from "~/lib/utils";
+import { getBaseOrigin, getBaseHost } from "~/lib/utils";
 
 import {
   getCurrentPasswordResetSession,
@@ -100,8 +100,8 @@ export async function verify2FAWithPasskeyAction(
       error: "Invalid data",
     };
   }
-  // TODO: Update host
-  if (!authenticatorData.verifyRelyingPartyIdHash(getBaseDomain())) {
+
+  if (!authenticatorData.verifyRelyingPartyIdHash(getBaseHost())) {
     return {
       error: "Invalid data",
     };
@@ -131,8 +131,8 @@ export async function verify2FAWithPasskeyAction(
       error: "Invalid data",
     };
   }
-  // TODO: Update origin
-  if (clientData.origin !== getBaseUrl()) {
+
+  if (clientData.origin !== getBaseOrigin()) {
     return {
       error: "Invalid data",
     };

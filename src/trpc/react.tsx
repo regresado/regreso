@@ -8,7 +8,7 @@ import { createTRPCReact } from "@trpc/react-query";
 import { type inferRouterInputs, type inferRouterOutputs } from "@trpc/server";
 import SuperJSON from "superjson";
 
-import { getBaseUrl } from "~/lib/utils";
+import { getBaseOrigin } from "~/lib/utils";
 
 import { type AppRouter } from "~/server/api/root";
 import { createQueryClient } from "~/trpc/query-client";
@@ -52,7 +52,7 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
         }),
         unstable_httpBatchStreamLink({
           transformer: SuperJSON,
-          url: getBaseUrl() + "/api/trpc",
+          url: getBaseOrigin() + "/api/trpc",
           headers: () => {
             const headers = new Headers();
             headers.set("x-trpc-source", "nextjs-react");

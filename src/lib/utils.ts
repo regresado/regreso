@@ -25,13 +25,13 @@ export function formatBytes(
   }`;
 }
 
-export function getBaseUrl(): string {
+export function getBaseOrigin(): string {
   if (typeof window !== "undefined") return window.location.origin;
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
   return `http://localhost:${process.env.PORT ?? 3000}`;
 }
 
-export function getBaseDomain(): string {
+export function getBaseHost(): string {
   if (typeof window !== "undefined") return window.location.origin;
   if (process.env.VERCEL_URL)
     return `${process.env.VERCEL_URL.replace("https://", "").replace("http://", "").split(":")[0]}`;
