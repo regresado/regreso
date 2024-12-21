@@ -47,7 +47,7 @@ export async function verify2FAWithPasskeyAction(
   const { session, user } = await getCurrentSession();
   if (session === null || user === null) {
     return {
-      error: "Not authenticated1",
+      error: "Not authenticated",
     };
   }
   if (
@@ -102,6 +102,7 @@ export async function verify2FAWithPasskeyAction(
       error: "Invalid data",
     };
   }
+  console.error(getBaseHost());
   if (!authenticatorData.verifyRelyingPartyIdHash(getBaseHost())) {
     return {
       error: "Invalid data",
