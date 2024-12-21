@@ -72,6 +72,7 @@ export async function createUser(
     registeredPasskey: false,
     registeredSecurityKey: false,
     emailVerified: false,
+    avatarUrl: null,
     registered2FA: false,
   };
 
@@ -107,6 +108,7 @@ export async function getUserFromGoogleId(
     registeredTOTP: userProfile.totpCredentials.length > 0,
     registeredPasskey: userProfile.passkeyCredentials.length > 0,
     registeredSecurityKey: userProfile.securityKeyCredentials.length > 0,
+    avatarUrl: userProfile.avatarUrl,
     registered2FA: false,
   };
   if (
@@ -148,6 +150,7 @@ export async function getUserFromGitHubId(
     registeredTOTP: userProfile.totpCredentials.length > 0,
     registeredPasskey: userProfile.passkeyCredentials.length > 0,
     registeredSecurityKey: userProfile.securityKeyCredentials.length > 0,
+    avatarUrl: userProfile.avatarUrl,
     registered2FA: false,
   };
   if (
@@ -267,6 +270,7 @@ export async function getUserFromEmail(email: string): Promise<User | null> {
     registeredTOTP: userResult.totpCredentials.length > 0,
     registeredPasskey: userResult.passkeyCredentials.length > 0,
     registeredSecurityKey: userResult.securityKeyCredentials.length > 0,
+    avatarUrl: userResult.avatarUrl,
     registered2FA: false,
   };
   if (

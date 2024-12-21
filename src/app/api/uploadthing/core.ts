@@ -38,9 +38,9 @@ export const ourFileRouter = {
     })
     .onUploadComplete(async ({ metadata, file }) => {
       // This code RUNS ON YOUR SERVER after upload
-      console.log("Upload complete for userId:", metadata.userId);
+      // console.log("Upload complete for userId:", metadata.userId);
 
-      console.log("file url", file.url);
+      // console.log("file url", file.url);
       const { userId } = metadata;
       const user = await db.query.users.findFirst({
         where: eq(users.id, userId),

@@ -28,6 +28,7 @@ export async function validateSessionToken(
       totpCredentials,
       passkeyCredentials,
       securityKeyCredentials,
+      avatarUrl: users.avatarUrl,
     })
     .from(sessions)
     .innerJoin(users, eq(sessions.userId, users.id))
@@ -56,6 +57,7 @@ export async function validateSessionToken(
     registeredPasskey: !!result[0]!.passkeyCredentials,
     registeredSecurityKey: !!result[0]!.securityKeyCredentials,
     registeredTOTP: !!result[0]!.totpCredentials,
+    avatarUrl: result[0]!.avatarUrl,
     registered2FA: !!(
       result[0]!.totpCredentials ??
       result[0]!.securityKeyCredentials ??

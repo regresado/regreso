@@ -20,6 +20,14 @@ import {
   getUserSecurityKeyCredentials,
 } from "~/server/webauthn";
 import { globalGETRateLimit } from "~/server/request";
+import {
+  Card,
+  CardContent,
+  CardTitle,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+} from "~/components/ui/card";
 
 export default async function Page() {
   if (!(await globalGETRateLimit())) {
@@ -40,68 +48,99 @@ export default async function Page() {
   const passkeyCredentials = await getUserPasskeyCredentials(user.id);
   const securityKeyCredentials = await getUserSecurityKeyCredentials(user.id);
   return (
-    <>
-      <section>
-        <h2>Update email</h2>
-        <p>Your email: {user.email}</p>
-        <UpdateEmailForm />
-      </section>
-      <section>
-        <h2>Update password</h2>
-        <UpdatePasswordForm />
-      </section>
-      <section>
-        <h2>Authenticator app</h2>
-        {user.registeredTOTP ? (
-          <>
-            <Link href="/2fa/totp/setup">Update TOTP</Link>
-            <DisconnectTOTPButton />
-          </>
-        ) : (
-          <Link href="/2fa/totp/setup">Set up TOTP</Link>
-        )}
-      </section>
-      <section>
-        <h2>Passkeys</h2>
-        <p>
-          Passkeys are WebAuthn credentials that validate your identity using
-          your device.
-        </p>
-        <ul>
-          {passkeyCredentials.map((credential) => {
-            return (
-              <PasskeyCredentialListItem
-                encodedId={encodeBase64(credential.id)}
-                name={credential.name}
-                key={encodeBase64(credential.id)}
-              />
-            );
-          })}
-        </ul>
-        <Link href="/2fa/passkey/register">Add</Link>
-      </section>
-      <section>
-        <h2>Security keys</h2>
-        <p>
-          Security keys are WebAuthn credentials that can only be used for
-          two-factor authentication.
-        </p>
-        <ul>
-          {securityKeyCredentials.map((credential) => {
-            return (
-              <SecurityKeyCredentialListItem
-                encodedId={encodeBase64(credential.id)}
-                name={credential.name}
-                key={encodeBase64(credential.id)}
-              />
-            );
-          })}
-        </ul>
-        <Link href="/2fa/security-key/register">Add</Link>
-      </section>
+    <div className="space-y-4 overflow-y-scroll px-3">
+      <Card>
+        <CardHeader>
+          <CardTitle>Update email</CardTitle>
+          <CardDescription>Your email: {user.email}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <UpdateEmailForm />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Update password</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <UpdatePasswordForm />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Authenticator app</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {user.registeredTOTP ? (
+            <>
+              <Link href="/2fa/totp/setup">Update TOTP</Link>
+              <DisconnectTOTPButton />
+            </>
+          ) : (
+            <Link href="/2fa/totp/setup">Set up TOTP</Link>
+          )}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Passkeys</CardTitle>
+          <CardDescription>
+            Passkeys are WebAuthn credentials that validate your identity using
+            your device.
+          </CardDescription>
+        </CardHeader>
+
+        <CardContent>
+          <ul>
+            {passkeyCredentials.map((credential) => {
+              return (
+                <PasskeyCredentialListItem
+                  encodedId={encodeBase64(credential.id)}
+                  name={credential.name}
+                  key={encodeBase64(credential.id)}
+                />
+              );
+            })}
+          </ul>
+        </CardContent>
+        <CardFooter>
+          <Link href="/2fa/passkey/register">Add</Link>
+        </CardFooter>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Security keys</CardTitle>{" "}
+          <CardDescription>
+            Security keys are WebAuthn credentials that can only be used for
+            two-factor authentication.
+          </CardDescription>
+        </CardHeader>
+
+        <CardContent>
+          <ul>
+            {securityKeyCredentials.map((credential) => {
+              return (
+                <SecurityKeyCredentialListItem
+                  encodedId={encodeBase64(credential.id)}
+                  name={credential.name}
+                  key={encodeBase64(credential.id)}
+                />
+              );
+            })}
+          </ul>
+        </CardContent>
+        <CardFooter>
+          <Link href="/2fa/security-key/register">Add</Link>
+        </CardFooter>
+      </Card>
+
       {recoveryCode !== null && (
         <RecoveryCodeSection recoveryCode={recoveryCode} />
       )}
-    </>
+    </div>
   );
 }

@@ -1,10 +1,12 @@
 "use client";
 
-import { useState, useActionState } from "react";
+import { useState, useActionState, useEffect } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+
+import BoringAvatar from "boring-avatars";
 
 import type { User } from "~/server/models";
 
@@ -12,15 +14,24 @@ import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 
 import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-import { Form, FormLabel, FormControl, FormItem } from "~/components/ui/form";
+import {
+  Form,
+  FormLabel,
+  FormControl,
+  FormItem,
+  FormMessage,
+  FormField,
+} from "~/components/ui/form";
 import { UploadButton } from "~/lib/client/uploadthing";
 
 import { toast } from "~/components/hooks/use-toast";
 
-import { updateProfileAction } from "~/app/(platform)/dashboard/settings/profile/actions";
+import {
+  updateProfileAction,
+  clearProfilePictureAction,
+} from "~/app/(platform)/dashboard/settings/profile/actions";
 
 const FormSchema = z.object({
   displayName: z
@@ -40,16 +51,18 @@ const initialState = {
   message: "",
 };
 
+const pfpClearInitialState = {
+  message: "",
+};
+
 export default function ProfileEdit(props: { user: User }) {
-  const [displayName, setDisplayName] = useState(props.user.displayName);
-  const [bio, setBio] = useState(
-    "I'm a software developer who loves creating user-friendly interfaces.",
-  );
-  const [avatarUrl, setAvatarUrl] = useState(
-    "/placeholder.svg?height=100&width=100",
-  );
+  const [avatarUrl, setAvatarUrl] = useState(props.user.avatarUrl ?? "");
 
   const [, action] = useActionState(updateProfileAction, initialState);
+  const [pfpClearState, deletePfpAction] = useActionState(
+    clearProfilePictureAction,
+    pfpClearInitialState,
+  );
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -63,67 +76,106 @@ export default function ProfileEdit(props: { user: User }) {
     formState: { isValid },
   } = form;
 
+  useEffect(() => {
+    if (pfpClearState.message === "ok") {
+      setAvatarUrl("");
+    } else {
+      toast({
+        description: pfpClearState.message,
+      });
+    }
+  }, [pfpClearState]);
+
   return (
     <>
       <Form {...form}>
-        <form
-          action={action}
-          onSubmit={async (e) => {
-            if (!isValid) {
-              e.preventDefault();
-              await trigger();
-              return;
-            }
-            e.currentTarget?.requestSubmit();
-          }}
-          className="flex w-full flex-col gap-6"
-        >
+        <div className="space-y-2 px-3">
           <FormItem className="w-full">
             <FormLabel>Profile Picture</FormLabel>
-            <FormControl>
-              <UploadButton
-                className="rounded px-4 py-2 font-bold text-white"
-                endpoint="profilePicture"
-                onClientUploadComplete={(res) => {
-                  console.log("Files", res);
-                  alert("Files uploaded");
-                  toast({
-                    title: "Upload complete.",
-                    description: "Your file was successfully uploaded!",
-                  });
-                  if (res[0]) {
-                    setAvatarUrl(res[0].url);
-                  }
-                }}
-                onUploadError={(error: Error) => {
-                  alert(`ERROR! ${error.message}`);
-                }}
-              />
-            </FormControl>
+            <div className="flex items-center space-x-4">
+              <Avatar>
+                <AvatarImage src={avatarUrl} alt={`@${props.user.name}`} />
+                <AvatarFallback>
+                  <BoringAvatar
+                    name={props.user?.name ?? "anonymous"}
+                    variant="beam"
+                  />
+                </AvatarFallback>
+              </Avatar>
+              <FormControl>
+                <UploadButton
+                  className="rounded px-4 py-2 font-bold text-white"
+                  endpoint="profilePicture"
+                  onClientUploadComplete={(res) => {
+                    console.log("Files", res);
+                    alert("Files uploaded");
+                    toast({
+                      title: "Upload complete.",
+                      description: "Your file was successfully uploaded!",
+                    });
+                    if (res[0]) {
+                      setAvatarUrl(res[0].url);
+                    }
+                  }}
+                  onUploadError={(error: Error) => {
+                    alert(`ERROR! ${error.message}`);
+                  }}
+                />
+              </FormControl>
+            </div>
+            <form action={deletePfpAction}>
+              <Button variant="ghost" type="submit">
+                Clear Picture
+              </Button>
+            </form>
           </FormItem>
-          <Button type="submit">Submit</Button>
-        </form>
+          <form
+            action={action}
+            onSubmit={async (e) => {
+              if (!isValid) {
+                e.preventDefault();
+                await trigger();
+                return;
+              }
+              e.currentTarget?.requestSubmit();
+            }}
+            className="flex w-full flex-col gap-3"
+          >
+            <FormField
+              control={form.control}
+              name="displayName"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Display Name</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder="Pelican Steve" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="bio"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Biography</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      rows={3}
+                      {...field}
+                      placeholder="Pelicans are epic"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit">Save Profile</Button>
+          </form>
+        </div>
       </Form>
 
-      <div className="space-y-2">
-        <Label htmlFor="displayName">Display Name</Label>
-        <Input
-          id="displayName"
-          value={displayName}
-          onChange={(e) => setDisplayName(e.target.value)}
-        />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="bio">Bio</Label>
-        <Textarea
-          id="bio"
-          value={bio}
-          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-            setBio(e.target.value)
-          }
-          rows={3}
-        />
-      </div>
       <Card>
         <CardHeader>
           <CardTitle>Profile Preview</CardTitle>
@@ -133,16 +185,21 @@ export default function ProfileEdit(props: { user: User }) {
             <Avatar>
               <AvatarImage src={avatarUrl} />
               <AvatarFallback>
-                {displayName
-                  .split(" ")
+                {form
+                  .getValues()
+                  .displayName.split(" ")
                   .map((n) => n[0])
                   .join("")
                   .toUpperCase()}
               </AvatarFallback>
             </Avatar>
             <div className="space-y-1">
-              <h4 className="text-sm font-semibold">{displayName}</h4>
-              <p className="text-sm text-muted-foreground">{bio}</p>
+              <h4 className="text-sm font-semibold">
+                {form.getValues().displayName}
+              </h4>
+              <p className="text-sm text-muted-foreground">
+                {form.getValues().bio}
+              </p>
             </div>
           </div>
         </CardContent>

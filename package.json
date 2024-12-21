@@ -91,5 +91,5 @@
   "ct3aMetadata": {
     "initVersion": "7.38.1"
   },
-  "packageManager": "npm@10.8.3"
+  "packageManager": "npm@11.0.0"
 }

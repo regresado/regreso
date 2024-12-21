@@ -6,8 +6,10 @@ import tailwindCssAnimate from "tailwindcss-animate";
 // @ts-expect-error there is no type definition for this package
 import flattenColorPalette from "tailwindcss/lib/util/flattenColorPalette";
 
+import { withUt } from "uploadthing/tw";
+
 /** @type {import('tailwindcss').Config} */
-export default {
+export default withUt({
   darkMode: ["class"],
   content: ["./src/**/*.tsx"],
   theme: {
@@ -83,7 +85,7 @@ export default {
     },
   },
   plugins: [tailwindCssAnimate, addVariablesForColors],
-} satisfies Config;
+}) satisfies Config;
 
 // This plugin adds each Tailwind color as a global CSS variable, e.g. var(--gray-200).
 // @ts-expect-error there is no type definition for this package

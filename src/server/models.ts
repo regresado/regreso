@@ -5,6 +5,7 @@ export interface User {
   displayName: string;
   googleId?: string | null;
   githubId?: number | null;
+  avatarUrl: string | null;
   emailVerified: boolean;
   registered2FA: boolean;
   registeredPasskey: boolean;

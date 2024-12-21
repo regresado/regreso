@@ -2,6 +2,8 @@
 
 import { headers } from "next/headers";
 
+import { UTApi } from "uploadthing/server";
+
 import { RefillingTokenBucket, ExpiringTokenBucket } from "~/server/rate-limit";
 import { getCurrentSession } from "~/server/session";
 
@@ -62,4 +64,40 @@ export async function updateProfileAction(
 
 interface ActionResult {
   message: string;
+}
+export async function clearProfilePictureAction(): Promise<ActionResult> {
+  if (!(await globalPOSTRateLimit())) {
+    return {
+      message: "Too many requests",
+    };
+  }
+
+  const { session, user } = await getCurrentSession();
+
+  if (session === null) {
+    return {
+      message: "Not authenticated",
+    };
+  }
+
+  if (user.registered2FA && !session.twoFactorVerified) {
+    return {
+      message: "Forbidden",
+    };
+  }
+  const url = user.avatarUrl;
+
+  if (url === null) {
+    return {
+      message: "No profile picture to delete",
+    };
+  }
+
+  const newUrl = url.substring(url.lastIndexOf("/") + 1);
+  const utapi = new UTApi();
+  await utapi.deleteFiles(newUrl);
+
+  return {
+    message: "ok",
+  };
 }
