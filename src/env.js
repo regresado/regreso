@@ -16,7 +16,7 @@ export const env = createEnv({
     EMAIL_USER: z.string(),
     EMAIL_PASSWORD: z.string(),
     UPLOADTHING_TOKEN: z.string(),
-    VERCEL_URL: z.string().url().default("http://localhost:3000"),
+    VERCEL_URL: z.string().default("localhost:3000"),
 
     NODE_ENV: z
       .enum(["development", "test", "production"])
