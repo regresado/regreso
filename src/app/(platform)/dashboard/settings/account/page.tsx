@@ -20,6 +20,8 @@ import {
   getUserSecurityKeyCredentials,
 } from "~/server/webauthn";
 import { globalGETRateLimit } from "~/server/request";
+
+import { Button } from "~/components/ui/button";
 import {
   Card,
   CardContent,
@@ -79,7 +81,9 @@ export default async function Page() {
               <DisconnectTOTPButton />
             </>
           ) : (
-            <Link href="/2fa/totp/setup">Set up TOTP</Link>
+            <Button asChild variant="link">
+              <Link href="/2fa/totp/setup">Set up TOTP</Link>
+            </Button>
           )}
         </CardContent>
       </Card>
@@ -107,7 +111,9 @@ export default async function Page() {
           </ul>
         </CardContent>
         <CardFooter>
-          <Link href="/2fa/passkey/register">Add</Link>
+          <Button asChild>
+            <Link href="/2fa/passkey/register">Add</Link>
+          </Button>
         </CardFooter>
       </Card>
 
@@ -134,7 +140,9 @@ export default async function Page() {
           </ul>
         </CardContent>
         <CardFooter>
-          <Link href="/2fa/security-key/register">Add</Link>
+          <Button asChild>
+            <Link href="/2fa/security-key/register">Add</Link>
+          </Button>
         </CardFooter>
       </Card>
 

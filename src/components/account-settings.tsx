@@ -232,10 +232,11 @@ export function PasskeyCredentialListItem(props: {
     initialPasskeyState,
   );
   return (
-    <li>
+    <li className="flex justify-between align-middle">
       <p>{props.name}</p>
       <form action={formAction}>
         <input type="hidden" name="credential_id" value={props.encodedId} />
+
         <Button variant="destructive" type="submit">
           Delete
         </Button>
@@ -266,14 +267,14 @@ export function SecurityKeyCredentialListItem(props: {
     initialSecurityKeyState,
   );
   return (
-    <li>
+    <li className="flex justify-between align-middle">
       <p>{props.name}</p>
       <form action={formAction}>
         {/** TODO: Make this a React Hook Form */}
         <input type="hidden" name="credential_id" value={props.encodedId} />
         <Button variant="destructive" type="submit">
           Delete
-        </Button>{" "}
+        </Button>
         {state.message.length > 0 ? (
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
