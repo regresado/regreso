@@ -4,7 +4,13 @@ import { headers } from "next/headers";
 
 import { UTApi } from "uploadthing/server";
 
+import { eq } from "drizzle-orm";
+
 import { RefillingTokenBucket, ExpiringTokenBucket } from "~/server/rate-limit";
+
+import { db } from "~/server/db";
+import { users } from "~/server/db/schema";
+
 import { getCurrentSession } from "~/server/session";
 
 import { globalPOSTRateLimit } from "~/server/request";
@@ -96,6 +102,14 @@ export async function clearProfilePictureAction(): Promise<ActionResult> {
   const newUrl = url.substring(url.lastIndexOf("/") + 1);
   const utapi = new UTApi();
   await utapi.deleteFiles(newUrl);
+
+  await db
+    .update(users)
+    .set({
+      avatarUrl: null,
+    })
+    .where(eq(users.id, user.id))
+    .returning({ avatarUrl: users.avatarUrl });
 
   return {
     message: "ok",
