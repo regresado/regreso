@@ -226,18 +226,22 @@ export function LandingNavigation() {
 
             <NavigationMenu className="hidden items-baseline md:ml-2 md:flex lg:ml-10 lg:flex">
               <NavigationMenuList>
-                <NavigationMenuLink asChild>
-                  <Link
-                    href="/dashboard"
-                    target="_blank"
-                    className="group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
-                    prefetch={false}
-                  >
-                    <span className="mr-2 inline align-middle">Dashboard </span>
+                <NavigationMenuItem>
+                  <NavigationMenuLink asChild>
+                    <Link
+                      href="/dashboard"
+                      target="_blank"
+                      className="group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
+                      prefetch={false}
+                    >
+                      <span className="mr-2 inline align-middle">
+                        Dashboard{" "}
+                      </span>
 
-                    <ExternalLink size="16" className="inline align-middle" />
-                  </Link>
-                </NavigationMenuLink>
+                      <ExternalLink size="16" className="inline align-middle" />
+                    </Link>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
                 <NavigationMenuItem>
                   <NavigationMenuTrigger>About</NavigationMenuTrigger>
                   <NavigationMenuContent>
@@ -364,15 +368,17 @@ export function LandingNavigation() {
                     </div>
                   </NavigationMenuContent>
                 </NavigationMenuItem>
-                <NavigationMenuLink asChild>
-                  <Link
-                    href="#"
-                    className="group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
-                    prefetch={false}
-                  >
-                    Blog
-                  </Link>
-                </NavigationMenuLink>
+                <NavigationMenuItem>
+                  <NavigationMenuLink asChild>
+                    <Link
+                      href="#"
+                      className="group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
+                      prefetch={false}
+                    >
+                      Blog
+                    </Link>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
               </NavigationMenuList>
             </NavigationMenu>
           </div>
@@ -390,7 +396,10 @@ export function LandingNavigation() {
                 <Link href="/log-in">Log in</Link>
               </Button>
 
-              <Button className="bg-cyan-500 text-white hover:bg-cyan-600">
+              <Button
+                className="bg-cyan-700 text-white hover:bg-cyan-800"
+                asChild
+              >
                 <Link href="/sign-up">Sign up</Link>
               </Button>
             </div>

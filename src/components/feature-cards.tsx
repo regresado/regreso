@@ -62,10 +62,10 @@ const FeatureCard = ({ feature }: { feature: Feature }) => {
         <div className="mb-4 inline-block rounded-full bg-cyan-100 p-3 dark:bg-cyan-900">
           {feature.icon}
         </div>
-        <h3 className="mb-2 text-xl font-bold text-gray-900 dark:text-white">
+        <h3 className="mb-2 text-xl font-bold text-black dark:text-white">
           {feature.title}
         </h3>
-        <p className="text-gray-600 dark:text-gray-300">
+        <p className="text-gray-900 dark:text-gray-200">
           {feature.description}
         </p>
       </div>
