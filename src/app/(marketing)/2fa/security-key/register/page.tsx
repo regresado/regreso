@@ -38,7 +38,7 @@ export default async function Page() {
       <CardHeader>
         <CardTitle className="text-2xl">Register security key</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-4">
         <RegisterSecurityKey
           encodedCredentialIds={credentials.map((credential) =>
             encodeBase64(credential.id),

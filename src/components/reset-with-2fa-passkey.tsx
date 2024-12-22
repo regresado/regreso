@@ -23,46 +23,54 @@ export function Verify2FAWithPasskeyButton(props: {
     <div>
       <Button
         onClick={async () => {
-          const challenge = await createChallenge();
+          try {
+            const challenge = await createChallenge();
 
-          const credential = await navigator.credentials.get({
-            publicKey: {
-              challenge,
-              userVerification: "discouraged",
-              allowCredentials: props.encodedCredentialIds.map((encoded) => {
-                return {
-                  id: decodeBase64(encoded),
-                  type: "public-key",
-                };
-              }),
-            },
-          });
+            const credential = await navigator.credentials.get({
+              publicKey: {
+                challenge,
+                userVerification: "discouraged",
+                allowCredentials: props.encodedCredentialIds.map((encoded) => {
+                  return {
+                    id: decodeBase64(encoded),
+                    type: "public-key",
+                  };
+                }),
+              },
+            });
 
-          if (!(credential instanceof PublicKeyCredential)) {
-            throw new Error("Failed to create public key");
-          }
-          if (
-            !(credential.response instanceof AuthenticatorAssertionResponse)
-          ) {
-            throw new Error("Unexpected error");
-          }
+            if (!(credential instanceof PublicKeyCredential)) {
+              throw new Error("Failed to create public key");
+            }
+            if (
+              !(credential.response instanceof AuthenticatorAssertionResponse)
+            ) {
+              throw new Error("Unexpected error");
+            }
 
-          const result = await verify2FAWithPasskeyAction({
-            credential_id: encodeBase64(new Uint8Array(credential.rawId)),
-            signature: encodeBase64(
-              new Uint8Array(credential.response.signature),
-            ),
-            authenticator_data: encodeBase64(
-              new Uint8Array(credential.response.authenticatorData),
-            ),
-            client_data_json: encodeBase64(
-              new Uint8Array(credential.response.clientDataJSON),
-            ),
-          });
-          if (result.error !== null) {
-            setMessage(result.error);
-          } else {
-            router.push("/reset-password");
+            const result = await verify2FAWithPasskeyAction({
+              credential_id: encodeBase64(new Uint8Array(credential.rawId)),
+              signature: encodeBase64(
+                new Uint8Array(credential.response.signature),
+              ),
+              authenticator_data: encodeBase64(
+                new Uint8Array(credential.response.authenticatorData),
+              ),
+              client_data_json: encodeBase64(
+                new Uint8Array(credential.response.clientDataJSON),
+              ),
+            });
+            if (result.error !== null) {
+              setMessage(result.error);
+            } else {
+              router.push("/reset-password");
+            }
+          } catch (e) {
+            if (e instanceof Error) {
+              setMessage(e.message);
+            } else {
+              setMessage("An error occurred");
+            }
           }
         }}
       >
