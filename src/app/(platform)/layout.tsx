@@ -24,7 +24,6 @@ export default async function DashboardLayout({
 
   const cookieStore = await cookies();
 
-  // TODO: Audit this auth logic
   if (user) {
     if (session == null) {
       return redirect("/log-in");

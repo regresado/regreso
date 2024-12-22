@@ -68,7 +68,6 @@ export async function sendVerificationEmail(
   code: string,
 ): Promise<Error | null> {
   // TODO: Consider adding hyphen between parts of OTP
-  // TODO: Consider adding code to email subject line
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     secure: true,
@@ -79,6 +78,7 @@ export async function sendVerificationEmail(
     },
   });
 
+  // TODO: Consider adding code to email subject line
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,

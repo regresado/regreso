@@ -108,7 +108,7 @@ export default function ProfileEdit(props: { user: User }) {
                   className="rounded px-4 py-2 font-bold text-white"
                   endpoint="profilePicture"
                   onClientUploadComplete={(res) => {
-                    console.log("Files", res);
+                    // console.log("Files", res);
                     alert("Files uploaded");
                     toast({
                       title: "Upload complete.",

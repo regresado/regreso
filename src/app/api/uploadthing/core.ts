@@ -30,7 +30,6 @@ export const ourFileRouter = {
 
       const { session, user } = await getCurrentSession();
 
-      // TODO: Check if user is allowed to upload images
       if (!session) throw new UploadThingError("Unauthorized") as Error;
 
       // Whatever is returned here is accessible in onUploadComplete as `metadata`

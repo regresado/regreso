@@ -28,7 +28,7 @@ export async function forgotPasswordAction(
     };
   }
 
-  // TODO: Assumes X-Forwarded-For is always included.
+  // FIXME: Assumes X-Forwarded-For is always included.
   const clientIP = (await headers()).get("X-Forwarded-For");
   if (clientIP !== null && !passwordResetEmailIPBucket.check(clientIP, 1)) {
     return {

@@ -98,7 +98,6 @@ export async function GET(request: Request): Promise<Response> {
     });
   }
 
-  // TODO: Handle Avatar (picture)
   const user = await createUser(
     email,
     name,

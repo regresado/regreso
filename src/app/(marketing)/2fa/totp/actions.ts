@@ -4,7 +4,6 @@ import { redirect } from "next/navigation";
 
 import { verifyTOTP } from "@oslojs/otp";
 
-// TODO: Ensure verifyTOTP is correctly typed
 type VerifyTOTP = (
   key: Uint8Array,
   step: number,

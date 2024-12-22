@@ -99,7 +99,6 @@ export function NavUser({ user }: { user: User | null }) {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              {/* TODO: Replace with user's username or "anonymous" */}
               <ProfilePicture user={user} className="!h-8 !w-8" />
 
               <div className="grid flex-1 text-left text-sm leading-tight">

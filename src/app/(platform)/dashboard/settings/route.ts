@@ -9,7 +9,6 @@ export async function GET() {
   }
   const { session, user } = await getCurrentSession();
 
-  // TODO: Audit this auth logic
   if (user) {
     if (session == null) {
       return new Response(null, {
