@@ -1,10 +1,17 @@
 "use client";
 
-import { createChallenge } from "~/lib/client/webauthn";
-import { decodeBase64, encodeBase64 } from "@oslojs/encoding";
-import { verify2FAWithSecurityKeyAction } from "~/app/(marketing)/reset-password/2fa/security-key/actions";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+
+import { decodeBase64, encodeBase64 } from "@oslojs/encoding";
+
+import { AlertCircle } from "lucide-react";
+
+import { Button } from "~/components/ui/button";
+import { Alert, AlertTitle, AlertDescription } from "~/components/ui/alert";
+
+import { createChallenge } from "~/lib/client/webauthn";
+import { verify2FAWithSecurityKeyAction } from "~/app/(marketing)/reset-password/2fa/security-key/actions";
 
 export function Verify2FAWithSecurityKeyButton(props: {
   encodedCredentialIds: string[];
@@ -13,7 +20,7 @@ export function Verify2FAWithSecurityKeyButton(props: {
   const [message, setMessage] = useState("");
   return (
     <div>
-      <button
+      <Button
         onClick={async () => {
           try {
             const challenge = await createChallenge();
@@ -67,8 +74,14 @@ export function Verify2FAWithSecurityKeyButton(props: {
         }}
       >
         Authenticate
-      </button>
-      <p>{message}</p>
+      </Button>
+      {message.length > 0 ? (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>{message ?? "An error occurred"}</AlertDescription>
+        </Alert>
+      ) : null}
     </div>
   );
 }
