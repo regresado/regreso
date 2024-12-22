@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useActionState } from "react";
+import { useState, useEffect, useActionState } from "react";
 
 import { decodeBase64, encodeBase64 } from "@oslojs/encoding";
 
@@ -49,6 +49,7 @@ export function RegisterPasskeyForm(props: {
   const [encodedClientDataJSON, setEncodedClientDataJSON] = useState<
     string | null
   >(null);
+  const [message, setMessage] = useState("");
   const [formState, action] = useActionState(
     registerPasskeyAction,
     initialRegisterPasskeyState,
@@ -57,15 +58,13 @@ export function RegisterPasskeyForm(props: {
     resolver: zodResolver(FormSchema),
     defaultValues: {
       name: "",
-      client_data_json: "",
-      attestation_object: "",
-    },
-    values: {
-      attestation_object: encodedAttestationObject ?? "",
       client_data_json: encodedClientDataJSON ?? "",
-      name: "",
+      attestation_object: encodedAttestationObject ?? "",
     },
   });
+  useEffect(() => {
+    setMessage(formState.message);
+  }, [formState.message]);
   return (
     <>
       <Button
@@ -74,58 +73,70 @@ export function RegisterPasskeyForm(props: {
           encodedAttestationObject !== null && encodedClientDataJSON !== null
         }
         onClick={async () => {
-          const challenge = await createChallenge();
-          const credential = await navigator.credentials.create({
-            publicKey: {
-              challenge,
-              user: {
-                displayName: props.user.name,
-                id: decodeBase64(props.encodedCredentialUserId),
-                name: props.user.email,
-              },
-              rp: {
-                name: "Regreso",
-              },
-              pubKeyCredParams: [
-                {
-                  alg: -7,
-                  type: "public-key",
+          try {
+            const challenge = await createChallenge();
+            const credential = await navigator.credentials.create({
+              publicKey: {
+                challenge,
+                user: {
+                  displayName: props.user.name,
+                  id: decodeBase64(props.encodedCredentialUserId),
+                  name: props.user.email,
                 },
-                {
-                  alg: -257,
-                  type: "public-key",
+                rp: {
+                  name: "Regreso",
                 },
-              ],
-              attestation: "none",
-              authenticatorSelection: {
-                userVerification: "required",
-                residentKey: "required",
-                requireResidentKey: true,
+                pubKeyCredParams: [
+                  {
+                    alg: -7,
+                    type: "public-key",
+                  },
+                  {
+                    alg: -257,
+                    type: "public-key",
+                  },
+                ],
+                attestation: "none",
+                authenticatorSelection: {
+                  userVerification: "required",
+                  residentKey: "required",
+                  requireResidentKey: true,
+                },
+                excludeCredentials: props.encodedCredentialIds.map(
+                  (encoded) => {
+                    return {
+                      id: decodeBase64(encoded),
+                      type: "public-key",
+                    };
+                  },
+                ),
               },
-              excludeCredentials: props.encodedCredentialIds.map((encoded) => {
-                return {
-                  id: decodeBase64(encoded),
-                  type: "public-key",
-                };
-              }),
-            },
-          });
+            });
 
-          if (!(credential instanceof PublicKeyCredential)) {
-            throw new Error("Failed to create public key");
-          }
-          if (
-            !(credential.response instanceof AuthenticatorAttestationResponse)
-          ) {
-            throw new Error("Unexpected error");
-          }
+            if (!(credential instanceof PublicKeyCredential)) {
+              throw new Error("Failed to create public key");
+            }
+            if (
+              !(credential.response instanceof AuthenticatorAttestationResponse)
+            ) {
+              throw new Error("Unexpected error");
+            }
 
-          setEncodedAttestationObject(
-            encodeBase64(new Uint8Array(credential.response.attestationObject)),
-          );
-          setEncodedClientDataJSON(
-            encodeBase64(new Uint8Array(credential.response.clientDataJSON)),
-          );
+            setEncodedAttestationObject(
+              encodeBase64(
+                new Uint8Array(credential.response.attestationObject),
+              ),
+            );
+            setEncodedClientDataJSON(
+              encodeBase64(new Uint8Array(credential.response.clientDataJSON)),
+            );
+          } catch (e) {
+            if (e instanceof Error) {
+              setMessage(e.message);
+            } else {
+              setMessage("An unknown error occurred");
+            }
+          }
         }}
       >
         Create credential
@@ -181,12 +192,12 @@ export function RegisterPasskeyForm(props: {
           >
             Continue
           </Button>
-          {formState.message.length > 0 ? (
+          {message.length > 0 ? (
             <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
               <AlertTitle>Error</AlertTitle>
               <AlertDescription>
-                {formState.message ?? "An error occurred"}
+                {message ?? "An error occurred"}
               </AlertDescription>
             </Alert>
           ) : null}
