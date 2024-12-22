@@ -98,6 +98,7 @@ export default function ProfileEdit(props: { user: User }) {
                 <AvatarFallback>
                   <BoringAvatar
                     name={props.user?.name ?? "anonymous"}
+                    aria-label={`@${props.user?.name}'s profile picture`}
                     variant="beam"
                   />
                 </AvatarFallback>

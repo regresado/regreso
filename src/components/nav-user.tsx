@@ -73,7 +73,11 @@ function ProfilePicture({
     >
       <AvatarImage src={user?.avatarUrl ?? ""} alt={`@${user?.name}`} />
       <AvatarFallback>
-        <BoringAvatar name={user?.name ?? "anonymous"} variant="beam" />
+        <BoringAvatar
+          aria-label={`@${user?.name}'s profile picture`}
+          name={user?.name ?? "anonymous"}
+          variant="beam"
+        />
       </AvatarFallback>
     </Avatar>
   );
