@@ -65,7 +65,7 @@ const FeatureCard = ({ feature }: { feature: Feature }) => {
         <h3 className="mb-2 text-xl font-bold text-black dark:text-white">
           {feature.title}
         </h3>
-        <p className="text-gray-900 dark:text-gray-200">
+        <p className="text-gray-900 dark:text-gray-100">
           {feature.description}
         </p>
       </div>

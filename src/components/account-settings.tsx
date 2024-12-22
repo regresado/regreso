@@ -234,6 +234,7 @@ export function PasskeyCredentialListItem(props: {
   return (
     <li className="flex justify-between align-middle">
       <p>{props.name}</p>
+
       <form action={formAction}>
         <input type="hidden" name="credential_id" value={props.encodedId} />
 
