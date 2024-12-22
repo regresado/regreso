@@ -8,7 +8,6 @@ export default {
   out: "./supabase/migrations",
   dbCredentials: {
     url: env.DATABASE_URL,
-    database: "postgres",
   },
   tablesFilter: ["regreso_*"],
 } satisfies Config;
