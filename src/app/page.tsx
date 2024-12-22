@@ -226,7 +226,6 @@ export default function LandingPage() {
   return (
     <>
       <div className="lamding-page min-h-screen bg-white text-gray-900 dark:bg-slate-950 dark:text-white">
-        {" "}
         <LandingNavigation />
         <Hero />
         <MacbookScrollDemo />
