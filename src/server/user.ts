@@ -65,6 +65,7 @@ export async function createUser(
     id: row[0]!.id,
     email,
     displayName,
+    bio: "Pelicans are epic",
     name,
     googleId,
     githubId,
@@ -102,6 +103,7 @@ export async function getUserFromGoogleId(
     email: userProfile.email,
     name: userProfile.name,
     displayName: userProfile.displayName,
+    bio: userProfile.bio,
     emailVerified: userProfile.emailVerified,
     googleId: userProfile.googleId,
     githubId: userProfile.githubId,
@@ -144,6 +146,7 @@ export async function getUserFromGitHubId(
     email: userProfile.email,
     name: userProfile.name,
     displayName: userProfile.displayName,
+    bio: userProfile.bio,
     emailVerified: userProfile.emailVerified,
     googleId: userProfile.googleId,
     githubId: userProfile.githubId,
@@ -214,7 +217,7 @@ export async function setUserAsEmailVerifiedIfEmailMatches(
   return updatedVerification[0]?.emailVerified !== undefined;
 }
 
-export async function getUserRecoverCode(userId: number): Promise<string> {
+export async function getUserRecoveryCode(userId: number): Promise<string> {
   const result = await db.query.users.findFirst({
     where: eq(users.id, userId),
   });
@@ -264,6 +267,7 @@ export async function getUserFromEmail(email: string): Promise<User | null> {
     email: userResult.email,
     name: userResult.name,
     displayName: userResult.displayName,
+    bio: userResult.bio,
     googleId: userResult.googleId,
     githubId: userResult.githubId,
     emailVerified: userResult.emailVerified,

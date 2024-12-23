@@ -3,6 +3,7 @@ export interface User {
   email: string;
   name: string;
   displayName: string;
+  bio: string | null;
   googleId?: string | null;
   githubId?: number | null;
   avatarUrl: string | null;

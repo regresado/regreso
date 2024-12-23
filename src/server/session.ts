@@ -50,6 +50,7 @@ export async function validateSessionToken(
     id: result[0]!.user.id,
     email: result[0]!.user.email,
     displayName: result[0]!.user.displayName,
+    bio: result[0]!.user.bio,
     name: result[0]!.user.name,
     emailVerified: result[0]!.user.emailVerified,
     googleId: result[0]!.user.googleId,

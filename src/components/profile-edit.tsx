@@ -38,7 +38,7 @@ const FormSchema = z.object({
   displayName: z
     .string()
     .min(1, {
-      message: "Display name must be at least 2 characters.",
+      message: "Display name must be at least 1 characters.",
     })
     .max(50, {
       message: "Display name must be at most 50 characters.",
@@ -68,8 +68,8 @@ export default function ProfileEdit(props: { user: User }) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      displayName: "",
-      bio: "",
+      displayName: props.user.displayName,
+      bio: props.user.bio ?? "",
     },
   });
   const {

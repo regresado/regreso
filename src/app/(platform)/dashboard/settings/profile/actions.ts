@@ -62,6 +62,14 @@ export async function updateProfileAction(
     };
   }
 
+  await db
+    .update(users)
+    .set({
+      displayName: typeof displayName === "string" ? displayName : undefined,
+      bio: typeof bio === "string" ? bio : undefined,
+    })
+    .where(eq(users.id, user.id));
+
   return {
     message: "Updated profile settings",
   };
