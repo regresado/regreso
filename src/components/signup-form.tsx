@@ -43,12 +43,12 @@ const FormSchema = z.object({
       message: "Username must be at least 2 characters.",
     })
     .max(50, {
-      message: "Display name must be at most 50 characters.",
+      message: "Username must be at most 50 characters.",
     }),
   displayName: z
     .string()
     .min(1, {
-      message: "Display name must be at least 2 characters.",
+      message: "Display name must be at least 1 characters.",
     })
     .max(50, {
       message: "Display name must be at most 50 characters.",
