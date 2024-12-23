@@ -66,6 +66,7 @@ export async function validatePasswordResetSessionToken(
     id: resetSession.user.id,
     email: resetSession.user.email,
     displayName: resetSession.user.displayName,
+    bio: resetSession.user.bio,
     name: resetSession.user.name,
     emailVerified: resetSession.user.emailVerified,
     registered2FA: false,
