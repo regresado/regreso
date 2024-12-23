@@ -47,33 +47,36 @@ const data = {
 
     { name: "Account", icon: Lock, url: "/dashboard/settings/account" },
     {
-      name: (
+      name: "Notifications",
+      render: (
         <div>
           Notifications
           <Badge className="ml-2">Soon</Badge>
         </div>
       ),
       icon: Bell,
-      url: "#",
+      url: "#notifications",
     },
     {
-      name: (
+      name: "Appearance",
+      render: (
         <div>
           Appearance <Badge className="ml-2">Soon</Badge>
         </div>
       ),
       icon: Paintbrush,
-      url: "#",
+      url: "#appearance",
     },
 
     {
-      name: (
+      name: "Accessibility",
+      render: (
         <div>
           Accessibility <Badge className="ml-2">Soon</Badge>
         </div>
       ),
       icon: Keyboard,
-      url: "#",
+      url: "#accessibility",
     },
 
     // { name: "Messages & media", icon: MessageCircle },
@@ -85,7 +88,8 @@ const data = {
     // { name: "Privacy & visibility", icon: Lock },
 
     {
-      name: (
+      name: "Advanced",
+      render: (
         <div>
           Advanced <Badge className="ml-2">Soon</Badge>
         </div>
@@ -138,7 +142,7 @@ export function SettingsDialog({ children }: { children: React.ReactNode }) {
                         >
                           <a href={item.url}>
                             <item.icon />
-                            <span>{item.name}</span>
+                            <span>{item.render ?? item.name}</span>
                           </a>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
