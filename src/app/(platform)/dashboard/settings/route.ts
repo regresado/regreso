@@ -37,11 +37,10 @@ export async function GET() {
       }
     }
   }
-  // TODO: Redirect to profile instead of account
   return new Response(null, {
     status: 302,
     headers: {
-      Location: "/dashboard/settings/account",
+      Location: "/dashboard/settings/profile",
     },
   });
 }
