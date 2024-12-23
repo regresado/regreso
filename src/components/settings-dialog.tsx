@@ -21,6 +21,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "~/components/ui/breadcrumb";
+import { Badge } from "~/components/ui/badge";
 import {
   Dialog,
   DialogContent,
@@ -46,20 +47,33 @@ const data = {
 
     { name: "Account", icon: Lock, url: "/dashboard/settings/account" },
     {
-      name: "Notifications",
+      name: (
+        <div>
+          Notifications
+          <Badge className="ml-2">Soon</Badge>
+        </div>
+      ),
       icon: Bell,
-      url: "/dashboard/settings/notifications",
+      url: "#",
     },
     {
-      name: "Appearance",
+      name: (
+        <div>
+          Appearance <Badge className="ml-2">Soon</Badge>
+        </div>
+      ),
       icon: Paintbrush,
-      url: "/dashboard/settings/appearance",
+      url: "#",
     },
 
     {
-      name: "Accessibility",
+      name: (
+        <div>
+          Accessibility <Badge className="ml-2">Soon</Badge>
+        </div>
+      ),
       icon: Keyboard,
-      url: "/dashboard/settings/accessibility",
+      url: "#",
     },
 
     // { name: "Messages & media", icon: MessageCircle },
@@ -70,7 +84,15 @@ const data = {
     // { name: "Connected accounts", icon: Link },
     // { name: "Privacy & visibility", icon: Lock },
 
-    { name: "Advanced", icon: Settings, url: "/dashboard/settings/advanced" },
+    {
+      name: (
+        <div>
+          Advanced <Badge className="ml-2">Soon</Badge>
+        </div>
+      ),
+      icon: Settings,
+      url: "#s",
+    },
   ],
 };
 
