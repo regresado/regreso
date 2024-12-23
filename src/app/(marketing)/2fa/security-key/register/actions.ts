@@ -1,8 +1,8 @@
 "use server";
 
-import { decodeBase64 } from "@oslojs/encoding";
 import { redirect } from "next/navigation";
 
+import { decodeBase64 } from "@oslojs/encoding";
 import {
   AttestationStatementFormat,
   ClientDataType,
@@ -93,28 +93,28 @@ export async function registerSecurityKeyAction(
     authenticatorData = attestationObject.authenticatorData;
   } catch {
     return {
-      message: "Invalid data",
+      message: "Invalid data2",
     };
   }
   if (attestationStatement.format !== AttestationStatementFormat.None) {
     return {
-      message: "Invalid data",
+      message: "Invalid data3",
     };
   }
 
   if (!authenticatorData.verifyRelyingPartyIdHash(getBaseHost())) {
     return {
-      message: "Invalid data",
+      message: "Invalid data1",
     };
   }
   if (!authenticatorData.userPresent) {
     return {
-      message: "Invalid data",
+      message: "Invalid data4",
     };
   }
   if (authenticatorData.credential === null) {
     return {
-      message: "Invalid data",
+      message: "Invalid data5",
     };
   }
 
@@ -123,29 +123,29 @@ export async function registerSecurityKeyAction(
     clientData = parseClientDataJSON(clientDataJSON);
   } catch {
     return {
-      message: "Invalid data",
+      message: "Invalid data6",
     };
   }
   if (clientData.type !== ClientDataType.Create) {
     return {
-      message: "Invalid data",
+      message: "Invalid data7",
     };
   }
 
   if (!verifyWebAuthnChallenge(clientData.challenge)) {
     return {
-      message: "Invalid data",
+      message: "Invalid data8",
     };
   }
 
   if (clientData.origin !== getBaseOrigin()) {
     return {
-      message: "Invalid data",
+      message: "Invalid data9",
     };
   }
   if (clientData.crossOrigin !== null && clientData.crossOrigin) {
     return {
-      message: "Invalid data",
+      message: "Invalid data0",
     };
   }
 
@@ -158,7 +158,7 @@ export async function registerSecurityKeyAction(
       cosePublicKey = authenticatorData.credential.publicKey.ec2();
     } catch {
       return {
-        message: "Invalid data",
+        message: "Invalid data-",
       };
     }
     if (cosePublicKey.curve !== coseEllipticCurveP256) {
@@ -186,7 +186,7 @@ export async function registerSecurityKeyAction(
       cosePublicKey = authenticatorData.credential.publicKey.rsa();
     } catch {
       return {
-        message: "Invalid data",
+        message: "Invalid data_",
       };
     }
     const encodedPublicKey = new RSAPublicKey(
@@ -215,7 +215,7 @@ export async function registerSecurityKeyAction(
   }
 
   try {
-    createSecurityKeyCredential(credential);
+    await createSecurityKeyCredential(credential);
   } catch {
     return {
       message: "Internal error",
@@ -223,7 +223,7 @@ export async function registerSecurityKeyAction(
   }
 
   if (!session.twoFactorVerified) {
-    void setSessionAs2FAVerified(session.id);
+    await setSessionAs2FAVerified(session.id);
   }
 
   if (!user.registered2FA) {

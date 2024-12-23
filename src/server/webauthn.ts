@@ -239,10 +239,10 @@ export async function getUserSecurityKeyCredential(
   return credential;
 }
 
-export function createSecurityKeyCredential(
+export async function createSecurityKeyCredential(
   credential: WebAuthnUserCredential,
-): void {
-  db.insert(securityKeyCredentials).values({
+): Promise<void> {
+  await db.insert(securityKeyCredentials).values({
     id: Buffer.from(credential.id).toString("base64"),
     userId: credential.userId,
     name: credential.name,

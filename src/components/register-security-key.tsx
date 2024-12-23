@@ -60,6 +60,11 @@ export function RegisterSecurityKey(props: {
       attestation_object: encodedAttestationObject ?? "",
       client_data_json: encodedClientDataJSON ?? "",
     },
+    values: {
+      name: "",
+      attestation_object: encodedAttestationObject ?? "",
+      client_data_json: encodedClientDataJSON ?? "",
+    },
   });
   useEffect(() => {
     setMessage(formState.message);
