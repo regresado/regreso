@@ -93,28 +93,28 @@ export async function registerSecurityKeyAction(
     authenticatorData = attestationObject.authenticatorData;
   } catch {
     return {
-      message: "Invalid data2",
+      message: "Invalid data",
     };
   }
   if (attestationStatement.format !== AttestationStatementFormat.None) {
     return {
-      message: "Invalid data3",
+      message: "Invalid data",
     };
   }
 
   if (!authenticatorData.verifyRelyingPartyIdHash(getBaseHost())) {
     return {
-      message: "Invalid data1",
+      message: "Invalid data",
     };
   }
   if (!authenticatorData.userPresent) {
     return {
-      message: "Invalid data4",
+      message: "Invalid data",
     };
   }
   if (authenticatorData.credential === null) {
     return {
-      message: "Invalid data5",
+      message: "Invalid data",
     };
   }
 
@@ -123,29 +123,29 @@ export async function registerSecurityKeyAction(
     clientData = parseClientDataJSON(clientDataJSON);
   } catch {
     return {
-      message: "Invalid data6",
+      message: "Invalid data",
     };
   }
   if (clientData.type !== ClientDataType.Create) {
     return {
-      message: "Invalid data7",
+      message: "Invalid data",
     };
   }
 
   if (!verifyWebAuthnChallenge(clientData.challenge)) {
     return {
-      message: "Invalid data8",
+      message: "Invalid data",
     };
   }
 
   if (clientData.origin !== getBaseOrigin()) {
     return {
-      message: "Invalid data9",
+      message: "Invalid data",
     };
   }
   if (clientData.crossOrigin !== null && clientData.crossOrigin) {
     return {
-      message: "Invalid data0",
+      message: "Invalid data",
     };
   }
 
@@ -158,7 +158,7 @@ export async function registerSecurityKeyAction(
       cosePublicKey = authenticatorData.credential.publicKey.ec2();
     } catch {
       return {
-        message: "Invalid data-",
+        message: "Invalid data",
       };
     }
     if (cosePublicKey.curve !== coseEllipticCurveP256) {
@@ -186,7 +186,7 @@ export async function registerSecurityKeyAction(
       cosePublicKey = authenticatorData.credential.publicKey.rsa();
     } catch {
       return {
-        message: "Invalid data_",
+        message: "Invalid data",
       };
     }
     const encodedPublicKey = new RSAPublicKey(
