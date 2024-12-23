@@ -61,6 +61,11 @@ export function RegisterPasskeyForm(props: {
       client_data_json: encodedClientDataJSON ?? "",
       attestation_object: encodedAttestationObject ?? "",
     },
+    values: {
+      name: "",
+      attestation_object: encodedAttestationObject ?? "",
+      client_data_json: encodedClientDataJSON ?? "",
+    },
   });
   useEffect(() => {
     setMessage(formState.message);
