@@ -42,24 +42,24 @@ export default async function Page() {
       <CardHeader>
         <CardTitle className="text-2xl">Authenticate with passkeys</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-4">
         <Verify2FAWithPasskeyButton
           encodedCredentialIds={credentials.map((credential) =>
             encodeBase64(credential.id),
           )}
         />
-        <Button asChild variant="outline" className="mt-4">
+        <Button asChild variant="outline">
           <Link href="/reset-password/2fa/recovery-code">
             Use recovery code
           </Link>
         </Button>
         {user.registeredTOTP && (
-          <Button asChild variant="outline" className="mt-4">
+          <Button asChild variant="outline">
             <Link href="/reset-password/2fa/totp">Use authenticator apps</Link>
           </Button>
         )}
         {user.registeredSecurityKey && (
-          <Button asChild variant="outline" className="mt-4">
+          <Button asChild variant="outline">
             <Link href="/reset-password/2fa/security-key">
               Use security keys
             </Link>

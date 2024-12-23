@@ -43,22 +43,22 @@ export default async function Page() {
           Authenticate with security keys
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-4">
         <Verify2FAWithSecurityKeyButton
           encodedCredentialIds={credentials.map((credential) =>
             encodeBase64(credential.id),
           )}
         />
-        <Button asChild variant="outline" className="mt-4">
+        <Button asChild variant="outline">
           <Link href="/2fa/reset">Use recovery code</Link>
         </Button>
         {user.registeredTOTP && (
-          <Button asChild variant="outline" className="mt-4">
+          <Button asChild variant="outline">
             <Link href="/2fa/totp">Use authenticator apps</Link>
           </Button>
         )}
         {user.registeredPasskey && (
-          <Button asChild variant="outline" className="mt-4">
+          <Button asChild variant="outline">
             <Link href="/2fa/passkey">Use passkeys</Link>
           </Button>
         )}

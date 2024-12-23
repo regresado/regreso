@@ -19,7 +19,7 @@ export function Verify2FAWithSecurityKeyButton(props: {
   const router = useRouter();
   const [message, setMessage] = useState("");
   return (
-    <div>
+    <div className="space-y-4">
       <Button
         onClick={async () => {
           try {

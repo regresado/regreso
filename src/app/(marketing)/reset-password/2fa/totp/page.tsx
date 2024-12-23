@@ -47,18 +47,18 @@ export default async function Page() {
         </CardTitle>
         <CardDescription>Enter the code from your app.</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-4">
         <PasswordResetTOTPForm />
-        <Button asChild variant="outline" className="mt-4">
+        <Button asChild variant="outline">
           <Link href="/reset-password/2fa/reset">Use recovery code</Link>
         </Button>
         {user.registeredPasskey && (
-          <Button asChild variant="outline" className="mt-4">
+          <Button asChild variant="outline">
             <Link href="/reset-password/2fa/passkey">Use passkeys</Link>
           </Button>
         )}
         {user.registeredSecurityKey && (
-          <Button asChild variant="outline" className="mt-4">
+          <Button asChild variant="outline">
             <Link href="/reset-password/2fa/security-key">
               Use security keys
             </Link>

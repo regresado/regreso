@@ -204,7 +204,7 @@ export function DisconnectTOTPButton() {
     initialDisconnectTOTPState,
   );
   return (
-    <form action={formAction}>
+    <form action={formAction} className="space-y-4">
       <Button variant="destructive">Disconnect</Button>
       {state.message.length > 0 ? (
         <Alert variant="destructive">
@@ -235,7 +235,7 @@ export function PasskeyCredentialListItem(props: {
     <li className="flex justify-between align-middle">
       <p>{props.name}</p>
 
-      <form action={formAction}>
+      <form action={formAction} className="space-y-4">
         <input type="hidden" name="credential_id" value={props.encodedId} />
 
         <Button variant="destructive" type="submit">
@@ -270,8 +270,7 @@ export function SecurityKeyCredentialListItem(props: {
   return (
     <li className="flex justify-between align-middle">
       <p>{props.name}</p>
-      <form action={formAction}>
-        {/** TODO: Make this a React Hook Form */}
+      <form action={formAction} className="space-y-4">
         <input type="hidden" name="credential_id" value={props.encodedId} />
         <Button variant="destructive" type="submit">
           Delete
