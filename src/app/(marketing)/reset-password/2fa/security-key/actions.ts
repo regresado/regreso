@@ -1,7 +1,7 @@
 "use server";
 
-import { decodeBase64 } from "@oslojs/encoding";
 import { ObjectParser } from "@pilcrowjs/object-parser";
+import { decodeBase64 } from "@oslojs/encoding";
 import {
   ClientDataType,
   coseAlgorithmES256,
