@@ -24,15 +24,16 @@ import { RSAPublicKey } from "@oslojs/crypto/rsa";
 
 import { getBaseOrigin, getBaseHost } from "~/lib/utils";
 
+import { getCurrentSession, setSessionAs2FAVerified } from "~/server/session";
+
 import {
   createSecurityKeyCredential,
   getUserSecurityKeyCredentials,
   verifyWebAuthnChallenge,
 } from "~/server/webauthn";
+import type { WebAuthnUserCredential } from "~/server/webauthn";
 
 import { globalPOSTRateLimit } from "~/server/request";
-import { getCurrentSession, setSessionAs2FAVerified } from "~/server/session";
-import type { WebAuthnUserCredential } from "~/server/webauthn";
 
 export async function registerSecurityKeyAction(
   _prev: ActionResult,

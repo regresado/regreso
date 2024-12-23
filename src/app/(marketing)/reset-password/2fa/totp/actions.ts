@@ -1,12 +1,15 @@
 "use server";
 
+import { redirect } from "next/navigation";
+
+import { verifyTOTP } from "@oslojs/otp";
+
 import {
   setPasswordResetSessionAs2FAVerified,
   getCurrentPasswordResetSession,
 } from "~/server/password-reset";
 import { getUserTOTPKey, totpBucket } from "~/server/totp";
-import { verifyTOTP } from "@oslojs/otp";
-import { redirect } from "next/navigation";
+
 import { globalPOSTRateLimit } from "~/server/request";
 
 export async function verifyPasswordReset2FAWithTOTPAction(

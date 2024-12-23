@@ -11,9 +11,11 @@ type VerifyTOTP = (
   token: string,
 ) => boolean;
 
-import { totpBucket } from "~/server/totp";
 import { getCurrentSession, setSessionAs2FAVerified } from "~/server/session";
+
+import { totpBucket } from "~/server/totp";
 import { getUserTOTPKey } from "~/server/totp";
+
 import { globalPOSTRateLimit } from "~/server/request";
 
 export async function verify2FAAction(

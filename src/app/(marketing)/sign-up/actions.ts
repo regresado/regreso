@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { cookies, headers } from "next/headers";
 
 import { checkEmailAvailability, verifyEmailInput } from "~/server/email";
 import {
@@ -9,14 +10,14 @@ import {
   setEmailVerificationRequestCookie,
 } from "~/server/email-verification";
 import { verifyPasswordStrength } from "~/server/password";
-import { RefillingTokenBucket } from "~/server/rate-limit";
 import {
   createSession,
   generateSessionToken,
   setSessionTokenCookie,
 } from "~/server/session";
 import { createUser, verifyUsernameInput } from "~/server/user";
-import { cookies, headers } from "next/headers";
+
+import { RefillingTokenBucket } from "~/server/rate-limit";
 import { globalPOSTRateLimit } from "~/server/request";
 
 import type { SessionFlags } from "~/server/models";

@@ -1,7 +1,10 @@
 "use server";
 
+import { redirect } from "next/navigation";
+
+import { decodeBase64 } from "@oslojs/encoding";
+
 import { verifyPasswordHash, verifyPasswordStrength } from "~/server/password";
-import { ExpiringTokenBucket } from "~/server/rate-limit";
 import {
   createSession,
   generateSessionToken,
@@ -21,13 +24,13 @@ import {
   setEmailVerificationRequestCookie,
 } from "~/server/email-verification";
 import { checkEmailAvailability, verifyEmailInput } from "~/server/email";
-import { redirect } from "next/navigation";
 import { deleteUserTOTPKey, totpUpdateBucket } from "~/server/totp";
-import { decodeBase64 } from "@oslojs/encoding";
 import {
   deleteUserPasskeyCredential,
   deleteUserSecurityKeyCredential,
 } from "~/server/webauthn";
+
+import { ExpiringTokenBucket } from "~/server/rate-limit";
 import { globalPOSTRateLimit } from "~/server/request";
 
 import type { SessionFlags } from "~/server/models";

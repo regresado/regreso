@@ -11,6 +11,7 @@ import {
 import { TwoFactorResetForm } from "~/components/2fa-reset";
 
 import { getCurrentSession } from "~/server/session";
+
 import { globalGETRateLimit } from "~/server/request";
 
 export default async function Page() {

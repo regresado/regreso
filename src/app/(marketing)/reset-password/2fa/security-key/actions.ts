@@ -1,9 +1,5 @@
 "use server";
 
-import {
-  getCurrentPasswordResetSession,
-  setPasswordResetSessionAs2FAVerified,
-} from "~/server/password-reset";
 import { decodeBase64 } from "@oslojs/encoding";
 import { ObjectParser } from "@pilcrowjs/object-parser";
 import {
@@ -30,10 +26,14 @@ import {
   sha256ObjectIdentifier,
   verifyRSASSAPKCS1v15Signature,
 } from "@oslojs/crypto/rsa";
-
 import type { AuthenticatorData, ClientData } from "@oslojs/webauthn";
 
 import { getBaseOrigin, getBaseHost } from "~/lib/utils";
+
+import {
+  getCurrentPasswordResetSession,
+  setPasswordResetSessionAs2FAVerified,
+} from "~/server/password-reset";
 
 import { globalPOSTRateLimit } from "~/server/request";
 

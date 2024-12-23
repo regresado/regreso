@@ -5,10 +5,11 @@ import { redirect } from "next/navigation";
 import { decodeBase64 } from "@oslojs/encoding";
 import { verifyTOTP } from "@oslojs/otp";
 
-import { RefillingTokenBucket } from "~/server/rate-limit";
 import { getCurrentSession, setSessionAs2FAVerified } from "~/server/session";
+
 import { updateUserTOTPKey } from "~/server/totp";
 
+import { RefillingTokenBucket } from "~/server/rate-limit";
 import { globalPOSTRateLimit } from "~/server/request";
 
 const totpUpdateBucket = new RefillingTokenBucket<number>(3, 60 * 10);

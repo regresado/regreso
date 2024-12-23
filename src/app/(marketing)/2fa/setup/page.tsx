@@ -11,6 +11,7 @@ import {
 import { TwoFactorSetup } from "~/components/2fa-setup";
 
 import { getCurrentSession } from "~/server/session";
+
 import { globalGETRateLimit } from "~/server/request";
 
 export default async function Page() {

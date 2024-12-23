@@ -7,6 +7,7 @@ import {
   getCurrentSession,
   invalidateSession,
 } from "~/server/session";
+
 import { globalPOSTRateLimit } from "~/server/request";
 
 export async function logoutAction(): Promise<ActionResult> {

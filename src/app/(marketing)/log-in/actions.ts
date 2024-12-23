@@ -5,14 +5,16 @@ import { headers, cookies } from "next/headers";
 
 import { verifyEmailInput } from "~/server/email";
 import { verifyPasswordHash } from "~/server/password";
-import { RefillingTokenBucket, Throttler } from "~/server/rate-limit";
+import { get2FARedirect } from "~/server/2fa";
+
 import {
   createSession,
   generateSessionToken,
   setSessionTokenCookie,
 } from "~/server/session";
 import { getUserFromEmail, getUserPasswordHash } from "~/server/user";
-import { get2FARedirect } from "~/server/2fa";
+
+import { RefillingTokenBucket, Throttler } from "~/server/rate-limit";
 import { globalPOSTRateLimit } from "~/server/request";
 
 import type { SessionFlags } from "~/server/db/schema";

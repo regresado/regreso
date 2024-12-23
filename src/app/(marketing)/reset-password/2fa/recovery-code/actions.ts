@@ -1,9 +1,11 @@
 "use server";
 
+import { redirect } from "next/navigation";
+
 import { recoveryCodeBucket, resetUser2FAWithRecoveryCode } from "~/server/2fa";
 import { getCurrentPasswordResetSession } from "~/server/password-reset";
+
 import { globalPOSTRateLimit } from "~/server/request";
-import { redirect } from "next/navigation";
 
 export async function verifyPasswordReset2FAWithRecoveryCodeAction(
   _prev: ActionResult,

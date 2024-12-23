@@ -10,9 +10,10 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 
-import { get2FARedirect } from "~/server/2fa";
 import { getCurrentSession } from "~/server/session";
 import { getUserRecoverCode } from "~/server/user";
+import { get2FARedirect } from "~/server/2fa";
+
 import { globalGETRateLimit } from "~/server/request";
 
 export default async function Page() {

@@ -1,6 +1,9 @@
-import { generateState } from "arctic";
-import { github } from "~/server/oauth";
 import { cookies } from "next/headers";
+
+import { generateState } from "arctic";
+
+import { github } from "~/server/oauth";
+
 import { globalGETRateLimit } from "~/server/request";
 
 export async function GET(): Promise<Response> {

@@ -1,6 +1,5 @@
 "use server";
 
-import { getCurrentSession, setSessionAs2FAVerified } from "~/server/session";
 import { decodeBase64 } from "@oslojs/encoding";
 import { ObjectParser } from "@pilcrowjs/object-parser";
 import {
@@ -31,6 +30,8 @@ import {
   getUserSecurityKeyCredential,
   verifyWebAuthnChallenge,
 } from "~/server/webauthn";
+
+import { getCurrentSession, setSessionAs2FAVerified } from "~/server/session";
 
 import { globalPOSTRateLimit } from "~/server/request";
 

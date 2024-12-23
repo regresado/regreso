@@ -1,21 +1,19 @@
-// Figure out why this is necessary for ObjectParser!
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import crypto from "node:crypto";
+import { cookies } from "next/headers";
+
+import type { OAuth2Tokens } from "arctic";
+
+import { ObjectParser } from "@pilcrowjs/object-parser";
+
 import {
   generateSessionToken,
   createSession,
   setSessionTokenCookie,
 } from "~/server/session";
-import { github } from "~/server/oauth";
-import { cookies } from "next/headers";
 import { createUser, getUserFromGitHubId } from "~/server/user";
-import { ObjectParser } from "@pilcrowjs/object-parser";
+import { github } from "~/server/oauth";
+
 import { globalGETRateLimit } from "~/server/request";
-
-import crypto from "node:crypto";
-
-import type { OAuth2Tokens } from "arctic";
 
 export async function GET(request: Request): Promise<Response> {
   if (!(await globalGETRateLimit())) {

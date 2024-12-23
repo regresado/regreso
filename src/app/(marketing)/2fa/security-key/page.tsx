@@ -8,9 +8,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 
 import { Verify2FAWithSecurityKeyButton } from "~/components/verify-security-key";
 
-import { get2FARedirect } from "~/server/2fa";
 import { getCurrentSession } from "~/server/session";
+import { get2FARedirect } from "~/server/2fa";
 import { getUserSecurityKeyCredentials } from "~/server/webauthn";
+
 import { globalGETRateLimit } from "~/server/request";
 
 export default async function Page() {

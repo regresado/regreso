@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 
 import { SignupForm } from "~/components/signup-form";
+
 import { getCurrentSession } from "~/server/session";
 
 import { globalGETRateLimit } from "~/server/request";

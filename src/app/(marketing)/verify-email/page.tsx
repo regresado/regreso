@@ -16,6 +16,7 @@ import {
 
 import { getCurrentSession } from "~/server/session";
 import { getCurrentUserEmailVerificationRequest } from "~/server/email-verification";
+
 import { globalGETRateLimit } from "~/server/request";
 
 export default async function Page() {

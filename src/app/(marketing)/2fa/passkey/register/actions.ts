@@ -31,10 +31,9 @@ import {
   getUserPasskeyCredentials,
   verifyWebAuthnChallenge,
 } from "~/server/webauthn";
+import type { WebAuthnUserCredential } from "~/server/webauthn";
 
 import { globalPOSTRateLimit } from "~/server/request";
-
-import type { WebAuthnUserCredential } from "~/server/webauthn";
 
 export async function registerPasskeyAction(
   _prev: ActionResult,

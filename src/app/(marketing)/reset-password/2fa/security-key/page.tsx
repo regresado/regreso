@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
+import { encodeBase64 } from "@oslojs/encoding";
+
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 
@@ -9,7 +11,7 @@ import { Verify2FAWithSecurityKeyButton } from "~/components/reset-with-security
 import { getUserSecurityKeyCredentials } from "~/server/webauthn";
 import { getCurrentPasswordResetSession } from "~/server/password-reset";
 import { getPasswordReset2FARedirect } from "~/server/2fa";
-import { encodeBase64 } from "@oslojs/encoding";
+
 import { globalGETRateLimit } from "~/server/request";
 
 export default async function Page() {

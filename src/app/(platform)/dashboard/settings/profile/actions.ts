@@ -6,13 +6,12 @@ import { UTApi } from "uploadthing/server";
 
 import { eq } from "drizzle-orm";
 
-import { RefillingTokenBucket, ExpiringTokenBucket } from "~/server/rate-limit";
-
 import { db } from "~/server/db";
 import { users } from "~/server/db/schema";
 
 import { getCurrentSession } from "~/server/session";
 
+import { RefillingTokenBucket, ExpiringTokenBucket } from "~/server/rate-limit";
 import { globalPOSTRateLimit } from "~/server/request";
 
 const usernameUpdateBucket = new ExpiringTokenBucket<string>(5, 60 * 30);

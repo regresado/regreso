@@ -1,8 +1,8 @@
 "use server";
 
 // TODO: This is the same file as another?
-import { decodeBase64 } from "@oslojs/encoding";
 import { ObjectParser } from "@pilcrowjs/object-parser";
+import { decodeBase64 } from "@oslojs/encoding";
 import {
   ClientDataType,
   coseAlgorithmES256,
@@ -35,6 +35,7 @@ import {
   getUserPasskeyCredential,
   verifyWebAuthnChallenge,
 } from "~/server/webauthn";
+
 import { globalPOSTRateLimit } from "~/server/request";
 
 export async function verify2FAWithPasskeyAction(
@@ -49,7 +50,7 @@ export async function verify2FAWithPasskeyAction(
   const { session, user } = await getCurrentPasswordResetSession();
   if (session === null || user === null) {
     return {
-      error: "Not authenticated1",
+      error: "Not authenticated",
     };
   }
   if (
