@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { X } from "lucide-react";
 import BoringAvatar from "boring-avatars";
 
 import type { User } from "~/server/models";
@@ -126,6 +127,7 @@ export default function ProfileEdit(props: { user: User }) {
             </div>
             <form action={deletePfpAction}>
               <Button variant="ghost" type="submit">
+                <X />
                 Clear Picture
               </Button>
             </form>
