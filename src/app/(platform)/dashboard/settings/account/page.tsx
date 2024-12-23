@@ -13,7 +13,7 @@ import {
 } from "~/components/account-settings";
 
 import { getCurrentSession } from "~/server/session";
-import { getUserRecoverCode } from "~/server/user";
+import { getUserRecoveryCode } from "~/server/user";
 import { get2FARedirect } from "~/server/2fa";
 import {
   getUserPasskeyCredentials,
@@ -46,7 +46,7 @@ export default async function Page() {
   }
   let recoveryCode: string | null = null;
   if (user.registered2FA) {
-    recoveryCode = await getUserRecoverCode(user.id);
+    recoveryCode = await getUserRecoveryCode(user.id);
   }
   const passkeyCredentials = await getUserPasskeyCredentials(user.id);
   const securityKeyCredentials = await getUserSecurityKeyCredentials(user.id);

@@ -40,6 +40,7 @@ export async function resetUser2FAWithRecoveryCode(
             .map((char) => char.charCodeAt(0)),
         ),
       );
+
       if (recoveryCode !== userRecoveryCode) {
         tx.rollback();
         return false;
@@ -62,26 +63,36 @@ export async function resetUser2FAWithRecoveryCode(
         setRecoveryCode &&
         setRecoveryCode.length > 0 &&
         setRecoveryCode[0] &&
-        setRecoveryCode[0].recoveryCode ==
+        setRecoveryCode[0].recoveryCode !=
           Buffer.from(encryptedNewRecoveryCode).toString("base64")
       ) {
         tx.rollback();
         return false;
       }
+
       await tx
         .update(sessions)
         .set({
           twoFactorVerified: false,
         })
-        .where(eq(users.id, userId))
-        .returning({ recoveryCode: users.recoveryCode });
+        .where(eq(sessions.userId, userId));
 
-      await tx.delete(totpCredentials).where(eq(users.id, userId));
-      await tx.delete(passkeyCredentials).where(eq(users.id, userId));
-      await tx.delete(securityKeyCredentials).where(eq(users.id, userId));
+      await tx
+        .delete(totpCredentials)
+        .where(eq(totpCredentials.userId, userId));
+      await tx
+        .delete(passkeyCredentials)
+        .where(eq(passkeyCredentials.userId, userId));
+      await tx
+        .delete(securityKeyCredentials)
+        .where(eq(securityKeyCredentials.userId, userId));
     } catch (e) {
-      tx.rollback();
-      throw e;
+      console.error(e);
+      if (e instanceof Error) {
+        if (!e.toString().includes("Rollback")) {
+          tx.rollback();
+        }
+      }
       return false;
     }
   });

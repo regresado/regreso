@@ -25,11 +25,11 @@ import { verifyPasswordReset2FAWithRecoveryCodeAction } from "~/app/(marketing)/
 const FormSchema = z.object({
   code: z
     .string()
-    .min(11, {
-      message: "Your one-time password must be 8 characters.",
+    .min(16, {
+      message: "Your one-time password must be 16 characters.",
     })
-    .max(11, {
-      message: "Your one-time password must be 8 characters.",
+    .max(16, {
+      message: "Your one-time password must be 16 characters.",
     }),
 });
 

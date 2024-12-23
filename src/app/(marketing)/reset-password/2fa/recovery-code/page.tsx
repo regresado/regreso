@@ -1,6 +1,12 @@
 import { redirect } from "next/navigation";
 
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
 
 import { PasswordResetRecoveryCodeForm } from "~/components/password-reset-recovery";
 
@@ -31,6 +37,10 @@ export default async function Page() {
     <Card className="mx-auto max-w-sm">
       <CardHeader>
         <CardTitle className="text-2xl">Use your recovery code</CardTitle>
+        <CardDescription>
+          Enter your recovery code to reset your password. This will also reset
+          your 2FA settings.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <PasswordResetRecoveryCodeForm />

@@ -11,7 +11,7 @@ import {
 } from "~/components/ui/card";
 
 import { getCurrentSession } from "~/server/session";
-import { getUserRecoverCode } from "~/server/user";
+import { getUserRecoveryCode } from "~/server/user";
 import { get2FARedirect } from "~/server/2fa";
 
 import { globalGETRateLimit } from "~/server/request";
@@ -34,7 +34,7 @@ export default async function Page() {
   if (!session.twoFactorVerified) {
     return redirect(get2FARedirect(user));
   }
-  const recoveryCode = getUserRecoverCode(user.id);
+  const recoveryCode = getUserRecoveryCode(user.id);
   return (
     <Card className="mx-auto max-w-sm">
       <CardHeader>
