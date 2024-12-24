@@ -201,11 +201,6 @@ export function PasswordResetEmailVerificationForm() {
           </Alert>
         ) : null}
       </form>
-      <div className="mt-3 flex justify-end">
-        <Button variant="outline" asChild>
-          <Link href="/log-in">Log in</Link>
-        </Button>
-      </div>
     </Form>
   );
 }
