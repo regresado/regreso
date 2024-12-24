@@ -71,7 +71,7 @@ export async function updateProfileAction(
     .where(eq(users.id, user.id));
 
   return {
-    message: "Updated profile settings",
+    message: "Updated profile settings!",
   };
 }
 

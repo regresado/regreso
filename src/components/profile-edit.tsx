@@ -59,7 +59,10 @@ const pfpClearInitialState = {
 export default function ProfileEdit(props: { user: User }) {
   const [avatarUrl, setAvatarUrl] = useState(props.user.avatarUrl ?? "");
 
-  const [, action] = useActionState(updateProfileAction, initialState);
+  const [updateProfileState, action] = useActionState(
+    updateProfileAction,
+    initialState,
+  );
   const [pfpClearState, deletePfpAction] = useActionState(
     clearProfilePictureAction,
     pfpClearInitialState,
@@ -78,12 +81,22 @@ export default function ProfileEdit(props: { user: User }) {
   } = form;
 
   useEffect(() => {
+    if (updateProfileState.message.length > 0) {
+      toast({
+        description: updateProfileState.message,
+      });
+    }
+  }, [updateProfileState]);
+
+  useEffect(() => {
     if (pfpClearState.message === "ok") {
       setAvatarUrl("");
     } else {
-      toast({
-        description: pfpClearState.message,
-      });
+      if (pfpClearState.message.length > 0) {
+        toast({
+          description: pfpClearState.message,
+        });
+      }
     }
   }, [pfpClearState]);
 
