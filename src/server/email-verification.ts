@@ -1,17 +1,23 @@
 import { cache } from "react";
 
+import { cookies } from "next/headers";
+
 import { and, eq } from "drizzle-orm";
 
 import nodemailer from "nodemailer";
 
+import { encodeBase32 } from "@oslojs/encoding";
+
+import { getBaseOrigin } from "~/lib/utils";
+
 import { generateRandomOTP } from "~/server/utils";
+
 import { db } from "~/server/db";
 
 import { emailVerificationRequests } from "~/server/db/schema";
-import { ExpiringTokenBucket } from "~/server/rate-limit";
-import { encodeBase32 } from "@oslojs/encoding";
-import { cookies } from "next/headers";
 import { getCurrentSession } from "~/server/session";
+
+import { ExpiringTokenBucket } from "~/server/rate-limit";
 
 export async function getUserEmailVerificationRequest(
   userId: number,
@@ -67,6 +73,7 @@ export async function sendVerificationEmail(
   email: string,
   code: string,
 ): Promise<Error | null> {
+  // TODO: Consider adding hyphen between parts of OTP
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     secure: true,
@@ -77,12 +84,13 @@ export async function sendVerificationEmail(
     },
   });
 
+  // TODO: Consider adding code to email subject line
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
     subject: "Verify your Email for Regreso",
-    html: `<div><p>To ${email}: Your verification code is ${code}</p>
-    <p>Enter this code in the verification form to activate your account.</p>
+    html: `<div><p>To ${email}: Your verification code is ${code}</p> 
+    <p>An account registration process has been initiated from <a href="${getBaseOrigin()}">Regreso</a>. Enter this code in the verification form to activate your account.</p>
     <strong>The Regreso Team</strong></div>`,
   };
   return new Promise((resolve) => {
@@ -137,7 +145,6 @@ export async function getUserEmailVerificationRequestFromRequest(): Promise<Emai
 
   const request = getUserEmailVerificationRequest(user.id, id);
   if (request === null) {
-    // TODO: Evaluate whether this is correct or not
     void deleteEmailVerificationRequestCookie();
   }
   return request;

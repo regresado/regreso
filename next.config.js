@@ -17,6 +17,13 @@ const config = {
       },
     ],
   },
+  // TODO: Probably delete this when GitHub codespaces aren't needed.
+  // experimental: {
+  //   serverActions: {
+  //     // edit: updated to new key. Was previously `allowedForwardedHosts`
+  //     allowedOrigins: ['localhost:3000'],
+  //   },
+  // },
   async headers() {
     return [
       {

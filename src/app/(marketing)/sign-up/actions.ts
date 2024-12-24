@@ -1,5 +1,8 @@
 "use server";
 
+import { redirect } from "next/navigation";
+import { cookies, headers } from "next/headers";
+
 import { checkEmailAvailability, verifyEmailInput } from "~/server/email";
 import {
   createEmailVerificationRequest,
@@ -7,15 +10,14 @@ import {
   setEmailVerificationRequestCookie,
 } from "~/server/email-verification";
 import { verifyPasswordStrength } from "~/server/password";
-import { RefillingTokenBucket } from "~/server/rate-limit";
 import {
   createSession,
   generateSessionToken,
   setSessionTokenCookie,
 } from "~/server/session";
 import { createUser, verifyUsernameInput } from "~/server/user";
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
+
+import { RefillingTokenBucket } from "~/server/rate-limit";
 import { globalPOSTRateLimit } from "~/server/request";
 
 import type { SessionFlags } from "~/server/models";
@@ -31,6 +33,8 @@ export async function signupAction(
       message: "Too many requests",
     };
   }
+
+  const cookieStore = await cookies();
 
   // FIXME: Assumes X-Forwarded-For is always included.
   const clientIP = (await headers()).get("X-Forwarded-For");
@@ -103,15 +107,16 @@ export async function signupAction(
     user.id,
     user.email,
   );
-  const err = await sendVerificationEmail(
+  await sendVerificationEmail(
     emailVerificationRequest.email,
     emailVerificationRequest.code,
   );
-  if (err) {
-    return {
-      message: "Failed to send verification email: " + err.message,
-    };
-  }
+  // TODO: Evaluate whether error handling is necessary. Most errors are timeouts anyway and the emails get sent anyway...
+  // if (err) {
+  //   return {
+  //     message: "Failed to send verification email: " + err.message,
+  //   };
+  // }
   void setEmailVerificationRequestCookie(emailVerificationRequest);
 
   const sessionFlags: SessionFlags = {
@@ -119,8 +124,15 @@ export async function signupAction(
   };
   const sessionToken = generateSessionToken();
   const session = await createSession(sessionToken, user.id, sessionFlags);
-  void setSessionTokenCookie(sessionToken, session.expiresAt);
-  return redirect("/dashboard");
+  await setSessionTokenCookie(sessionToken, session.expiresAt);
+  cookieStore.set("disable2FAReminder", "", {
+    httpOnly: true,
+    path: "/",
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: 0,
+  });
+  return redirect("/2fa/setup");
 }
 
 interface ActionResult {

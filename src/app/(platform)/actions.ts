@@ -1,11 +1,13 @@
 "use server";
 
+import { redirect } from "next/navigation";
+
 import {
   deleteSessionTokenCookie,
   getCurrentSession,
   invalidateSession,
 } from "~/server/session";
-import { redirect } from "next/navigation";
+
 import { globalPOSTRateLimit } from "~/server/request";
 
 export async function logoutAction(): Promise<ActionResult> {
@@ -21,6 +23,7 @@ export async function logoutAction(): Promise<ActionResult> {
       message: "Not authenticated",
     };
   }
+
   void invalidateSession(session.id);
   void deleteSessionTokenCookie();
   return redirect("/log-in");

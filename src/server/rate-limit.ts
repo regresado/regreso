@@ -69,7 +69,6 @@ export class Throttler<_Key> {
       this.storage.set(key, counter);
       return true;
     }
-    // TODO: Am I doing this right??
     let timeoutSec = this.timeoutSeconds[counter.timeout];
     if (!timeoutSec) {
       timeoutSec = 0;

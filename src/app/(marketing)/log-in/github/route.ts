@@ -1,6 +1,9 @@
-import { generateState } from "arctic";
-import { github } from "~/server/oauth";
 import { cookies } from "next/headers";
+
+import { generateState } from "arctic";
+
+import { github } from "~/server/oauth";
+
 import { globalGETRateLimit } from "~/server/request";
 
 export async function GET(): Promise<Response> {
@@ -9,10 +12,20 @@ export async function GET(): Promise<Response> {
       status: 429,
     });
   }
+
   const state = generateState();
   const url = github.createAuthorizationURL(state, ["user:email"]);
+  const cookieStore = await cookies();
 
-  (await cookies()).set("github_oauth_state", state, {
+  cookieStore.set("disable2FAReminder", "", {
+    httpOnly: true,
+    path: "/",
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: 0,
+  });
+
+  cookieStore.set("github_oauth_state", state, {
     path: "/",
     secure: process.env.NODE_ENV === "production",
     httpOnly: true,

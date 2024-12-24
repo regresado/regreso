@@ -107,6 +107,7 @@ export function PasswordResetForm() {
           )}
         />
         <Button>Reset password</Button>
+
         {state.message.length > 0 ? (
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
@@ -126,7 +127,6 @@ export function PasswordResetEmailVerificationForm() {
     verifyPasswordResetEmailAction,
     initialPasswordResetEmailVerificationState,
   );
-
   const form = useForm<z.infer<typeof VerifyEmailFormSchema>>({
     resolver: zodResolver(VerifyEmailFormSchema),
     defaultValues: {

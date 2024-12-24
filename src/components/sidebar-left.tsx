@@ -9,7 +9,6 @@ import {
   MessageCircleQuestion,
   Search,
   Settings,
-  Trash2,
 } from "lucide-react";
 
 import { NavFavorites } from "~/components/nav-favorites";
@@ -60,14 +59,14 @@ const data = {
   navSecondary: [
     {
       title: "Settings",
-      url: "#",
+      url: "/dashboard/settings",
       icon: Settings,
     },
-    {
-      title: "Trash",
-      url: "#",
-      icon: Trash2,
-    },
+    // {
+    //   title: "Trash",
+    //   url: "#",
+    //   icon: Trash2,
+    // },
     {
       title: "Help",
       url: "#",

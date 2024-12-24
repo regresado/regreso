@@ -51,7 +51,7 @@ export function LandingNavigation() {
                     Regreso
                   </span>
                   <div className="flex w-full justify-end">
-                    <ModeToggle />
+                    <ModeToggle className="block xs:hidden" />
                   </div>
                   <div />
                 </Link>
@@ -210,7 +210,7 @@ export function LandingNavigation() {
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="lucide lucide-footprints xs:block ml-4 mr-3 hidden md:ml-0 lg:ml-0"
+              className="lucide lucide-footprints ml-4 mr-3 hidden xs:block md:ml-0 lg:ml-0"
             >
               <path d="M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.68V16a2 2 0 1 1-4 0Z" />
               <path d="M20 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5c0 3.11 2 5.66 2 8.68V20a2 2 0 1 0 4 0Z" />
@@ -219,25 +219,29 @@ export function LandingNavigation() {
             </svg>
             <Link
               href="/"
-              className="xs:block hidden text-xl font-bold text-gray-900 dark:text-white"
+              className="hidden text-xl font-bold text-gray-900 dark:text-white xs:block"
             >
               Regreso
             </Link>
 
             <NavigationMenu className="hidden items-baseline md:ml-2 md:flex lg:ml-10 lg:flex">
               <NavigationMenuList>
-                <NavigationMenuLink asChild>
-                  <Link
-                    href="/dashboard"
-                    target="_blank"
-                    className="group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
-                    prefetch={false}
-                  >
-                    <span className="mr-2 inline align-middle">Dashboard </span>
+                <NavigationMenuItem>
+                  <NavigationMenuLink asChild>
+                    <Link
+                      href="/dashboard"
+                      target="_blank"
+                      className="group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
+                      prefetch={false}
+                    >
+                      <span className="mr-2 inline align-middle">
+                        Dashboard{" "}
+                      </span>
 
-                    <ExternalLink size="16" className="inline align-middle" />
-                  </Link>
-                </NavigationMenuLink>
+                      <ExternalLink size="16" className="inline align-middle" />
+                    </Link>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
                 <NavigationMenuItem>
                   <NavigationMenuTrigger>About</NavigationMenuTrigger>
                   <NavigationMenuContent>
@@ -364,21 +368,23 @@ export function LandingNavigation() {
                     </div>
                   </NavigationMenuContent>
                 </NavigationMenuItem>
-                <NavigationMenuLink asChild>
-                  <Link
-                    href="#"
-                    className="group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
-                    prefetch={false}
-                  >
-                    Blog
-                  </Link>
-                </NavigationMenuLink>
+                <NavigationMenuItem>
+                  <NavigationMenuLink asChild>
+                    <Link
+                      href="#"
+                      className="group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
+                      prefetch={false}
+                    >
+                      Blog
+                    </Link>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
               </NavigationMenuList>
             </NavigationMenu>
           </div>
 
           <div className="ml-4 flex items-center space-x-2 lg:space-x-4">
-            <div className="xs:block hidden">
+            <div className="hidden xs:block">
               <ThemeToggle />
             </div>
             <div className="flex items-center space-x-4">
@@ -390,7 +396,10 @@ export function LandingNavigation() {
                 <Link href="/log-in">Log in</Link>
               </Button>
 
-              <Button className="bg-cyan-500 text-white hover:bg-cyan-600">
+              <Button
+                className="bg-cyan-700 text-white hover:bg-cyan-800"
+                asChild
+              >
                 <Link href="/sign-up">Sign up</Link>
               </Button>
             </div>

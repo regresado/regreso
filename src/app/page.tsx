@@ -1,16 +1,20 @@
 "use client";
 
-import { LandingNavigation } from "~/components/landing-navigation";
-import Hero from "~/components/hero";
-import { Button } from "~/components/ui/button";
+import React from "react";
+
 import Link from "next/link";
-import { FeatureCards } from "~/components/feature-cards";
+import Image from "next/image";
+
 import { Github } from "lucide-react";
+
+import { Button } from "~/components/ui/button";
+import { Tabs } from "~/components/ui/tabs";
 import { MacbookScroll } from "~/components/ui/macbook-scroll";
 
-import React from "react";
-import Image from "next/image";
-import { Tabs } from "~/components/ui/tabs";
+import { LandingNavigation } from "~/components/landing-navigation";
+import Hero from "~/components/hero";
+import { FeatureCards } from "~/components/feature-cards";
+
 function TabsDemo() {
   const tabs = [
     {
@@ -94,11 +98,7 @@ function MacbookScrollDemo() {
             Use Anywhere <br /> No kidding.
           </span>
         }
-        badge={
-          <Link href="https://google.com">
-            <Badge className="h-10 w-10 -rotate-12 transform" />
-          </Link>
-        }
+        badge={<Badge className="h-10 w-10 -rotate-12 transform" />}
         src={`https://dummyimage.com/1000x1000/000/fff`}
         showGradient={false}
       />
@@ -230,11 +230,10 @@ export default function LandingPage() {
   return (
     <>
       <div className="lamding-page min-h-screen bg-white text-gray-900 dark:bg-slate-950 dark:text-white">
-        {" "}
         <LandingNavigation />
         <Hero />
         <MacbookScrollDemo />
-        <section className="bg-gray-50 py-20 dark:bg-slate-900">
+        <section className="py-20 dark:bg-slate-900">
           <div className="container mx-auto px-4">
             <h2 className="mb-12 text-center text-3xl font-bold">
               Key Features
@@ -347,6 +346,7 @@ export default function LandingPage() {
                 <div className="flex space-x-4">
                   <Link
                     href="https://github.com/your-repo"
+                    aria-label="GitHub Repository for Regreso"
                     className="text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
                   >
                     <Github className="h-6 w-6" />

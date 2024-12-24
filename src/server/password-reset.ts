@@ -8,9 +8,12 @@ import nodemailer from "nodemailer";
 import { encodeHexLowerCase } from "@oslojs/encoding";
 import { sha256 } from "@oslojs/crypto/sha2";
 
+import { getBaseOrigin } from "~/lib/utils";
+
 import { db } from "~/server/db";
 import { passwordResetSessions } from "~/server/db/schema";
 import { generateRandomOTP } from "~/server/utils";
+
 import type { User } from "~/server/models";
 
 export async function createPasswordResetSession(
@@ -37,10 +40,17 @@ export async function validatePasswordResetSessionToken(
   token: string,
 ): Promise<PasswordResetSessionValidationResult> {
   const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
+
   const resetSession = await db.query.passwordResetSessions.findFirst({
     where: eq(passwordResetSessions.id, sessionId),
     with: {
-      user: true,
+      user: {
+        with: {
+          totpCredentials: true,
+          passkeyCredentials: true,
+          securityKeyCredentials: true,
+        },
+      },
     },
   });
   if (!resetSession) {
@@ -59,11 +69,20 @@ export async function validatePasswordResetSessionToken(
     id: resetSession.user.id,
     email: resetSession.user.email,
     displayName: resetSession.user.displayName,
+    bio: resetSession.user.bio,
     name: resetSession.user.name,
     emailVerified: resetSession.user.emailVerified,
     registered2FA: false,
+    registeredSecurityKey: resetSession.user.securityKeyCredentials.length > 0,
+    registeredTOTP: resetSession.user.totpCredentials.length > 0,
+    registeredPasskey: resetSession.user.passkeyCredentials.length > 0,
+    avatarUrl: resetSession.user.avatarUrl,
   };
-  if (resetSession.user.totpKey) {
+  if (
+    user.registeredPasskey ||
+    user.registeredSecurityKey ||
+    user.registeredTOTP
+  ) {
     user.registered2FA = true;
   }
 
@@ -73,10 +92,6 @@ export async function validatePasswordResetSessionToken(
 export async function setPasswordResetSessionAsEmailVerified(
   sessionId: string,
 ): Promise<void> {
-  //   db.execute(
-  //     "UPDATE password_reset_session SET email_verified = 1 WHERE id = ?",
-  //     [sessionId],
-  //   );
   await db
     .update(passwordResetSessions)
     .set({
@@ -86,12 +101,10 @@ export async function setPasswordResetSessionAsEmailVerified(
     .returning({ emailVerified: passwordResetSessions.emailVerified });
 }
 
-export function setPasswordResetSessionAs2FAVerified(sessionId: string): void {
-  //   db.execute(
-  //     "UPDATE password_reset_session SET two_factor_verified = 1 WHERE id = ?",
-  //     [sessionId],
-  //   );
-  void db
+export async function setPasswordResetSessionAs2FAVerified(
+  sessionId: string,
+): Promise<void> {
+  await db
     .update(passwordResetSessions)
     .set({
       twoFactorVerified: true,
@@ -104,7 +117,6 @@ export function invalidateUserPasswordResetSessions(userId: number): void {
   db.delete(passwordResetSessions).where(
     eq(passwordResetSessions.userId, userId),
   );
-  //   db.execute("DELETE FROM password_reset_session WHERE user_id = ?", [userId]);
 }
 
 export const getCurrentPasswordResetSession = cache(async () => {
@@ -162,7 +174,7 @@ export function sendPasswordResetEmail(
     from: process.env.EMAIL_USER,
     to: email,
     subject: "Regreso Password Reset Request",
-    html: `<div><p>To ${email}: A password reset request has been created for your email. Your reset code is ${code}</p>
+    html: `<div><p>To ${email}: A password reset request has been created for your email from <a href="${getBaseOrigin()}">Regreso</a>. Your reset code is ${code}</p>
     <p>Enter this code in the password reset form to continue restoring accesss to your account.</p>
     <p>If you have 2-factor auth set up, you may be required to prove your identity using one of these methods as well. 
     <strong>If you did  not request this, ignore this message.</strong>

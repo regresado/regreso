@@ -64,7 +64,7 @@ export function LoginForm() {
       <CardHeader>
         <CardTitle className="text-2xl">Log in</CardTitle>
         <CardDescription>
-          Enter your email below to login to your account
+          Enter your email below to log in to your account
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -137,7 +137,7 @@ export function LoginForm() {
             ) : null}
 
             <div className="flex flex-col space-y-4 fill-black dark:fill-white">
-              <Label>Login with:</Label>
+              <Label>Log in with:</Label>
               <Link
                 className="button group/btn relative flex h-10 w-full items-center justify-start space-x-2 rounded-md bg-gray-50 px-4 font-medium text-black shadow-input dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
                 href="/log-in/github"

@@ -29,7 +29,7 @@ export function WelcomeCard({
           Learn the basics of how to use Regreso.
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="sm:p-3 xl:p-6">
         <TeamSwitcher teams={teams} />
 
         <div className="mt-4 flex gap-2">

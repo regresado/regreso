@@ -1,145 +1,212 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useActionState, useEffect } from "react";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { X } from "lucide-react";
+import BoringAvatar from "boring-avatars";
+
+import type { User } from "~/server/models";
+
 import { Button } from "~/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "~/components/ui/hover-card";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+
 import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import {
+  Form,
+  FormLabel,
+  FormControl,
+  FormItem,
+  FormMessage,
+  FormField,
+} from "~/components/ui/form";
+import { UploadButton } from "~/lib/client/uploadthing";
 
-import { UploadButton } from "~/lib/uploadthing";
+import { toast } from "~/components/hooks/use-toast";
 
-export default function ProfileEdit() {
-  const [displayName, setDisplayName] = useState("John Doe");
-  const [bio, setBio] = useState(
-    "I'm a software developer who loves creating user-friendly interfaces.",
+import {
+  updateProfileAction,
+  clearProfilePictureAction,
+} from "~/app/(platform)/dashboard/settings/profile/actions";
+
+const FormSchema = z.object({
+  displayName: z
+    .string()
+    .min(1, {
+      message: "Display name must be at least 1 characters.",
+    })
+    .max(50, {
+      message: "Display name must be at most 50 characters.",
+    }),
+  bio: z.string().max(160, {
+    message: "Bio must be at most 160 characters.",
+  }),
+});
+
+const initialState = {
+  message: "",
+};
+
+const pfpClearInitialState = {
+  message: "",
+};
+
+export default function ProfileEdit(props: { user: User }) {
+  const [avatarUrl, setAvatarUrl] = useState(props.user.avatarUrl ?? "");
+
+  const [, action] = useActionState(updateProfileAction, initialState);
+  const [pfpClearState, deletePfpAction] = useActionState(
+    clearProfilePictureAction,
+    pfpClearInitialState,
   );
-  const [avatarUrl, setAvatarUrl] = useState(
-    "/placeholder.svg?height=100&width=100",
-  );
 
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setAvatarUrl(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      displayName: props.user.displayName,
+      bio: props.user.bio ?? "",
+    },
+  });
+  const {
+    trigger,
+    formState: { isValid },
+  } = form;
+
+  useEffect(() => {
+    if (pfpClearState.message === "ok") {
+      setAvatarUrl("");
+    } else {
+      toast({
+        description: pfpClearState.message,
+      });
     }
-  };
+  }, [pfpClearState]);
 
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col gap-6 md:flex-row">
-      <Card className="flex-1">
-        <CardHeader>
-          <CardTitle>Edit Profile</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="avatar">Profile Picture</Label>
+    <>
+      <Form {...form}>
+        <div className="space-y-2 px-3">
+          <FormItem className="w-full">
+            <FormLabel>Profile Picture</FormLabel>
             <div className="flex items-center space-x-4">
-              <Avatar className="h-20 w-20">
-                <AvatarImage src={avatarUrl} alt={displayName} />
+              <Avatar>
+                <AvatarImage src={avatarUrl} alt={`@${props.user.name}`} />
                 <AvatarFallback>
-                  {displayName
-                    .split(" ")
-                    .map((n) => n[0])
-                    .join("")
-                    .toUpperCase()}
+                  <BoringAvatar
+                    name={props.user?.name ?? "anonymous"}
+                    aria-label={`@${props.user?.name}'s profile picture`}
+                    variant="beam"
+                  />
                 </AvatarFallback>
               </Avatar>
-              <UploadButton
-                endpoint="imageUploader"
-                onClientUploadComplete={(res) => {
-                  // Do something with the response
-                  console.log("Files: ", res);
-                  alert("Upload Completed");
-                }}
-                onUploadError={(error: Error) => {
-                  // Do something with the error.
-                  alert(`ERROR! ${error.message}`);
-                }}
-              />
-              <Input
-                id="avatar"
-                type="file"
-                accept="image/*"
-                onChange={handleAvatarChange}
-                className="w-full"
-              />
+              <FormControl>
+                <UploadButton
+                  className="rounded px-4 py-2 font-bold text-white"
+                  endpoint="profilePicture"
+                  onClientUploadComplete={(res) => {
+                    // console.log("Files", res);
+                    alert("Files uploaded");
+                    toast({
+                      title: "Upload complete.",
+                      description: "Your file was successfully uploaded!",
+                    });
+                    if (res[0]) {
+                      setAvatarUrl(res[0].url);
+                    }
+                  }}
+                  onUploadError={(error: Error) => {
+                    alert(`ERROR! ${error.message}`);
+                  }}
+                />
+              </FormControl>
+            </div>
+            <form action={deletePfpAction}>
+              <Button variant="ghost" type="submit">
+                <X />
+                Clear Picture
+              </Button>
+            </form>
+          </FormItem>
+          <form
+            action={action}
+            onSubmit={async (e) => {
+              if (!isValid) {
+                e.preventDefault();
+                await trigger();
+                return;
+              }
+              e.currentTarget?.requestSubmit();
+            }}
+            className="flex w-full flex-col gap-3"
+          >
+            <FormField
+              control={form.control}
+              name="displayName"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Display Name</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder="Pelican Steve" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="bio"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Biography</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      rows={3}
+                      {...field}
+                      placeholder="Pelicans are epic"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit">Save Profile</Button>
+          </form>
+        </div>
+      </Form>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Profile Preview</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex justify-between space-x-4">
+            <Avatar>
+              <AvatarImage src={avatarUrl} />
+              <AvatarFallback>
+                {form
+                  .getValues()
+                  .displayName.split(" ")
+                  .map((n) => n[0])
+                  .join("")
+                  .toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+            <div className="space-y-1">
+              <h4 className="text-sm font-semibold">
+                {form.getValues().displayName}
+              </h4>
+              <p className="text-sm text-muted-foreground">
+                {form.getValues().bio}
+              </p>
             </div>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="displayName">Display Name</Label>
-            <Input
-              id="displayName"
-              value={displayName}
-              onChange={(e) => setDisplayName(e.target.value)}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="bio">Bio</Label>
-            <Textarea
-              id="bio"
-              value={bio}
-              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                setBio(e.target.value)
-              }
-              rows={3}
-            />
-          </div>
         </CardContent>
-        <CardFooter>
-          <Button className="w-full">Save Changes</Button>
-        </CardFooter>
       </Card>
-      <div className="flex-1">
-        <Card>
-          <CardHeader>
-            <CardTitle>Profile Preview</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <HoverCard>
-              <HoverCardTrigger asChild>
-                <Button variant="outline" className="w-full">
-                  Hover to Preview
-                </Button>
-              </HoverCardTrigger>
-              <HoverCardContent className="w-80">
-                <div className="flex justify-between space-x-4">
-                  <Avatar>
-                    <AvatarImage src={avatarUrl} />
-                    <AvatarFallback>
-                      {displayName
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")
-                        .toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="space-y-1">
-                    <h4 className="text-sm font-semibold">{displayName}</h4>
-                    <p className="text-sm text-muted-foreground">{bio}</p>
-                  </div>
-                </div>
-              </HoverCardContent>
-            </HoverCard>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+    </>
   );
 }

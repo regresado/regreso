@@ -1,5 +1,8 @@
 "use server";
 
+import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
+
 import {
   createEmailVerificationRequest,
   deleteEmailVerificationRequestCookie,
@@ -10,10 +13,10 @@ import {
   setEmailVerificationRequestCookie,
 } from "~/server/email-verification";
 import { invalidateUserPasswordResetSessions } from "~/server/password-reset";
-import { ExpiringTokenBucket } from "~/server/rate-limit";
 import { getCurrentSession } from "~/server/session";
 import { updateUserEmailAndSetEmailAsVerified } from "~/server/user";
-import { redirect } from "next/navigation";
+
+import { ExpiringTokenBucket } from "~/server/rate-limit";
 import { globalPOSTRateLimit } from "~/server/request";
 
 const bucket = new ExpiringTokenBucket<number>(5, 60 * 30);
@@ -27,6 +30,7 @@ export async function verifyEmailAction(
       message: "Too many requests",
     };
   }
+  const cookieStore = await cookies();
 
   const { session, user } = await getCurrentSession();
   if (session === null) {
@@ -90,6 +94,12 @@ export async function verifyEmailAction(
   invalidateUserPasswordResetSessions(user.id);
   void updateUserEmailAndSetEmailAsVerified(user.id, verificationRequest.email);
   void deleteEmailVerificationRequestCookie();
+  if (
+    !user.registered2FA &&
+    cookieStore.get("disable2FAReminder")?.value !== "yes"
+  ) {
+    return redirect("/2fa/setup");
+  }
   return redirect("/dashboard");
 }
 

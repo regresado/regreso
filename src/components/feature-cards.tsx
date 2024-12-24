@@ -15,7 +15,7 @@ const features: Feature[] = [
     icon: <Zap className="h-10 w-10 text-cyan-500" />,
     title: "Smart Bookmarking",
     description:
-      "Automatically organize and categorize your visited websites and resources.",
+      "Organize and categorize your visited websites and resources. Search with tags.",
   },
   {
     icon: <Code className="h-10 w-10 text-cyan-500" />,
@@ -25,7 +25,7 @@ const features: Feature[] = [
   },
   {
     icon: <Users className="h-10 w-10 text-cyan-500" />,
-    title: "Collaborative",
+    title: "Collaborative (Coming soon!)",
     description:
       "Share and collaborate on digital trails with your team or community.",
   },
@@ -62,10 +62,10 @@ const FeatureCard = ({ feature }: { feature: Feature }) => {
         <div className="mb-4 inline-block rounded-full bg-cyan-100 p-3 dark:bg-cyan-900">
           {feature.icon}
         </div>
-        <h3 className="mb-2 text-xl font-bold text-gray-900 dark:text-white">
+        <h3 className="mb-2 text-xl font-bold text-black dark:text-white">
           {feature.title}
         </h3>
-        <p className="text-gray-600 dark:text-gray-300">
+        <p className="text-gray-900 dark:text-gray-100">
           {feature.description}
         </p>
       </div>

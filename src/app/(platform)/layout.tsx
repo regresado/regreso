@@ -1,8 +1,19 @@
 "use server";
 import { redirect } from "next/navigation";
-import { getCurrentSession } from "~/server/session";
+
+import { cookies } from "next/headers";
+
 import { HydrateClient } from "~/trpc/server";
 import { ClientLayout } from "~/app/(platform)/client-layout";
+
+import { Toaster } from "~/components/ui/toaster";
+
+import { getCurrentSession } from "~/server/session";
+
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
+import { extractRouterConfig } from "uploadthing/server";
+
+import { ourFileRouter } from "~/app/api/uploadthing/core";
 
 export default async function DashboardLayout({
   children,
@@ -11,7 +22,8 @@ export default async function DashboardLayout({
 }) {
   const { session, user } = await getCurrentSession();
 
-  // TODO: Audit this auth logic
+  const cookieStore = await cookies();
+
   if (user) {
     if (session == null) {
       return redirect("/log-in");
@@ -22,13 +34,28 @@ export default async function DashboardLayout({
       if (user.registered2FA && !session.twoFactorVerified) {
         return redirect("/2fa");
       }
-      //   return redirect("/dashboard");
+      if (
+        !user.registered2FA &&
+        cookieStore.get("disable2FAReminder")?.value != "yes"
+      ) {
+        return redirect("/2fa/setup");
+      }
     }
   }
 
   return (
     <HydrateClient>
+      <NextSSRPlugin
+        /**
+         * The `extractRouterConfig` will extract **only** the route configs
+         * from the router to prevent additional information from being
+         * leaked to the client. The data passed to the client is the same
+         * as if you were to fetch `/api/uploadthing` directly.
+         */
+        routerConfig={extractRouterConfig(ourFileRouter)}
+      />
       <ClientLayout user={user}>{children}</ClientLayout>
+      <Toaster />
     </HydrateClient>
   );
 }

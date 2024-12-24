@@ -11,6 +11,13 @@ export async function GET(): Promise<Response> {
   ]);
 
   const cookieStore = await cookies();
+  cookieStore.set("disable2FAReminder", "", {
+    httpOnly: true,
+    path: "/",
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: 0,
+  });
   cookieStore.set("google_oauth_state", state, {
     path: "/",
     httpOnly: true,

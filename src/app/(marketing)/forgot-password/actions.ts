@@ -1,5 +1,8 @@
 "use server";
 
+import { redirect } from "next/navigation";
+import { headers } from "next/headers";
+
 import { verifyEmailInput } from "~/server/email";
 import {
   createPasswordResetSession,
@@ -7,11 +10,11 @@ import {
   sendPasswordResetEmail,
   setPasswordResetSessionTokenCookie,
 } from "~/server/password-reset";
-import { RefillingTokenBucket } from "~/server/rate-limit";
+
 import { generateSessionToken } from "~/server/session";
 import { getUserFromEmail } from "~/server/user";
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
+
+import { RefillingTokenBucket } from "~/server/rate-limit";
 import { globalPOSTRateLimit } from "~/server/request";
 
 const passwordResetEmailIPBucket = new RefillingTokenBucket<string>(3, 60);
@@ -27,7 +30,7 @@ export async function forgotPasswordAction(
     };
   }
 
-  // TODO: Assumes X-Forwarded-For is always included.
+  // FIXME: Assumes X-Forwarded-For is always included.
   const clientIP = (await headers()).get("X-Forwarded-For");
   if (clientIP !== null && !passwordResetEmailIPBucket.check(clientIP, 1)) {
     return {

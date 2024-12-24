@@ -15,13 +15,6 @@ export const metadata: Metadata = {
   ],
 };
 
-// TODO: Reenable this once issues with next dev --turbo are understood
-// const geistSans = Geist({
-//   subsets: ["latin"],
-//   display: "swap",
-//   adjustFontFallback: false,
-// });
-
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {

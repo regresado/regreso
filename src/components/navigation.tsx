@@ -1,7 +1,14 @@
 import Link from "next/link";
 
+import { ExternalLink } from "lucide-react";
+
 import { Button } from "~/components/ui/button";
-import { Sheet, SheetTrigger, SheetContent } from "~/components/ui/sheet";
+import {
+  Sheet,
+  SheetTrigger,
+  SheetTitle,
+  SheetContent,
+} from "~/components/ui/sheet";
 import { ModeToggle } from "~/components/ui/mode-toggle";
 import {
   Collapsible,
@@ -29,24 +36,29 @@ export default function Navigation() {
             <span className="sr-only">Toggle navigation menu</span>
           </Button>
         </SheetTrigger>
+
         <SheetContent side="left">
-          <Link className="mr-6 flex items-center" href="/" prefetch={false}>
-            <Logo className="h-12 w-12" />
-            <span className="mr-2 text-xl font-bold text-gray-900 dark:text-white">
-              Regreso
-            </span>
-            <div className="flex w-full justify-end">
-              <ModeToggle />
-            </div>
-            <div />
-          </Link>
+          <SheetTitle>
+            <Link className="mr-6 flex items-center" href="/" prefetch={false}>
+              <Logo className="h-12 w-12" />
+              <span className="mr-2 text-xl font-bold text-gray-900 dark:text-white">
+                Regreso
+              </span>
+              <div className="flex w-full justify-end">
+                <ModeToggle />
+              </div>
+              <div />
+            </Link>
+          </SheetTitle>
           <div className="grid gap-2 py-6">
             <Link
               href="/dashboard"
               className="flex w-full items-center py-2 text-lg font-semibold"
               prefetch={false}
             >
-              Dashboard
+              <span className="mr-2 inline align-middle">Dashboard </span>
+
+              <ExternalLink size="16" className="inline align-middle" />
             </Link>
             <Collapsible className="grid gap-4">
               <CollapsibleTrigger className="flex w-full items-center text-lg font-semibold [&[data-state=open]>svg]:rotate-90">
@@ -191,15 +203,19 @@ export default function Navigation() {
       </Link>
       <NavigationMenu className="hidden lg:flex">
         <NavigationMenuList>
-          <NavigationMenuLink asChild>
-            <Link
-              href="/dashboard"
-              className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
-              prefetch={false}
-            >
-              Dashboard
-            </Link>
-          </NavigationMenuLink>
+          <NavigationMenuItem>
+            <NavigationMenuLink asChild>
+              <Link
+                href="/dashboard"
+                className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
+                prefetch={false}
+              >
+                <span className="mr-2 inline align-middle">Dashboard </span>
+
+                <ExternalLink size="16" className="inline align-middle" />
+              </Link>
+            </NavigationMenuLink>
+          </NavigationMenuItem>
           <NavigationMenuItem>
             <NavigationMenuTrigger>About</NavigationMenuTrigger>
             <NavigationMenuContent>
@@ -326,15 +342,17 @@ export default function Navigation() {
               </div>
             </NavigationMenuContent>
           </NavigationMenuItem>
-          <NavigationMenuLink asChild>
-            <Link
-              href="#"
-              className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
-              prefetch={false}
-            >
-              Blog
-            </Link>
-          </NavigationMenuLink>
+          <NavigationMenuItem>
+            <NavigationMenuLink asChild>
+              <Link
+                href="#"
+                className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
+                prefetch={false}
+              >
+                Blog
+              </Link>
+            </NavigationMenuLink>
+          </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
       <div className="flex w-full items-center justify-end gap-4">

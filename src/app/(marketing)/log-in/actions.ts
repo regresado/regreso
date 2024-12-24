@@ -1,16 +1,20 @@
 "use server";
 
+import { redirect } from "next/navigation";
+import { headers, cookies } from "next/headers";
+
 import { verifyEmailInput } from "~/server/email";
 import { verifyPasswordHash } from "~/server/password";
-import { RefillingTokenBucket, Throttler } from "~/server/rate-limit";
+import { get2FARedirect } from "~/server/2fa";
+
 import {
   createSession,
   generateSessionToken,
   setSessionTokenCookie,
 } from "~/server/session";
 import { getUserFromEmail, getUserPasswordHash } from "~/server/user";
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
+
+import { RefillingTokenBucket, Throttler } from "~/server/rate-limit";
 import { globalPOSTRateLimit } from "~/server/request";
 
 import type { SessionFlags } from "~/server/db/schema";
@@ -27,6 +31,8 @@ export async function loginAction(
       message: "Too many requests",
     };
   }
+
+  const cookieStore = await cookies();
   // FIXME: Assumes X-Forwarded-For is always included.
   const clientIP = (await headers()).get("X-Forwarded-For");
   if (clientIP !== null && !ipBucket.check(clientIP, 1)) {
@@ -82,14 +88,24 @@ export async function loginAction(
   const sessionToken = generateSessionToken();
   const session = await createSession(sessionToken, user.id, sessionFlags);
   await setSessionTokenCookie(sessionToken, session.expiresAt);
+  cookieStore.set("disable2FAReminder", "", {
+    httpOnly: true,
+    path: "/",
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: 0,
+  });
 
   if (!user.emailVerified) {
     return redirect("/verify-email");
   }
-  if (!user.registered2FA) {
+  if (
+    !user.registered2FA &&
+    cookieStore.get("disable2FAReminder")?.value != "yes"
+  ) {
     return redirect("/2fa/setup");
   }
-  return redirect("/2fa");
+  return redirect(get2FARedirect(user));
 }
 
 interface ActionResult {

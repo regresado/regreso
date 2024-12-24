@@ -43,12 +43,12 @@ const FormSchema = z.object({
       message: "Username must be at least 2 characters.",
     })
     .max(50, {
-      message: "Display name must be at most 50 characters.",
+      message: "Username must be at most 50 characters.",
     }),
   displayName: z
     .string()
     .min(1, {
-      message: "Display name must be at least 2 characters.",
+      message: "Display name must be at least 1 characters.",
     })
     .max(50, {
       message: "Display name must be at most 50 characters.",
@@ -186,7 +186,7 @@ export function SignupForm() {
             <div className="my-5 h-[1px] w-full bg-gradient-to-r from-transparent via-neutral-300 to-transparent dark:via-neutral-700" />
 
             <div className="flex flex-col space-y-4 fill-black dark:fill-white">
-              <Label>Login with:</Label>
+              <Label>Log in with:</Label>
               <button className="group/btn relative flex h-10 w-full items-center justify-start space-x-2 rounded-md bg-gray-50 px-4 font-medium text-black shadow-input dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]">
                 <svg
                   role="img"

@@ -1,9 +1,9 @@
 import { SettingsDialog } from "~/components/settings-dialog";
 
-export default function Page() {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex h-svh items-center justify-center">
-      <SettingsDialog></SettingsDialog>
+      <SettingsDialog>{children}</SettingsDialog>
     </div>
   );
 }
