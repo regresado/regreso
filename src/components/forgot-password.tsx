@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { forgotPasswordAction } from "~/app/(marketing)/forgot-password/actions";
+import { forgotPasswordAction } from "~/app/(auth)/forgot-password/actions";
 
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";

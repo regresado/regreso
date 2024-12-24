@@ -10,7 +10,7 @@ import { AlertCircle } from "lucide-react";
 
 import { createChallenge } from "~/lib/client/webauthn";
 
-import { verify2FAWithPasskeyAction } from "~/app/(marketing)/reset-password/2fa/passkey/actions";
+import { verify2FAWithPasskeyAction } from "~/app/(auth)/reset-password/2fa/passkey/actions";
 
 import { Button } from "~/components/ui/button";
 import { Alert, AlertTitle, AlertDescription } from "~/components/ui/alert";

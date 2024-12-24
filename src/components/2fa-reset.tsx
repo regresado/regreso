@@ -8,7 +8,7 @@ import { z } from "zod";
 
 import { AlertCircle } from "lucide-react";
 
-import { reset2FAAction } from "~/app/(marketing)/2fa/reset/actions";
+import { reset2FAAction } from "~/app/(auth)/2fa/reset/actions";
 
 import { Button } from "~/components/ui/button";
 import {

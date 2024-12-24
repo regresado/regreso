@@ -30,7 +30,7 @@ import {
 import { BottomGradient } from "~/components/ui/bottom-gradient";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 
-import { signupAction } from "~/app/(marketing)/sign-up/actions";
+import { signupAction } from "~/app/(auth)/sign-up/actions";
 
 const initialState = {
   message: "",

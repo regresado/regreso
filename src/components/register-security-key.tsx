@@ -23,7 +23,7 @@ import {
 
 import { createChallenge } from "~/lib/client/webauthn";
 
-import { registerSecurityKeyAction } from "~/app/(marketing)/2fa/security-key/register/actions";
+import { registerSecurityKeyAction } from "~/app/(auth)/2fa/security-key/register/actions";
 
 import type { User } from "~/server/models";
 

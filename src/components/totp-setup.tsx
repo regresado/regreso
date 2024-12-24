@@ -8,7 +8,7 @@ import { z } from "zod";
 
 import { AlertCircle } from "lucide-react";
 
-import { setup2FAAction } from "~/app/(marketing)/2fa/totp/setup/actions";
+import { setup2FAAction } from "~/app/(auth)/2fa/totp/setup/actions";
 
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";

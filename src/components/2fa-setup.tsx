@@ -7,7 +7,7 @@ import Link from "next/link";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
 
-import { skip2FASetupAction } from "~/app/(marketing)/2fa/setup/actions";
+import { skip2FASetupAction } from "~/app/(auth)/2fa/setup/actions";
 
 const initialState = {
   error: "",

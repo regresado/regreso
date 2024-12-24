@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 
 import { LoginForm } from "~/components/login-form";
 
-import { loginAction } from "~/app/(marketing)/log-in/actions";
+import { loginAction } from "~/app/(auth)/log-in/actions";
 
 import { getCurrentSession } from "~/server/session";
 import { get2FARedirect } from "~/server/2fa";

@@ -21,7 +21,7 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 
-import { verifyPasswordReset2FAWithRecoveryCodeAction } from "~/app/(marketing)/reset-password/2fa/recovery-code/actions";
+import { verifyPasswordReset2FAWithRecoveryCodeAction } from "~/app/(auth)/reset-password/2fa/recovery-code/actions";
 
 const FormSchema = z.object({
   code: z

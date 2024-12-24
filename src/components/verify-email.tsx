@@ -11,7 +11,7 @@ import { AlertCircle } from "lucide-react";
 import {
   verifyEmailAction,
   resendEmailVerificationCodeAction,
-} from "~/app/(marketing)/verify-email/actions";
+} from "~/app/(auth)/verify-email/actions";
 import { logoutAction } from "~/app/(platform)/actions";
 
 import { Button } from "~/components/ui/button";

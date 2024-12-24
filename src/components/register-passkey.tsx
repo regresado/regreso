@@ -26,7 +26,7 @@ import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 
 import { createChallenge } from "~/lib/client/webauthn";
 
-import { registerPasskeyAction } from "~/app/(marketing)/2fa/passkey/register/actions";
+import { registerPasskeyAction } from "~/app/(auth)/2fa/passkey/register/actions";
 import type { User } from "~/server/models";
 
 const initialRegisterPasskeyState = {

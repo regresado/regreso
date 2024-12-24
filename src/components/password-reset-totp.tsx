@@ -25,7 +25,7 @@ import {
 } from "~/components/ui/input-otp";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 
-import { verifyPasswordReset2FAWithTOTPAction } from "~/app/(marketing)/reset-password/2fa/totp/actions";
+import { verifyPasswordReset2FAWithTOTPAction } from "~/app/(auth)/reset-password/2fa/totp/actions";
 
 const FormSchema = z.object({
   code: z

@@ -8,8 +8,8 @@ import { z } from "zod";
 
 import { AlertCircle } from "lucide-react";
 
-import { resetPasswordAction } from "~/app/(marketing)/reset-password/actions";
-import { verifyPasswordResetEmailAction } from "~/app/(marketing)/reset-password/verify-email/actions";
+import { resetPasswordAction } from "~/app/(auth)/reset-password/actions";
+import { verifyPasswordResetEmailAction } from "~/app/(auth)/reset-password/verify-email/actions";
 
 const initialPasswordResetEmailVerificationState = {
   message: "",

@@ -29,7 +29,7 @@ import {
 import { BottomGradient } from "~/components/ui/bottom-gradient";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 
-import { loginAction } from "~/app/(marketing)/log-in/actions";
+import { loginAction } from "~/app/(auth)/log-in/actions";
 import { useActionState } from "react";
 
 const initialState = {
