@@ -88,9 +88,9 @@ export default function ProfileEdit(props: { user: User }) {
   }, [pfpClearState]);
 
   return (
-    <>
+    <div className="max-w-2/3 space-y-6 overflow-y-scroll px-3">
       <Form {...form}>
-        <div className="space-y-2 px-3">
+        <div className="space-y-2">
           <FormItem className="w-full">
             <FormLabel>Profile Picture</FormLabel>
             <div className="flex items-center space-x-4">
@@ -184,22 +184,24 @@ export default function ProfileEdit(props: { user: User }) {
           <CardTitle>Profile Preview</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex justify-between space-x-4">
+          <div className="flex space-x-4">
             <Avatar>
               <AvatarImage src={avatarUrl} />
               <AvatarFallback>
-                {form
-                  .getValues()
-                  .displayName.split(" ")
-                  .map((n) => n[0])
-                  .join("")
-                  .toUpperCase()}
+                <BoringAvatar
+                  aria-label={`@${props.user?.name}'s profile picture`}
+                  name={props.user?.name ?? "anonymous"}
+                  variant="beam"
+                />
               </AvatarFallback>
             </Avatar>
             <div className="space-y-1">
-              <h4 className="text-sm font-semibold">
-                {form.getValues().displayName}
-              </h4>
+              <div className="flex space-x-1 align-middle">
+                <h4 className="text-sm font-semibold">
+                  {form.getValues().displayName}
+                </h4>
+                <h4 className="text-sm">@{props.user?.name}</h4>
+              </div>
               <p className="text-sm text-muted-foreground">
                 {form.getValues().bio}
               </p>
@@ -207,6 +209,6 @@ export default function ProfileEdit(props: { user: User }) {
           </div>
         </CardContent>
       </Card>
-    </>
+    </div>
   );
 }
