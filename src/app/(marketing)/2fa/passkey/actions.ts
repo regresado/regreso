@@ -102,7 +102,6 @@ export async function verify2FAWithPasskeyAction(
       error: "Invalid data",
     };
   }
-  console.error(getBaseHost());
   if (!authenticatorData.verifyRelyingPartyIdHash(getBaseHost())) {
     return {
       error: "Invalid data",

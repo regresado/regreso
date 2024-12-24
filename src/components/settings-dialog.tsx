@@ -95,7 +95,7 @@ const data = {
         </div>
       ),
       icon: Settings,
-      url: "#s",
+      url: "#advanced",
     },
   ],
 };
