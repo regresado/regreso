@@ -8,8 +8,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 
 import { Verify2FAWithPasskeyButton } from "~/components/verify-2fa-passkey";
 
-import { get2FARedirect } from "~/server/2fa";
 import { getCurrentSession } from "~/server/session";
+import { get2FARedirect } from "~/server/2fa";
 import { getUserPasskeyCredentials } from "~/server/webauthn";
 
 import { globalGETRateLimit } from "~/server/request";
@@ -36,6 +36,7 @@ export default async function Page() {
     return redirect(get2FARedirect(user));
   }
   const credentials = await getUserPasskeyCredentials(user.id);
+
   return (
     <Card className="mx-auto max-w-sm">
       <CardHeader>
