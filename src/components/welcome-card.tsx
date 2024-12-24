@@ -1,6 +1,9 @@
-import { motion } from "framer-motion";
+import Link from "next/link";
 
+import { motion } from "framer-motion";
 import { Binoculars, Rocket } from "lucide-react";
+
+import { useOnborda } from "onborda";
 
 import {
   Card,
@@ -23,6 +26,7 @@ export function WelcomeCard({
   }[];
   name: string;
 }) {
+  const { startOnborda, closeOnborda } = useOnborda();
   return (
     <motion.div
       initial={{ opacity: 0.5, y: 30 }}
@@ -33,7 +37,7 @@ export function WelcomeCard({
         ease: "easeOut",
       }}
     >
-      <Card>
+      <Card id="welcome-card">
         <CardHeader>
           <CardTitle>👋 Welcome {name},</CardTitle>
           <CardDescription>
@@ -44,11 +48,18 @@ export function WelcomeCard({
           <TeamSwitcher teams={teams} />
 
           <div className="mt-4 flex gap-2">
-            <Button size="sm" variant="outline">
-              <Rocket />
-              Setup Guide
+            <Button size="sm" variant="outline" asChild>
+              <Link href="/guide">
+                <Rocket />
+                Setup Guide
+              </Link>
             </Button>
-            <Button size="sm">
+            <Button
+              size="sm"
+              onClick={() => {
+                startOnborda("welcome-tour");
+              }}
+            >
               <Binoculars /> Start Tour
             </Button>
           </div>
