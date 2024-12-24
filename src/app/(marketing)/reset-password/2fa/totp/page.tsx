@@ -49,14 +49,18 @@ export default async function Page() {
       </CardHeader>
       <CardContent className="space-y-4">
         <PasswordResetTOTPForm />
+
         <Button asChild variant="outline">
           <Link href="/reset-password/2fa/reset">Use recovery code</Link>
         </Button>
-        {user.registeredPasskey && (
-          <Button asChild variant="outline">
-            <Link href="/reset-password/2fa/passkey">Use passkeys</Link>
-          </Button>
-        )}
+
+        <div>
+          {user.registeredPasskey && (
+            <Button asChild variant="outline">
+              <Link href="/reset-password/2fa/passkey">Use passkeys</Link>
+            </Button>
+          )}
+        </div>
         {user.registeredSecurityKey && (
           <Button asChild variant="outline">
             <Link href="/reset-password/2fa/security-key">

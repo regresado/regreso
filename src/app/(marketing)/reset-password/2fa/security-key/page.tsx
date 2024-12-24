@@ -60,11 +60,13 @@ export default async function Page() {
             <Link href="/reset-password/2fa/totp">Use authenticator apps</Link>
           </Button>
         )}
-        {user.registeredPasskey && (
-          <Button asChild variant="outline">
-            <Link href="/reset-password/2fa/passkey">Use passkeys</Link>
-          </Button>
-        )}
+        <div>
+          {user.registeredPasskey && (
+            <Button asChild variant="outline">
+              <Link href="/reset-password/2fa/passkey">Use passkeys</Link>
+            </Button>
+          )}
+        </div>
       </CardContent>
     </Card>
   );

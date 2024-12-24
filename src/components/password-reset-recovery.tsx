@@ -23,8 +23,6 @@ import {
 
 import { verifyPasswordReset2FAWithRecoveryCodeAction } from "~/app/(marketing)/reset-password/2fa/recovery-code/actions";
 
-import { logoutAction } from "~/app/(platform)/actions";
-
 const FormSchema = z.object({
   code: z
     .string()
@@ -39,16 +37,12 @@ const FormSchema = z.object({
 const initialPasswordResetRecoveryCodeState = {
   message: "",
 };
-const logoutState = {
-  message: "",
-};
 
 export function PasswordResetRecoveryCodeForm() {
   const [state, action] = useActionState(
     verifyPasswordReset2FAWithRecoveryCodeAction,
     initialPasswordResetRecoveryCodeState,
   );
-  const [, outAction] = useActionState(logoutAction, logoutState);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -90,13 +84,7 @@ export function PasswordResetRecoveryCodeForm() {
           )}
         />
         <Button type="submit">Verify</Button>
-        <div className="mt-4 flex justify-end space-x-4">
-          <form action={outAction} className="mt-4">
-            <Button variant="destructive" type="submit">
-              Log out
-            </Button>
-          </form>
-        </div>
+
         {state.message.length > 0 ? (
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />

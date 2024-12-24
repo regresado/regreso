@@ -125,7 +125,7 @@ export function TwoFactorVerificationForm() {
         </form>
       </Form>
       <div className="mt-4 flex justify-end space-x-4">
-        <form action={outAction} className="mt-4">
+        <form action={outAction}>
           <Button variant="destructive" type="submit">
             Log out
           </Button>
