@@ -49,7 +49,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
-    "drizzle-orm": "^0.33.0",
+    "drizzle-orm": "^0.38.2",
     "framer-motion": "^11.11.17",
     "geist": "^1.3.0",
     "input-otp": "^1.4.1",
