@@ -39,7 +39,7 @@ export default async function Page() {
 
   const { session, user } = await getCurrentSession();
   if (session === null) {
-    return redirect("/login");
+    return redirect("/log-in");
   }
   if (user.registered2FA && !session.twoFactorVerified) {
     return redirect(get2FARedirect(user));
