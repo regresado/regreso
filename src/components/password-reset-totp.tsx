@@ -25,6 +25,9 @@ import {
 } from "~/components/ui/input-otp";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 
+import { verifyPasswordReset2FAWithTOTPAction } from "~/app/(marketing)/reset-password/2fa/totp/actions";
+import { logoutAction } from "~/app/(platform)/actions";
+
 const FormSchema = z.object({
   code: z
     .string()
@@ -35,9 +38,12 @@ const FormSchema = z.object({
       message: "Your one-time password must be 6 characters.",
     }),
 });
-import { verifyPasswordReset2FAWithTOTPAction } from "~/app/(marketing)/reset-password/2fa/totp/actions";
 
 const initialPasswordResetTOTPState = {
+  message: "",
+};
+
+const logoutState = {
   message: "",
 };
 
@@ -46,6 +52,8 @@ export function PasswordResetTOTPForm() {
     verifyPasswordReset2FAWithTOTPAction,
     initialPasswordResetTOTPState,
   );
+  const [, outAction] = useActionState(logoutAction, logoutState);
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -108,6 +116,13 @@ export function PasswordResetTOTPForm() {
             </AlertDescription>
           </Alert>
         ) : null}
+        <div className="mt-4 flex justify-end space-x-4">
+          <form action={outAction} className="mt-4">
+            <Button variant="destructive" type="submit">
+              Log out
+            </Button>
+          </form>
+        </div>
       </form>
     </Form>
   );

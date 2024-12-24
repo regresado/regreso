@@ -27,6 +27,8 @@ import {
 } from "~/components/ui/input-otp";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 
+import { logoutAction } from "~/app/(platform)/actions";
+
 const FormSchema = z.object({
   code: z
     .string()
@@ -41,12 +43,17 @@ const FormSchema = z.object({
 const twoFactorResetInitialState = {
   message: "",
 };
+const logoutState = {
+  message: "",
+};
 
 export function TwoFactorResetForm() {
   const [state, action] = useActionState(
     reset2FAAction,
     twoFactorResetInitialState,
   );
+  const [, outAction] = useActionState(logoutAction, logoutState);
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -93,7 +100,7 @@ export function TwoFactorResetForm() {
                 </InputOTP>
               </FormControl>
               <FormDescription>
-                Please enter the code from the app.
+                Please enter your recovery code.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -101,6 +108,15 @@ export function TwoFactorResetForm() {
         />
 
         <Button type="submit">Verify</Button>
+
+        <div className="mt-4 flex justify-end space-x-4">
+          <form action={outAction} className="mt-4">
+            <Button variant="destructive" type="submit">
+              Log out
+            </Button>
+          </form>
+        </div>
+
         {state.message.length > 0 ? (
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />

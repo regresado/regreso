@@ -34,6 +34,8 @@ import {
 } from "~/components/ui/input-otp";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 
+import { logoutAction } from "~/app/(platform)/actions";
+
 import { toast } from "~/components/hooks/use-toast";
 
 const VerifyEmailFormSchema = z.object({
@@ -54,12 +56,16 @@ const FormSchema = z.object({
 const initialPasswordResetState = {
   message: "",
 };
+const logoutState = {
+  message: "",
+};
 
 export function PasswordResetForm() {
   const [state, action] = useActionState(
     resetPasswordAction,
     initialPasswordResetState,
   );
+  const [, outAction] = useActionState(logoutAction, logoutState);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -107,6 +113,13 @@ export function PasswordResetForm() {
           )}
         />
         <Button>Reset password</Button>
+        <div className="mt-4 flex justify-end space-x-4">
+          <form action={outAction} className="mt-4">
+            <Button variant="destructive" type="submit">
+              Log out
+            </Button>
+          </form>
+        </div>
         {state.message.length > 0 ? (
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
