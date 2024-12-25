@@ -25,9 +25,12 @@ export default async function Post({
   };
   return (
     <div className="align-center min-w-sm mx-auto max-w-3xl space-y-8 pt-4">
-      <div className="space-y-3">
-        <h1 className="text-3xl font-extrabold">{postData.title}</h1>
-        <p className="text-muted-foreground">{postData.date}</p>
+      <div className="flex flex-col space-y-3">
+        <div className="flex flex-row items-end space-x-3">
+          <h1 className="text-3xl font-extrabold">{postData.title}</h1>
+          <p className="align-end text-muted-foreground">{postData.date}</p>
+        </div>
+        <p className="text-muted-foreground">{postData.description}</p>
       </div>
       <ReactMarkdown components={components}>{postData.content}</ReactMarkdown>
     </div>
