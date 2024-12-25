@@ -52,6 +52,7 @@
     "drizzle-orm": "^0.38.2",
     "framer-motion": "^11.11.17",
     "geist": "^1.3.0",
+    "gray-matter": "^4.0.3",
     "input-otp": "^1.4.1",
     "lucide-react": "^0.469.0",
     "next": "^15.1.2",
