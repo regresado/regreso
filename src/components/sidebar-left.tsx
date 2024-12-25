@@ -62,14 +62,9 @@ const data = {
       url: "/dashboard/settings",
       icon: Settings,
     },
-    // {
-    //   title: "Trash",
-    //   url: "#",
-    //   icon: Trash2,
-    // },
     {
       title: "Help",
-      url: "#",
+      url: "/help",
       icon: MessageCircleQuestion,
     },
   ],
