@@ -24,7 +24,7 @@
     "@node-rs/argon2": "^2.0.0",
     "@oslojs/crypto": "^1.0.1",
     "@oslojs/encoding": "^1.1.0",
-    "@oslojs/otp": "^1.0.0",
+    "@oslojs/otp": "^1.1.0",
     "@oslojs/webauthn": "^1.0.0",
     "@pilcrowjs/object-parser": "^0.0.4",
     "@radix-ui/react-avatar": "^1.1.1",
