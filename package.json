@@ -71,7 +71,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@types/eslint": "^8.56.10",
+    "@types/eslint": "^9.6.1",
     "@types/node": "^20.14.10",
     "@types/nodemailer": "^6.4.17",
     "@types/react": "^18.3.3",
@@ -79,7 +79,7 @@
     "@typescript-eslint/eslint-plugin": "^8.18.2",
     "@typescript-eslint/parser": "^8.18.2",
     "drizzle-kit": "^0.24.0",
-    "eslint": "^8.57.1",
+    "eslint": "^9.17.0",
     "eslint-config-next": "^15.0.1",
     "eslint-plugin-drizzle": "^0.2.3",
     "postcss": "^8.4.39",
