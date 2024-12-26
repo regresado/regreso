@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-import ProfileEdit from "~/components/profile-edit";
+import AppearanceSettings from "~/components/appearance-settings";
 
 import { getCurrentSession } from "~/server/session";
 import { get2FARedirect } from "~/server/2fa";
@@ -20,5 +20,5 @@ export default async function Page() {
     return redirect(get2FARedirect(user));
   }
 
-  return <ProfileEdit user={user} />;
+  return <AppearanceSettings user={user} />;
 }
