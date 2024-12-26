@@ -19,7 +19,7 @@ export default async function Page() {
 
   const { session, user } = await getCurrentSession();
   if (session === null || user === null) {
-    return redirect("/login");
+    return redirect("/log-in");
   }
   if (!user.emailVerified) {
     return redirect("/verify-email");

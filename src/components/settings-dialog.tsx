@@ -41,8 +41,6 @@ import {
 
 const data = {
   nav: [
-    // { name: "Navigation", icon: Menu },
-    // { name: "Home", icon: Home },
     { name: "Profile", icon: CircleUser, url: "/dashboard/settings/profile" },
 
     { name: "Account", icon: Lock, url: "/dashboard/settings/account" },
@@ -51,7 +49,9 @@ const data = {
       render: (
         <div>
           Notifications
-          <Badge className="ml-2">Soon</Badge>
+          <Badge className="ml-2" variant="secondary">
+            Soon!
+          </Badge>
         </div>
       ),
       icon: Bell,
@@ -61,37 +61,34 @@ const data = {
       name: "Appearance",
       render: (
         <div>
-          Appearance <Badge className="ml-2">Soon</Badge>
+          Appearance <Badge className="ml-2">New</Badge>
         </div>
       ),
       icon: Paintbrush,
-      url: "#appearance",
+      url: "/dashboard/settings/appearance",
     },
 
     {
       name: "Accessibility",
       render: (
         <div>
-          Accessibility <Badge className="ml-2">Soon</Badge>
+          Accessibility{" "}
+          <Badge className="ml-2" variant="secondary">
+            Soon!
+          </Badge>
         </div>
       ),
       icon: Keyboard,
       url: "#accessibility",
     },
-
-    // { name: "Messages & media", icon: MessageCircle },
-    // { name: "Language & region", icon: Globe },
-    // { name: "Accessibility", icon: Keyboard },
-    // { name: "Mark as read", icon: Check },
-    // { name: "Audio & video", icon: Video },
-    // { name: "Connected accounts", icon: Link },
-    // { name: "Privacy & visibility", icon: Lock },
-
     {
       name: "Advanced",
       render: (
         <div>
-          Advanced <Badge className="ml-2">Soon</Badge>
+          Advanced{" "}
+          <Badge className="ml-2" variant="secondary">
+            Soon!
+          </Badge>
         </div>
       ),
       icon: Settings,
@@ -170,14 +167,6 @@ export function SettingsDialog({ children }: { children: React.ReactNode }) {
                 </Breadcrumb>
               </div>
             </header>
-            {/* <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-4 pt-0">
-              {Array.from({ length: 10 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="aspect-video max-w-3xl rounded-xl bg-muted/50"
-                />
-              ))}
-            </div> */}
             {children}
           </main>
         </SidebarProvider>
