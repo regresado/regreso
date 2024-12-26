@@ -1,6 +1,9 @@
 import React from "react";
 
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+
+import "~/styles/markdown.css";
 
 import { getPostData, getSortedPostsData } from "~/lib/blog";
 
@@ -17,12 +20,6 @@ export default async function Post({
   params: Promise<{ slug: string }>;
 }) {
   const postData = await getPostData((await params).slug);
-  const renderH3 = (props: { children?: React.ReactNode }) => (
-    <h3 className="text-2xl font-bold">{props.children}</h3>
-  );
-  const components = {
-    h4: renderH3,
-  };
   return (
     <div className="align-center min-w-sm mx-auto max-w-3xl space-y-8 pt-4">
       <div className="flex flex-col space-y-3">
@@ -32,7 +29,9 @@ export default async function Post({
         </div>
         <p className="text-muted-foreground">{postData.description}</p>
       </div>
-      <ReactMarkdown components={components}>{postData.content}</ReactMarkdown>
+      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+        {postData.content}
+      </ReactMarkdown>
     </div>
   );
 }
