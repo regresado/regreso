@@ -3,6 +3,8 @@ import React from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
+import { Avatar, AvatarImage, AvatarFallback } from "~/components/ui/avatar";
+
 import "~/styles/markdown.css";
 
 import { getPostData, getSortedPostsData } from "~/lib/blog";
@@ -27,7 +29,21 @@ export default async function Post({
           <h1 className="text-3xl font-extrabold">{postData.title}</h1>
           <p className="align-end text-muted-foreground">{postData.date}</p>
         </div>
-        <p className="text-muted-foreground">{postData.description}</p>
+        <div className="flex flex-row items-end space-x-3">
+          <p className="text-muted-foreground">{postData.description}</p>
+          <div className="w-4 overflow-visible">
+            <Avatar>
+              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+          </div>
+          <div className="w-4 overflow-visible">
+            <Avatar>
+              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+          </div>
+        </div>
       </div>
       <ReactMarkdown remarkPlugins={[remarkGfm]}>
         {postData.content}

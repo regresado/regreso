@@ -17,7 +17,7 @@ export const env = createEnv({
     EMAIL_PASSWORD: z.string(),
     UPLOADTHING_TOKEN: z.string(),
     VERCEL_URL: z.string().default("localhost:3000"),
-
+    REPOSITORY_URL: z.string().url(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
@@ -47,6 +47,7 @@ export const env = createEnv({
     EMAIL_PASSWORD: process.env.EMAIL_PASSWORD,
     UPLOADTHING_TOKEN: process.env.UPLOADTHING_TOKEN,
     VERCEL_URL: process.env.VERCEL_URL,
+    REPOSITORY_URL: process.env.REPOSITORY_URL,
     NODE_ENV: process.env.NODE_ENV,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
