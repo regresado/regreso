@@ -12,9 +12,11 @@ import { Separator } from "~/components/ui/separator";
 import { WelcomeCard } from "~/components/welcome-card";
 import { SidebarTrigger } from "~/components/ui/sidebar";
 
+import type { User } from "~/server/models";
+
 import { Home } from "lucide-react";
 
-const Page: React.FC = () => {
+export default function DashboardHome(user: User) {
   return (
     <>
       <header className="sticky top-0 flex h-14 shrink-0 items-center gap-2 bg-background">
@@ -53,7 +55,7 @@ const Page: React.FC = () => {
                   plan: "Free",
                 },
               ]}
-              name={"John Doe"}
+              name={user.displayName}
             />
           </div>
           <div className="rounded-xl bg-muted/50" />
@@ -62,6 +64,4 @@ const Page: React.FC = () => {
       </div>
     </>
   );
-};
-
-export default Page;
+}
