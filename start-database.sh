@@ -51,10 +51,18 @@ if [ "$DB_PASSWORD" = "password" ]; then
   sed -i -e "s#:password@#:$DB_PASSWORD@#" .env
 fi
 
+# Check if setup.sql file exists
+if [ ! -f setup.sql ]; then
+  echo "setup.sql file not found. Please provide the setup.sql file and try again."
+  exit 1
+fi
+
 docker run -d \
   --name $DB_CONTAINER_NAME \
   -e POSTGRES_USER="postgres" \
   -e POSTGRES_PASSWORD="$DB_PASSWORD" \
   -e POSTGRES_DB=regreso \
+  -v "$(pwd)/setup.sql":/docker-entrypoint-initdb.d/setup.sql \
+  docker.io/postgres
   -p "$DB_PORT":5432 \
   docker.io/postgres && echo "Database container '$DB_CONTAINER_NAME' was successfully created"

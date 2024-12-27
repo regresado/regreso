@@ -17,7 +17,13 @@ Regreso is an open source application that allows you to sync, manage, and track
 - [Technical Wiki](https://regreso.netlify.app/wiki)
 - [Roadmap](https://regreso.netlify.app/roadmap)
 
-## ⚙️ Tech Stack:
+## 🚀 Development
+
+To fork/extend Regreso, it is recommended that you use Supabase or any other Postgres database provider. To develop locally, you can run the `start-database.sh` file to easily create a new Postgres database with Docker. Alternatively, the `setup.sql` provides the full database schema.
+
+Many environment variables are also required for Regreso development. These are also documented in the `.env.example` file.
+
+## ⚙️ Tech Overview
 
 This project uses the [T3 Webdev Stack](https://create.t3.gg/) made by [@t3oss](https://github.com/t3oss):
 

@@ -1,0 +1,37 @@
+blockquote {
+  @apply mt-6 border-l-2 pl-6 italic;
+}
+
+h2 {
+  /* TODO: Move these styles to globals.css. This is beyond the scope 
+      of the PR I am opening right now though so I guess that means
+      it's future me's problem ✨*/
+  @apply text-xl;
+}
+h3 {
+  @apply text-lg;
+}
+
+table {
+  @apply w-full;
+}
+
+tr {
+  @apply m-0 border-t p-0 even:bg-muted;
+}
+
+th {
+  @apply border px-4 py-2 text-left font-bold [&[align=center]]:text-center [&[align=right]]:text-right;
+}
+
+td {
+  @apply border px-4 py-2 text-left [&[align=center]]:text-center [&[align=right]]:text-right;
+}
+
+ul {
+  @apply my-6 ml-6 list-disc [&>li]:mt-2;
+}
+
+code {
+  @apply relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold;
+}

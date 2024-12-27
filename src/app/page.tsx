@@ -314,7 +314,7 @@ export default function LandingPage() {
                   </li>
                   <li>
                     <Link
-                      href="/source-code"
+                      href="/repository"
                       className="text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
                     >
                       Source Code
