@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 export interface User {
   id: number;
   email: string;
@@ -23,3 +25,22 @@ export interface Session extends SessionFlags {
   expiresAt: Date;
   userId: number;
 }
+
+const destinationTypes = ["location", "note", "file"] as const;
+
+export const destinationSchema = z.object({
+  type: z.enum(destinationTypes),
+  location: z.string().url(),
+  name: z
+    .string({
+      required_error: "Please select an email to display.",
+    })
+    .max(100, {
+      message: "The name must be less than 100 characters.",
+    }),
+  body: z.string().max(1000, {
+    message: "The body must be less than 1000 characters.",
+  }),
+  tags: z.array(z.string()),
+  attachments: z.array(z.string()),
+});
