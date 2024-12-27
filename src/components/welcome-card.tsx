@@ -24,7 +24,9 @@ export function WelcomeCard({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>👋 Welcome {name},</CardTitle>
+        <CardTitle>
+          👋 Welcome{name ? " back, " + name : " to Regreso"},
+        </CardTitle>
         <CardDescription>
           Learn the basics of how to use Regreso.
         </CardDescription>
