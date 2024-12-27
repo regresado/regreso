@@ -2,6 +2,8 @@
 
 import React, { useActionState } from "react";
 
+import { useSearchParams } from "next/navigation";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -61,12 +63,14 @@ const FormSchema = z.object({
 
 export function SignupForm() {
   const [state, action] = useActionState(signupAction, initialState);
+  const searchParams = useSearchParams();
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       username: "",
       displayName: "",
-      email: "",
+      email: searchParams.get("email") ?? "",
       password: "",
     },
   });
