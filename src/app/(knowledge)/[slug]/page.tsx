@@ -5,13 +5,10 @@ import { SiteContent } from "~/components/site-content";
 import { getPostData, getSortedPostsData } from "~/lib/knowledge";
 
 export async function generateStaticParams() {
-  const posts = getSortedPostsData();
-  return posts.map((post) => ({
-    slug: post.id,
-  }));
+  return getSortedPostsData();
 }
 
-export default async function Post({
+export default async function ContentPage({
   params,
 }: {
   params: Promise<{ slug: string }>;

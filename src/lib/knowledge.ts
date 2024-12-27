@@ -2,14 +2,14 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 
-const postsDirectory = path.join(
+const contentDirectory = path.join(
   process.cwd(),
-  "src/app/(knowledge)/blog/posts",
+  "src/app/(knowledge)/(content)",
 );
 
-export function getSortedPostsData() {
+export function getSortedPostsData(dir = "") {
   // Get file names under /posts
-  const fileNames = fs.readdirSync(postsDirectory);
+  const fileNames = fs.readdirSync(path.join(contentDirectory, dir));
   const allPostsData = fileNames
     .map((fileName) => {
       if (!fileName.endsWith(".md")) return null;
@@ -17,7 +17,7 @@ export function getSortedPostsData() {
       const id = fileName.replace(/\.md$/, "");
 
       // Read markdown file as string
-      const fullPath = path.join(postsDirectory, fileName);
+      const fullPath = path.join(contentDirectory, dir, fileName);
       const fileContents = fs.readFileSync(fullPath, "utf8");
 
       // Use gray-matter to parse the post metadata section
@@ -40,8 +40,8 @@ export function getSortedPostsData() {
   });
 }
 
-export async function getPostData(id: string): Promise<PostData> {
-  const fullPath = path.join(postsDirectory, `${id}.md`);
+export async function getPostData(id: string, dir = ""): Promise<PostData> {
+  const fullPath = path.join(contentDirectory, dir, `${id}.md`);
   const fileContents = fs.readFileSync(fullPath, "utf8");
 
   // Use gray-matter to parse the post metadata section
@@ -63,6 +63,7 @@ export interface PostData {
   description?: string;
   image?: string;
   content?: string;
+  authors?: string[];
 }
 
 type PostDataWithoutContent = Omit<PostData, "content">;

@@ -73,7 +73,7 @@ export function LandingNavigation() {
                     <CollapsibleContent>
                       <div className="-mx-6 grid gap-6 bg-muted p-6">
                         <Link
-                          href="#"
+                          href="/features"
                           className="group grid h-auto w-full justify-start gap-1"
                           prefetch={false}
                         >
@@ -85,7 +85,7 @@ export function LandingNavigation() {
                           </div>
                         </Link>
                         <Link
-                          href="#"
+                          href="/repository"
                           className="group grid h-auto w-full justify-start gap-1"
                           prefetch={false}
                         >
@@ -97,7 +97,7 @@ export function LandingNavigation() {
                           </div>
                         </Link>
                         <Link
-                          href="#"
+                          href="/credits"
                           className="group grid h-auto w-full justify-start gap-1"
                           prefetch={false}
                         >
@@ -109,7 +109,7 @@ export function LandingNavigation() {
                           </div>
                         </Link>
                         <Link
-                          href="#"
+                          href="/[rivacy"
                           className="group grid h-auto w-full justify-start gap-1"
                           prefetch={false}
                         >
@@ -132,7 +132,7 @@ export function LandingNavigation() {
                     <CollapsibleContent>
                       <div className="-mx-6 grid gap-6 bg-muted p-6">
                         <Link
-                          href="#"
+                          href="/guide"
                           className="group grid h-auto w-full justify-start gap-1"
                           prefetch={false}
                         >
@@ -144,7 +144,7 @@ export function LandingNavigation() {
                           </div>
                         </Link>
                         <Link
-                          href="#"
+                          href="/wiki"
                           className="group grid h-auto w-full justify-start gap-1"
                           prefetch={false}
                         >
@@ -156,7 +156,7 @@ export function LandingNavigation() {
                           </div>
                         </Link>
                         <Link
-                          href="#"
+                          href="/roadmap"
                           className="group grid h-auto w-full justify-start gap-1"
                           prefetch={false}
                         >
@@ -168,12 +168,12 @@ export function LandingNavigation() {
                           </div>
                         </Link>
                         <Link
-                          href="#"
+                          href="/help"
                           className="group grid h-auto w-full justify-start gap-1"
                           prefetch={false}
                         >
                           <div className="text-sm font-medium leading-none group-hover:underline">
-                            Discussions and Issues
+                            Discussions
                           </div>
                           <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
                             Get help from other users and developers.
@@ -248,7 +248,7 @@ export function LandingNavigation() {
                     <div className="grid w-[400px] p-2">
                       <NavigationMenuLink asChild>
                         <Link
-                          href="#"
+                          href="/features"
                           className="group grid h-auto w-full items-center justify-start gap-1 rounded-md bg-background p-4 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
                           prefetch={false}
                         >
@@ -262,7 +262,7 @@ export function LandingNavigation() {
                       </NavigationMenuLink>
                       <NavigationMenuLink asChild>
                         <Link
-                          href="#"
+                          href="/repository"
                           className="group grid h-auto w-full items-center justify-start gap-1 rounded-md bg-background p-4 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
                           prefetch={false}
                         >
@@ -311,7 +311,7 @@ export function LandingNavigation() {
                     <div className="grid w-[550px] grid-cols-2 p-2">
                       <NavigationMenuLink asChild>
                         <Link
-                          href="#"
+                          href="/guide"
                           className="group grid h-auto w-full items-center justify-start gap-1 rounded-md bg-background p-4 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
                           prefetch={false}
                         >
@@ -325,7 +325,7 @@ export function LandingNavigation() {
                       </NavigationMenuLink>
                       <NavigationMenuLink asChild>
                         <Link
-                          href="#"
+                          href="/wiki"
                           className="group grid h-auto w-full items-center justify-start gap-1 rounded-md bg-background p-4 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
                           prefetch={false}
                         >
@@ -339,7 +339,7 @@ export function LandingNavigation() {
                       </NavigationMenuLink>
                       <NavigationMenuLink asChild>
                         <Link
-                          href="#"
+                          href="/roadmap"
                           className="group grid h-auto w-full items-center justify-start gap-1 rounded-md bg-background p-4 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
                           prefetch={false}
                         >
@@ -353,7 +353,7 @@ export function LandingNavigation() {
                       </NavigationMenuLink>
                       <NavigationMenuLink asChild>
                         <Link
-                          href="#"
+                          href="/help"
                           className="group grid h-auto w-full items-center justify-start gap-1 rounded-md bg-background p-4 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
                           prefetch={false}
                         >

@@ -2,10 +2,10 @@ import Link from "next/link";
 import Image from "next/image";
 
 import { formatDate } from "~/lib/utils";
-import { getSortedPostsData } from "~/lib/blog";
+import { getSortedPostsData } from "~/lib/knowledge";
 
 export default async function Blog() {
-  const allPostsData = getSortedPostsData();
+  const allPostsData = getSortedPostsData("posts");
   return (
     <div className="align-center min-w-sm mx-auto max-w-3xl space-y-8">
       <div className="space-y-3">

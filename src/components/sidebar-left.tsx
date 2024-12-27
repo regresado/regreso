@@ -36,23 +36,23 @@ const data = {
   navMain: [
     {
       title: "Search",
-      url: "#",
+      url: "#search",
       icon: Search,
     },
     {
       title: "Home",
-      url: "#",
+      url: "/dashboard",
       icon: Home,
       isActive: true,
     },
     {
       title: "Graph",
-      url: "#",
+      url: "#graph",
       icon: Network,
     },
     {
       title: "Calendar",
-      url: "#",
+      url: "#calendar",
       icon: Calendar,
     },
   ],
