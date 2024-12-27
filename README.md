@@ -5,7 +5,7 @@
 
 ## ⭐ About
 
-Regreso is an open source application that allows you to sync, manage, and track bookmarks and resources you wish to "return" to later.
+Regreso is an open source application that allows you to create, sync, manage, and find "destinations" (bookmarked links, files, and resources) you wish to "return" to later.
 
 ## ⚡ Quick Links
 
@@ -22,6 +22,12 @@ Regreso is an open source application that allows you to sync, manage, and track
 To fork/extend Regreso, it is recommended that you use Supabase or any other Postgres database provider. To develop locally, you can run the `start-database.sh` file to easily create a new Postgres database with Docker. Alternatively, the `setup.sql` provides the full database schema.
 
 Many environment variables are also required for Regreso development. These are also documented in the `.env.example` file.
+
+To build/run, simply run `pnpm run dev` or `pnpm run build && pnpm run start`.
+
+## 🤝 Contributing
+
+Regreso is licensed under the [MIT license](LICENSE.md), a permissive software license which allows you to modify, fork, extend, or redistributethe source code.
 
 ## ⚙️ Tech Overview
 
@@ -124,14 +130,25 @@ This project uses the [T3 Webdev Stack](https://create.t3.gg/) made by [@t3oss](
 <li>
 <a href="https://ui.aceternity.com/">Aceternity UI</a> animated landing page features
 </li>
+<li>
+<a href="https://github.com/Aslam97/shadcn-minimal-tiptap/">Shadcn Minimal Tiptap</a> component
+</li>
+<li>
+<a href="https://www.npmjs.com/package/react-day-picker">React Day Picker</a> calendar picker
+</li>
+<li>
+<a href="https://tiptap.dev">TipTap</a> calendar picker
+</li>
 </ul>
 </details>
 </li>
 </ul>
 
+<ul>
 - [Motion](https://motion.dev/) page animations
 - [Lucide](https://lucide.dev/) Icons
 - [Boring](https://boringavatars.com/) Avatars
+</ul>
 
 <ul>
 <li>
@@ -144,7 +161,7 @@ This project uses the [T3 Webdev Stack](https://create.t3.gg/) made by [@t3oss](
 <a href="https://arcticjs.dev/">Arctic</a> OAuth 2.0 Providers
 </li>
 <li>
-<a href="https://oslojs.dev/">React Day Picker</a> calendar picker
+<a href="https://oslojs.dev/">Oslo</a> auth packages
 </li>
 <li>
 <a href="https://node-rs.dev/">Node-RS</a> bindings for Argon2
