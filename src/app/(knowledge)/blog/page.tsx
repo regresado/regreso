@@ -1,6 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 
+import { Button } from "~/components/ui/button";
+
 import { formatDate } from "~/lib/utils";
 import { getSortedPostsData } from "~/lib/knowledge";
 
@@ -47,6 +49,14 @@ export default async function Blog() {
           </article>
         ))}
       </section>
+      <footer>
+        <p className="text-sm text-muted-foreground">
+          Illustrations by{" "}
+          <Button variant="link" asChild className="p-0">
+            <Link href="https://popsy.co">Popsy</Link>
+          </Button>
+        </p>
+      </footer>
     </div>
   );
 }

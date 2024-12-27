@@ -1,5 +1,8 @@
 import React from "react";
 
+import Link from "next/link";
+
+import { Button } from "~/components/ui/button";
 import { SiteContent } from "~/components/site-content";
 
 import { getPostData, getSortedPostsData } from "~/lib/knowledge";
@@ -20,6 +23,14 @@ export default async function Post({
   return (
     <div className="align-center min-w-sm mx-auto max-w-3xl space-y-8 pt-4">
       <SiteContent postData={postData} />
+      <footer>
+        <p className="text-sm text-muted-foreground">
+          Illustrations by{" "}
+          <Button variant="link" asChild className="p-0">
+            <Link href="https://popsy.co">Popsy</Link>
+          </Button>
+        </p>
+      </footer>
     </div>
   );
 }

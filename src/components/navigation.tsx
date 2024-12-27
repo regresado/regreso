@@ -168,7 +168,7 @@ export default function Navigation() {
                     prefetch={false}
                   >
                     <div className="text-sm font-medium leading-none group-hover:underline">
-                      Discussions and Issues
+                      Discussions
                     </div>
                     <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
                       Get help from other users and developers.
@@ -332,7 +332,7 @@ export default function Navigation() {
                     prefetch={false}
                   >
                     <div className="text-sm font-medium leading-none group-hover:underline">
-                      Discussions and Issues
+                      Discussions
                     </div>
                     <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
                       Get help from other users and developers.
