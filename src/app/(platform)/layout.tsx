@@ -15,7 +15,7 @@ import { extractRouterConfig } from "uploadthing/server";
 
 import { ourFileRouter } from "~/app/api/uploadthing/core";
 
-export default async function DashboardLayout({
+export default async function PlatformLayout({
   children,
 }: {
   children: React.ReactNode;
