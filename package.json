@@ -68,6 +68,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
     "drizzle-orm": "^0.38.2",
+    "emblor": "^1.4.7",
     "geist": "^1.3.0",
     "gray-matter": "^4.0.3",
     "input-otp": "^1.4.1",
