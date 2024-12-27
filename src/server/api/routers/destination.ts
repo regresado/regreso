@@ -4,9 +4,11 @@ import { eq } from "drizzle-orm";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { destinations } from "~/server/db/schema";
 
+import { destinationSchema } from "~/server/models";
+
 export const destinationRouter = createTRPCRouter({
   create: publicProcedure
-    .input(z.object({ location: z.string().min(1) }))
+    .input(destinationSchema)
     .mutation(async ({ ctx, input }) => {
       await ctx.db.insert(destinations).values({
         location: input.location,
