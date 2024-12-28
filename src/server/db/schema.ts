@@ -118,6 +118,7 @@ export const destinations = createTable("destination", {
   location: varchar("location", { length: 256 }),
   type: varchar("type", { length: 256 }),
   body: text("body"),
+  userId: integer("user_id").references(() => users.id),
   createdAt: timestamp("created_at", { withTimezone: true })
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),

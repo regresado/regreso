@@ -31,6 +31,7 @@ export interface Destination {
   name?: string;
   location?: string;
   type: string;
+  userId: number;
   body?: string | null;
   attachments?: string[];
   createdAt: Date;
