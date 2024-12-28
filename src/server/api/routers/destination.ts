@@ -1,13 +1,17 @@
 import { z } from "zod";
 import { eq } from "drizzle-orm";
 
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  publicProcedure,
+  protectedProcedure,
+} from "~/server/api/trpc";
 import { destinations } from "~/server/db/schema";
 
 import { destinationSchema } from "~/server/models";
 
 export const destinationRouter = createTRPCRouter({
-  create: publicProcedure
+  create: protectedProcedure
     .input(destinationSchema)
     .mutation(async ({ ctx, input }) => {
       await ctx.db.insert(destinations).values({
@@ -18,7 +22,7 @@ export const destinationRouter = createTRPCRouter({
         location: input.location,
       });
     }),
-  getRecent: publicProcedure.query(async ({ ctx }) => {
+  getRecent: protectedProcedure.query(async ({ ctx }) => {
     // get recent destinations
     const dests = await ctx.db.query.destinations.findMany({
       orderBy: (destinations, { desc }) => [desc(destinations.createdAt)],
@@ -29,7 +33,7 @@ export const destinationRouter = createTRPCRouter({
     return dests ?? null;
   }),
 
-  get: publicProcedure
+  get: protectedProcedure
     .input(z.object({ id: z.number() }))
     .query(async ({ ctx, input }) => {
       // get by id

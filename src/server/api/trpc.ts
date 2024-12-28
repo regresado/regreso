@@ -13,7 +13,7 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
-// import { getCurrentSession } from "~/server/session";
+import { getCurrentSession } from "~/server/session";
 
 import { db } from "~/server/db";
 
@@ -30,12 +30,12 @@ import { db } from "~/server/db";
  * @see https://trpc.io/docs/server/context
  */
 export const createTRPCContext = async (opts: { headers: Headers }) => {
-  // const { session, user } = await getCurrentSession();
+  const { session, user } = await getCurrentSession();
 
   return {
     db,
-    // session,
-    // user,
+    session,
+    user,
     ...opts,
   };
 };
@@ -123,21 +123,21 @@ export const publicProcedure = t.procedure.use(timingMiddleware);
  *
  * @see https://trpc.io/docs/procedures
  */
-// export const protectedProcedure = t.procedure
-//   .use(timingMiddleware)
-//   .use(({ ctx, next }) => {
-//     if (!ctx.session || !ctx.user) {
-//       throw new TRPCError({ code: "UNAUTHORIZED" });
-//     }
-//     return next({
-//       ctx: {
-//         // infers the `session` as non-nullable
-//         session: ctx.session,
-//         user: ctx.user,
-//       },
-//     });
-//   });
-export const protectedProcedure = t.procedure.use(timingMiddleware);
+export const protectedProcedure = t.procedure
+  .use(timingMiddleware)
+  .use(({ ctx, next }) => {
+    if (!ctx.session || !ctx.user) {
+      throw new TRPCError({ code: "UNAUTHORIZED" });
+    }
+    return next({
+      ctx: {
+        // infers the `session` as non-nullable
+        session: ctx.session,
+        user: ctx.user,
+      },
+    });
+  });
+// export const protectedProcedure = t.procedure.use(timingMiddleware);
 // .use(({ ctx, next }) => {
 //   return next({
 //     ctx: {
