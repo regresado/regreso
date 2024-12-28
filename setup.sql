@@ -8,8 +8,9 @@ CREATE TABLE "regreso_destination" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"name" varchar(256),
 	"location" varchar(256),
-	"type" varchar(256),
+	"type" varchar(256) NOT NULL,
 	"body" text,
+	"user_id" integer,
 	"created_at" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
@@ -89,6 +90,7 @@ CREATE TABLE "regreso_user" (
 
 ALTER TABLE "regreso_destination_tag" ADD CONSTRAINT "regreso_destination_tag_destination_id_regreso_destination_id_fk" FOREIGN KEY ("destination_id") REFERENCES "public"."regreso_destination"("id") ON DELETE no action ON UPDATE no action;
 ALTER TABLE "regreso_destination_tag" ADD CONSTRAINT "regreso_destination_tag_tag_id_regreso_tag_id_fk" FOREIGN KEY ("tag_id") REFERENCES "public"."regreso_tag"("id") ON DELETE no action ON UPDATE no action;
+ALTER TABLE "regreso_destination" ADD CONSTRAINT "regreso_destination_user_id_regreso_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."regreso_user"("id") ON DELETE no action ON UPDATE no action;
 ALTER TABLE "regreso_email_verification_request" ADD CONSTRAINT "regreso_email_verification_request_user_id_regreso_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."regreso_user"("id") ON DELETE no action ON UPDATE no action;
 ALTER TABLE "regreso_passkey_credential" ADD CONSTRAINT "regreso_passkey_credential_user_id_regreso_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."regreso_user"("id") ON DELETE no action ON UPDATE no action;
 ALTER TABLE "regreso_password_reset_session" ADD CONSTRAINT "regreso_password_reset_session_user_id_regreso_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."regreso_user"("id") ON DELETE no action ON UPDATE no action;
