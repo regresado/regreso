@@ -116,9 +116,11 @@ export const destinations = createTable("destination", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 256 }),
   location: varchar("location", { length: 256 }),
-  type: varchar("type", { length: 256 }),
+  type: varchar("type", { length: 256 }).notNull(),
   body: text("body"),
-  userId: integer("user_id").references(() => users.id),
+  userId: integer("user_id")
+    .references(() => users.id)
+    .notNull(),
   createdAt: timestamp("created_at", { withTimezone: true })
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),

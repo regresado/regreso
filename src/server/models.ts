@@ -28,14 +28,14 @@ export interface Session extends SessionFlags {
 
 export interface Destination {
   id: number;
-  name?: string;
-  location?: string;
+  name: string | null;
+  location: string | null;
   type: string;
   userId: number;
-  body?: string | null;
+  body: string | null;
   attachments?: string[];
   createdAt: Date;
-  updatedAt: Date;
+  updatedAt: Date | null;
 }
 
 const destinationTypes = ["location", "note", "file"] as const;
