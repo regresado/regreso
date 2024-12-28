@@ -28,7 +28,7 @@ import {
 const data = {
   teams: [
     {
-      name: "My Team",
+      name: "My Squad",
       logo: Command,
       plan: "Enterprise",
     },
