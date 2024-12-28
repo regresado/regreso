@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import type { MotionValue } from "framer-motion";
-import { motion, useScroll, useTransform } from "framer-motion";
+import type { MotionValue } from "motion/react";
+import { motion, useScroll, useTransform } from "motion/react";
 import { cn } from "~/lib/utils";
 import {
   SunDim,

@@ -1,7 +1,7 @@
 "use client";
 
 import { Zap, Code, Users } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 // import { useInView } from "react-intersection-observer";
 
 type Feature = {
@@ -22,12 +22,6 @@ const features: Feature[] = [
     title: "Open Source",
     description:
       "Fully open-source, allowing community contributions and transparency.",
-  },
-  {
-    icon: <Users className="h-10 w-10 text-cyan-500" />,
-    title: "Collaborative (Coming soon!)",
-    description:
-      "Share and collaborate on digital trails with your team or community.",
   },
 ];
 

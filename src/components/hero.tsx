@@ -4,7 +4,7 @@ import React from "react";
 
 import Link from "next/link";
 
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 
 import { LampContainer } from "~/components/ui/lamp";
 import { Input } from "~/components/ui/input";
