@@ -75,7 +75,7 @@ export function TeamSwitcher({
                 <Plus className="size-4" />
               </div>
               <div className="font-medium text-muted-foreground">Add team</div>
-              <Badge variant="default">Coming soon!</Badge>
+              <Badge variant="secondary">Soon!</Badge>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
