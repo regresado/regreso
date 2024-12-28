@@ -3,18 +3,18 @@
 [![Netlify Status](https://api.netlify.com/api/v1/badges/9186e8eb-17c0-4d34-bdd9-e2add4200741/deploy-status)](https://app.netlify.com/sites/regreso/deploys)
 [![wakatime](https://wakatime.com/badge/user/7482ea9d-3085-4e9b-95ad-1ca78a14d948/project/2972fea6-6fe2-4f55-afb8-a47ff01540ad.svg)](https://wakatime.com/badge/user/7482ea9d-3085-4e9b-95ad-1ca78a14d948/project/2972fea6-6fe2-4f55-afb8-a47ff01540ad)
 
-## ⭐ About
+## 👋 Introduction
 
 Regreso is an open source application that allows you to create, sync, manage, and find "destinations" (bookmarked links, files, and resources) you wish to "return" to later.
 
+Destinations may be organized using "maps", which allow one to graph and visualize relationships between them using tags, "journies" (saving sessions), and references. "Cabinets" allow one to separate maps by subject, topic, or project.
+
 ## ⚡ Quick Links
 
-- [Landing Page](https://regreso.netlify.app)
-- [Dashboard](https://regreso.netlify.app/dashboard) - Can be used without an account and offline!
+- [Website](https://regreso.netlify.app)
+- [Dashboard](https://regreso.netlify.app/dashboard) - Can be used without an account/offline!
 - [Guide](https://regreso.netlify.app/guide)
-- [Blog](https://regreso.netlify.app/blog)
-- [Credits](https://regreso.netlify.app/credits)
-- [Technical Wiki](https://regreso.netlify.app/wiki)
+- [Wiki](https://regreso.netlify.app/wiki)
 - [Roadmap](https://regreso.netlify.app/roadmap)
 
 ## 🚀 Development
