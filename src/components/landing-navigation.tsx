@@ -149,7 +149,7 @@ export function LandingNavigation() {
                           prefetch={false}
                         >
                           <div className="text-sm font-medium leading-none group-hover:underline">
-                            Technical Wiki
+                            Wiki
                           </div>
                           <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
                             Learn how Regreso works and implement it yourself.
@@ -330,7 +330,7 @@ export function LandingNavigation() {
                           prefetch={false}
                         >
                           <div className="text-sm font-medium leading-none group-hover:underline">
-                            Technical Wiki
+                            Wiki
                           </div>
                           <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
                             Learn how Regreso works and implement it yourself.
