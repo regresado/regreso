@@ -23,11 +23,15 @@ To fork/extend Regreso, it is recommended that you use Supabase or any other Pos
 
 Many environment variables are also required for Regreso development. These are also documented in the `.env.example` file.
 
-To build/run, simply run `pnpm run dev` or `pnpm run build && pnpm run start`.
+To install dependencies, run `pnpm install` and to build/start server, use `pnpm run dev` or `pnpm run build && pnpm run start`.
 
 ## 🤝 Contributing
 
-Regreso is licensed under the [MIT license](LICENSE.md), a permissive software license which allows you to modify, fork, extend, or redistributethe source code.
+Regreso is licensed under the [MIT license](LICENSE.md), a permissive license which allows you to modify, fork, extend, or redistribute the source code.
+
+We accept contributions of new features and bug fixes through [Pull Requests](/pulls) and general suggestions/bug reports through [Issues](/issues). Before opening either of these, please check if a similar issue/PR has already been opened/assigned and if unsure about its status, it is best to ask before ootentially creating a duplicate.
+
+**For security reports, please [submit](/security) a private vulnerability disclosure with the relevant information!**
 
 ## ⚙️ Tech Overview
 
