@@ -26,11 +26,22 @@ export interface Session extends SessionFlags {
   userId: number;
 }
 
+export interface Destination {
+  id: number;
+  name?: string;
+  location?: string;
+  type: string;
+  body?: string | null;
+  attachments?: string[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 const destinationTypes = ["location", "note", "file"] as const;
 
 export const destinationSchema = z.object({
   type: z.enum(destinationTypes),
-  location: z.string().url(),
+  location: z.string(),
   name: z
     .string({
       required_error: "Please select an email to display.",
@@ -41,6 +52,6 @@ export const destinationSchema = z.object({
   body: z.string().max(1000, {
     message: "The body must be less than 1000 characters.",
   }),
-  tags: z.array(z.string()),
+  tags: z.array(z.object({ id: z.string(), text: z.string() })),
   attachments: z.array(z.string()),
 });
