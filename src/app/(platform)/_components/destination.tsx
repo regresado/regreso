@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { ArrowRight, MapPinPlus } from "lucide-react";
+import { ArrowRight, MapPin, MapPinPlus } from "lucide-react";
 
 import { Tag, TagInput } from "emblor";
 
@@ -231,18 +231,24 @@ export function CreateDestination() {
 
 export function RecentDestinations() {
   // query api.destinatioin.recent
-  const recentDestinations = api.destination.getRecent.useQuery().data;
+  // const recentDestinations = api.destination.getRecent.useQuery({
+  //   limit: 10,
+  // }).data;
+
+  const [recentDestinations] = api.destination.getRecent.useSuspenseQuery();
 
   // const [recentDestinations] = api.destination.recent.q();
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Recent Destinations</CardTitle>
+        <CardTitle className="flex items-center">
+          <MapPin className="mr-2 w-5" /> Recent Destinations
+        </CardTitle>
       </CardHeader>
       <CardContent className="sm:px-3 xl:px-6">
         {recentDestinations
-          ? recentDestinations.map((dest) => {
+          ? recentDestinations.map((dest: Destination) => {
               return (
                 <DestinationCard {...dest} />
                 // <DestinationCard
