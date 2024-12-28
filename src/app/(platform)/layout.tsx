@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 
 import { cookies } from "next/headers";
 
-import { HydrateClient } from "~/trpc/server";
+import { api, HydrateClient } from "~/trpc/server";
 import { ClientLayout } from "~/app/(platform)/client-layout";
 
 import { Toaster } from "~/components/ui/toaster";
