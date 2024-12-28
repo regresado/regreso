@@ -53,3 +53,6 @@ supabase
 
 # Local Netlify folder
 .netlify
+
+# Blog posts (for now) 
+src/app/(knowledge)/(content)/posts
