@@ -1,6 +1,3 @@
-// Example model schema from the Drizzle docs
-// https://orm.drizzle.team/docs/sql-schema-declaration
-
 import { type InferSelectModel, relations } from "drizzle-orm";
 import { sql } from "drizzle-orm/sql";
 import {
@@ -10,8 +7,9 @@ import {
   integer,
   boolean,
   varchar,
-  pgTableCreator,
   timestamp,
+  unique,
+  pgTableCreator,
 } from "drizzle-orm/pg-core";
 
 /**
@@ -59,18 +57,6 @@ export type SessionSchema = InferSelectModel<typeof sessions>;
 export interface SessionFlags {
   twoFactorVerified: boolean;
 }
-
-export const destinations = createTable("post", {
-  id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
-  name: varchar("name", { length: 256 }),
-  location: varchar("location", { length: 256 }),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
-  updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
-    () => new Date(),
-  ),
-});
 
 export const emailVerificationRequests = createTable(
   "email_verification_request",
@@ -125,6 +111,42 @@ export const securityKeyCredentials = createTable("security_key_credential", {
   algorithm: integer("algorithm").notNull(),
   publicKey: text("public_key").notNull(),
 });
+
+export const destinations = createTable("destination", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 256 }),
+  location: varchar("location", { length: 256 }),
+  type: varchar("type", { length: 256 }),
+  body: text("body"),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull()
+    .$onUpdate(() => new Date()),
+});
+
+export const tags = createTable("tag", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 256 }),
+  displayName: varchar("display_name", { length: 256 }),
+  userId: integer("user_id").references(() => users.id),
+});
+
+export const destinationTags = createTable(
+  "destination_tag",
+  {
+    destinationId: integer("destination_id").references(() => destinations.id),
+    tagId: integer("tag_id").references(() => tags.id),
+  },
+  (destinationTag) => ({
+    uniqueTagDestination: unique().on(
+      destinationTag.destinationId,
+      destinationTag.tagId,
+    ),
+  }),
+);
 
 export const usersRelations = relations(users, ({ many }) => ({
   passwordResetSessions: many(passwordResetSessions),
