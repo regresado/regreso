@@ -2,8 +2,6 @@
 
 import React from "react";
 
-import { api, HydrateClient } from "~/trpc/server";
-
 import { WelcomeCard } from "~/components/welcome-card";
 import {
   CreateDestination,
@@ -15,40 +13,35 @@ import type { User } from "~/server/models";
 import { Command } from "lucide-react";
 
 export default function DashboardHome(user: User) {
-  if (user) {
-    void api.destination.getRecent.prefetch();
-  }
   return (
     <>
-      <HydrateClient>
-        <div className="grid grid-cols-1 gap-4 p-4 xl:grid-cols-5">
-          <div className="xl:col-span-2">
-            <div className="rounded-xl bg-muted/50">
-              <WelcomeCard
-                teams={[
-                  {
-                    name: "My Squad",
-                    logo: Command,
-                    plan: "Free",
-                  },
-                ]}
-                name={user.displayName}
-              />
-            </div>
+      <div className="grid grid-cols-1 gap-4 p-4 xl:grid-cols-5">
+        <div className="xl:col-span-2">
+          <div className="rounded-xl bg-muted/50">
+            <WelcomeCard
+              teams={[
+                {
+                  name: "My Squad",
+                  logo: Command,
+                  plan: "Free",
+                },
+              ]}
+              name={user.displayName}
+            />
           </div>
-          <div className="xl:col-span-3">
-            <div className="rounded-xl bg-muted/50">
-              <CreateDestination />
-            </div>
-          </div>
-          <div className="col-span-2">
-            <div className="rounded-xl bg-muted/50 p-4">
-              <RecentDestinations />
-            </div>
-          </div>
-          <div className="col-span-3 min-h-[100vh] flex-1 rounded-xl bg-muted/50 p-4 md:min-h-min" />
         </div>
-      </HydrateClient>
+        <div className="xl:col-span-3">
+          <div className="rounded-xl bg-muted/50">
+            <CreateDestination />
+          </div>
+        </div>
+        <div className="col-span-2">
+          <div className="rounded-xl bg-muted/50">
+            <RecentDestinations />
+          </div>
+        </div>
+        <div className="col-span-3 min-h-[100vh] flex-1 rounded-xl bg-muted/50 p-4 md:min-h-min" />
+      </div>
     </>
   );
 }
