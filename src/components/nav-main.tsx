@@ -13,6 +13,7 @@ export function NavMain({
 }: {
   items: {
     title: string;
+    render?: React.ReactNode;
     url: string;
     icon: LucideIcon;
     isActive?: boolean;
@@ -25,7 +26,7 @@ export function NavMain({
           <SidebarMenuButton asChild isActive={item.isActive}>
             <a href={item.url}>
               <item.icon />
-              <span>{item.title}</span>
+              <span>{item.render ?? item.title}</span>
             </a>
           </SidebarMenuButton>
         </SidebarMenuItem>
