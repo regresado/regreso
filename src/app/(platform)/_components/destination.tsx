@@ -6,13 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { MinimalTiptapEditor } from "~/components/minimal-tiptap";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import {
   Form,
   FormControl,
@@ -225,14 +219,7 @@ export function CreateDestination() {
 }
 
 export function RecentDestinations() {
-  // query api.destinatioin.recent
-  // const recentDestinations = api.destination.getRecent.useQuery({
-  //   limit: 10,
-  // }).data;
-
   const [recentDestinations] = api.destination.getRecent.useSuspenseQuery();
-
-  // const [recentDestinations] = api.destination.recent.q();
 
   return (
     <Card>
@@ -244,17 +231,7 @@ export function RecentDestinations() {
       <CardContent className="sm:px-3 xl:px-6">
         {recentDestinations.length > 0 ? (
           recentDestinations.map((dest: Destination) => {
-            return (
-              <DestinationCard {...dest} />
-              // <DestinationCard
-              //   destination={{
-              //     ...dest,
-              //     name: dest.name ?? "Unnamed Destination",
-              //     location: dest.location ?? "",
-              //     type: dest.type ?? "location",
-              //   }}
-              // />
-            );
+            return <DestinationCard {...dest} />;
           })
         ) : (
           <p className="text-sm text-muted-foreground">
