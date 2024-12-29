@@ -15,6 +15,7 @@ import {
 import type { User } from "~/server/models";
 
 import { cn } from "~/lib/utils";
+
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import {
   DropdownMenu,
@@ -31,6 +32,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "~/components/ui/sidebar";
+
 import { logoutAction } from "~/app/(platform)/actions";
 
 const initialState = {

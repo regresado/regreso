@@ -6,6 +6,7 @@ import type { Content, Editor } from "@tiptap/react";
 import { EditorContent } from "@tiptap/react";
 
 import { cn } from "~/lib/utils";
+
 import { Separator } from "~/components/ui/separator";
 
 import { LinkBubbleMenu } from "./components/bubble-menu/link-bubble-menu";

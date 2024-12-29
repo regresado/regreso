@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { getSortedPostsData } from "~/lib/knowledge";
 import { formatDate } from "~/lib/utils";
+
 import { Button } from "~/components/ui/button";
 
 export default async function Blog() {

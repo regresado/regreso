@@ -23,6 +23,7 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "~/components/ui/input-otp";
+
 import { verify2FAAction } from "~/app/(auth)/2fa/totp/actions";
 import { logoutAction } from "~/app/(platform)/actions";
 

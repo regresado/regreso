@@ -24,6 +24,7 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "~/components/ui/input-otp";
+
 import { setup2FAAction } from "~/app/(auth)/2fa/totp/setup/actions";
 
 const FormSchema = z.object({
