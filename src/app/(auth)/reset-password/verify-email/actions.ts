@@ -3,14 +3,13 @@
 import { redirect } from "next/navigation";
 
 import {
-  setPasswordResetSessionAsEmailVerified,
   getCurrentPasswordResetSession,
+  setPasswordResetSessionAsEmailVerified,
 } from "~/server/password-reset";
-import { setUserAsEmailVerifiedIfEmailMatches } from "~/server/user";
-import { getCurrentSession } from "~/server/session";
-
 import { ExpiringTokenBucket } from "~/server/rate-limit";
 import { globalPOSTRateLimit } from "~/server/request";
+import { getCurrentSession } from "~/server/session";
+import { setUserAsEmailVerifiedIfEmailMatches } from "~/server/user";
 
 const emailVerificationBucket = new ExpiringTokenBucket<number>(5, 60 * 30);
 

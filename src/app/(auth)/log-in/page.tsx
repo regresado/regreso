@@ -1,14 +1,12 @@
-import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-
-import { LoginForm } from "~/components/login-form";
+import { redirect } from "next/navigation";
 
 import { loginAction } from "~/app/(auth)/log-in/actions";
+import { LoginForm } from "~/components/login-form";
 
-import { getCurrentSession } from "~/server/session";
 import { get2FARedirect } from "~/server/2fa";
-
 import { globalGETRateLimit } from "~/server/request";
+import { getCurrentSession } from "~/server/session";
 
 export default async function LogInPage() {
   if (!(await globalGETRateLimit())) {

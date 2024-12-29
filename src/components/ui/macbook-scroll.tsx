@@ -1,31 +1,33 @@
 "use client";
+
 import React, { useEffect, useRef, useState } from "react";
-import type { MotionValue } from "motion/react";
-import { motion, useScroll, useTransform } from "motion/react";
+import Image from "next/image";
+
 import { cn } from "~/lib/utils";
 import {
-  SunDim,
-  Sun,
-  SquareChevronUp,
-  ChevronUp,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
-  Mic,
-  SkipForward,
-  Search,
-  Rewind,
-  Table2,
-  Moon,
+  ChevronUp,
+  Command,
   FastForward,
-  VolumeX,
+  Globe,
+  Loader,
+  Mic,
+  Moon,
+  Rewind,
+  Search,
+  SkipForward,
+  SquareChevronUp,
+  Sun,
+  SunDim,
+  Table2,
   Volume1,
   Volume2,
-  Globe,
-  Command,
-  Loader,
+  VolumeX,
 } from "lucide-react";
-import Image from "next/image";
+import type { MotionValue } from "motion/react";
+import { motion, useScroll, useTransform } from "motion/react";
 
 export const MacbookScroll = ({
   src,

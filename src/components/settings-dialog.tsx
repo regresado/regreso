@@ -1,18 +1,9 @@
 "use client";
 
 import * as React from "react";
+import { usePathname, useRouter } from "next/navigation";
 
-import { useRouter, usePathname } from "next/navigation";
-
-import {
-  Bell,
-  Keyboard,
-  CircleUser,
-  Lock,
-  Paintbrush,
-  Settings,
-} from "lucide-react";
-
+import { Badge } from "~/components/ui/badge";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -21,7 +12,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "~/components/ui/breadcrumb";
-import { Badge } from "~/components/ui/badge";
 import {
   Dialog,
   DialogContent,
@@ -38,6 +28,14 @@ import {
   SidebarMenuItem,
   SidebarProvider,
 } from "~/components/ui/sidebar";
+import {
+  Bell,
+  CircleUser,
+  Keyboard,
+  Lock,
+  Paintbrush,
+  Settings,
+} from "lucide-react";
 
 const data = {
   nav: [

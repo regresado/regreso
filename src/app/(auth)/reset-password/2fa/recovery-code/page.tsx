@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 
+import { PasswordResetRecoveryCodeForm } from "~/components/password-reset-recovery";
 import {
   Card,
   CardContent,
@@ -8,10 +9,7 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 
-import { PasswordResetRecoveryCodeForm } from "~/components/password-reset-recovery";
-
 import { getCurrentPasswordResetSession } from "~/server/password-reset";
-
 import { globalGETRateLimit } from "~/server/request";
 
 export default async function Page() {

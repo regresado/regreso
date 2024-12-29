@@ -1,7 +1,8 @@
 "use client";
 
-import { Zap, Code, Users } from "lucide-react";
+import { Code, Users, Zap } from "lucide-react";
 import { motion } from "motion/react";
+
 // import { useInView } from "react-intersection-observer";
 
 type Feature = {

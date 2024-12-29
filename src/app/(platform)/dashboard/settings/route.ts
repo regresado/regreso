@@ -1,6 +1,5 @@
-import { getCurrentSession } from "~/server/session";
-
 import { globalGETRateLimit } from "~/server/request";
+import { getCurrentSession } from "~/server/session";
 
 export async function GET() {
   if (!(await globalGETRateLimit())) {

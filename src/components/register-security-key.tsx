@@ -1,30 +1,25 @@
 "use client";
 
-import { useState, useEffect, useActionState } from "react";
-import { decodeBase64, encodeBase64 } from "@oslojs/encoding";
+import { useActionState, useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-import { AlertCircle } from "lucide-react";
-
+import { decodeBase64, encodeBase64 } from "@oslojs/encoding";
+import { registerSecurityKeyAction } from "~/app/(auth)/2fa/security-key/register/actions";
+import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
-import { Alert, AlertTitle, AlertDescription } from "~/components/ui/alert";
 import {
   Form,
-  FormField,
-  FormLabel,
-  FormItem,
-  FormMessage,
   FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from "~/components/ui/form";
-
+import { Input } from "~/components/ui/input";
 import { createChallenge } from "~/lib/client/webauthn";
-
-import { registerSecurityKeyAction } from "~/app/(auth)/2fa/security-key/register/actions";
-
+import { AlertCircle } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import type { User } from "~/server/models";
 
 const initialRegisterSecurityKeyState = {

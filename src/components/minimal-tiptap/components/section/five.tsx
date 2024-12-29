@@ -1,17 +1,19 @@
 import * as React from "react";
+
 import type { Editor } from "@tiptap/react";
-import type { FormatAction } from "../../types";
 import type { toggleVariants } from "~/components/ui/toggle";
 import type { VariantProps } from "class-variance-authority";
 import {
   ChevronDown,
   Code,
-  SquareSplitVertical,
   Plus,
   Quote,
+  SquareSplitVertical,
 } from "lucide-react";
-import { LinkEditPopover } from "../link/link-edit-popover";
+
+import type { FormatAction } from "../../types";
 import { ImageEditDialog } from "../image/image-edit-dialog";
+import { LinkEditPopover } from "../link/link-edit-popover";
 import { ToolbarSection } from "../toolbar-section";
 
 type InsertElementAction = "codeBlock" | "blockquote" | "horizontalRule";

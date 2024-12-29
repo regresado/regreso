@@ -1,15 +1,6 @@
 "use client";
 
 import * as React from "react";
-import {
-  Calendar,
-  Network,
-  Command,
-  Home,
-  MessageCircleQuestion,
-  Search,
-  Settings,
-} from "lucide-react";
 
 import { NavFavorites } from "~/components/nav-favorites";
 import { NavMain } from "~/components/nav-main";
@@ -23,6 +14,15 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "~/components/ui/sidebar";
+import {
+  Calendar,
+  Command,
+  Home,
+  MessageCircleQuestion,
+  Network,
+  Search,
+  Settings,
+} from "lucide-react";
 
 // This is sample data.
 const data = {

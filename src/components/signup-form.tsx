@@ -1,18 +1,13 @@
 "use client";
 
 import React, { useActionState } from "react";
-
 import { useSearchParams } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-import { AlertCircle } from "lucide-react";
-
-import { Label } from "~/components/ui/label";
+import { signupAction } from "~/app/(auth)/sign-up/actions";
+import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
+import { BottomGradient } from "~/components/ui/bottom-gradient";
 import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
 import {
   Card,
   CardContent,
@@ -29,10 +24,11 @@ import {
   FormLabel,
   FormMessage,
 } from "~/components/ui/form";
-import { BottomGradient } from "~/components/ui/bottom-gradient";
-import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
-
-import { signupAction } from "~/app/(auth)/sign-up/actions";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
+import { AlertCircle } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 const initialState = {
   message: "",

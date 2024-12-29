@@ -1,16 +1,16 @@
-import { type InferSelectModel, relations } from "drizzle-orm";
-import { sql } from "drizzle-orm/sql";
+import { relations, type InferSelectModel } from "drizzle-orm";
 import {
+  boolean,
   index,
+  integer,
+  pgTableCreator,
   serial,
   text,
-  integer,
-  boolean,
-  varchar,
   timestamp,
   unique,
-  pgTableCreator,
+  varchar,
 } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm/sql";
 
 /**
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema

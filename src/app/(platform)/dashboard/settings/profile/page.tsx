@@ -2,10 +2,9 @@ import { redirect } from "next/navigation";
 
 import ProfileEdit from "~/components/profile-edit";
 
-import { getCurrentSession } from "~/server/session";
 import { get2FARedirect } from "~/server/2fa";
-
 import { globalGETRateLimit } from "~/server/request";
+import { getCurrentSession } from "~/server/session";
 
 export default async function Page() {
   if (!(await globalGETRateLimit())) {

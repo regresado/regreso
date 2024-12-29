@@ -13,9 +13,8 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
-import { getCurrentSession } from "~/server/session";
-
 import { db } from "~/server/db";
+import { getCurrentSession } from "~/server/session";
 
 /**
  * 1. CONTEXT

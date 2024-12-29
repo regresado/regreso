@@ -1,10 +1,9 @@
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 
 import { Button } from "~/components/ui/button";
-
-import { formatDate } from "~/lib/utils";
 import { getSortedPostsData } from "~/lib/knowledge";
+import { formatDate } from "~/lib/utils";
 
 export default async function Blog() {
   const allPostsData = getSortedPostsData("posts");

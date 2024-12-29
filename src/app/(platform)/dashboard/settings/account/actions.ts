@@ -3,8 +3,18 @@
 import { redirect } from "next/navigation";
 
 import { decodeBase64 } from "@oslojs/encoding";
+import type { SessionFlags } from "~/server/models";
 
+import { checkEmailAvailability, verifyEmailInput } from "~/server/email";
+import {
+  createEmailVerificationRequest,
+  sendVerificationEmail,
+  sendVerificationEmailBucket,
+  setEmailVerificationRequestCookie,
+} from "~/server/email-verification";
 import { verifyPasswordHash, verifyPasswordStrength } from "~/server/password";
+import { ExpiringTokenBucket } from "~/server/rate-limit";
+import { globalPOSTRateLimit } from "~/server/request";
 import {
   createSession,
   generateSessionToken,
@@ -12,28 +22,16 @@ import {
   invalidateUserSessions,
   setSessionTokenCookie,
 } from "~/server/session";
+import { deleteUserTOTPKey, totpUpdateBucket } from "~/server/totp";
 import {
   getUserPasswordHash,
   resetUserRecoveryCode,
   updateUserPassword,
 } from "~/server/user";
 import {
-  createEmailVerificationRequest,
-  sendVerificationEmail,
-  sendVerificationEmailBucket,
-  setEmailVerificationRequestCookie,
-} from "~/server/email-verification";
-import { checkEmailAvailability, verifyEmailInput } from "~/server/email";
-import { deleteUserTOTPKey, totpUpdateBucket } from "~/server/totp";
-import {
   deleteUserPasskeyCredential,
   deleteUserSecurityKeyCredential,
 } from "~/server/webauthn";
-
-import { ExpiringTokenBucket } from "~/server/rate-limit";
-import { globalPOSTRateLimit } from "~/server/request";
-
-import type { SessionFlags } from "~/server/models";
 
 const passwordUpdateBucket = new ExpiringTokenBucket<string>(5, 60 * 30);
 

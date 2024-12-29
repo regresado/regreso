@@ -1,38 +1,32 @@
 "use client";
 
-import { useState, useActionState, useEffect } from "react";
+import { useActionState, useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-import { X } from "lucide-react";
-import BoringAvatar from "boring-avatars";
-
-import type { User } from "~/server/models";
-
+import {
+  clearProfilePictureAction,
+  updateProfileAction,
+} from "~/app/(platform)/dashboard/settings/profile/actions";
+import { toast } from "~/components/hooks/use-toast";
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-
-import { Input } from "~/components/ui/input";
-import { Textarea } from "~/components/ui/textarea";
-import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import {
   Form,
-  FormLabel,
   FormControl,
-  FormItem,
-  FormMessage,
   FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from "~/components/ui/form";
+import { Input } from "~/components/ui/input";
+import { Textarea } from "~/components/ui/textarea";
 import { UploadButton } from "~/lib/client/uploadthing";
-
-import { toast } from "~/components/hooks/use-toast";
-
-import {
-  updateProfileAction,
-  clearProfilePictureAction,
-} from "~/app/(platform)/dashboard/settings/profile/actions";
+import BoringAvatar from "boring-avatars";
+import { X } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import type { User } from "~/server/models";
 
 const FormSchema = z.object({
   displayName: z

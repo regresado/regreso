@@ -1,8 +1,7 @@
 import { eq } from "drizzle-orm";
 
 import { db } from "~/server/db";
-import { users, totpCredentials } from "~/server/db/schema";
-
+import { totpCredentials, users } from "~/server/db/schema";
 import { decrypt, encrypt } from "~/server/encryption";
 import { ExpiringTokenBucket, RefillingTokenBucket } from "~/server/rate-limit";
 

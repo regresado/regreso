@@ -3,23 +3,9 @@
 import { useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-import { ArrowRight, MapPin, MapPinPlus } from "lucide-react";
-
-import { Tag, TagInput } from "emblor";
-
+import { MinimalTiptapEditor } from "~/components/minimal-tiptap";
+import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
-import {
-  Form,
-  FormDescription,
-  FormField,
-  FormControl,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "~/components/ui/form";
 import {
   Card,
   CardContent,
@@ -28,19 +14,28 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "~/components/ui/form";
+import { Input } from "~/components/ui/input";
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { Input } from "~/components/ui/input";
-import { Badge } from "~/components/ui/badge";
-
-import { MinimalTiptapEditor } from "~/components/minimal-tiptap";
-
-import { destinationSchema, type Destination } from "~/server/models";
 import { api } from "~/trpc/react";
+import { Tag, TagInput } from "emblor";
+import { ArrowRight, MapPin, MapPinPlus } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { destinationSchema, type Destination } from "~/server/models";
 
 export function CreateDestination() {
   const utils = api.useUtils();

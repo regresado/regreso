@@ -1,14 +1,12 @@
 "use client";
 
 import React from "react";
-
 import Link from "next/link";
-
-import { motion } from "motion/react";
-import { Footprints } from "lucide-react";
 
 import { Button } from "~/components/ui/button";
 import { LampContainer } from "~/components/ui/lamp";
+import { Footprints } from "lucide-react";
+import { motion } from "motion/react";
 
 export default function NotFound() {
   return (

@@ -1,23 +1,21 @@
-import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 import {
   Card,
   CardContent,
-  CardHeader,
   CardDescription,
+  CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-
 import {
   EmailVerificationForm,
   ResendEmailVerificationCodeForm,
 } from "~/components/verify-email";
 
-import { getCurrentSession } from "~/server/session";
 import { getCurrentUserEmailVerificationRequest } from "~/server/email-verification";
-
 import { globalGETRateLimit } from "~/server/request";
+import { getCurrentSession } from "~/server/session";
 
 export default async function Page() {
   if (!(await globalGETRateLimit())) {

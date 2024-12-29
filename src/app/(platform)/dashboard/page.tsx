@@ -2,15 +2,13 @@
 
 import React from "react";
 
-import { WelcomeCard } from "~/components/welcome-card";
 import {
   CreateDestination,
   RecentDestinations,
 } from "~/app/(platform)/_components/destination";
-
-import type { User } from "~/server/models";
-
+import { WelcomeCard } from "~/components/welcome-card";
 import { Command } from "lucide-react";
+import type { User } from "~/server/models";
 
 export default function DashboardHome(user: User) {
   return (

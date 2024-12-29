@@ -1,20 +1,16 @@
 import { cache } from "react";
 import { cookies } from "next/headers";
 
-import { eq } from "drizzle-orm";
-
-import nodemailer from "nodemailer";
-
-import { encodeHexLowerCase } from "@oslojs/encoding";
 import { sha256 } from "@oslojs/crypto/sha2";
-
+import { encodeHexLowerCase } from "@oslojs/encoding";
 import { getBaseOrigin } from "~/lib/utils";
+import { eq } from "drizzle-orm";
+import nodemailer from "nodemailer";
+import type { User } from "~/server/models";
 
 import { db } from "~/server/db";
 import { passwordResetSessions } from "~/server/db/schema";
 import { generateRandomOTP } from "~/server/utils";
-
-import type { User } from "~/server/models";
 
 export async function createPasswordResetSession(
   token: string,
