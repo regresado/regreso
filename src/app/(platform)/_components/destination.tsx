@@ -242,21 +242,25 @@ export function RecentDestinations() {
         </CardTitle>
       </CardHeader>
       <CardContent className="sm:px-3 xl:px-6">
-        {recentDestinations
-          ? recentDestinations.map((dest: Destination) => {
-              return (
-                <DestinationCard {...dest} />
-                // <DestinationCard
-                //   destination={{
-                //     ...dest,
-                //     name: dest.name ?? "Unnamed Destination",
-                //     location: dest.location ?? "",
-                //     type: dest.type ?? "location",
-                //   }}
-                // />
-              );
-            })
-          : null}
+        {recentDestinations.length > 0 ? (
+          recentDestinations.map((dest: Destination) => {
+            return (
+              <DestinationCard {...dest} />
+              // <DestinationCard
+              //   destination={{
+              //     ...dest,
+              //     name: dest.name ?? "Unnamed Destination",
+              //     location: dest.location ?? "",
+              //     type: dest.type ?? "location",
+              //   }}
+              // />
+            );
+          })
+        ) : (
+          <p className="text-sm text-muted-foreground">
+            🌌 No destinations found. Try creating one and come back!
+          </p>
+        )}
       </CardContent>
     </Card>
   );
