@@ -1,11 +1,7 @@
 import { z } from "zod";
 import { eq } from "drizzle-orm";
 
-import {
-  createTRPCRouter,
-  publicProcedure,
-  protectedProcedure,
-} from "~/server/api/trpc";
+import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { destinations } from "~/server/db/schema";
 
 import { destinationSchema } from "~/server/models";
@@ -26,7 +22,7 @@ export const destinationRouter = createTRPCRouter({
     // get recent destinations
     const dests = await ctx.db.query.destinations.findMany({
       orderBy: (destinations, { desc }) => [desc(destinations.createdAt)],
-      // where: eq(destinations.userId, ctx.user.id),
+      where: eq(destinations.userId, ctx.user.id),
       limit: 10,
     });
 
