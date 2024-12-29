@@ -1,4 +1,30 @@
-/** @type {import('prettier').Config & import('prettier-plugin-tailwindcss').PluginOptions} */
+/** @type {import('prettier').Config & import('prettier-plugin-tailwindcss').PluginOptions & import('@ianvs/prettier-plugin-sort-imports').PluginConfig} */
 export default {
-  plugins: ["prettier-plugin-tailwindcss"],
+  importOrder: [
+    "^(react/(.*)$)|^(react$)",
+    "^(next/(.*)$)|^(next$)",
+    "",
+    "<THIRD_PARTY_MODULES>",
+    "^(~/types$)|^(~/server/models$)",
+    "",
+    "^(~/server/(.*)$)|^(~/server$)",
+    "^@/lib/(.*)$",
+    "^@/hooks/(.*)$",
+    "^@/components/ui/(.*)$",
+    "^@/components/(.*)$",
+    "^@/styles/(.*)$",
+    "^@/app/(.*)$",
+    "",
+    "^[./]",
+  ],
+  importOrderSeparation: false,
+  importOrderSortSpecifiers: true,
+  importOrderBuiltinModulesToTop: true,
+  importOrderParserPlugins: ["typescript", "jsx"],
+  importOrderMergeDuplicateImports: true,
+  importOrderCombineTypeAndValueImports: true,
+  plugins: [
+    "prettier-plugin-tailwindcss",
+    "@ianvs/prettier-plugin-sort-imports",
+  ],
 };
