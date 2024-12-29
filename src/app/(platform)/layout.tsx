@@ -8,7 +8,9 @@ import { api, HydrateClient } from "~/trpc/server";
 import { extractRouterConfig } from "uploadthing/server";
 
 import { getCurrentSession } from "~/server/session";
+
 import { Toaster } from "~/components/ui/toaster";
+
 import { ClientLayout } from "~/app/(platform)/client-layout";
 import { ourFileRouter } from "~/app/api/uploadthing/core";
 

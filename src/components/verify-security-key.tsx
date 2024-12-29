@@ -7,8 +7,10 @@ import { decodeBase64, encodeBase64 } from "@oslojs/encoding";
 import { AlertCircle } from "lucide-react";
 
 import { createChallenge } from "~/lib/client/webauthn";
+
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { Button } from "~/components/ui/button";
+
 import { verify2FAWithSecurityKeyAction } from "~/app/(auth)/2fa/security-key/actions";
 import { logoutAction } from "~/app/(platform)/actions";
 

@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { globalGETRateLimit } from "~/server/request";
+
 import { Button } from "~/components/ui/button";
 import {
   Card,

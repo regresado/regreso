@@ -6,6 +6,7 @@ import { Command } from "lucide-react";
 import type { User } from "~/server/models";
 
 import { WelcomeCard } from "~/components/welcome-card";
+
 import {
   CreateDestination,
   RecentDestinations,
