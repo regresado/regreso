@@ -3,8 +3,13 @@
 import { useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { MinimalTiptapEditor } from "~/components/minimal-tiptap";
-import { TiltCard } from "~/components/tilt-card";
+import { api } from "~/trpc/react";
+import { TagInput, type Tag } from "emblor";
+import { ArrowRight, MapPin, MapPinPlus, Plus, RefreshCcw } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { type z } from "zod";
+import { destinationSchema, type Destination } from "~/server/models";
+
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
@@ -25,12 +30,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { api } from "~/trpc/react";
-import { TagInput, type Tag } from "emblor";
-import { ArrowRight, MapPin, MapPinPlus, Plus, RefreshCcw } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { type z } from "zod";
-import { destinationSchema, type Destination } from "~/server/models";
+import { MinimalTiptapEditor } from "~/components/minimal-tiptap";
+import { TiltCard } from "~/components/tilt-card";
 
 export function CreateDestination() {
   const utils = api.useUtils();

@@ -1,6 +1,9 @@
 import * as React from "react";
 
 import type { Editor } from "@tiptap/react";
+import type { VariantProps } from "class-variance-authority";
+import { Check, ChevronDown } from "lucide-react";
+
 import {
   Popover,
   PopoverContent,
@@ -13,8 +16,6 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
-import type { VariantProps } from "class-variance-authority";
-import { Check, ChevronDown } from "lucide-react";
 
 import { useTheme } from "../../hooks/use-theme";
 import { ToolbarButton } from "../toolbar-button";

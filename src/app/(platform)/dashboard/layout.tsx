@@ -1,3 +1,6 @@
+import { api } from "~/trpc/server";
+import { Home } from "lucide-react";
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -6,8 +9,6 @@ import {
 } from "~/components/ui/breadcrumb";
 import { Separator } from "~/components/ui/separator";
 import { SidebarTrigger } from "~/components/ui/sidebar";
-import { api } from "~/trpc/server";
-import { Home } from "lucide-react";
 
 export default function DashboardLayout({
   children,

@@ -1,5 +1,7 @@
 import * as React from "react";
 
+import { Check, ChevronRight } from "lucide-react";
+
 import {
   Collapsible,
   CollapsibleContent,
@@ -14,7 +16,6 @@ import {
   SidebarMenuItem,
   SidebarSeparator,
 } from "~/components/ui/sidebar";
-import { Check, ChevronRight } from "lucide-react";
 
 export function Calendars({
   calendars,

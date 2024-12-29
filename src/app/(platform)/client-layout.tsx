@@ -2,11 +2,12 @@
 
 import { cloneElement, isValidElement } from "react";
 
-import { SidebarLeft } from "~/components/sidebar-left";
-import { SidebarRight } from "~/components/sidebar-right";
+import type { User } from "~/server/models";
+
 import { SidebarInset, SidebarProvider } from "~/components/ui/sidebar";
 import { TooltipProvider } from "~/components/ui/tooltip";
-import type { User } from "~/server/models";
+import { SidebarLeft } from "~/components/sidebar-left";
+import { SidebarRight } from "~/components/sidebar-right";
 
 interface ClientLayoutProps {
   children: React.ReactNode;

@@ -3,6 +3,15 @@
 import * as React from "react";
 import { usePathname, useRouter } from "next/navigation";
 
+import {
+  Bell,
+  CircleUser,
+  Keyboard,
+  Lock,
+  Paintbrush,
+  Settings,
+} from "lucide-react";
+
 import { Badge } from "~/components/ui/badge";
 import {
   Breadcrumb,
@@ -28,14 +37,6 @@ import {
   SidebarMenuItem,
   SidebarProvider,
 } from "~/components/ui/sidebar";
-import {
-  Bell,
-  CircleUser,
-  Keyboard,
-  Lock,
-  Paintbrush,
-  Settings,
-} from "lucide-react";
 
 const data = {
   nav: [

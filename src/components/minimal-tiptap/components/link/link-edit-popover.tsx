@@ -1,14 +1,15 @@
 import * as React from "react";
 
 import type { Editor } from "@tiptap/react";
+import type { VariantProps } from "class-variance-authority";
+import { Link } from "lucide-react";
+
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "~/components/ui/popover";
 import type { toggleVariants } from "~/components/ui/toggle";
-import type { VariantProps } from "class-variance-authority";
-import { Link } from "lucide-react";
 
 import { ToolbarButton } from "../toolbar-button";
 import { LinkEditBlock } from "./link-edit-block";

@@ -1,7 +1,7 @@
 import React from "react";
 
-import { SiteContent } from "~/components/site-content";
 import { getPostData, getSortedPostsData } from "~/lib/knowledge";
+import { SiteContent } from "~/components/site-content";
 
 export async function generateStaticParams() {
   return getSortedPostsData();

@@ -2,14 +2,14 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { encodeBase64 } from "@oslojs/encoding";
-import { Button } from "~/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { Verify2FAWithPasskeyButton } from "~/components/verify-2fa-passkey";
 
 import { get2FARedirect } from "~/server/2fa";
 import { globalGETRateLimit } from "~/server/request";
 import { getCurrentSession } from "~/server/session";
 import { getUserPasskeyCredentials } from "~/server/webauthn";
+import { Button } from "~/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { Verify2FAWithPasskeyButton } from "~/components/verify-2fa-passkey";
 
 export default async function Page() {
   if (!(await globalGETRateLimit())) {

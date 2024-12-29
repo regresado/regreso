@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { ForgotPasswordForm } from "~/components/forgot-password";
+import { globalGETRateLimit } from "~/server/request";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -9,8 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-
-import { globalGETRateLimit } from "~/server/request";
+import { ForgotPasswordForm } from "~/components/forgot-password";
 
 export default async function Page() {
   if (!(await globalGETRateLimit())) {

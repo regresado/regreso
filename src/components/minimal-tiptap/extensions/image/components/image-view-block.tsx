@@ -1,9 +1,10 @@
 import * as React from "react";
 
 import { NodeViewWrapper, type NodeViewProps } from "@tiptap/react";
-import { cn } from "~/lib/utils";
 import { Info, Trash } from "lucide-react";
 import { Controlled as ControlledZoom } from "react-medium-image-zoom";
+
+import { cn } from "~/lib/utils";
 
 import { Spinner } from "../../../components/spinner";
 import { blobUrlToBase64, randomId } from "../../../utils";

@@ -1,6 +1,7 @@
 import Link from "next/link";
 
-import { Logo } from "~/components/logo";
+import { ExternalLink } from "lucide-react";
+
 import { Button } from "~/components/ui/button";
 import {
   Collapsible,
@@ -22,7 +23,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "~/components/ui/sheet";
-import { ExternalLink } from "lucide-react";
+import { Logo } from "~/components/logo";
 
 export default function Navigation() {
   return (

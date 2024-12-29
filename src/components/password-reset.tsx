@@ -3,9 +3,10 @@
 import { useActionState, useEffect } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { resetPasswordAction } from "~/app/(auth)/reset-password/actions";
-import { verifyPasswordResetEmailAction } from "~/app/(auth)/reset-password/verify-email/actions";
-import { toast } from "~/components/hooks/use-toast";
+import { AlertCircle } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { Button } from "~/components/ui/button";
 import {
@@ -24,9 +25,9 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "~/components/ui/input-otp";
-import { AlertCircle } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { toast } from "~/components/hooks/use-toast";
+import { resetPasswordAction } from "~/app/(auth)/reset-password/actions";
+import { verifyPasswordResetEmailAction } from "~/app/(auth)/reset-password/verify-email/actions";
 
 const initialPasswordResetEmailVerificationState = {
   message: "",

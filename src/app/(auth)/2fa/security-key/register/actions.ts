@@ -21,7 +21,6 @@ import type {
   COSEEC2PublicKey,
   COSERSAPublicKey,
 } from "@oslojs/webauthn";
-import { getBaseHost, getBaseOrigin } from "~/lib/utils";
 
 import { globalPOSTRateLimit } from "~/server/request";
 import { getCurrentSession, setSessionAs2FAVerified } from "~/server/session";
@@ -31,6 +30,7 @@ import {
   verifyWebAuthnChallenge,
 } from "~/server/webauthn";
 import type { WebAuthnUserCredential } from "~/server/webauthn";
+import { getBaseHost, getBaseOrigin } from "~/lib/utils";
 
 export async function registerSecurityKeyAction(
   _prev: ActionResult,

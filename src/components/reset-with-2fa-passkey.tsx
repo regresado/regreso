@@ -4,11 +4,12 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { decodeBase64, encodeBase64 } from "@oslojs/encoding";
-import { verify2FAWithPasskeyAction } from "~/app/(auth)/reset-password/2fa/passkey/actions";
+import { AlertCircle } from "lucide-react";
+
+import { createChallenge } from "~/lib/client/webauthn";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { Button } from "~/components/ui/button";
-import { createChallenge } from "~/lib/client/webauthn";
-import { AlertCircle } from "lucide-react";
+import { verify2FAWithPasskeyAction } from "~/app/(auth)/reset-password/2fa/passkey/actions";
 
 export function Verify2FAWithPasskeyButton(props: {
   encodedCredentialIds: string[];

@@ -23,7 +23,6 @@ import {
 } from "@oslojs/webauthn";
 import type { AuthenticatorData, ClientData } from "@oslojs/webauthn";
 import { ObjectParser } from "@pilcrowjs/object-parser";
-import { getBaseHost, getBaseOrigin } from "~/lib/utils";
 
 import { globalPOSTRateLimit } from "~/server/request";
 import { getCurrentSession, setSessionAs2FAVerified } from "~/server/session";
@@ -31,6 +30,7 @@ import {
   getUserPasskeyCredential,
   verifyWebAuthnChallenge,
 } from "~/server/webauthn";
+import { getBaseHost, getBaseOrigin } from "~/lib/utils";
 
 export async function verify2FAWithPasskeyAction(
   data: unknown,

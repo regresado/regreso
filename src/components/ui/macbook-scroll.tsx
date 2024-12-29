@@ -3,7 +3,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
-import { cn } from "~/lib/utils";
 import {
   ChevronDown,
   ChevronLeft,
@@ -28,6 +27,8 @@ import {
 } from "lucide-react";
 import type { MotionValue } from "motion/react";
 import { motion, useScroll, useTransform } from "motion/react";
+
+import { cn } from "~/lib/utils";
 
 export const MacbookScroll = ({
   src,

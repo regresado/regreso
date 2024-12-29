@@ -4,7 +4,10 @@ import { useActionState } from "react";
 import Link from "next/link";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginAction } from "~/app/(auth)/log-in/actions";
+import { AlertCircle } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { BottomGradient } from "~/components/ui/bottom-gradient";
 import { Button } from "~/components/ui/button";
@@ -25,9 +28,7 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { AlertCircle } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { loginAction } from "~/app/(auth)/log-in/actions";
 
 const initialState = {
   message: "",

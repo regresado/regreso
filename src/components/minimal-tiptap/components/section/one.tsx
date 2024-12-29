@@ -2,6 +2,10 @@ import * as React from "react";
 
 import type { Level } from "@tiptap/extension-heading";
 import type { Editor } from "@tiptap/react";
+import type { VariantProps } from "class-variance-authority";
+import { ALargeSmall, ChevronDown } from "lucide-react";
+
+import { cn } from "~/lib/utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,9 +13,6 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import type { toggleVariants } from "~/components/ui/toggle";
-import { cn } from "~/lib/utils";
-import type { VariantProps } from "class-variance-authority";
-import { ALargeSmall, ChevronDown } from "lucide-react";
 
 import type { FormatAction } from "../../types";
 import { ShortcutKey } from "../shortcut-key";
