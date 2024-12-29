@@ -3,7 +3,18 @@
 import { startTransition, useActionState } from "react";
 import { redirect, useRouter } from "next/navigation";
 
-import { logoutAction } from "~/app/(platform)/actions";
+import BoringAvatar from "boring-avatars";
+import {
+  Bell,
+  ChevronsUpDown,
+  CircleUser,
+  Lock,
+  LogIn,
+  LogOut,
+} from "lucide-react";
+import type { User } from "~/server/models";
+
+import { cn } from "~/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import {
   DropdownMenu,
@@ -20,17 +31,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "~/components/ui/sidebar";
-import { cn } from "~/lib/utils";
-import BoringAvatar from "boring-avatars";
-import {
-  Bell,
-  ChevronsUpDown,
-  CircleUser,
-  Lock,
-  LogIn,
-  LogOut,
-} from "lucide-react";
-import type { User } from "~/server/models";
+import { logoutAction } from "~/app/(platform)/actions";
 
 const initialState = {
   message: "",

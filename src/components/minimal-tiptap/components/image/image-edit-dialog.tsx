@@ -1,6 +1,9 @@
 import { useState } from "react";
 
 import type { Editor } from "@tiptap/react";
+import type { VariantProps } from "class-variance-authority";
+import { ImageIcon } from "lucide-react";
+
 import {
   Dialog,
   DialogContent,
@@ -10,8 +13,6 @@ import {
   DialogTrigger,
 } from "~/components/ui/dialog";
 import type { toggleVariants } from "~/components/ui/toggle";
-import type { VariantProps } from "class-variance-authority";
-import { ImageIcon } from "lucide-react";
 
 import { ToolbarButton } from "../toolbar-button";
 import { ImageEditBlock } from "./image-edit-block";

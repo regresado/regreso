@@ -2,13 +2,13 @@ import { redirect } from "next/navigation";
 
 import { bigEndian } from "@oslojs/binary";
 import { encodeBase64 } from "@oslojs/encoding";
-import { RegisterPasskeyForm } from "~/components/register-passkey";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 
 import { get2FARedirect } from "~/server/2fa";
 import { globalGETRateLimit } from "~/server/request";
 import { getCurrentSession } from "~/server/session";
 import { getUserPasskeyCredentials } from "~/server/webauthn";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { RegisterPasskeyForm } from "~/components/register-passkey";
 
 export default async function Page() {
   if (!(await globalGETRateLimit())) {

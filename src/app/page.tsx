@@ -4,13 +4,14 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { FeatureCards } from "~/components/feature-cards";
-import Hero from "~/components/hero";
-import { LandingNavigation } from "~/components/landing-navigation";
+import { Github } from "lucide-react";
+
 import { Button } from "~/components/ui/button";
 import { MacbookScroll } from "~/components/ui/macbook-scroll";
 import { Tabs } from "~/components/ui/tabs";
-import { Github } from "lucide-react";
+import { FeatureCards } from "~/components/feature-cards";
+import Hero from "~/components/hero";
+import { LandingNavigation } from "~/components/landing-navigation";
 
 function TabsDemo() {
   const tabs = [

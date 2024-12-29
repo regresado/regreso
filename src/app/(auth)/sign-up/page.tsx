@@ -1,9 +1,8 @@
 import { redirect } from "next/navigation";
 
-import { SignupForm } from "~/components/signup-form";
-
 import { globalGETRateLimit } from "~/server/request";
 import { getCurrentSession } from "~/server/session";
+import { SignupForm } from "~/components/signup-form";
 
 export default async function Page() {
   if (!(await globalGETRateLimit())) {

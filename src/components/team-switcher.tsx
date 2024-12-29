@@ -2,6 +2,8 @@
 
 import * as React from "react";
 
+import { ChevronDown, Plus } from "lucide-react";
+
 import { Badge } from "~/components/ui/badge";
 import {
   DropdownMenu,
@@ -17,7 +19,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "~/components/ui/sidebar";
-import { ChevronDown, Plus } from "lucide-react";
 
 export function TeamSwitcher({
   teams,

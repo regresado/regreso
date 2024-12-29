@@ -4,13 +4,13 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
-import { ClientLayout } from "~/app/(platform)/client-layout";
-import { ourFileRouter } from "~/app/api/uploadthing/core";
-import { Toaster } from "~/components/ui/toaster";
 import { api, HydrateClient } from "~/trpc/server";
 import { extractRouterConfig } from "uploadthing/server";
 
 import { getCurrentSession } from "~/server/session";
+import { Toaster } from "~/components/ui/toaster";
+import { ClientLayout } from "~/app/(platform)/client-layout";
+import { ourFileRouter } from "~/app/api/uploadthing/core";
 
 export default async function PlatformLayout({
   children,

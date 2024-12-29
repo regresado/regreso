@@ -1,7 +1,6 @@
 import * as React from "react";
 
 import type { Editor } from "@tiptap/react";
-import type { toggleVariants } from "~/components/ui/toggle";
 import type { VariantProps } from "class-variance-authority";
 import {
   Bold,
@@ -12,6 +11,8 @@ import {
   Strikethrough,
   Underline,
 } from "lucide-react";
+
+import type { toggleVariants } from "~/components/ui/toggle";
 
 import type { FormatAction } from "../../types";
 import { ToolbarSection } from "../toolbar-section";

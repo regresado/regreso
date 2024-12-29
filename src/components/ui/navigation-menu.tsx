@@ -10,9 +10,10 @@ import {
   Trigger,
   Viewport,
 } from "@radix-ui/react-navigation-menu";
-import { cn } from "~/lib/utils";
 import { cva } from "class-variance-authority";
 import { ChevronDown } from "lucide-react";
+
+import { cn } from "~/lib/utils";
 
 const NavigationMenu = React.forwardRef<
   React.ElementRef<typeof Root>,

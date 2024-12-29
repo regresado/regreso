@@ -4,12 +4,13 @@ import { useActionState, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { decodeBase64, encodeBase64 } from "@oslojs/encoding";
-import { verify2FAWithSecurityKeyAction } from "~/app/(auth)/2fa/security-key/actions";
-import { logoutAction } from "~/app/(platform)/actions";
+import { AlertCircle } from "lucide-react";
+
+import { createChallenge } from "~/lib/client/webauthn";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { Button } from "~/components/ui/button";
-import { createChallenge } from "~/lib/client/webauthn";
-import { AlertCircle } from "lucide-react";
+import { verify2FAWithSecurityKeyAction } from "~/app/(auth)/2fa/security-key/actions";
+import { logoutAction } from "~/app/(platform)/actions";
 
 const logoutState = {
   message: "",

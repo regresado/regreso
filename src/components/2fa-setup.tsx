@@ -3,9 +3,9 @@
 import { useActionState } from "react";
 import Link from "next/link";
 
-import { skip2FASetupAction } from "~/app/(auth)/2fa/setup/actions";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
+import { skip2FASetupAction } from "~/app/(auth)/2fa/setup/actions";
 
 const initialState = {
   error: "",

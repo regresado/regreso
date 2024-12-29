@@ -1,7 +1,8 @@
 import * as React from "react";
 
-import { Separator } from "~/components/ui/separator";
 import { Copy, ExternalLink, Unlink } from "lucide-react";
+
+import { Separator } from "~/components/ui/separator";
 
 import { ToolbarButton } from "../toolbar-button";
 

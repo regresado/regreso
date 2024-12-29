@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import { PasswordResetTOTPForm } from "~/components/password-reset-totp";
+import { getPasswordReset2FARedirect } from "~/server/2fa";
+import { getCurrentPasswordResetSession } from "~/server/password-reset";
+import { globalGETRateLimit } from "~/server/request";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -10,10 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-
-import { getPasswordReset2FARedirect } from "~/server/2fa";
-import { getCurrentPasswordResetSession } from "~/server/password-reset";
-import { globalGETRateLimit } from "~/server/request";
+import { PasswordResetTOTPForm } from "~/components/password-reset-totp";
 
 export default async function Page() {
   if (!(await globalGETRateLimit())) {

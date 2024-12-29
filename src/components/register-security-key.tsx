@@ -4,7 +4,12 @@ import { useActionState, useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { decodeBase64, encodeBase64 } from "@oslojs/encoding";
-import { registerSecurityKeyAction } from "~/app/(auth)/2fa/security-key/register/actions";
+import { AlertCircle } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import type { User } from "~/server/models";
+
+import { createChallenge } from "~/lib/client/webauthn";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { Button } from "~/components/ui/button";
 import {
@@ -16,11 +21,7 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
-import { createChallenge } from "~/lib/client/webauthn";
-import { AlertCircle } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import type { User } from "~/server/models";
+import { registerSecurityKeyAction } from "~/app/(auth)/2fa/security-key/register/actions";
 
 const initialRegisterSecurityKeyState = {
   message: "",

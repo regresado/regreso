@@ -1,7 +1,7 @@
 import Link from "next/link";
 
-import { ThemeToggle } from "~/components/landing-theme-toggle";
-import { Logo } from "~/components/logo";
+import { ChevronRightIcon, ExternalLink, MenuIcon } from "lucide-react";
+
 import { Button } from "~/components/ui/button";
 import {
   Collapsible,
@@ -18,7 +18,8 @@ import {
   NavigationMenuTrigger,
 } from "~/components/ui/navigation-menu";
 import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
-import { ChevronRightIcon, ExternalLink, MenuIcon } from "lucide-react";
+import { ThemeToggle } from "~/components/landing-theme-toggle";
+import { Logo } from "~/components/logo";
 
 // TODO: Make Side Navigation Sheet share component with marketing one
 export function LandingNavigation() {

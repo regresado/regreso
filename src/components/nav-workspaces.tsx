@@ -1,3 +1,5 @@
+import { ChevronRight, MoreHorizontal, Plus } from "lucide-react";
+
 import {
   Collapsible,
   CollapsibleContent,
@@ -15,7 +17,6 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "~/components/ui/sidebar";
-import { ChevronRight, MoreHorizontal, Plus } from "lucide-react";
 
 export function NavWorkspaces({
   workspaces,

@@ -2,18 +2,6 @@
 
 import * as React from "react";
 
-import { NavFavorites } from "~/components/nav-favorites";
-import { NavMain } from "~/components/nav-main";
-import { NavSecondary } from "~/components/nav-secondary";
-import { NavWorkspaces } from "~/components/nav-workspaces";
-import { TeamSwitcher } from "~/components/team-switcher";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarRail,
-} from "~/components/ui/sidebar";
 import {
   Calendar,
   Command,
@@ -23,6 +11,19 @@ import {
   Search,
   Settings,
 } from "lucide-react";
+
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarRail,
+} from "~/components/ui/sidebar";
+import { NavFavorites } from "~/components/nav-favorites";
+import { NavMain } from "~/components/nav-main";
+import { NavSecondary } from "~/components/nav-secondary";
+import { NavWorkspaces } from "~/components/nav-workspaces";
+import { TeamSwitcher } from "~/components/team-switcher";
 
 // This is sample data.
 const data = {

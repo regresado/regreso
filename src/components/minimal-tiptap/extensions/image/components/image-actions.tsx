@@ -1,5 +1,14 @@
 import * as React from "react";
 
+import {
+  ClipboardCopy,
+  Download,
+  Ellipsis,
+  ImageUpscale,
+  Link,
+} from "lucide-react";
+
+import { cn } from "~/lib/utils";
 import { Button } from "~/components/ui/button";
 import {
   DropdownMenu,
@@ -12,14 +21,6 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
-import { cn } from "~/lib/utils";
-import {
-  ClipboardCopy,
-  Download,
-  Ellipsis,
-  ImageUpscale,
-  Link,
-} from "lucide-react";
 
 interface ImageActionsProps {
   shouldMerge?: boolean;

@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 
-import { TwoFactorResetForm } from "~/components/2fa-reset";
+import { globalGETRateLimit } from "~/server/request";
+import { getCurrentSession } from "~/server/session";
 import {
   Card,
   CardContent,
@@ -8,9 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-
-import { globalGETRateLimit } from "~/server/request";
-import { getCurrentSession } from "~/server/session";
+import { TwoFactorResetForm } from "~/components/2fa-reset";
 
 export default async function Page() {
   if (!(await globalGETRateLimit())) {

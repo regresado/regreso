@@ -3,10 +3,11 @@
 import React from "react";
 import Link from "next/link";
 
-import { Button } from "~/components/ui/button";
-import { LampContainer } from "~/components/ui/lamp";
 import { Footprints } from "lucide-react";
 import { motion } from "motion/react";
+
+import { Button } from "~/components/ui/button";
+import { LampContainer } from "~/components/ui/lamp";
 
 export default function NotFound() {
   return (

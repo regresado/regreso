@@ -3,14 +3,10 @@
 import { useActionState, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  deletePasskeyAction,
-  deleteSecurityKeyAction,
-  disconnectTOTPAction,
-  regenerateRecoveryCodeAction,
-  updateEmailAction,
-  updatePasswordAction,
-} from "~/app/(platform)/dashboard/settings/account/actions";
+import { AlertCircle } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
@@ -23,9 +19,14 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
-import { AlertCircle } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import {
+  deletePasskeyAction,
+  deleteSecurityKeyAction,
+  disconnectTOTPAction,
+  regenerateRecoveryCodeAction,
+  updateEmailAction,
+  updatePasswordAction,
+} from "~/app/(platform)/dashboard/settings/account/actions";
 
 import { CardDescription } from "./ui/card";
 

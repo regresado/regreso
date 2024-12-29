@@ -2,23 +2,6 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { encodeBase64 } from "@oslojs/encoding";
-import {
-  DisconnectTOTPButton,
-  PasskeyCredentialListItem,
-  RecoveryCodeSection,
-  SecurityKeyCredentialListItem,
-  UpdateEmailForm,
-  UpdatePasswordForm,
-} from "~/components/account-settings";
-import { Button } from "~/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
 
 import { get2FARedirect } from "~/server/2fa";
 import { globalGETRateLimit } from "~/server/request";
@@ -28,6 +11,23 @@ import {
   getUserPasskeyCredentials,
   getUserSecurityKeyCredentials,
 } from "~/server/webauthn";
+import { Button } from "~/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
+import {
+  DisconnectTOTPButton,
+  PasskeyCredentialListItem,
+  RecoveryCodeSection,
+  SecurityKeyCredentialListItem,
+  UpdateEmailForm,
+  UpdatePasswordForm,
+} from "~/components/account-settings";
 
 export default async function Page() {
   if (!(await globalGETRateLimit())) {

@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
+import { get2FARedirect } from "~/server/2fa";
+import { globalGETRateLimit } from "~/server/request";
+import { getCurrentSession } from "~/server/session";
+import { getUserRecoveryCode } from "~/server/user";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -9,11 +13,6 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-
-import { get2FARedirect } from "~/server/2fa";
-import { globalGETRateLimit } from "~/server/request";
-import { getCurrentSession } from "~/server/session";
-import { getUserRecoveryCode } from "~/server/user";
 
 export default async function Page() {
   if (!(await globalGETRateLimit())) {

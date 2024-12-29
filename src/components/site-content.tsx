@@ -5,9 +5,9 @@ import remarkGfm from "remark-gfm";
 
 import "~/styles/markdown.css";
 
+import type { PostData } from "~/lib/knowledge";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
-import type { PostData } from "~/lib/knowledge";
 
 export function SiteContent(props: { postData: PostData }) {
   return (

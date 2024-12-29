@@ -1,6 +1,9 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
+import { getCurrentUserEmailVerificationRequest } from "~/server/email-verification";
+import { globalGETRateLimit } from "~/server/request";
+import { getCurrentSession } from "~/server/session";
 import {
   Card,
   CardContent,
@@ -12,10 +15,6 @@ import {
   EmailVerificationForm,
   ResendEmailVerificationCodeForm,
 } from "~/components/verify-email";
-
-import { getCurrentUserEmailVerificationRequest } from "~/server/email-verification";
-import { globalGETRateLimit } from "~/server/request";
-import { getCurrentSession } from "~/server/session";
 
 export default async function Page() {
   if (!(await globalGETRateLimit())) {

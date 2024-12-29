@@ -3,8 +3,9 @@
 import { useActionState, useEffect } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { forgotPasswordAction } from "~/app/(auth)/forgot-password/actions";
-import { toast } from "~/components/hooks/use-toast";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
 import { Button } from "~/components/ui/button";
 import {
   Form,
@@ -14,8 +15,8 @@ import {
   FormLabel,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { toast } from "~/components/hooks/use-toast";
+import { forgotPasswordAction } from "~/app/(auth)/forgot-password/actions";
 
 const FormSchema = z.object({
   email: z.string().email(),

@@ -7,8 +7,9 @@ import { Underline } from "@tiptap/extension-underline";
 import type { Content, Editor, UseEditorOptions } from "@tiptap/react";
 import { useEditor } from "@tiptap/react";
 import { StarterKit } from "@tiptap/starter-kit";
-import { useToast } from "~/components/hooks/use-toast";
+
 import { cn } from "~/lib/utils";
+import { useToast } from "~/components/hooks/use-toast";
 
 import {
   CodeBlockLowlight,
