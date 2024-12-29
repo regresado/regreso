@@ -1,4 +1,5 @@
 import { TeamSwitcher } from "~/components/team-switcher";
+import { TiltCard } from "~/components/tilt-card";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -7,7 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-import { TiltCard } from "~/components/tilt-card";
 import { Binoculars, Rocket } from "lucide-react";
 
 export function WelcomeCard({
