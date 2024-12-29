@@ -2,17 +2,14 @@
 
 import { headers } from "next/headers";
 
-import { UTApi } from "uploadthing/server";
-
 import { eq } from "drizzle-orm";
+import { UTApi } from "uploadthing/server";
 
 import { db } from "~/server/db";
 import { users } from "~/server/db/schema";
-
-import { getCurrentSession } from "~/server/session";
-
-import { RefillingTokenBucket, ExpiringTokenBucket } from "~/server/rate-limit";
+import { ExpiringTokenBucket, RefillingTokenBucket } from "~/server/rate-limit";
 import { globalPOSTRateLimit } from "~/server/request";
+import { getCurrentSession } from "~/server/session";
 
 const usernameUpdateBucket = new ExpiringTokenBucket<string>(5, 60 * 30);
 

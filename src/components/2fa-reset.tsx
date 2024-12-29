@@ -3,13 +3,8 @@
 import { useActionState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-import { AlertCircle } from "lucide-react";
-
 import { reset2FAAction } from "~/app/(auth)/2fa/reset/actions";
-
+import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { Button } from "~/components/ui/button";
 import {
   Form,
@@ -25,7 +20,9 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "~/components/ui/input-otp";
-import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
+import { AlertCircle } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 const FormSchema = z.object({
   code: z

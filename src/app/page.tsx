@@ -1,19 +1,16 @@
 "use client";
 
 import React from "react";
-
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 
-import { Github } from "lucide-react";
-
-import { Button } from "~/components/ui/button";
-import { Tabs } from "~/components/ui/tabs";
-import { MacbookScroll } from "~/components/ui/macbook-scroll";
-
-import { LandingNavigation } from "~/components/landing-navigation";
-import Hero from "~/components/hero";
 import { FeatureCards } from "~/components/feature-cards";
+import Hero from "~/components/hero";
+import { LandingNavigation } from "~/components/landing-navigation";
+import { Button } from "~/components/ui/button";
+import { MacbookScroll } from "~/components/ui/macbook-scroll";
+import { Tabs } from "~/components/ui/tabs";
+import { Github } from "lucide-react";
 
 function TabsDemo() {
   const tabs = [

@@ -1,7 +1,7 @@
 "use server";
 
-import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 import {
   createEmailVerificationRequest,
@@ -13,11 +13,10 @@ import {
   setEmailVerificationRequestCookie,
 } from "~/server/email-verification";
 import { invalidateUserPasswordResetSessions } from "~/server/password-reset";
-import { getCurrentSession } from "~/server/session";
-import { updateUserEmailAndSetEmailAsVerified } from "~/server/user";
-
 import { ExpiringTokenBucket } from "~/server/rate-limit";
 import { globalPOSTRateLimit } from "~/server/request";
+import { getCurrentSession } from "~/server/session";
+import { updateUserEmailAndSetEmailAsVerified } from "~/server/user";
 
 const bucket = new ExpiringTokenBucket<number>(5, 60 * 30);
 

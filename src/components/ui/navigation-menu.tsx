@@ -1,18 +1,18 @@
 import * as React from "react";
+
 import {
-  Root,
-  List,
-  Item,
-  Trigger,
   Content,
-  Link,
-  Viewport,
   Indicator,
+  Item,
+  Link,
+  List,
+  Root,
+  Trigger,
+  Viewport,
 } from "@radix-ui/react-navigation-menu";
+import { cn } from "~/lib/utils";
 import { cva } from "class-variance-authority";
 import { ChevronDown } from "lucide-react";
-
-import { cn } from "~/lib/utils";
 
 const NavigationMenu = React.forwardRef<
   React.ElementRef<typeof Root>,

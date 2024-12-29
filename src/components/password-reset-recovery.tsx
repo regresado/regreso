@@ -3,14 +3,9 @@
 import { useActionState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-import { AlertCircle } from "lucide-react";
-
-import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
+import { verifyPasswordReset2FAWithRecoveryCodeAction } from "~/app/(auth)/reset-password/2fa/recovery-code/actions";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
+import { Button } from "~/components/ui/button";
 import {
   Form,
   FormControl,
@@ -20,8 +15,10 @@ import {
   FormLabel,
   FormMessage,
 } from "~/components/ui/form";
-
-import { verifyPasswordReset2FAWithRecoveryCodeAction } from "~/app/(auth)/reset-password/2fa/recovery-code/actions";
+import { Input } from "~/components/ui/input";
+import { AlertCircle } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 const FormSchema = z.object({
   code: z

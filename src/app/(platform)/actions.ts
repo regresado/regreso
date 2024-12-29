@@ -2,13 +2,12 @@
 
 import { redirect } from "next/navigation";
 
+import { globalPOSTRateLimit } from "~/server/request";
 import {
   deleteSessionTokenCookie,
   getCurrentSession,
   invalidateSession,
 } from "~/server/session";
-
-import { globalPOSTRateLimit } from "~/server/request";
 
 export async function logoutAction(): Promise<ActionResult> {
   if (!(await globalPOSTRateLimit())) {

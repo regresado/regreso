@@ -1,15 +1,14 @@
 import Link from "next/link";
 
+import { ForgotPasswordForm } from "~/components/forgot-password";
 import { Button } from "~/components/ui/button";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
 } from "~/components/ui/card";
-
-import { ForgotPasswordForm } from "~/components/forgot-password";
 
 import { globalGETRateLimit } from "~/server/request";
 

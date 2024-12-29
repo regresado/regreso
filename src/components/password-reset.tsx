@@ -3,20 +3,11 @@
 import { useActionState, useEffect } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-import { AlertCircle } from "lucide-react";
-
 import { resetPasswordAction } from "~/app/(auth)/reset-password/actions";
 import { verifyPasswordResetEmailAction } from "~/app/(auth)/reset-password/verify-email/actions";
-
-const initialPasswordResetEmailVerificationState = {
-  message: "",
-};
-
+import { toast } from "~/components/hooks/use-toast";
+import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
 import {
   Form,
   FormControl,
@@ -26,15 +17,20 @@ import {
   FormLabel,
   FormMessage,
 } from "~/components/ui/form";
+import { Input } from "~/components/ui/input";
 import {
   InputOTP,
   InputOTPGroup,
-  InputOTPSlot,
   InputOTPSeparator,
+  InputOTPSlot,
 } from "~/components/ui/input-otp";
-import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
+import { AlertCircle } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-import { toast } from "~/components/hooks/use-toast";
+const initialPasswordResetEmailVerificationState = {
+  message: "",
+};
 
 const VerifyEmailFormSchema = z.object({
   code: z

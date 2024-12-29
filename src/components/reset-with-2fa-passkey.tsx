@@ -1,19 +1,14 @@
 "use client";
 
 import { useState } from "react";
-
 import { useRouter } from "next/navigation";
 
 import { decodeBase64, encodeBase64 } from "@oslojs/encoding";
-
-import { AlertCircle } from "lucide-react";
-
-import { createChallenge } from "~/lib/client/webauthn";
-
 import { verify2FAWithPasskeyAction } from "~/app/(auth)/reset-password/2fa/passkey/actions";
-
+import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { Button } from "~/components/ui/button";
-import { Alert, AlertTitle, AlertDescription } from "~/components/ui/alert";
+import { createChallenge } from "~/lib/client/webauthn";
+import { AlertCircle } from "lucide-react";
 
 export function Verify2FAWithPasskeyButton(props: {
   encodedCredentialIds: string[];

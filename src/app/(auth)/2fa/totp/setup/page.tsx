@@ -2,23 +2,19 @@ import { redirect } from "next/navigation";
 
 import { encodeBase64 } from "@oslojs/encoding";
 import { createTOTPKeyURI } from "@oslojs/otp";
-
-import { renderSVG } from "uqr";
-
+import { TOTPSetUpForm } from "~/components/totp-setup";
 import {
   Card,
   CardContent,
-  CardHeader,
   CardDescription,
+  CardHeader,
   CardTitle,
 } from "~/components/ui/card";
+import { renderSVG } from "uqr";
 
-import { TOTPSetUpForm } from "~/components/totp-setup";
-
-import { getCurrentSession } from "~/server/session";
 import { get2FARedirect } from "~/server/2fa";
-
 import { globalGETRateLimit } from "~/server/request";
+import { getCurrentSession } from "~/server/session";
 
 export default async function Page() {
   if (!(await globalGETRateLimit())) {

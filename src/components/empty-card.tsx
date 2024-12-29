@@ -1,7 +1,6 @@
-import { ImageIcon } from "lucide-react";
-
-import { cn } from "~/lib/utils";
 import { Card, CardDescription, CardTitle } from "~/components/ui/card";
+import { cn } from "~/lib/utils";
+import { ImageIcon } from "lucide-react";
 
 interface EmptyCardProps extends React.ComponentPropsWithoutRef<typeof Card> {
   title: string;

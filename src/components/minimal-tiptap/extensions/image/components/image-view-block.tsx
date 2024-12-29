@@ -1,17 +1,19 @@
 import * as React from "react";
+
 import { NodeViewWrapper, type NodeViewProps } from "@tiptap/react";
+import { cn } from "~/lib/utils";
+import { Info, Trash } from "lucide-react";
+import { Controlled as ControlledZoom } from "react-medium-image-zoom";
+
+import { Spinner } from "../../../components/spinner";
+import { blobUrlToBase64, randomId } from "../../../utils";
 import type { ElementDimensions } from "../hooks/use-drag-resize";
 import { useDragResize } from "../hooks/use-drag-resize";
-import { ResizeHandle } from "./resize-handle";
-import { cn } from "~/lib/utils";
-import { Controlled as ControlledZoom } from "react-medium-image-zoom";
-import { ActionButton, ActionWrapper, ImageActions } from "./image-actions";
 import { useImageActions } from "../hooks/use-image-actions";
-import { blobUrlToBase64, randomId } from "../../../utils";
-import { Info, Trash } from "lucide-react";
-import { ImageOverlay } from "./image-overlay";
-import { Spinner } from "../../../components/spinner";
 import type { UploadReturnType } from "../image";
+import { ActionButton, ActionWrapper, ImageActions } from "./image-actions";
+import { ImageOverlay } from "./image-overlay";
+import { ResizeHandle } from "./resize-handle";
 
 const MAX_HEIGHT = 600;
 const MIN_HEIGHT = 120;

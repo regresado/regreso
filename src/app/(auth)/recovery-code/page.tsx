@@ -5,16 +5,15 @@ import { Button } from "~/components/ui/button";
 import {
   Card,
   CardContent,
-  CardHeader,
   CardDescription,
+  CardHeader,
   CardTitle,
 } from "~/components/ui/card";
 
+import { get2FARedirect } from "~/server/2fa";
+import { globalGETRateLimit } from "~/server/request";
 import { getCurrentSession } from "~/server/session";
 import { getUserRecoveryCode } from "~/server/user";
-import { get2FARedirect } from "~/server/2fa";
-
-import { globalGETRateLimit } from "~/server/request";
 
 export default async function Page() {
   if (!(await globalGETRateLimit())) {

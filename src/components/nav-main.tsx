@@ -1,12 +1,11 @@
 "use client";
 
-import { type LucideIcon } from "lucide-react";
-
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "~/components/ui/sidebar";
+import { type LucideIcon } from "lucide-react";
 
 export function NavMain({
   items,

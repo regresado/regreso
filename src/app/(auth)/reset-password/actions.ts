@@ -1,14 +1,17 @@
 "use server";
 
-import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+
+import type { SessionFlags } from "~/server/models";
 
 import { verifyPasswordStrength } from "~/server/password";
 import {
   deletePasswordResetSessionTokenCookie,
-  invalidateUserPasswordResetSessions,
   getCurrentPasswordResetSession,
+  invalidateUserPasswordResetSessions,
 } from "~/server/password-reset";
+import { globalPOSTRateLimit } from "~/server/request";
 import {
   createSession,
   generateSessionToken,
@@ -16,10 +19,6 @@ import {
   setSessionTokenCookie,
 } from "~/server/session";
 import { updateUserPassword } from "~/server/user";
-
-import { globalPOSTRateLimit } from "~/server/request";
-
-import type { SessionFlags } from "~/server/models";
 
 export async function resetPasswordAction(
   _prev: ActionResult,

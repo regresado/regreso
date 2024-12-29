@@ -1,6 +1,5 @@
 import { getPasswordReset2FARedirect } from "~/server/2fa";
 import { getCurrentPasswordResetSession } from "~/server/password-reset";
-
 import { globalGETRateLimit } from "~/server/request";
 
 export async function GET() {

@@ -1,21 +1,22 @@
-import { db } from "~/server/db";
-import { eq } from "drizzle-orm";
+import { cache } from "react";
+import { cookies } from "next/headers";
+
+import { sha256 } from "@oslojs/crypto/sha2";
 import {
-  encodeHexLowerCase,
   encodeBase32LowerCaseNoPadding,
+  encodeHexLowerCase,
 } from "@oslojs/encoding";
+import { eq } from "drizzle-orm";
+import type { Session, SessionFlags, User } from "~/server/models";
+
+import { db } from "~/server/db";
 import {
-  users,
-  sessions,
-  totpCredentials,
   passkeyCredentials,
   securityKeyCredentials,
+  sessions,
+  totpCredentials,
+  users,
 } from "~/server/db/schema";
-import type { User, Session, SessionFlags } from "~/server/models";
-
-import { cookies } from "next/headers";
-import { cache } from "react";
-import { sha256 } from "@oslojs/crypto/sha2";
 
 export async function validateSessionToken(
   token: string,
