@@ -12,6 +12,7 @@ import {
   Settings,
 } from "lucide-react";
 
+import { Badge } from "~/components/ui/badge";
 import {
   Sidebar,
   SidebarContent,
@@ -37,6 +38,14 @@ const data = {
   navMain: [
     {
       title: "Search",
+      render: (
+        <div>
+          Search{" "}
+          <Badge className="ml-2" variant="secondary">
+            Soon!
+          </Badge>
+        </div>
+      ),
       url: "#search",
       icon: Search,
     },
@@ -48,11 +57,27 @@ const data = {
     },
     {
       title: "Graph",
+      render: (
+        <div>
+          Graph{" "}
+          <Badge className="ml-2" variant="secondary">
+            Soon!
+          </Badge>
+        </div>
+      ),
       url: "#graph",
       icon: Network,
     },
     {
       title: "Calendar",
+      render: (
+        <div>
+          Calendar{" "}
+          <Badge className="ml-2" variant="secondary">
+            Soon!
+          </Badge>
+        </div>
+      ),
       url: "#calendar",
       icon: Calendar,
     },
@@ -70,65 +95,65 @@ const data = {
     },
   ],
   lists: [
-    {
-      name: "Project Management & Task Tracking",
-      url: "#",
-      emoji: "📊",
-    },
-    {
-      name: "Family Recipe Collection & Meal Planning",
-      url: "#",
-      emoji: "🍳",
-    },
-    {
-      name: "Fitness Tracker & Workout Routines",
-      url: "#",
-      emoji: "💪",
-    },
+    // {
+    //   name: "Project Management & Task Tracking",
+    //   url: "#",
+    //   emoji: "📊",
+    // },
+    // {
+    //   name: "Family Recipe Collection & Meal Planning",
+    //   url: "#",
+    //   emoji: "🍳",
+    // },
+    // {
+    //   name: "Fitness Tracker & Workout Routines",
+    //   url: "#",
+    //   emoji: "💪",
+    // },
   ],
   workspaces: [
-    {
-      name: "Personal Life Management",
-      emoji: "🏠",
-      pages: [
-        {
-          name: "Daily Journal & Reflection",
-          url: "#",
-          emoji: "📔",
-        },
-        {
-          name: "Health & Wellness Tracker",
-          url: "#",
-          emoji: "🍏",
-        },
-        {
-          name: "Personal Growth & Learning Goals",
-          url: "#",
-          emoji: "🌟",
-        },
-      ],
-    },
-    {
-      name: "Professional Development",
-      emoji: "💼",
-      pages: [
-        {
-          name: "Career Objectives & Milestones",
-          url: "#",
-          emoji: "🎯",
-        },
-        {
-          name: "Skill Acquisition & Training Log",
-          url: "#",
-          emoji: "🧠",
-        },
-        {
-          name: "Networking Contacts & Events",
-          url: "#",
-          emoji: "🤝",
-        },
-      ],
-    },
+    // {
+    //   name: "Personal Life Management",
+    //   emoji: "🏠",
+    //   pages: [
+    //     {
+    //       name: "Daily Journal & Reflection",
+    //       url: "#",
+    //       emoji: "📔",
+    //     },
+    //     {
+    //       name: "Health & Wellness Tracker",
+    //       url: "#",
+    //       emoji: "🍏",
+    //     },
+    //     {
+    //       name: "Personal Growth & Learning Goals",
+    //       url: "#",
+    //       emoji: "🌟",
+    //     },
+    //   ],
+    // },
+    // {
+    //   name: "Professional Development",
+    //   emoji: "💼",
+    //   pages: [
+    //     {
+    //       name: "Career Objectives & Milestones",
+    //       url: "#",
+    //       emoji: "🎯",
+    //     },
+    //     {
+    //       name: "Skill Acquisition & Training Log",
+    //       url: "#",
+    //       emoji: "🧠",
+    //     },
+    //     {
+    //       name: "Networking Contacts & Events",
+    //       url: "#",
+    //       emoji: "🤝",
+    //     },
+    //   ],
+    // },
   ],
 };
 

@@ -3,6 +3,7 @@ import * as React from "react";
 import { Plus } from "lucide-react";
 import type { User } from "~/server/models";
 
+import { Badge } from "~/components/ui/badge";
 import {
   Sidebar,
   SidebarContent,
@@ -63,7 +64,12 @@ export function SidebarRight({
           <SidebarMenuItem>
             <SidebarMenuButton>
               <Plus />
-              <span>New Calendar</span>
+              <span>
+                New Calendar
+                <Badge className="ml-2" variant="secondary">
+                  Soon!
+                </Badge>
+              </span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
