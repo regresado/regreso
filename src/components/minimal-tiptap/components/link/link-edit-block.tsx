@@ -42,7 +42,7 @@ export const LinkEditBlock = React.forwardRef<HTMLDivElement, LinkEditorProps>(
       [onSave, url, text, isNewTab],
     );
 
-    React.useImperativeHandle(ref, () => formRef.current as HTMLDivElement);
+    React.useImperativeHandle(ref, () => formRef.current!);
 
     return (
       <div ref={formRef}>

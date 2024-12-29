@@ -165,7 +165,7 @@ const checkTypeAndSize = (
 ): { isValidType: boolean; isValidSize: boolean } => {
   const mimeType = input instanceof File ? input.type : base64MimeType(input);
   const size =
-    input instanceof File ? input.size : atob(input.split(",")[1]).length;
+    input instanceof File ? input.size : atob(input.split(",")[1]!).length;
 
   const isValidType =
     allowedMimeTypes.length === 0 ||
@@ -178,14 +178,16 @@ const checkTypeAndSize = (
 };
 
 const base64MimeType = (encoded: string): string => {
-  const result = encoded.match(/data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+).*,.*/);
-  return result && result.length > 1 ? result[1] : "unknown";
+  const result = /data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+).*,.*/.exec(encoded);
+  return result && result.length > 1 && result[1] != undefined
+    ? result[1]
+    : "unknown";
 };
 
 const isBase64 = (str: string): boolean => {
   if (str.startsWith("data:")) {
-    const matches = str.match(/^data:[^;]+;base64,(.+)$/);
-    if (matches && matches[1]) {
+    const matches = /^data:[^;]+;base64,(.+)$/.exec(str);
+    if (matches?.[1]) {
       str = matches[1];
     } else {
       return false;
