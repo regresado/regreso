@@ -25,10 +25,10 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { api } from "~/trpc/react";
-import { Tag, TagInput } from "emblor";
+import { type Tag, TagInput } from "emblor";
 import { ArrowRight, MapPin, MapPinPlus } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { type z } from "zod";
 import { destinationSchema, type Destination } from "~/server/models";
 
 export function CreateDestination() {
