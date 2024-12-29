@@ -65,17 +65,18 @@ export function CreateDestination() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center">
-            <MapPinPlus className="mr-2 w-5" /> Create Destination
+            <MapPinPlus className="mr-2 h-5 w-5" /> Create Destination
           </CardTitle>
         </CardHeader>
-        <CardContent className="sm:px-3 xl:px-6">
+        <CardContent className="px-6">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <div
-                className={`flex flex-row items-end xs:space-x-1 xl:space-x-3`}
-              >
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="w-full space-y-4"
+            >
+              <div className={`flex w-full flex-row flex-wrap items-end gap-3`}>
                 <div
-                  className={`w-${form.watch("type") === "location" ? "1/3" : "full"}`}
+                  className={`w-${form.watch("type") === "location" ? "1/3" : "full"} min-w-[100px]`}
                 >
                   <FormField
                     control={form.control}
@@ -111,7 +112,7 @@ export function CreateDestination() {
 
                 {form.watch("type") == "location" ? (
                   <>
-                    <div className="w-1/2">
+                    <div className="min-w-[200px] sm:w-1/2">
                       <FormField
                         control={form.control}
                         name="location"
@@ -235,10 +236,10 @@ export function RecentDestinations() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center">
-            <MapPin className="mr-2 w-5" /> Recent Destinations
+            <MapPin className="mr-2 h-5 w-5" /> Recent Destinations
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-6 sm:px-3 xl:px-6">
+        <CardContent className="space-y-6 px-6">
           {recentDestinations.length > 0 ? (
             recentDestinations.map((dest: Destination) => {
               return <DestinationCard {...dest} />;
