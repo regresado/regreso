@@ -20,23 +20,14 @@ import { NavUser } from "~/components/nav-user";
 
 // This is sample data.
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   calendars: [
     {
       name: "My Calendars",
-      items: ["Personal", "Work", "Family"],
+      items: ["Reminders", "General"],
     },
     {
-      name: "Lists",
-      items: ["Holidays", "Birthdays"],
-    },
-    {
-      name: "Other",
-      items: ["Travel", "Reminders", "Deadlines"],
+      name: "Maps",
+      items: [],
     },
   ],
 };

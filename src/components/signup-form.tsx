@@ -99,7 +99,7 @@ export function SignupForm() {
               }
               e.currentTarget?.requestSubmit();
             }}
-            className="space-y-3"
+            className="space-y-6"
           >
             <FormField
               control={form.control}
@@ -175,16 +175,22 @@ export function SignupForm() {
               <Checkbox id="terms" />
               <label
                 htmlFor="terms"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
                 By continuing, you agree to the{" "}
-                <Link href="/terms">Terms of Service</Link> and{" "}
-                <Link href="/privacy">Privacy Policy</Link>.
+                <Button asChild variant="link" type="button" className="px-0">
+                  <Link href="/terms">Terms of Service</Link>
+                </Button>{" "}
+                and{" "}
+                <Button asChild variant="link" type="button" className="px-0">
+                  <Link href="/privacy">Privacy Policy</Link>
+                </Button>
+                .
               </label>
             </div>
 
             <Button
-              className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-indigo-500 to-violet-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
+              className="group/btn relative block h-10 w-full rounded-md bg-primary font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
               type="submit"
             >
               Sign up &rarr;
