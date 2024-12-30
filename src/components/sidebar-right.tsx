@@ -31,7 +31,7 @@ const data = {
       items: ["Personal", "Work", "Family"],
     },
     {
-      name: "Favorites",
+      name: "Lists",
       items: ["Holidays", "Birthdays"],
     },
     {

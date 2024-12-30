@@ -75,7 +75,7 @@ export function NavWorkspaces({
             ))
           ) : (
             <p className="my-3 px-4 text-sm text-muted-foreground">
-              🌌 No trunks found. Try creating one and come back!
+              🧰 No trunks found. Try creating one and come back!
             </p>
           )}
           <SidebarMenuItem>

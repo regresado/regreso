@@ -26,10 +26,10 @@ import {
   useSidebar,
 } from "~/components/ui/sidebar";
 
-export function NavFavorites({
-  favorites,
+export function NavLists({
+  lists,
 }: {
-  favorites: {
+  lists: {
     name: string;
     url: string;
     emoji: string;
@@ -42,8 +42,8 @@ export function NavFavorites({
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
       <SidebarGroupLabel>My Maps</SidebarGroupLabel>
       <SidebarMenu>
-        {favorites.length > 0 ? (
-          favorites.map((item) => (
+        {lists.length > 0 ? (
+          lists.map((item) => (
             <SidebarMenuItem key={item.name}>
               <SidebarMenuButton asChild>
                 <a href={item.url} title={item.name}>
@@ -65,7 +65,7 @@ export function NavFavorites({
                 >
                   <DropdownMenuItem>
                     <StarOff className="text-muted-foreground" />
-                    <span>Remove from Favorites</span>
+                    <span>Remove from Lists</span>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>
@@ -87,7 +87,7 @@ export function NavFavorites({
           ))
         ) : (
           <p className="my-3 px-4 text-sm text-muted-foreground">
-            🌌 No maps found. Try creating one and come back!
+            🗺️ No maps found. Try creating one and come back!
           </p>
         )}
         <SidebarMenuItem>
