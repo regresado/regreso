@@ -138,21 +138,21 @@ This project uses the [T3 Webdev Stack](https://create.t3.gg/) made by [@t3oss](
 <a href="https://github.com/Aslam97/shadcn-minimal-tiptap/">Shadcn Minimal Tiptap</a> component
 </li>
 <li>
+<a href="https://emblor.jaleelbennett.com/introduction">Emblor</a> tag selections
+</li>
+<li>
 <a href="https://www.npmjs.com/package/react-day-picker">React Day Picker</a> calendar picker
 </li>
 <li>
-<a href="https://tiptap.dev">TipTap</a> calendar picker
+<a href="https://tiptap.dev">TipTap</a> rich text editor
 </li>
 </ul>
 </details>
 </li>
 </ul>
 
-<ul>
 - [Motion](https://motion.dev/) page animations
-- [Lucide](https://lucide.dev/) Icons
-- [Boring](https://boringavatars.com/) Avatars
-</ul>
+- [Lucide](https://lucide.dev/) Icons and [Boring](https://boringavatars.com/) Avatars
 
 <ul>
 <li>
@@ -182,3 +182,4 @@ This project uses the [T3 Webdev Stack](https://create.t3.gg/) made by [@t3oss](
 </ul>
 
 - [UploadThing](https://uploadthing.com/) for handling user file uplaods
+- [Gray Matter](https://www.npmjs.com/package/gray-matter/) and [Remark (react-markdown)](https://remark.js.org/) for blog/site content rendering
