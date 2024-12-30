@@ -41,9 +41,6 @@ export default async function PlatformLayout({
       }
     }
   }
-  if (user) {
-    void api.destination.getRecent.prefetch();
-  }
 
   return (
     <HydrateClient>

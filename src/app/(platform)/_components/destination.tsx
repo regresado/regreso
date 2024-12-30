@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "~/trpc/react";
 import { TagInput, type Tag } from "emblor";
 import { ArrowRight, MapPin, MapPinPlus, Plus, RefreshCcw } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { type z } from "zod";
+import { z } from "zod";
 import { destinationSchema, type Destination } from "~/server/models";
 
 import { Badge } from "~/components/ui/badge";
@@ -33,7 +33,49 @@ import {
 import { MinimalTiptapEditor } from "~/components/minimal-tiptap";
 import { TiltCard } from "~/components/tilt-card";
 
+import { getWebDetailsAction } from "~/app/(platform)/dashboard/actions";
+
+const destinationTypes = ["location", "note", "file"] as const;
+
+const destinationTypeSchema = z.object({
+  type: z.enum(destinationTypes),
+  location: z.string(),
+});
+
 export function CreateDestination() {
+  const [detailsState, action] = useActionState(getWebDetailsAction, {
+    error: undefined,
+    url: undefined,
+    title: [undefined],
+    description: [undefined],
+  });
+
+  const destinationTypeForm = useForm<z.infer<typeof destinationTypeSchema>>({
+    resolver: zodResolver(destinationTypeSchema),
+
+    defaultValues: {
+      type: "location",
+      location: "",
+    },
+  });
+  // const [locationConfirmed, confirmLocation] = useState(false);
+
+  useEffect(() => {
+    form.setValue("name", detailsState.title[0] ?? "");
+    form.setValue("body", detailsState.description[0] ?? "");
+    form.setValue("location", destinationTypeForm.watch("location"));
+
+    // confirmLocation(true);
+  }, [detailsState.url]);
+
+  // watch for when destinationTypeForm.watch("type") changes
+  useEffect(() => {
+    form.reset();
+    if (destinationTypeForm.watch("type") === "note") {
+      form.setValue("type", "note");
+    }
+  }, [destinationTypeForm.watch("type")]);
+
   const utils = api.useUtils();
   const createDestination = api.destination.create.useMutation({
     onSuccess: async () => {
@@ -46,7 +88,7 @@ export function CreateDestination() {
     resolver: zodResolver(destinationSchema),
     defaultValues: {
       type: "location",
-      location: "",
+      location: null,
       name: "",
       body: "",
       tags: [],
@@ -58,7 +100,11 @@ export function CreateDestination() {
     createDestination.mutate(data);
   }
   const [tags, setTags] = useState<Tag[]>([]);
-  const [locationConfirmed, confirmLocation] = useState(false);
+
+  const {
+    trigger,
+    formState: { isValid },
+  } = form;
 
   return (
     <TiltCard>
@@ -68,18 +114,25 @@ export function CreateDestination() {
             <MapPinPlus className="mr-2 h-5 w-5" /> Create Destination
           </CardTitle>
         </CardHeader>
-        <CardContent className="px-6">
-          <Form {...form}>
+        <CardContent className="px-6 space-y-4">
+          <Form {...destinationTypeForm}>
             <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="w-full space-y-4"
+              action={action}
+              onSubmit={async (e) => {
+                if (!isValid) {
+                  e.preventDefault();
+                  await trigger();
+                  return;
+                }
+                e.currentTarget?.requestSubmit();
+              }}
             >
               <div className={`flex w-full flex-row flex-wrap items-end gap-3`}>
                 <div
-                  className={`w-${form.watch("type") === "location" ? "1/3" : "full"} min-w-[100px]`}
+                  className={`w-${destinationTypeForm.watch("type") === "location" ? "1/3" : "full"} min-w-[100px]`}
                 >
                   <FormField
-                    control={form.control}
+                    control={destinationTypeForm.control}
                     name="type"
                     render={({ field }) => (
                       <FormItem>
@@ -109,12 +162,11 @@ export function CreateDestination() {
                     )}
                   />
                 </div>
-
-                {form.watch("type") == "location" ? (
+                {destinationTypeForm.watch("type") == "location" ? (
                   <>
                     <div className="min-w-[200px] sm:w-1/2">
                       <FormField
-                        control={form.control}
+                        control={destinationTypeForm.control}
                         name="location"
                         render={({ field }) => (
                           <FormItem>
@@ -132,9 +184,22 @@ export function CreateDestination() {
                     </div>
                     <Button
                       size="icon"
-                      disabled={form.watch("location") === ""}
+                      type="submit"
+                      disabled={
+                        destinationTypeForm.watch("location") === "" ||
+                        (!detailsState.error &&
+                          destinationTypeForm.watch("location") ===
+                            detailsState.url)
+                      }
                       onClick={() => {
-                        confirmLocation(true);
+                        form.setValue(
+                          "location",
+                          destinationTypeForm.watch("location"),
+                        );
+                        // action(form.watch("location"));
+                        // form.setValue("body", '<p class="text-node">hi</p>', {
+                        //   shouldValidate: true,
+                        // });
                       }}
                     >
                       <ArrowRight />
@@ -142,8 +207,15 @@ export function CreateDestination() {
                   </>
                 ) : null}
               </div>
-              {form.watch("type") === "note" ||
-              (form.watch("type") === "location" && locationConfirmed) ? (
+            </form>
+          </Form>
+          {form.watch("type") === "note" ||
+          (form.watch("type") === "location" && form.watch("location")) ? (
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="w-full space-y-4"
+              >
                 <>
                   <FormField
                     control={form.control}
@@ -166,7 +238,7 @@ export function CreateDestination() {
                     name="body"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Headline</FormLabel>
+                        <FormLabel>Body</FormLabel>
                         <FormControl>
                           <MinimalTiptapEditor
                             value={field.value}
@@ -211,17 +283,23 @@ export function CreateDestination() {
                     )}
                   />
                 </>
-              ) : null}
-              <Button
-                type="submit"
-                disabled={createDestination.isPending}
-                size="sm"
-              >
-                <Plus />
-                {createDestination.isPending ? "Submitting..." : "Submit "}
-              </Button>
-            </form>
-          </Form>
+
+                <Button
+                  type="submit"
+                  disabled={
+                    createDestination.isPending ||
+                    !(form.watch("name") && form.watch("type") === "note") ||
+                    (!form.watch("location") &&
+                      form.watch("type") === "location")
+                  }
+                  size="sm"
+                >
+                  <Plus />
+                  {createDestination.isPending ? "Creating..." : "Create"}
+                </Button>
+              </form>
+            </Form>
+          ) : null}
         </CardContent>
       </Card>
     </TiltCard>
@@ -229,7 +307,7 @@ export function CreateDestination() {
 }
 
 export function RecentDestinations() {
-  const [recentDestinations] = api.destination.getRecent.useSuspenseQuery();
+  const recentDestinations = api.destination.getRecent.useQuery()?.data ?? [];
 
   return (
     <TiltCard>

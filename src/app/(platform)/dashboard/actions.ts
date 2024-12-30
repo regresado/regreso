@@ -1,12 +1,19 @@
-import type { NextRequest } from "next/server";
+"use server";
 
 import { parse } from "node-html-parser";
 
-export async function POST(req: NextRequest): Promise<Response> {
-  const formData = await req.formData();
-  const url = formData.get("url");
+export async function getWebDetailsAction(
+  _prev: ActionResult,
+  formData: FormData,
+): Promise<ActionResult> {
+  const url = formData.get("location");
   if (typeof url !== "string") {
-    return new Response("Invalid URL", { status: 400 });
+    return {
+      error: "Invalid URL",
+      url: undefined,
+      title: [undefined],
+      description: [undefined],
+    };
   }
   const htmlResponse = await fetch(url, { signal: AbortSignal.timeout(1200) })
     .then((res) => res.text())
@@ -15,13 +22,18 @@ export async function POST(req: NextRequest): Promise<Response> {
     });
 
   if (htmlResponse === "Failed to fetch URL") {
-    return new Response(htmlResponse, { status: 400 });
+    return {
+      error: htmlResponse,
+      url: undefined,
+      title: [undefined],
+      description: [undefined],
+    };
   }
 
   const doc = parse(htmlResponse);
   const title = [
     doc.querySelector("title")?.text,
-    doc.querySelector('meta[property="og:title"')?.getAttribute("content"),
+    doc.querySelector('meta[property="og:title"]')?.getAttribute("content"),
     doc.querySelector('meta[name="twitter:title"]')?.getAttribute("content"),
   ];
   const description = [
@@ -34,8 +46,17 @@ export async function POST(req: NextRequest): Promise<Response> {
       ?.getAttribute("content"),
   ];
 
-  return Response.json({
+  console.log({ title, description });
+  return {
+    url,
     title,
     description,
-  });
+  };
 }
+
+type ActionResult = {
+  url: string | undefined;
+  title: (string | undefined)[];
+  description: (string | undefined)[];
+  error?: string;
+};

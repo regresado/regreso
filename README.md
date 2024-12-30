@@ -29,7 +29,7 @@ To install dependencies, run `pnpm install` and to build/start server, use `pnpm
 
 Regreso is licensed under the [MIT license](LICENSE.md), a permissive license which allows you to modify, fork, extend, or redistribute the source code.
 
-We accept contributions of new features and bug fixes through [Pull Requests](/pulls) and general suggestions/bug reports through [Issues](/issues). Before opening either of these, please check if a similar issue/PR has already been opened/assigned and if unsure about its status, it is best to ask before ootentially creating a duplicate.
+We accept contributions of new features and bug fixes through [Pull Requests](/pulls) and general suggestions/bug reports through [Issues](/issues). Before opening either of these, please check if a similar issue/PR has already been opened/assigned and if unsure about its assignment/development status, please ask before potentially creating a duplicate.
 
 **For security reports, please [submit](/security) a private vulnerability disclosure with the relevant information!**
 
@@ -110,13 +110,13 @@ This project uses the [T3 Webdev Stack](https://create.t3.gg/) made by [@t3oss](
 </li>
 </ul>
 
-**With my own custom additions of:**
+**With own custom additions of:**
 
 <ul>
 <li>
 <details>
 <summary> 
-<a href="https://ui.shadcn.com/">Shadcn-ui</a> copy-pasted components
+<a href="https://ui.shadcn.com/">shadcn/ui</a> copy-pasted components
 </summary>
 <ul>
 <li>
