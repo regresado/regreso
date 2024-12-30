@@ -20,7 +20,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "~/components/ui/sidebar";
-import { NavFavorites } from "~/components/nav-favorites";
+import { NavLists } from "~/components/nav-lists";
 import { NavMain } from "~/components/nav-main";
 import { NavSecondary } from "~/components/nav-secondary";
 import { NavWorkspaces } from "~/components/nav-workspaces";
@@ -167,7 +167,7 @@ export function SidebarLeft({
         <NavMain items={data.navMain} />
       </SidebarHeader>
       <SidebarContent>
-        <NavFavorites favorites={data.lists} />
+        <NavLists lists={data.lists} />
       </SidebarContent>
       <SidebarFooter>
         <NavWorkspaces workspaces={data.workspaces} />
