@@ -42,7 +42,7 @@ const destinationTypes = ["location", "note", "file"] as const;
 
 export const destinationSchema = z.object({
   type: z.enum(destinationTypes),
-  location: z.string(),
+  location: z.string().nullable(),
   name: z
     .string({
       required_error: "Please select an email to display.",

@@ -34,14 +34,10 @@ const data = {
 
 export function SidebarRight({
   user,
-  ...props
+  ..._props
 }: { user: User | null } & React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar
-      collapsible="none"
-      className="sticky top-0 hidden h-svh border-l lg:flex"
-      {...props}
-    >
+    <Sidebar side="right" className="">
       <SidebarHeader className="h-16 border-b border-sidebar-border">
         <NavUser user={user} />
       </SidebarHeader>

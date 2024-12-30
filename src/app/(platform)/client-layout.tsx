@@ -19,6 +19,7 @@ export function ClientLayout({ children, user }: ClientLayoutProps) {
     <SidebarProvider>
       <TooltipProvider delayDuration={0}>
         <SidebarLeft />
+
         <SidebarInset>
           {children && isValidElement(children) ? (
             cloneElement(children, { props: { user } } as Parameters<
