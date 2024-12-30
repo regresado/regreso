@@ -7,9 +7,9 @@ import {
   useSpring,
 } from "motion/react";
 
-const ROTATION_RANGE = 24;
+const ROTATION_RANGE = 12;
 
-const HALF_ROTATION_RANGE = 24 / 2;
+const HALF_ROTATION_RANGE = 12 / 2;
 
 export const TiltCard = ({ children }: { children: ReactNode }) => {
   const ref = useRef<HTMLDivElement>(null);
