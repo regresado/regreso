@@ -37,6 +37,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { toast } from "~/components/hooks/use-toast";
 import { MinimalTiptapEditor } from "~/components/minimal-tiptap";
 import { TiltCard } from "~/components/tilt-card";
 
@@ -81,8 +82,10 @@ export function CreateDestination() {
 
   useEffect(() => {
     if (!detailsState.error) {
-      form.setValue("name", detailsState.title[0] ?? "");
-      form.setValue("body", detailsState.description[0] ?? "");
+      const names = detailsState.title.filter(String);
+      const descriptions = detailsState.description.filter(String);
+      form.setValue("name", names[0] ?? "");
+      form.setValue("body", descriptions[0] ?? "");
     }
     if (detailsState.url) {
       form.setValue(
@@ -107,8 +110,17 @@ export function CreateDestination() {
   const utils = api.useUtils();
   const createDestination = api.destination.create.useMutation({
     onSuccess: async () => {
-      await utils.destination.invalidate();
       form.reset();
+      destinationTypeForm.reset();
+
+      await utils.destination.invalidate();
+    },
+    onError: (error) => {
+      toast({
+        title: "Failed to create destination",
+        description: error.message,
+        variant: "destructive",
+      });
     },
   });
 
@@ -128,7 +140,7 @@ export function CreateDestination() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center">
-            <MapPinPlus className="mr-2 h-5 w-5" /> Create Destination
+            <MapPinPlus className="mr-2 h-5 w-5" /> New Destination
           </CardTitle>
         </CardHeader>
         <CardContent className="px-6 space-y-4">
@@ -212,16 +224,6 @@ export function CreateDestination() {
                             detailsState.url) ||
                         loading
                       }
-                      // onClick={() => {
-                      //   // form.setValue(
-                      //   //   "location",
-                      //   //   destinationTypeForm.watch("location"),
-                      //   // );
-                      //   // action(form.watch("location"));
-                      //   // form.setValue("body", '<p class="text-node">hi</p>', {
-                      //   //   shouldValidate: true,
-                      //   // });
-                      // }}
                     >
                       {loading ? (
                         <Loader2 className="animate-spin" />
@@ -370,16 +372,15 @@ export function DestinationCard(props: Destination) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{props.name ?? "Unnamed Destination"}</CardTitle>
+        <CardTitle className="truncate">
+          {props.name ?? "Unnamed Destination"}
+        </CardTitle>
       </CardHeader>
       <CardContent className="sm:px-3 xl:px-6">
-        {props.id ? (
-          <p className="truncate">
-            Your most recent post: {props.name ?? "Unnamed Destination"}
-          </p>
-        ) : (
-          <p>You have no posts yet.</p>
-        )}
+        <p>
+          {props.body?.slice(0, 47) +
+            (props.body && props.body.length > 47 ? "..." : "")}
+        </p>
       </CardContent>
     </Card>
   );
