@@ -15,7 +15,10 @@ export async function getWebDetailsAction(
       description: [undefined],
     };
   }
-  const htmlResponse = await fetch(url, { signal: AbortSignal.timeout(1200) })
+  const htmlResponse = await fetch(
+    url.startsWith("http") ? url : "https://" + url,
+    { signal: AbortSignal.timeout(1200) },
+  )
     .then((res) => res.text())
     .catch((_err) => {
       return "Failed to fetch URL";
@@ -47,7 +50,7 @@ export async function getWebDetailsAction(
   ];
 
   return {
-    url,
+    url: url.startsWith("http") ? url : "https://" + url,
     title,
     description,
   };
