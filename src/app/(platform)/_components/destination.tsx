@@ -53,6 +53,8 @@ const destinationTypeSchema = z.object({
 
 export function CreateDestination() {
   const [loading, setLoading] = useState(false);
+  const [tags, setTags] = useState<Tag[]>([]);
+
   const [detailsState, action] = useActionState(getWebDetailsAction, {
     error: undefined,
     url: undefined,
@@ -93,6 +95,10 @@ export function CreateDestination() {
         "location",
         detailsState.url ?? destinationTypeForm.watch("location"),
       );
+      destinationTypeForm.setValue(
+        "location",
+        detailsState.url ?? destinationTypeForm.watch("location"),
+      );
     }
     setLoading(false);
 
@@ -102,6 +108,7 @@ export function CreateDestination() {
   // watch for when destinationTypeForm.watch("type") changes
   const type = destinationTypeForm.watch("type");
   useEffect(() => {
+    setTags([]);
     form.reset();
     if (destinationTypeForm.watch("type") === "note") {
       form.setValue("type", "note");
@@ -112,6 +119,7 @@ export function CreateDestination() {
   const createDestination = api.destination.create.useMutation({
     onSuccess: async () => {
       form.reset();
+      setTags([]);
       destinationTypeForm.reset();
 
       await utils.destination.invalidate();
@@ -128,7 +136,6 @@ export function CreateDestination() {
   function onSubmit(data: z.infer<typeof destinationSchema>) {
     createDestination.mutate(data);
   }
-  const [tags, setTags] = useState<Tag[]>([]);
   const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
 
   const {
@@ -156,6 +163,7 @@ export function CreateDestination() {
                 }
                 setLoading(true);
                 form.reset();
+                setTags([]);
 
                 e.currentTarget?.requestSubmit();
               }}
@@ -220,9 +228,8 @@ export function CreateDestination() {
                       type="submit"
                       disabled={
                         destinationTypeForm.watch("location") === "" ||
-                        (!detailsState.error &&
-                          destinationTypeForm.watch("location") ===
-                            detailsState.url) ||
+                        destinationTypeForm.watch("location") ===
+                          form.watch("location") ||
                         loading
                       }
                     >
@@ -315,18 +322,24 @@ export function CreateDestination() {
                     )}
                   />
                 </>
-
                 <Button
                   type="submit"
                   disabled={
                     createDestination.isPending ||
                     (!form.watch("name") && form.watch("type") === "note") ||
                     (!form.watch("location") &&
-                      form.watch("type") === "location")
+                      form.watch("type") === "location") ||
+                    destinationTypeForm.watch("location") !=
+                      form.watch("location")
                   }
                   size="sm"
                 >
-                  <Plus />
+                  {createDestination.isPending ? (
+                    <Loader2 className="animate-spin" />
+                  ) : (
+                    <Plus />
+                  )}
+
                   {createDestination.isPending ? "Creating..." : "Create"}
                 </Button>
               </form>
@@ -339,8 +352,11 @@ export function CreateDestination() {
 }
 
 export function RecentDestinations() {
-  const { data: recentDestinations = [], refetch } =
-    api.destination.getRecent.useQuery();
+  const {
+    data: recentDestinations = [],
+    refetch,
+    isFetching,
+  } = api.destination.getRecent.useQuery();
 
   return (
     <TiltCard>
@@ -362,11 +378,12 @@ export function RecentDestinations() {
           )}
           <Button
             size="sm"
+            disabled={isFetching}
             onClick={() => {
-              refetch();
+              void refetch();
             }}
           >
-            <RefreshCw />
+            <RefreshCw className={isFetching ? "animate-spin" : undefined} />
             Refresh
           </Button>
         </CardContent>
@@ -380,7 +397,9 @@ export function DestinationCard(props: Destination) {
     <Card>
       <CardHeader className="px-3 pt-4 pb-2 text-sm">
         <CardTitle className="truncate">
-          {props.name ?? "Unnamed Destination"}
+          <Link href={`/pin/${props.id}`}>
+            {props.name ?? "Unnamed Destination"}
+          </Link>
         </CardTitle>
       </CardHeader>
       <CardContent className="px-3 pb-3 pt-0 text-sm ">
