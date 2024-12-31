@@ -14,6 +14,7 @@ import superjson from "superjson";
 import { ZodError } from "zod";
 
 import { db } from "~/server/db";
+import { globalGETRateLimit, globalPOSTRateLimit } from "~/server/request";
 import { getCurrentSession } from "~/server/session";
 
 /**
@@ -105,6 +106,22 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
   return result;
 });
 
+const rateLimitQueryMiddleware = t.middleware(async ({ ctx, next }) => {
+  if (!(await globalGETRateLimit())) {
+    throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
+  }
+  return next();
+});
+
+const rateLimitMutationMiddleware = t.middleware(
+  async ({ ctx, next, path }) => {
+    if (!(await globalPOSTRateLimit())) {
+      throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
+    }
+    return next();
+  },
+);
+
 /**
  * Public (unauthenticated) procedure
  *
@@ -122,8 +139,22 @@ export const publicProcedure = t.procedure.use(timingMiddleware);
  *
  * @see https://trpc.io/docs/procedures
  */
-export const protectedProcedure = t.procedure
-  .use(timingMiddleware)
+export const protectedQueryProcedure = t.procedure
+  .use(rateLimitQueryMiddleware)
+  .use(({ ctx, next }) => {
+    if (!ctx.session || !ctx.user) {
+      throw new TRPCError({ code: "UNAUTHORIZED" });
+    }
+    return next({
+      ctx: {
+        // infers the `session` as non-nullable
+        session: ctx.session,
+        user: ctx.user,
+      },
+    });
+  });
+export const protectedMutationProcedure = t.procedure
+  .use(rateLimitMutationMiddleware)
   .use(({ ctx, next }) => {
     if (!ctx.session || !ctx.user) {
       throw new TRPCError({ code: "UNAUTHORIZED" });
