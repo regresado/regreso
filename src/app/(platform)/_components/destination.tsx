@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useState } from "react";
+import Link from "next/link";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "~/trpc/react";
@@ -11,7 +12,7 @@ import {
   MapPin,
   MapPinPlus,
   Plus,
-  RefreshCcw,
+  RefreshCw,
 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -140,7 +141,7 @@ export function CreateDestination() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center">
-            <MapPinPlus className="mr-2 h-5 w-5" /> New Destination
+            <MapPinPlus className="mr-2 h-5 w-5" /> Create Destination
           </CardTitle>
         </CardHeader>
         <CardContent className="px-6 space-y-4">
@@ -338,7 +339,8 @@ export function CreateDestination() {
 }
 
 export function RecentDestinations() {
-  const recentDestinations = api.destination.getRecent.useQuery()?.data ?? [];
+  const { data: recentDestinations = [], refetch } =
+    api.destination.getRecent.useQuery();
 
   return (
     <TiltCard>
@@ -358,8 +360,13 @@ export function RecentDestinations() {
               🌌 No destinations found. Try creating one and come back!
             </p>
           )}
-          <Button size="sm">
-            <RefreshCcw />
+          <Button
+            size="sm"
+            onClick={() => {
+              refetch();
+            }}
+          >
+            <RefreshCw />
             Refresh
           </Button>
         </CardContent>
@@ -371,16 +378,35 @@ export function RecentDestinations() {
 export function DestinationCard(props: Destination) {
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="px-3 pt-4 pb-2 text-sm">
         <CardTitle className="truncate">
           {props.name ?? "Unnamed Destination"}
         </CardTitle>
       </CardHeader>
-      <CardContent className="sm:px-3 xl:px-6">
+      <CardContent className="px-3 pb-3 pt-0 text-sm ">
+        <p className="truncate text-xs">
+          <Button variant="link" asChild className="p-0 truncate">
+            <Link
+              href={props.location ?? "#"}
+              className="text-primary-foreground truncate"
+            >
+              {props.location}
+            </Link>
+          </Button>
+        </p>
         <p>
           {props.body?.slice(0, 47) +
             (props.body && props.body.length > 47 ? "..." : "")}
         </p>
+        {props.tags && props.tags?.length > 0 ? (
+          <div className="flex flex-wrap gap-1 mt-2">
+            {props.tags.map((tag) => (
+              <Badge key={tag.id} variant="secondary">
+                {tag.text}
+              </Badge>
+            ))}
+          </div>
+        ) : null}
       </CardContent>
     </Card>
   );
