@@ -35,6 +35,7 @@ export interface Destination {
   body: string | null;
   attachments?: string[];
   createdAt: Date;
+  tags?: { id: number; text: string }[];
   updatedAt: Date | null;
 }
 
