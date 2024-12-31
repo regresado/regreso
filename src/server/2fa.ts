@@ -86,7 +86,6 @@ export async function resetUser2FAWithRecoveryCode(
         .delete(securityKeyCredentials)
         .where(eq(securityKeyCredentials.userId, userId));
     } catch (e) {
-      console.error(e);
       if (e instanceof Error) {
         if (!e.toString().includes("Rollback")) {
           tx.rollback();
