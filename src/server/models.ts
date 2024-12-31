@@ -51,9 +51,13 @@ export const destinationSchema = z.object({
     .max(100, {
       message: "The name must be less than 100 characters.",
     }),
-  body: z.string().max(1000, {
-    message: "The body must be less than 1000 characters.",
-  }),
-  tags: z.array(z.object({ id: z.string(), text: z.string() })),
+  body: z
+    .string()
+    .min(0)
+    .max(1000, {
+      message: "The body must be less than 1000 characters.",
+    })
+    .nullable(),
+  tags: z.array(z.object({ id: z.string(), text: z.string() })).min(0),
   attachments: z.array(z.string()),
 });
