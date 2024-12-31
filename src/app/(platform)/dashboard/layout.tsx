@@ -1,7 +1,7 @@
 import { cloneElement, isValidElement } from "react";
 
 import { Home } from "lucide-react";
-import { User } from "~/server/models";
+import { type User } from "~/server/models";
 
 import {
   Breadcrumb,
