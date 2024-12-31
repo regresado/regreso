@@ -5,7 +5,14 @@ import { useActionState, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "~/trpc/react";
 import { TagInput, type Tag } from "emblor";
-import { ArrowRight, MapPin, MapPinPlus, Plus, RefreshCcw } from "lucide-react";
+import {
+  ArrowRight,
+  Loader2,
+  MapPin,
+  MapPinPlus,
+  Plus,
+  RefreshCcw,
+} from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { destinationSchema, type Destination } from "~/server/models";
@@ -39,10 +46,11 @@ const destinationTypes = ["location", "note", "file"] as const;
 
 const destinationTypeSchema = z.object({
   type: z.enum(destinationTypes),
-  location: z.string(),
+  location: z.string().url(),
 });
 
 export function CreateDestination() {
+  const [loading, setLoading] = useState(false);
   const [detailsState, action] = useActionState(getWebDetailsAction, {
     error: undefined,
     url: undefined,
@@ -61,12 +69,18 @@ export function CreateDestination() {
   // const [locationConfirmed, confirmLocation] = useState(false);
 
   useEffect(() => {
-    form.setValue("name", detailsState.title[0] ?? "");
-    form.setValue("body", detailsState.description[0] ?? "");
-    form.setValue("location", destinationTypeForm.watch("location"));
+    if (!detailsState.error) {
+      form.setValue("name", detailsState.title[0] ?? "");
+      form.setValue("body", detailsState.description[0] ?? "");
+    }
+    form.setValue(
+      "location",
+      detailsState.url ?? destinationTypeForm.watch("location"),
+    );
+    setLoading(false);
 
     // confirmLocation(true);
-  }, [detailsState.url]);
+  }, [detailsState]);
 
   // watch for when destinationTypeForm.watch("type") changes
   useEffect(() => {
@@ -124,6 +138,9 @@ export function CreateDestination() {
                   await trigger();
                   return;
                 }
+                setLoading(true);
+                form.reset();
+
                 e.currentTarget?.requestSubmit();
               }}
             >
@@ -189,29 +206,35 @@ export function CreateDestination() {
                         destinationTypeForm.watch("location") === "" ||
                         (!detailsState.error &&
                           destinationTypeForm.watch("location") ===
-                            detailsState.url)
+                            detailsState.url) ||
+                        loading
                       }
-                      onClick={() => {
-                        form.setValue(
-                          "location",
-                          destinationTypeForm.watch("location"),
-                        );
-                        // action(form.watch("location"));
-                        // form.setValue("body", '<p class="text-node">hi</p>', {
-                        //   shouldValidate: true,
-                        // });
-                      }}
+                      // onClick={() => {
+                      //   // form.setValue(
+                      //   //   "location",
+                      //   //   destinationTypeForm.watch("location"),
+                      //   // );
+                      //   // action(form.watch("location"));
+                      //   // form.setValue("body", '<p class="text-node">hi</p>', {
+                      //   //   shouldValidate: true,
+                      //   // });
+                      // }}
                     >
-                      <ArrowRight />
+                      {loading ? (
+                        <Loader2 className="animate-spin" />
+                      ) : (
+                        <ArrowRight />
+                      )}
                     </Button>
                   </>
                 ) : null}
               </div>
             </form>
           </Form>
-          {form.watch("type") === "note" ||
-          (form.watch("type") === "location" && form.watch("location")) ? (
-            <Form {...form}>
+
+          <Form {...form}>
+            {form.watch("type") === "note" ||
+            (form.watch("type") === "location" && form.watch("location")) ? (
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="w-full space-y-4"
@@ -288,7 +311,7 @@ export function CreateDestination() {
                   type="submit"
                   disabled={
                     createDestination.isPending ||
-                    !(form.watch("name") && form.watch("type") === "note") ||
+                    (!form.watch("name") && form.watch("type") === "note") ||
                     (!form.watch("location") &&
                       form.watch("type") === "location")
                   }
@@ -298,8 +321,8 @@ export function CreateDestination() {
                   {createDestination.isPending ? "Creating..." : "Create"}
                 </Button>
               </form>
-            </Form>
-          ) : null}
+            ) : null}
+          </Form>
         </CardContent>
       </Card>
     </TiltCard>

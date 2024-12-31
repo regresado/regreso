@@ -22,9 +22,9 @@ export function ClientLayout({ children, user }: ClientLayoutProps) {
 
         <SidebarInset>
           {children && isValidElement(children) ? (
-            cloneElement(children, { props: { user } } as Parameters<
-              typeof cloneElement
-            >[0])
+            cloneElement(children, { props: { user } } as {
+              props: { user: User };
+            })
           ) : (
             <p>
               🌌 Nothing to display on the dashboard right now. Try selecting a
