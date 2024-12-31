@@ -20,7 +20,7 @@ export function WelcomeCard({
     logo: React.ElementType;
     plan: string;
   }[];
-  name: string;
+  name: string | undefined;
 }) {
   return (
     <TiltCard>
