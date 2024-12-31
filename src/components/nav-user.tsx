@@ -135,22 +135,20 @@ export function NavUser({ user }: { user: User | null }) {
               <>
                 <DropdownMenuGroup>
                   <DropdownMenuItem
-                    onSelect={() => router.push("/dashboard/settings/profile")}
+                    onSelect={() => router.push("/settings/profile")}
                   >
                     <CircleUser />
                     Profile
                   </DropdownMenuItem>
                   <DropdownMenuItem
-                    onSelect={() => router.push("/dashboard/settings/account")}
+                    onSelect={() => router.push("/settings/account")}
                   >
                     <Lock />
                     Account
                   </DropdownMenuItem>
 
                   <DropdownMenuItem
-                    onSelect={() =>
-                      router.push("/dashboard/settings/notifications")
-                    }
+                    onSelect={() => router.push("/settings/notifications")}
                   >
                     <Bell />
                     Notifications

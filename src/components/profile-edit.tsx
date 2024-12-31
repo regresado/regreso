@@ -29,7 +29,7 @@ import { toast } from "~/components/hooks/use-toast";
 import {
   clearProfilePictureAction,
   updateProfileAction,
-} from "~/app/(platform)/dashboard/settings/profile/actions";
+} from "~/app/(platform)/settings/profile/actions";
 
 const FormSchema = z.object({
   displayName: z
