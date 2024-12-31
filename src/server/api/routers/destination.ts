@@ -1,6 +1,6 @@
-import { eq } from "drizzle-orm";
+import { eq, inArray, or } from "drizzle-orm";
 import { z } from "zod";
-import { Destination, destinationSchema } from "~/server/models";
+import { destinationSchema, type Destination } from "~/server/models";
 
 import {
   createTRPCRouter,
@@ -25,9 +25,8 @@ export const destinationRouter = createTRPCRouter({
         .returning({
           id: destinations.id,
         });
-      let tagRows: { id: number }[] = [];
-      try {
-        tagRows = await ctx.db
+      if (input.tags.length > 0) {
+        let newTagRows = await ctx.db
           .insert(tags)
           .values(
             input.tags.map((tag) => {
@@ -42,23 +41,34 @@ export const destinationRouter = createTRPCRouter({
           .returning({
             id: tags.id,
           });
-      } catch (e) {
-        if (e instanceof Error && (e as any).code === "23505") {
-          console.error("duplicate key error");
-          // duplicate key error
-          // ignore
-        }
+
+        const tagRows = [
+          ...newTagRows,
+          ...(await ctx.db.query.tags.findMany({
+            where: or(
+              inArray(
+                tags.name,
+                input.tags.map((tag) => tag.text),
+              ),
+              inArray(
+                tags.shortcut,
+                input.tags.map((tag) => tag.text),
+              ),
+            ),
+            with: {
+              destinationTags: true,
+            },
+          })),
+        ];
+        await ctx.db.insert(destinationTags).values(
+          tagRows.map((tag) => {
+            return {
+              destinationId: destinationRows[0]!.id,
+              tagId: tag.id,
+            };
+          }),
+        );
       }
-      await ctx.db.insert(destinationTags).values(
-        tagRows.map((tag) => {
-          return {
-            destinationId: destinationRows[0]!.id,
-            tagId: tag.id,
-          };
-        }),
-      );
-      // simulate a long running task
-      // }
       return {
         success: true,
       };
@@ -80,7 +90,7 @@ export const destinationRouter = createTRPCRouter({
           return {
             tags: await ctx.db.query.destinationTags
               .findMany({
-                where: eq(destinationTags.destinationId, dest!.id),
+                where: eq(destinationTags.destinationId, dest.id),
                 with: {
                   tag: true,
                 },
@@ -98,26 +108,6 @@ export const destinationRouter = createTRPCRouter({
         }),
       );
       return destsWithTags;
-
-      // return (
-      //   (await dests.map(async (dest) => {
-      //     const tagRows = await ctx.db.query.destinationTags.findMany({
-      //       where: eq(destinationTags.destinationId, dest!.id),
-      //       with: {
-      //         tag: true,
-      //       },
-      //     });
-      //     return {
-      //       tags: await tagRows.map((tagRow) => {
-      //         return {
-      //           id: tagRow.tag!.id,
-      //           text: tagRow.tag!.name,
-      //         };
-      //       }),
-      //       ...dest,
-      //     };
-      //   })) ?? null
-      // );
     },
   ),
 
