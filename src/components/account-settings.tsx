@@ -27,7 +27,7 @@ import {
   regenerateRecoveryCodeAction,
   updateEmailAction,
   updatePasswordAction,
-} from "~/app/(platform)/dashboard/settings/account/actions";
+} from "~/app/(platform)/settings/account/actions";
 
 import { CardDescription } from "./ui/card";
 

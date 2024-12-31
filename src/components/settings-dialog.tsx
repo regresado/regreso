@@ -40,9 +40,9 @@ import {
 
 const data = {
   nav: [
-    { name: "Profile", icon: CircleUser, url: "/dashboard/settings/profile" },
+    { name: "Profile", icon: CircleUser, url: "/settings/profile" },
 
-    { name: "Account", icon: Lock, url: "/dashboard/settings/account" },
+    { name: "Account", icon: Lock, url: "/settings/account" },
     {
       name: "Notifications",
       render: (
@@ -64,7 +64,7 @@ const data = {
         </div>
       ),
       icon: Paintbrush,
-      url: "/dashboard/settings/appearance",
+      url: "/settings/appearance",
     },
 
     {
@@ -100,9 +100,7 @@ export function SettingsDialog({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = React.useState(true);
   const router = useRouter();
   const pathname = usePathname();
-  const settingsRoute = pathname
-    .split("/dashboard/settings/")[1]
-    ?.split("/")[0];
+  const settingsRoute = pathname.split("/settings/")[1]?.split("/")[0];
   const settingsName = data.nav.find((item) =>
     item.url.includes("settings/" + settingsRoute),
   )?.name;
@@ -116,9 +114,6 @@ export function SettingsDialog({ children }: { children: React.ReactNode }) {
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      {/* <DialogTrigger asChild>
-        <Button size="sm">Open Dialog</Button>
-      </DialogTrigger> */}
       <DialogContent className="overflow-hidden p-0 md:max-h-[500px] md:max-w-[700px] lg:max-w-[800px]">
         <DialogTitle className="sr-only">Settings</DialogTitle>
         <DialogDescription className="sr-only">
@@ -154,9 +149,7 @@ export function SettingsDialog({ children }: { children: React.ReactNode }) {
                 <Breadcrumb>
                   <BreadcrumbList>
                     <BreadcrumbItem className="hidden md:block">
-                      <BreadcrumbLink href="/dashboard/settings">
-                        Settings
-                      </BreadcrumbLink>
+                      <BreadcrumbLink href="/settings">Settings</BreadcrumbLink>
                     </BreadcrumbItem>
                     <BreadcrumbSeparator className="hidden md:block" />
                     <BreadcrumbItem>
