@@ -46,7 +46,6 @@ export async function getWebDetailsAction(
       ?.getAttribute("content"),
   ];
 
-  console.log({ title, description });
   return {
     url,
     title,

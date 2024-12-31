@@ -9,17 +9,13 @@ export const destinationRouter = createTRPCRouter({
   create: protectedProcedure
     .input(destinationSchema)
     .mutation(async ({ ctx, input }) => {
-      console.log("Creating destination", input);
-      await ctx.db
-        .insert(destinations)
-        .values({
-          userId: ctx.user.id,
-          name: input.name,
-          body: input.body,
-          type: input.type,
-          location: input.location,
-        })
-        .returning({ id: destinations.id });
+      await ctx.db.insert(destinations).values({
+        userId: ctx.user.id,
+        name: input.name,
+        body: input.body,
+        type: input.type,
+        location: input.location,
+      });
       return {
         success: true,
       };
