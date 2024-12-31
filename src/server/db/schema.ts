@@ -119,8 +119,8 @@ export const destinations = createTable("destination", {
   type: varchar("type", { length: 256 }).notNull(),
   body: text("body"),
   userId: integer("user_id")
-    .references(() => users.id)
-    .notNull(),
+    .notNull()
+    .references(() => users.id),
   createdAt: timestamp("created_at", { withTimezone: true })
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
@@ -130,12 +130,21 @@ export const destinations = createTable("destination", {
     .$onUpdate(() => new Date()),
 });
 
-export const tags = createTable("tag", {
-  id: serial("id").primaryKey(),
-  name: varchar("name", { length: 256 }),
-  displayName: varchar("display_name", { length: 256 }),
-  userId: integer("user_id").references(() => users.id),
-});
+export const tags = createTable(
+  "tag",
+  {
+    id: serial("id").primaryKey(),
+    shortcut: varchar("shortcut", { length: 256 }),
+    name: varchar("name", { length: 256 }).notNull(),
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id),
+  },
+  (tag) => ({
+    uniqueTagName: unique().on(tag.userId, tag.name),
+    uniqueTagShortcut: unique().on(tag.userId, tag.shortcut),
+  }),
+);
 
 export const destinationTags = createTable(
   "destination_tag",
@@ -197,3 +206,25 @@ export const passkeyCredentialsRelations = relations(
     }),
   }),
 );
+
+export const destinationTagsRelations = relations(
+  destinationTags,
+  ({ one }) => ({
+    destination: one(destinations, {
+      fields: [destinationTags.destinationId],
+      references: [destinations.id],
+    }),
+    tag: one(tags, {
+      fields: [destinationTags.tagId],
+      references: [tags.id],
+    }),
+  }),
+);
+
+export const tagsRelations = relations(tags, ({ one, many }) => ({
+  user: one(users, {
+    fields: [tags.userId],
+    references: [users.id],
+  }),
+  destinationTags: many(destinationTags),
+}));

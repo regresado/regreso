@@ -59,9 +59,11 @@ CREATE TABLE "regreso_session" (
 
 CREATE TABLE "regreso_tag" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"name" varchar(256),
-	"display_name" varchar(256),
-	"user_id" integer
+	"shortcut" varchar(256),
+	"name" varchar(256) NOT NULL,
+	"user_id" integer NOT NULL,
+	CONSTRAINT "regreso_tag_user_id_name_unique" UNIQUE("user_id","name"),
+	CONSTRAINT "regreso_tag_user_id_shortcut_unique" UNIQUE("user_id","shortcut")
 );
 
 CREATE TABLE "regreso_totp_credential" (
