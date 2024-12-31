@@ -1,4 +1,5 @@
 CREATE TABLE "regreso_destination_tag" (
+	"id" serial PRIMARY KEY NOT NULL,
 	"destination_id" integer,
 	"tag_id" integer,
 	CONSTRAINT "regreso_destination_tag_destination_id_tag_id_unique" UNIQUE("destination_id","tag_id")
