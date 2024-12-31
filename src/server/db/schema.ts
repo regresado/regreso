@@ -149,6 +149,7 @@ export const tags = createTable(
 export const destinationTags = createTable(
   "destination_tag",
   {
+    id: serial("id").primaryKey(),
     destinationId: integer("destination_id").references(() => destinations.id),
     tagId: integer("tag_id").references(() => tags.id),
   },
