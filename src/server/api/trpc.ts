@@ -106,21 +106,19 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
   return result;
 });
 
-const rateLimitQueryMiddleware = t.middleware(async ({ ctx, next }) => {
+const rateLimitQueryMiddleware = t.middleware(async ({ next }) => {
   if (!(await globalGETRateLimit())) {
     throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
   }
   return next();
 });
 
-const rateLimitMutationMiddleware = t.middleware(
-  async ({ ctx, next, path }) => {
-    if (!(await globalPOSTRateLimit())) {
-      throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
-    }
-    return next();
-  },
-);
+const rateLimitMutationMiddleware = t.middleware(async ({ next }) => {
+  if (!(await globalPOSTRateLimit())) {
+    throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
+  }
+  return next();
+});
 
 /**
  * Public (unauthenticated) procedure
