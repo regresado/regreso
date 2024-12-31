@@ -10,9 +10,10 @@ CREATE TABLE "regreso_destination" (
 	"location" varchar(256),
 	"type" varchar(256) NOT NULL,
 	"body" text,
-	"user_id" integer,
+	"user_id" integer NOT NULL,
 	"created_at" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-	"updated_at" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+	"updated_at" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	CONSTRAINT "regreso_destination_location_unique" UNIQUE("location")
 );
 
 CREATE TABLE "regreso_email_verification_request" (
