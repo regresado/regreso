@@ -1,4 +1,7 @@
+import { cloneElement, isValidElement } from "react";
+
 import { Home } from "lucide-react";
+import { User } from "~/server/models";
 
 import {
   Breadcrumb,
@@ -10,8 +13,10 @@ import { Separator } from "~/components/ui/separator";
 import { SidebarTrigger } from "~/components/ui/sidebar";
 
 export default function DashboardLayout({
+  user,
   children,
 }: {
+  user: User;
   children: React.ReactNode;
 }) {
   return (
@@ -41,7 +46,11 @@ export default function DashboardLayout({
           </Breadcrumb>
         </div>
       </header>
-      {children}
+      {children && isValidElement(children)
+        ? cloneElement(children, { props: { user } } as {
+            props: { user: User };
+          })
+        : null}
     </>
   );
 }

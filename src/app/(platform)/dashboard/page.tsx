@@ -12,7 +12,7 @@ import {
   RecentDestinations,
 } from "~/app/(platform)/_components/destination";
 
-export default function DashboardHome(user: User) {
+const DashboardHome: React.FC = (props: { user?: User }) => {
   return (
     <>
       <div className="grid grid-cols-1 gap-4 p-4 xl:grid-cols-5">
@@ -26,7 +26,7 @@ export default function DashboardHome(user: User) {
                   plan: "Free",
                 },
               ]}
-              name={user.displayName}
+              name={props.user?.displayName}
             />
           </div>
         </div>
@@ -44,4 +44,6 @@ export default function DashboardHome(user: User) {
       </div>
     </>
   );
-}
+};
+
+export default DashboardHome;
