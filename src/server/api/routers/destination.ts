@@ -126,10 +126,30 @@ export const destinationRouter = createTRPCRouter({
     .input(z.object({ id: z.number() }))
     .query(async ({ ctx, input }) => {
       // get by id
-      const dest = await ctx.db.query.destinations.findFirst({
-        where: eq(destinations.id, input.id),
-      });
+      const dest: Destination | undefined =
+        await ctx.db.query.destinations.findFirst({
+          where: eq(destinations.id, input.id),
+        });
 
-      return dest ?? null;
+      return {
+        ...dest,
+        tags: dest
+          ? await ctx.db.query.destinationTags
+              .findMany({
+                where: eq(destinationTags.destinationId, dest.id),
+                with: {
+                  tag: true,
+                },
+              })
+              .then((res) =>
+                res.map((tagRow) => {
+                  return {
+                    id: tagRow.tag!.id,
+                    text: tagRow.tag!.name,
+                  };
+                }),
+              )
+          : undefined,
+      };
     }),
 });
