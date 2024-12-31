@@ -110,7 +110,7 @@ This project uses the [T3 Stack](https://create.t3.gg/) made by [@t3oss](https:/
 </li>
 </ul>
 
-**With own custom additions of:**
+**With custom additions of:**
 
 <ul>
 <li>

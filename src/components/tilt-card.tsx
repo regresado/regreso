@@ -24,9 +24,7 @@ export const TiltCard = ({ children }: { children: ReactNode }) => {
 
   const transform = useMotionTemplate`rotateX(${xSpring}deg) rotateY(${ySpring}deg)`;
 
-  interface MouseMoveEvent extends React.MouseEvent<HTMLDivElement> {}
-
-  const handleMouseMove = (e: MouseMoveEvent) => {
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!ref.current) return [0, 0];
 
     const rect = ref.current.getBoundingClientRect();

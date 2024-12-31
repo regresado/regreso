@@ -3,7 +3,6 @@
 import {
   ArrowUpRight,
   Link,
-  Map,
   MoreHorizontal,
   StarOff,
   Trash2,

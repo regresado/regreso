@@ -1,4 +1,3 @@
-import { api } from "~/trpc/server";
 import { Home } from "lucide-react";
 
 import {

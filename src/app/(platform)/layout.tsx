@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
-import { api, HydrateClient } from "~/trpc/server";
+import { HydrateClient } from "~/trpc/server";
 import { extractRouterConfig } from "uploadthing/server";
 
 import { getCurrentSession } from "~/server/session";

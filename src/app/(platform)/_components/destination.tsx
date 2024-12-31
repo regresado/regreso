@@ -66,37 +66,6 @@ export function CreateDestination() {
       location: "",
     },
   });
-  // const [locationConfirmed, confirmLocation] = useState(false);
-
-  useEffect(() => {
-    if (!detailsState.error) {
-      form.setValue("name", detailsState.title[0] ?? "");
-      form.setValue("body", detailsState.description[0] ?? "");
-    }
-    form.setValue(
-      "location",
-      detailsState.url ?? destinationTypeForm.watch("location"),
-    );
-    setLoading(false);
-
-    // confirmLocation(true);
-  }, [detailsState]);
-
-  // watch for when destinationTypeForm.watch("type") changes
-  useEffect(() => {
-    form.reset();
-    if (destinationTypeForm.watch("type") === "note") {
-      form.setValue("type", "note");
-    }
-  }, [destinationTypeForm.watch("type")]);
-
-  const utils = api.useUtils();
-  const createDestination = api.destination.create.useMutation({
-    onSuccess: async () => {
-      await utils.destination.invalidate();
-      form.reset();
-    },
-  });
 
   const form = useForm<z.infer<typeof destinationSchema>>({
     resolver: zodResolver(destinationSchema),
@@ -110,10 +79,44 @@ export function CreateDestination() {
     },
   });
 
+  useEffect(() => {
+    if (!detailsState.error) {
+      form.setValue("name", detailsState.title[0] ?? "");
+      form.setValue("body", detailsState.description[0] ?? "");
+    }
+    if (detailsState.url) {
+      form.setValue(
+        "location",
+        detailsState.url ?? destinationTypeForm.watch("location"),
+      );
+    }
+    setLoading(false);
+
+    // confirmLocation(true);
+  }, [detailsState, destinationTypeForm, form]);
+
+  // watch for when destinationTypeForm.watch("type") changes
+  const type = destinationTypeForm.watch("type");
+  useEffect(() => {
+    form.reset();
+    if (destinationTypeForm.watch("type") === "note") {
+      form.setValue("type", "note");
+    }
+  }, [type, destinationTypeForm, form]);
+
+  const utils = api.useUtils();
+  const createDestination = api.destination.create.useMutation({
+    onSuccess: async () => {
+      await utils.destination.invalidate();
+      form.reset();
+    },
+  });
+
   function onSubmit(data: z.infer<typeof destinationSchema>) {
     createDestination.mutate(data);
   }
   const [tags, setTags] = useState<Tag[]>([]);
+  const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
 
   const {
     trigger,
@@ -294,8 +297,11 @@ export function CreateDestination() {
                               setTags(newTags);
                               form.setValue("tags", newTags as [Tag, ...Tag[]]);
                             }}
-                            activeTagIndex={-1}
-                            setActiveTagIndex={() => {}}
+                            styleClasses={{
+                              input: "w-full sm:max-w-[350px]",
+                            }}
+                            activeTagIndex={activeTagIndex}
+                            setActiveTagIndex={setActiveTagIndex}
                           />
                         </FormControl>
                         <FormDescription>
@@ -343,7 +349,7 @@ export function RecentDestinations() {
         <CardContent className="space-y-6 px-6">
           {recentDestinations.length > 0 ? (
             recentDestinations.map((dest: Destination) => {
-              return <DestinationCard {...dest} />;
+              return <DestinationCard key={dest.id} {...dest} />;
             })
           ) : (
             <p className="text-sm text-muted-foreground">
