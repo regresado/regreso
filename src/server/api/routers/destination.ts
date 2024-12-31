@@ -73,13 +73,25 @@ export const destinationRouter = createTRPCRouter({
         success: true,
       };
     }),
-  getRecent: protectedQueryProcedure.query(
-    async ({ ctx }): Promise<Destination[]> => {
+  getMany: protectedQueryProcedure
+    .input(
+      z.object({
+        sortBy: z.enum(["createdAt", "updatedAt"]).default("createdAt"),
+        order: z.enum(["asc", "desc"]).default("desc"),
+        limit: z.number().max(10).default(5),
+        offset: z.number().default(0),
+      }),
+    )
+    .query(async ({ ctx, input }): Promise<Destination[]> => {
       // get recent destinations
       const dests = await ctx.db.query.destinations.findMany({
-        orderBy: (destinations, { desc }) => [desc(destinations.createdAt)],
+        orderBy: (destinations, { desc, asc }) => [
+          input.order == "asc"
+            ? asc(destinations[input.sortBy])
+            : desc(destinations[input.sortBy]),
+        ],
         where: eq(destinations.userId, ctx.user.id),
-        limit: 10,
+        limit: input.limit,
       });
 
       if (dests.length === 0) {
@@ -108,8 +120,7 @@ export const destinationRouter = createTRPCRouter({
         }),
       );
       return destsWithTags;
-    },
-  ),
+    }),
 
   get: protectedQueryProcedure
     .input(z.object({ id: z.number() }))

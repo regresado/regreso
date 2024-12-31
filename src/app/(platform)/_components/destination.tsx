@@ -8,6 +8,7 @@ import { api } from "~/trpc/react";
 import { TagInput, type Tag } from "emblor";
 import {
   ArrowRight,
+  ExternalLink,
   Loader2,
   MapPin,
   MapPinPlus,
@@ -356,15 +357,19 @@ export function RecentDestinations() {
     data: recentDestinations = [],
     refetch,
     isFetching,
-  } = api.destination.getRecent.useQuery();
+  } = api.destination.getMany.useQuery({
+    limit: 3,
+  });
 
   return (
     <TiltCard>
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center">
-            <MapPin className="mr-2 h-5 w-5" /> Recent Destinations
-          </CardTitle>
+          <Link href="/pins">
+            <CardTitle className="flex items-center">
+              <MapPin className="mr-2 h-5 w-5" /> Recent Destinations
+            </CardTitle>
+          </Link>
         </CardHeader>
         <CardContent className="space-y-6 px-6">
           {recentDestinations.length > 0 ? (
@@ -376,16 +381,24 @@ export function RecentDestinations() {
               🌌 No destinations found. Try creating one and come back!
             </p>
           )}
-          <Button
-            size="sm"
-            disabled={isFetching}
-            onClick={() => {
-              void refetch();
-            }}
-          >
-            <RefreshCw className={isFetching ? "animate-spin" : undefined} />
-            Refresh
-          </Button>
+          <div className="flex space-x-2">
+            <Button size="sm" variant="secondary" disabled={isFetching} asChild>
+              <Link href="/pins">
+                <ExternalLink />
+                View All
+              </Link>
+            </Button>
+            <Button
+              size="sm"
+              disabled={isFetching}
+              onClick={() => {
+                void refetch();
+              }}
+            >
+              <RefreshCw className={isFetching ? "animate-spin" : undefined} />
+              Refresh
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </TiltCard>
