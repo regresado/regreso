@@ -9,6 +9,7 @@ export const destinationRouter = createTRPCRouter({
   create: protectedProcedure
     .input(destinationSchema)
     .mutation(async ({ ctx, input }) => {
+      console.log("Creating destination", input);
       await ctx.db.insert(destinations).values({
         userId: 0,
         name: input.name,
@@ -16,6 +17,9 @@ export const destinationRouter = createTRPCRouter({
         type: input.type,
         location: input.location,
       });
+      return {
+        success: true,
+      };
     }),
   getRecent: protectedProcedure.query(async ({ ctx }) => {
     // get recent destinations
