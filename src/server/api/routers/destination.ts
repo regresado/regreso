@@ -26,6 +26,21 @@ export const destinationRouter = createTRPCRouter({
           id: destinations.id,
         });
       if (input.tags.length > 0) {
+        const existingTagRows = await ctx.db.query.tags.findMany({
+          where: or(
+            inArray(
+              tags.name,
+              input.tags.map((tag) => tag.text),
+            ),
+            inArray(
+              tags.shortcut,
+              input.tags.map((tag) => tag.text),
+            ),
+          ),
+          with: {
+            destinationTags: true,
+          },
+        });
         const newTagRows = await ctx.db
           .insert(tags)
           .values(
@@ -42,24 +57,7 @@ export const destinationRouter = createTRPCRouter({
             id: tags.id,
           });
 
-        const tagRows = [
-          ...newTagRows,
-          ...(await ctx.db.query.tags.findMany({
-            where: or(
-              inArray(
-                tags.name,
-                input.tags.map((tag) => tag.text),
-              ),
-              inArray(
-                tags.shortcut,
-                input.tags.map((tag) => tag.text),
-              ),
-            ),
-            with: {
-              destinationTags: true,
-            },
-          })),
-        ];
+        const tagRows = [...newTagRows, ...existingTagRows];
         await ctx.db.insert(destinationTags).values(
           tagRows.map((tag) => {
             return {
