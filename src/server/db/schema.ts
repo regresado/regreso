@@ -115,7 +115,7 @@ export const securityKeyCredentials = createTable("security_key_credential", {
 export const destinations = createTable("destination", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 256 }),
-  location: varchar("location", { length: 256 }),
+  location: varchar("location", { length: 256 }).unique(),
   type: varchar("type", { length: 256 }).notNull(),
   body: text("body"),
   userId: integer("user_id")
