@@ -192,6 +192,21 @@ export const destinationRouter = createTRPCRouter({
         success: true,
       };
     }),
+  delete: protectedMutationProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db
+        .delete(destinations)
+        .where(
+          and(
+            eq(destinations.id, input.id),
+            eq(destinations.userId, ctx.user.id),
+          ),
+        );
+      return {
+        success: true,
+      };
+    }),
 
   get: protectedQueryProcedure
     .input(z.object({ id: z.number() }))
