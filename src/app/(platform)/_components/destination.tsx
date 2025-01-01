@@ -24,8 +24,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
   destinationSchema,
-  type updateDestinationSchema,
   type Destination,
+  type updateDestinationSchema,
 } from "~/server/models";
 
 import { Badge } from "~/components/ui/badge";
@@ -33,9 +33,13 @@ import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
+  DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "~/components/ui/dialog";
 import {
   Form,
@@ -599,8 +603,8 @@ export function DestinationDialog(props: { id: string }) {
         await utils.destination.invalidate();
         if (typeof callback === "function") {
           callback();
-          router.push("/dashboard");
         }
+        router.push("/dashboard");
       },
       onError: (error) => {
         toast({
@@ -610,6 +614,19 @@ export function DestinationDialog(props: { id: string }) {
         });
       },
     });
+  const deleteDestination = api.destination.delete.useMutation({
+    onSuccess: async () => {
+      await utils.destination.invalidate();
+      router.push("/dashboard");
+    },
+    onError: (error) => {
+      toast({
+        title: "Failed to update destination",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
 
   const { data }: { data: Destination | undefined } =
     api.destination.get.useQuery(
@@ -667,49 +684,85 @@ export function DestinationDialog(props: { id: string }) {
             destinationMutation={updateDestination}
           />
         ) : (
-          <main className="pt-0 flex h-[480px] flex-1 flex-col space-y-6 ">
-            {data?.type === "location" ? (
-              <p className="truncate text-sm">
+          <Dialog>
+            <main className="pt-0 flex h-[480px] flex-1 flex-col space-y-6 ">
+              {data?.type === "location" ? (
+                <p className="truncate text-sm">
+                  <>
+                    Location:{" "}
+                    <Button variant="link" asChild className="p-0 truncate ">
+                      <Link
+                        href={data?.location ?? "#"}
+                        className="text-primary-foreground truncate"
+                      >
+                        {data?.location}
+                      </Link>
+                    </Button>
+                  </>
+                </p>
+              ) : null}
+              {data?.body ? (
+                <DestinationDialogRender
+                  data={data?.id !== undefined ? data : undefined}
+                />
+              ) : null}
+              {data?.tags && data?.tags?.length > 0 ? (
+                <div className="flex flex-wrap gap-2 mt-2">
+                  Tags:{" "}
+                  {data?.tags.map((tag) => (
+                    <Badge key={tag.id} variant="secondary">
+                      {tag.text}
+                    </Badge>
+                  ))}
+                </div>
+              ) : null}
+              {data != undefined ? (
                 <>
-                  Location:{" "}
-                  <Button variant="link" asChild className="p-0 truncate ">
-                    <Link
-                      href={data?.location ?? "#"}
-                      className="text-primary-foreground truncate"
-                    >
-                      {data?.location}
-                    </Link>
+                  <p className="font-semibold text-sm">Destination actions:</p>
+                  <Button
+                    className="mt-4"
+                    size="sm"
+                    onClick={() => {
+                      setEditing(true);
+                    }}
+                  >
+                    Update Destination
                   </Button>
+                  <DialogTrigger asChild>
+                    <Button
+                      className="mt-4"
+                      size="sm"
+                      variant="destructive"
+                      onClick={() => {}}
+                    >
+                      Delete Destination
+                    </Button>
+                  </DialogTrigger>
                 </>
-              </p>
-            ) : null}
-            {data?.body ? (
-              <DestinationDialogRender
-                data={data?.id !== undefined ? data : undefined}
-              />
-            ) : null}
-            {data?.tags && data?.tags?.length > 0 ? (
-              <div className="flex flex-wrap gap-2 mt-2">
-                Tags:{" "}
-                {data?.tags.map((tag) => (
-                  <Badge key={tag.id} variant="secondary">
-                    {tag.text}
-                  </Badge>
-                ))}
-              </div>
-            ) : null}
-            {data != undefined ? (
-              <Button
-                className="mt-4"
-                size="sm"
-                onClick={() => {
-                  setEditing(true);
-                }}
-              >
-                Update Destination
-              </Button>
-            ) : null}
-          </main>
+              ) : null}
+            </main>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Are you absolutely sure?</DialogTitle>
+                <DialogDescription>
+                  This action cannot be undone. Are you sure you want to
+                  permanently delete this destination permanently?
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      deleteDestination.mutate({ id: parseInt(props.id) });
+                    }}
+                  >
+                    Confirm
+                  </Button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         )}
       </DialogContent>
     </Dialog>
