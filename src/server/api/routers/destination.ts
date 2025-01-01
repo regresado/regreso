@@ -119,6 +119,70 @@ export const destinationRouter = createTRPCRouter({
       );
       return destsWithTags;
     }),
+  update: protectedMutationProcedure
+    .input(z.object({ id: z.number(), ...destinationSchema.shape }))
+    .mutation(async ({ ctx, input }) => {
+      const destinationRows = await ctx.db
+        .update(destinations)
+        .set({
+          name: input.name,
+          body: input.body,
+          type: input.type,
+          location: input.location,
+        })
+        .where(eq(destinations.id, input.id))
+        .returning({
+          id: destinations.id,
+        });
+      if (input.tags.length > 0) {
+        const existingTagRows = await ctx.db.query.tags.findMany({
+          where: or(
+            inArray(
+              tags.name,
+              input.tags.map((tag) => tag.text),
+            ),
+            inArray(
+              tags.shortcut,
+              input.tags.map((tag) => tag.text),
+            ),
+          ),
+          with: {
+            destinationTags: true,
+          },
+        });
+        const newTagRows = await ctx.db
+          .insert(tags)
+          .values(
+            input.tags.map((tag) => {
+              return {
+                userId: ctx.user.id,
+                name: tag.text,
+                shortcut: tag.text.toLowerCase().replace(/\s/g, "-"),
+              };
+            }),
+          )
+          .onConflictDoNothing()
+          .returning({
+            id: tags.id,
+          });
+
+        const tagRows = [...newTagRows, ...existingTagRows];
+        await ctx.db
+          .insert(destinationTags)
+          .values(
+            tagRows.map((tag) => {
+              return {
+                destinationId: destinationRows[0]!.id,
+                tagId: tag.id,
+              };
+            }),
+          )
+          .onConflictDoNothing();
+      }
+      return {
+        success: true,
+      };
+    }),
 
   get: protectedQueryProcedure
     .input(z.object({ id: z.number() }))
