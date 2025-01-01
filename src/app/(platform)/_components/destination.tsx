@@ -6,8 +6,8 @@ import { useRouter } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EditorContent, useEditor } from "@tiptap/react";
-import { TRPCClientErrorLike } from "@trpc/client";
-import { UseTRPCMutationResult } from "@trpc/react-query/shared";
+import { type TRPCClientErrorLike } from "@trpc/client";
+import { type UseTRPCMutationResult } from "@trpc/react-query/shared";
 import { api } from "~/trpc/react";
 import { TagInput, type Tag } from "emblor";
 import {
@@ -321,7 +321,6 @@ function DestinationForm(props: DestinationFormProps) {
           </div>
         </form>
       </Form>
-      {JSON.stringify(loading2)}
       <Form {...form}>
         {((!loading && destinationTypeForm.watch("type") === "note") ||
           (form.watch("type") === "location" && form.watch("location")) ||
@@ -652,7 +651,7 @@ export function DestinationDialog(props: { id: string }) {
           <DestinationForm
             update={true}
             defaultValues={{
-              ...(data as Destination),
+              ...data,
               name: data.name ?? "",
               type: data.type as "location" | "note" | "file",
               attachments: [],
@@ -684,9 +683,7 @@ export function DestinationDialog(props: { id: string }) {
             ) : null}
             {data?.body ? (
               <DestinationDialogRender
-                data={
-                  data?.id !== undefined ? (data as Destination) : undefined
-                }
+                data={data?.id !== undefined ? data : undefined}
               />
             ) : null}
             {data?.tags && data?.tags?.length > 0 ? (
