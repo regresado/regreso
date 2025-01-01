@@ -126,19 +126,27 @@ export default function LandingPage() {
             <h2 className="mb-6 text-3xl font-bold">Open but Private</h2>
 
             <p className="mx-auto mb-8 max-w-2xl text-gray-600 dark:text-slate-300">
-              Regreso is proudly open source. We believe in the power of
-              community-driven development and transparency while being
-              committed to privacy and security.
+              Regreso is proud to be <i>completely</i> open source. We believe
+              in the community-driven development, transparency, and a
+              commitment to privacy and security.
             </p>
 
             <div className="flex justify-center space-x-4">
-              <Link href="https://github.com/your-repo" passHref>
+              <Link href={process.env.NEXT_PUBLIC_REPO_URL ?? "#"} passHref>
                 <Button className="bg-gray-800 text-white hover:bg-gray-700 dark:bg-slate-800 dark:hover:bg-slate-700">
                   <Github className="mr-2 h-4 w-4" /> View on GitHub
                 </Button>
               </Link>
 
-              <Link href="/contribute" passHref>
+              <Link
+                href={
+                  process.env.NEXT_PUBLIC_REPO_URL +
+                  "/blob/" +
+                  process.env.NEXT_PUBLIC_MAIN_BRANCH +
+                  "/README.md#-contributing"
+                }
+                passHref
+              >
                 <Button variant="outline">Contribute</Button>
               </Link>
             </div>
@@ -152,11 +160,11 @@ export default function LandingPage() {
 
             <p className="mx-auto mb-8 max-w-2xl text-gray-600 dark:text-slate-300">
               Regreso is the digital breadcrumbs tool you never knew you needed.
-              Get started for free and take control of your digital life.
+              Use locally in the browser or create an account to sync your data
             </p>
 
             <Button className="rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 px-8 py-3 text-lg text-white transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg">
-              Get Started for Free
+              Go to dashboard
             </Button>
           </div>
         </section>
