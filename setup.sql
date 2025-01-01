@@ -92,8 +92,8 @@ CREATE TABLE "regreso_user" (
 	CONSTRAINT "regreso_user_name_unique" UNIQUE("name")
 );
 
-ALTER TABLE "regreso_destination_tag" ADD CONSTRAINT "regreso_destination_tag_destination_id_regreso_destination_id_fk" FOREIGN KEY ("destination_id") REFERENCES "public"."regreso_destination"("id") ON DELETE no action ON UPDATE no action;
-ALTER TABLE "regreso_destination_tag" ADD CONSTRAINT "regreso_destination_tag_tag_id_regreso_tag_id_fk" FOREIGN KEY ("tag_id") REFERENCES "public"."regreso_tag"("id") ON DELETE no action ON UPDATE no action;
+ALTER TABLE "regreso_destination_tag" ADD CONSTRAINT "regreso_destination_tag_destination_id_regreso_destination_id_fk" FOREIGN KEY ("destination_id") REFERENCES "public"."regreso_destination"("id") ON DELETE cascade ON UPDATE cascade;
+ALTER TABLE "regreso_destination_tag" ADD CONSTRAINT "regreso_destination_tag_tag_id_regreso_tag_id_fk" FOREIGN KEY ("tag_id") REFERENCES "public"."regreso_tag"("id") ON DELETE cascade ON UPDATE cascade;
 ALTER TABLE "regreso_destination" ADD CONSTRAINT "regreso_destination_user_id_regreso_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."regreso_user"("id") ON DELETE no action ON UPDATE no action;
 ALTER TABLE "regreso_email_verification_request" ADD CONSTRAINT "regreso_email_verification_request_user_id_regreso_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."regreso_user"("id") ON DELETE no action ON UPDATE no action;
 ALTER TABLE "regreso_passkey_credential" ADD CONSTRAINT "regreso_passkey_credential_user_id_regreso_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."regreso_user"("id") ON DELETE no action ON UPDATE no action;
