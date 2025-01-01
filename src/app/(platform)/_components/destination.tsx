@@ -22,7 +22,11 @@ import {
 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { destinationSchema, type Destination } from "~/server/models";
+import {
+  destinationSchema,
+  type updateDestinationSchema,
+  type Destination,
+} from "~/server/models";
 
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
@@ -59,10 +63,6 @@ import { getWebDetailsAction } from "~/app/(platform)/dashboard/actions";
 
 const destinationTypes = ["location", "note", "file"] as const;
 
-const destinationSchema2 = z.object({
-  id: z.number(),
-  ...destinationSchema.shape,
-});
 const destinationTypeSchema = z.object({
   type: z.enum(destinationTypes),
   location: z
@@ -80,12 +80,12 @@ type DestinationFormProps =
       destinationMutation: (callback?: () => void) => UseTRPCMutationResult<
         { success: boolean },
         TRPCClientErrorLike<{
-          input: z.infer<typeof destinationSchema2>;
+          input: z.infer<typeof updateDestinationSchema>;
           output: { success: boolean };
           transformer: true;
           errorShape: { message: string };
         }>,
-        z.infer<typeof destinationSchema2>,
+        z.infer<typeof updateDestinationSchema>,
         unknown
       >;
       update: true;
@@ -151,7 +151,7 @@ function DestinationForm(props: DestinationFormProps) {
       attachments: [],
     });
     setLoading2(false);
-  }, [props.defaultValues]);
+  }, [props.defaultValues, form]);
 
   useEffect(() => {
     if (!detailsState.error) {
@@ -193,14 +193,16 @@ function DestinationForm(props: DestinationFormProps) {
       setLoading(false);
       setLoading2(false);
     }
-  }, [type, destinationTypeForm, form]);
+  }, [
+    type,
+    destinationTypeForm,
+    form,
+    props.defaultValues?.body,
+    props.defaultValues?.name,
+    props.defaultValues?.tags,
+  ]);
 
   const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
-
-  const {
-    trigger,
-    formState: { isValid },
-  } = form;
 
   function onSubmit(data: z.infer<typeof destinationSchema>) {
     if (props.update) {

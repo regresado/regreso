@@ -1,6 +1,10 @@
 import { eq, inArray, or } from "drizzle-orm";
 import { z } from "zod";
-import { destinationSchema, type Destination } from "~/server/models";
+import {
+  destinationSchema,
+  updateDestinationSchema,
+  type Destination,
+} from "~/server/models";
 
 import {
   createTRPCRouter,
@@ -120,7 +124,7 @@ export const destinationRouter = createTRPCRouter({
       return destsWithTags;
     }),
   update: protectedMutationProcedure
-    .input(z.object({ id: z.number(), ...destinationSchema.shape }))
+    .input(updateDestinationSchema)
     .mutation(async ({ ctx, input }) => {
       const destinationRows = await ctx.db
         .update(destinations)

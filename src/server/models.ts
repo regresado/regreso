@@ -61,3 +61,8 @@ export const destinationSchema = z.object({
   tags: z.array(z.object({ id: z.string(), text: z.string() })).min(0),
   attachments: z.array(z.string()),
 });
+
+export const updateDestinationSchema = z.object({
+  id: z.number(),
+  ...destinationSchema.shape,
+});
