@@ -2,8 +2,10 @@
 
 import { useActionState, useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { EditorContent, useEditor } from "@tiptap/react";
 import { api } from "~/trpc/react";
 import { TagInput, type Tag } from "emblor";
 import {
@@ -22,6 +24,7 @@ import { destinationSchema, type Destination } from "~/server/models";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { Dialog, DialogContent, DialogTitle } from "~/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -41,6 +44,7 @@ import {
 } from "~/components/ui/select";
 import { toast } from "~/components/hooks/use-toast";
 import { MinimalTiptapEditor } from "~/components/minimal-tiptap";
+import { createExtensions } from "~/components/minimal-tiptap/hooks/use-minimal-tiptap";
 import { TiltCard } from "~/components/tilt-card";
 
 import { getWebDetailsAction } from "~/app/(platform)/dashboard/actions";
@@ -49,7 +53,14 @@ const destinationTypes = ["location", "note", "file"] as const;
 
 const destinationTypeSchema = z.object({
   type: z.enum(destinationTypes),
-  location: z.string().url(),
+  location: z
+    .string()
+    .regex(
+      new RegExp(
+        /(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)$/,
+      ),
+      "Please enter a valid URL",
+    ),
 });
 
 export function CreateDestination() {
@@ -89,7 +100,7 @@ export function CreateDestination() {
       const names = detailsState.title.filter(String);
       const descriptions = detailsState.description.filter(String);
       form.setValue("name", names[0] ?? "");
-      form.setValue("body", descriptions[0] ?? "");
+      form.setValue("body", `<p class="text-node">${descriptions[0]}</p>`);
     }
     if (detailsState.url) {
       form.setValue(
@@ -110,20 +121,26 @@ export function CreateDestination() {
   const type = destinationTypeForm.watch("type");
   useEffect(() => {
     setTags([]);
-    form.reset();
+
     if (destinationTypeForm.watch("type") === "note") {
-      form.setValue("type", "note");
+      form.reset({
+        type: "note",
+        location: null,
+        name: "",
+        body: "",
+        tags: [],
+        attachments: [],
+      });
     }
   }, [type, destinationTypeForm, form]);
 
   const utils = api.useUtils();
   const createDestination = api.destination.create.useMutation({
     onSuccess: async () => {
+      await utils.destination.invalidate();
       form.reset();
       setTags([]);
       destinationTypeForm.reset();
-
-      await utils.destination.invalidate();
     },
     onError: (error) => {
       toast({
@@ -144,6 +161,11 @@ export function CreateDestination() {
     formState: { isValid },
   } = form;
 
+  const {
+    trigger: triggerDestinationTypeForm,
+    formState: { isValid: isDestinationTypeValid },
+  } = destinationTypeForm;
+
   return (
     <TiltCard>
       <Card>
@@ -157,9 +179,9 @@ export function CreateDestination() {
             <form
               action={action}
               onSubmit={async (e) => {
-                if (!isValid) {
+                if (!isDestinationTypeValid) {
                   e.preventDefault();
-                  await trigger();
+                  await triggerDestinationTypeForm();
                   return;
                 }
                 setLoading(true);
@@ -247,7 +269,7 @@ export function CreateDestination() {
           </Form>
 
           <Form {...form}>
-            {form.watch("type") === "note" ||
+            {(!loading && destinationTypeForm.watch("type") === "note") ||
             (form.watch("type") === "location" && form.watch("location")) ? (
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
@@ -328,10 +350,10 @@ export function CreateDestination() {
                   disabled={
                     createDestination.isPending ||
                     (!form.watch("name") && form.watch("type") === "note") ||
-                    (!form.watch("location") &&
-                      form.watch("type") === "location") ||
-                    destinationTypeForm.watch("location") !=
-                      form.watch("location")
+                    (form.watch("type") === "location" &&
+                      (!form.watch("location") ||
+                        destinationTypeForm.watch("location") !=
+                          form.watch("location")))
                   }
                   size="sm"
                 >
@@ -371,7 +393,7 @@ export function RecentDestinations() {
             </CardTitle>
           </Link>
         </CardHeader>
-        <CardContent className="space-y-6 px-6">
+        <CardContent className="space-y-4 px-6">
           {recentDestinations.length > 0 ? (
             recentDestinations.map((dest: Destination) => {
               return <DestinationCard key={dest.id} {...dest} />;
@@ -416,20 +438,23 @@ export function DestinationCard(props: Destination) {
         </CardTitle>
       </CardHeader>
       <CardContent className="px-3 pb-3 pt-0 text-sm ">
-        <p className="truncate text-xs">
-          <Button variant="link" asChild className="p-0 truncate">
-            <Link
-              href={props.location ?? "#"}
-              className="text-primary-foreground truncate"
-            >
-              {props.location}
-            </Link>
-          </Button>
-        </p>
-        <p>
+        {props.type == "location" ? (
+          <p className="truncate text-xs">
+            <Button variant="link" asChild className="p-0 truncate">
+              <Link
+                href={props.location ?? "#"}
+                className="text-primary-foreground truncate"
+              >
+                {props.location}
+              </Link>
+            </Button>
+          </p>
+        ) : null}
+        {/* <p>
           {props.body?.slice(0, 47) +
             (props.body && props.body.length > 47 ? "..." : "")}
-        </p>
+        </p> */}
+        <DestinationDialogRender data={props} />
         {props.tags && props.tags?.length > 0 ? (
           <div className="flex flex-wrap gap-1 mt-2">
             {props.tags.map((tag) => (
@@ -441,5 +466,81 @@ export function DestinationCard(props: Destination) {
         ) : null}
       </CardContent>
     </Card>
+  );
+}
+
+function DestinationDialogRender(props: { data?: Destination }) {
+  const editor = useEditor({
+    extensions: createExtensions(""),
+    editable: false,
+    content: props.data?.body ?? "howdy",
+  });
+  return <EditorContent editor={editor} />;
+}
+
+export function DestinationDialog(props: { id: string }) {
+  const router = useRouter();
+  const destinationId = props.id;
+  const [open, setOpen] = useState(true);
+  const [editing, setEditing] = useState(false);
+
+  const { data } = api.destination.get.useQuery(
+    { id: parseInt(destinationId ?? "0", 10) },
+    { enabled: !!destinationId },
+  );
+
+  function handleOpenChange(openStatus: boolean) {
+    setOpen(openStatus);
+    if (!openStatus) {
+      router.push("/dashboard");
+    }
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogContent className="overflow-hidden md:max-h-[500px] md:max-w-[700px] lg:max-w-[800px]">
+        <DialogTitle className="">
+          {editing
+            ? "Update Destination"
+            : data
+              ? data.name
+              : "Couldn't find Destination"}
+        </DialogTitle>
+        {editing ? null : (
+          <main className="flex h-[480px] flex-1 flex-col overflow-hidden space-y-3">
+            <p className="truncate text-sm">
+              <>
+                Location:{" "}
+                <Button variant="link" asChild className="p-0 truncate ">
+                  <Link
+                    href={data?.location ?? "#"}
+                    className="text-primary-foreground truncate"
+                  >
+                    {data?.location}
+                  </Link>
+                </Button>
+              </>
+            </p>
+            {data?.body ? (
+              <DestinationDialogRender
+                data={
+                  data?.id !== undefined ? (data as Destination) : undefined
+                }
+              />
+            ) : null}
+            {data?.tags && data?.tags?.length > 0 ? (
+              <div className="flex flex-wrap gap-2 mt-2">
+                Tags:{" "}
+                {data?.tags.map((tag) => (
+                  <Badge key={tag.id} variant="secondary">
+                    {tag.text}
+                  </Badge>
+                ))}
+              </div>
+            ) : null}
+          </main>
+        )}
+      </DialogContent>
+    </Dialog>
   );
 }
