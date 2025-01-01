@@ -729,12 +729,7 @@ export function DestinationDialog(props: { id: string }) {
                     Update Destination
                   </Button>
                   <DialogTrigger asChild>
-                    <Button
-                      className="mt-4"
-                      size="sm"
-                      variant="destructive"
-                      onClick={() => {}}
-                    >
+                    <Button className="mt-4" size="sm" variant="destructive">
                       Delete Destination
                     </Button>
                   </DialogTrigger>
