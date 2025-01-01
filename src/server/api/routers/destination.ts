@@ -1,4 +1,4 @@
-import { eq, inArray, or } from "drizzle-orm";
+import { and, eq, inArray, or } from "drizzle-orm";
 import { z } from "zod";
 import {
   destinationSchema,
@@ -134,7 +134,12 @@ export const destinationRouter = createTRPCRouter({
           type: input.type,
           location: input.location,
         })
-        .where(eq(destinations.id, input.id))
+        .where(
+          and(
+            eq(destinations.id, input.id),
+            eq(destinations.userId, ctx.user.id),
+          ),
+        )
         .returning({
           id: destinations.id,
         });
@@ -194,7 +199,10 @@ export const destinationRouter = createTRPCRouter({
       // get by id
       const dest: Destination | undefined =
         await ctx.db.query.destinations.findFirst({
-          where: eq(destinations.id, input.id),
+          where: and(
+            eq(destinations.id, input.id),
+            eq(destinations.userId, ctx.user.id),
+          ),
         });
 
       return {
