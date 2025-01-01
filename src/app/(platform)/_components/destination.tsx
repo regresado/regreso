@@ -58,6 +58,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { Separator } from "~/components/ui/separator";
 import { toast } from "~/components/hooks/use-toast";
 import { MinimalTiptapEditor } from "~/components/minimal-tiptap";
 import { createExtensions } from "~/components/minimal-tiptap/hooks/use-minimal-tiptap";
@@ -717,10 +718,13 @@ export function DestinationDialog(props: { id: string }) {
                 </div>
               ) : null}
               {data != undefined ? (
-                <>
-                  <p className="font-semibold text-sm">Destination actions:</p>
+                <div className="block">
+                  <Separator className="my-4" />
+
+                  <p className="font-semibold text-sm mb-4">
+                    Destination actions:
+                  </p>
                   <Button
-                    className="mt-4"
                     size="sm"
                     onClick={() => {
                       setEditing(true);
@@ -728,12 +732,12 @@ export function DestinationDialog(props: { id: string }) {
                   >
                     Update Destination
                   </Button>
-                  <DialogTrigger asChild>
-                    <Button className="mt-4" size="sm" variant="destructive">
+                  <DialogTrigger asChild className="ml-4">
+                    <Button size="sm" variant="destructive">
                       Delete Destination
                     </Button>
                   </DialogTrigger>
-                </>
+                </div>
               ) : null}
             </main>
             <DialogContent>
