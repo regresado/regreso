@@ -102,6 +102,12 @@ ALTER TABLE "regreso_security_key_credential" ADD CONSTRAINT "regreso_security_k
 ALTER TABLE "regreso_session" ADD CONSTRAINT "regreso_session_user_id_regreso_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."regreso_user"("id") ON DELETE no action ON UPDATE no action;
 ALTER TABLE "regreso_tag" ADD CONSTRAINT "regreso_tag_user_id_regreso_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."regreso_user"("id") ON DELETE no action ON UPDATE no action;
 ALTER TABLE "regreso_totp_credential" ADD CONSTRAINT "regreso_totp_credential_user_id_regreso_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."regreso_user"("id") ON DELETE no action ON UPDATE no action;
+CREATE INDEX "destination_search_index" ON "regreso_destination" USING gin (
+    to_tsvector('english', coalesce("name", '') || ' ' || coalesce("body", ''))
+);
+CREATE INDEX "tag_search_index" ON "regreso_tag" USING gin (
+    to_tsvector('english', coalesce("shortcut", '') || ' ' || coalesce("name", ''))
+);
 CREATE INDEX "email_index" ON "regreso_user" USING btree ("email");
 CREATE INDEX "google_id_index" ON "regreso_user" USING btree ("google_id");
 CREATE INDEX "github_id_index" ON "regreso_user" USING btree ("github_id");

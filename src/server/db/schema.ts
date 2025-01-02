@@ -1,4 +1,4 @@
-import { relations, type InferSelectModel } from "drizzle-orm";
+import { relations, sql, type InferSelectModel } from "drizzle-orm";
 import {
   boolean,
   index,
@@ -10,7 +10,6 @@ import {
   unique,
   varchar,
 } from "drizzle-orm/pg-core";
-import { sql } from "drizzle-orm/sql";
 
 /**
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
@@ -112,23 +111,33 @@ export const securityKeyCredentials = createTable("security_key_credential", {
   publicKey: text("public_key").notNull(),
 });
 
-export const destinations = createTable("destination", {
-  id: serial("id").primaryKey(),
-  name: varchar("name", { length: 256 }),
-  location: varchar("location", { length: 256 }).unique(),
-  type: varchar("type", { length: 256 }).notNull(),
-  body: text("body"),
-  userId: integer("user_id")
-    .notNull()
-    .references(() => users.id),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
-  updatedAt: timestamp("updated_at", { withTimezone: true })
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull()
-    .$onUpdate(() => new Date()),
-});
+export const destinations = createTable(
+  "destination",
+  {
+    id: serial("id").primaryKey(),
+    name: varchar("name", { length: 256 }),
+    location: varchar("location", { length: 256 }).unique(),
+    type: varchar("type", { length: 256 }).notNull(),
+    body: text("body"),
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull()
+      .$onUpdate(() => new Date()),
+  },
+  (destination) => ({
+    searchIndex: index("destination_search_index").using(
+      "gin",
+      sql`setweight(to_tsvector('english', ${destination.name}), 'A') ||
+          setweight(to_tsvector('english', ${destination.body}), 'B')`,
+    ),
+  }),
+);
 
 export const tags = createTable(
   "tag",
@@ -141,6 +150,11 @@ export const tags = createTable(
       .references(() => users.id),
   },
   (tag) => ({
+    searchIndex: index("tag_search_index").using(
+      "gin",
+      sql`setweight(to_tsvector('english', ${tag.shortcut}), 'A') ||
+          setweight(to_tsvector('english', ${tag.name}), 'B')`,
+    ),
     uniqueTagName: unique().on(tag.userId, tag.name),
     uniqueTagShortcut: unique().on(tag.userId, tag.shortcut),
   }),
@@ -235,3 +249,14 @@ export const tagsRelations = relations(tags, ({ one, many }) => ({
   }),
   destinationTags: many(destinationTags),
 }));
+
+export const destinationsRelations = relations(
+  destinations,
+  ({ one, many }) => ({
+    user: one(users, {
+      fields: [destinations.userId],
+      references: [users.id],
+    }),
+    destinationTags: many(destinationTags),
+  }),
+);
