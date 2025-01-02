@@ -9,10 +9,10 @@ Regreso is an open source application that allows you to create, sync, manage, a
 
 Destinations may be added to "maps", which enable graphing and visualizing relationships using tags, "journies" (saved sessions), and references. "Trunks" allow one to separate maps by subject, topic, or project.
 
-## ⚡ Quick Links
+## 📌 Quick Links
 
 - [Website](https://regreso.netlify.app)
-- [Dashboard](https://regreso.netlify.app/dashboard) - Can be used without an account/offline!
+- [Dashboard](https://regreso.netlify.app/dashboard)
 - [Guide](https://regreso.netlify.app/guide)
 - [Wiki](https://regreso.netlify.app/wiki)
 - [Roadmap](https://regreso.netlify.app/roadmap)
