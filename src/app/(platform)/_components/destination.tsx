@@ -12,13 +12,13 @@ import { api } from "~/trpc/react";
 import { TagInput, type Tag } from "emblor";
 import {
   ArrowRight,
-  ExternalLink,
   Loader2,
   MapPin,
   MapPinPlus,
   Pencil,
   Plus,
   RefreshCw,
+  Search,
 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -112,6 +112,7 @@ type DestinationFormProps =
       update: false;
       defaultValues?: z.infer<typeof destinationSchema>;
     };
+
 function DestinationForm(props: DestinationFormProps) {
   const [loading, setLoading] = useState(false);
   const [loading2, setLoading2] = useState(props.update ? true : false);
@@ -522,8 +523,8 @@ export function RecentDestinations() {
           <div className="flex space-x-2">
             <Button size="sm" variant="secondary" disabled={isFetching} asChild>
               <Link href="/pins">
-                <ExternalLink />
-                View All
+                <Search />
+                Search
               </Link>
             </Button>
             <Button
@@ -654,17 +655,6 @@ export function DestinationDialog(props: { id: string }) {
                 : "Couldn't find Destination"}
           </DialogTitle>
         </DialogHeader>
-        {/* {JSON.stringify({
-          ...(data as Destination),
-          name: data.name ?? "",
-          type: data.type as "location" | "note" | "file",
-          attachments: [],
-          tags:
-            data.tags?.map((tag) => ({
-              id: tag.id.toString(),
-              text: tag.text,
-            })) ?? [],
-        })} */}
         {editing &&
         data != undefined &&
         (data.name != undefined || data.location != undefined) ? (
