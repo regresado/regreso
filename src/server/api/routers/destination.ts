@@ -88,8 +88,12 @@ export const destinationRouter = createTRPCRouter({
           eq(destinations.id, destinationTags.destinationId),
         )
         .innerJoin(tags, eq(destinationTags.tagId, tags.id))
-        .where(tagNames.length > 0 ? inArray(tags.name, tagNames) : undefined) // Filter for specific tags
-        .groupBy(destinations.id) // Group by post ID to count matching tags
+        .where(
+          tagNames.length > 0
+            ? or(inArray(tags.name, tagNames), inArray(tags.shortcut, tagNames))
+            : undefined,
+        )
+        .groupBy(destinations.id)
         .having(
           tagNames.length > 0
             ? sql`COUNT(DISTINCT ${tags.name}) = ${tagNames.length}`
@@ -219,7 +223,6 @@ export const destinationRouter = createTRPCRouter({
   get: protectedQueryProcedure
     .input(z.object({ id: z.number() }))
     .query(async ({ ctx, input }) => {
-      // get by id
       const dest: Destination | undefined =
         await ctx.db.query.destinations.findFirst({
           where: and(
