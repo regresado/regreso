@@ -81,21 +81,8 @@ export const destinationRouter = createTRPCRouter({
   getMany: protectedQueryProcedure
     .input(destinationSearchSchema)
     .query(async ({ ctx, input }): Promise<Destination[]> => {
-      // get recent destinations
       const tagNames = input.tags ?? [];
-      // let tagRows = null;
-      // if (tagNames.length > 0) {
-      //   tagRows = await ctx.db
-      //     .select()
-      //     .from(tags)
-      //     .where(
-      //       or(inArray(tags.name, tagNames), inArray(tags.shortcut, tagNames)),
-      //     );
-      //   // console.log(tagRows);
-      // }
-      // const tagNames = ["note to self", "cool notes"];
-      console.log("hey");
-      const dests2 = await ctx.db
+      const dests = await ctx.db
         .select({ destination: destinations })
         .from(destinations)
         .innerJoin(
@@ -109,76 +96,14 @@ export const destinationRouter = createTRPCRouter({
           tagNames.length > 0
             ? sql`COUNT(DISTINCT ${tags.name}) = ${tagNames.length}`
             : undefined,
-        );
-      console.log(JSON.stringify(dests2));
-
-      // const dests = await ctx.db.query.destinations.findMany({
-      //   with: {
-      //     destinationTags: {
-      //       columns: {
-      //         tagId: true,
-      //       },
-      //       with: {
-      //         tag: true,
-      //       },
-      //     },
-      //   },
-      //   limit: input.limit,
-      //   offset: input.offset,
-      //   orderBy:
-      //     input.order == "ASC"
-      //       ? asc(destinations[input.sortBy ?? "createdAt"])
-      //       : desc(destinations[input.sortBy ?? "createdAt"]),
-      //   where: and(
-      //     input.searchString && input.searchString.length > 0
-      //       ? and(
-      //           sql`to_tsvector('english', ${destinations.name}) @@ websearch_to_tsquery('english', ${input.searchString})`,
-      //           eq(destinations.userId, ctx.user.id),
-      //         )
-      //       : eq(destinations.userId, ctx.user.id),
-      //     input.type ? eq(destinations.type, input.type) : undefined,
-      //   ),
-      // });
-      // console.log(JSON.stringify(dests));
-      // const destsMatchingTags = dests.filter((dest) => {
-      //   if (!tagRows) {
-      //     return true;
-      //   }
-      //   const destTagIds = dest.destinationTags.map((tag) => tag.tagId);
-      //   return tagRows.every((tag) => destTagIds.includes(tag.id));
-      // });
-
-      // if (dests2.length === 0) {
-      //   return [];
-      // }
-      // const destsWithTags = await Promise.all(
-      //   dests2.map(async (dest) => {
-      //     return {
-      //       tags: dest.destinationTags.map((tagRow) => {
-      //         return {
-      //           id: tagRow.tag!.id,
-      //           text: tagRow.tag!.name,
-      //         };
-      //       }),
-      //       ...dest,
-      //     };
-      //   }),
-      // );
-      console.log("hi");
-      // const destsWithTags2 = await ctx.db
-      //   .select({
-      //     destination: destinations,
-      //     tagName: tags.name,
-      //   })
-      //   .from(destinations)
-      //   .innerJoin(
-      //     destinationTags,
-      //     eq(destinations.id, destinationTags.destinationId),
-      //   )
-      //   .innerJoin(tags, eq(destinationTags.tagId, tags.id))
-      //   .where(
-      //     sql`${destinations.id} IN (${dests2.toSQL()})`, // Filter posts using the subquery
-      //   );
+        )
+        .orderBy(
+          input.order == "ASC"
+            ? asc(destinations[input.sortBy ?? "createdAt"])
+            : desc(destinations[input.sortBy ?? "createdAt"]),
+        )
+        .limit(input.limit)
+        .offset(input.offset);
 
       const destTags = await ctx.db
         .select()
@@ -187,13 +112,11 @@ export const destinationRouter = createTRPCRouter({
         .where(
           inArray(
             destinationTags.destinationId,
-            dests2.map((dest) => dest.destination.id),
+            dests.map((dest) => dest.destination.id),
           ),
         );
 
-      console.log("hiya", destTags);
-
-      const returnDestinations = dests2.map((dest) => {
+      const returnDestinations = dests.map((dest) => {
         return {
           tags: destTags
             .filter(
