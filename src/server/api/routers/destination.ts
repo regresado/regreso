@@ -1,7 +1,10 @@
-import { and, eq, inArray, or } from "drizzle-orm";
+import { defaultMaxListeners } from "node:events";
+
+import { and, asc, desc, eq, inArray, or, sql } from "drizzle-orm";
 import { z } from "zod";
 import {
   destinationSchema,
+  destinationSearchSchema,
   updateDestinationSchema,
   type Destination,
 } from "~/server/models";
@@ -76,52 +79,136 @@ export const destinationRouter = createTRPCRouter({
       };
     }),
   getMany: protectedQueryProcedure
-    .input(
-      z.object({
-        sortBy: z.enum(["createdAt", "updatedAt"]).default("createdAt"),
-        order: z.enum(["asc", "desc"]).default("desc"),
-        limit: z.number().max(10).default(5),
-        offset: z.number().default(0),
-      }),
-    )
+    .input(destinationSearchSchema)
     .query(async ({ ctx, input }): Promise<Destination[]> => {
       // get recent destinations
-      const dests = await ctx.db.query.destinations.findMany({
-        orderBy: (destinations, { desc, asc }) => [
-          input.order == "asc"
-            ? asc(destinations[input.sortBy])
-            : desc(destinations[input.sortBy]),
-        ],
-        where: eq(destinations.userId, ctx.user.id),
-        limit: input.limit,
-      });
+      const tagNames = input.tags ?? [];
+      // let tagRows = null;
+      // if (tagNames.length > 0) {
+      //   tagRows = await ctx.db
+      //     .select()
+      //     .from(tags)
+      //     .where(
+      //       or(inArray(tags.name, tagNames), inArray(tags.shortcut, tagNames)),
+      //     );
+      //   // console.log(tagRows);
+      // }
+      // const tagNames = ["note to self", "cool notes"];
+      console.log("hey");
+      const dests2 = await ctx.db
+        .select({ destination: destinations })
+        .from(destinations)
+        .innerJoin(
+          destinationTags,
+          eq(destinations.id, destinationTags.destinationId),
+        )
+        .innerJoin(tags, eq(destinationTags.tagId, tags.id))
+        .where(tagNames.length > 0 ? inArray(tags.name, tagNames) : undefined) // Filter for specific tags
+        .groupBy(destinations.id) // Group by post ID to count matching tags
+        .having(
+          tagNames.length > 0
+            ? sql`COUNT(DISTINCT ${tags.name}) = ${tagNames.length}`
+            : undefined,
+        );
+      console.log(JSON.stringify(dests2));
 
-      if (dests.length === 0) {
-        return [];
-      }
-      const destsWithTags = await Promise.all(
-        dests.map(async (dest) => {
-          return {
-            tags: await ctx.db.query.destinationTags
-              .findMany({
-                where: eq(destinationTags.destinationId, dest.id),
-                with: {
-                  tag: true,
-                },
-              })
-              .then((res) =>
-                res.map((tagRow) => {
-                  return {
-                    id: tagRow.tag!.id,
-                    text: tagRow.tag!.name,
-                  };
-                }),
-              ),
-            ...dest,
-          };
-        }),
-      );
-      return destsWithTags;
+      // const dests = await ctx.db.query.destinations.findMany({
+      //   with: {
+      //     destinationTags: {
+      //       columns: {
+      //         tagId: true,
+      //       },
+      //       with: {
+      //         tag: true,
+      //       },
+      //     },
+      //   },
+      //   limit: input.limit,
+      //   offset: input.offset,
+      //   orderBy:
+      //     input.order == "ASC"
+      //       ? asc(destinations[input.sortBy ?? "createdAt"])
+      //       : desc(destinations[input.sortBy ?? "createdAt"]),
+      //   where: and(
+      //     input.searchString && input.searchString.length > 0
+      //       ? and(
+      //           sql`to_tsvector('english', ${destinations.name}) @@ websearch_to_tsquery('english', ${input.searchString})`,
+      //           eq(destinations.userId, ctx.user.id),
+      //         )
+      //       : eq(destinations.userId, ctx.user.id),
+      //     input.type ? eq(destinations.type, input.type) : undefined,
+      //   ),
+      // });
+      // console.log(JSON.stringify(dests));
+      // const destsMatchingTags = dests.filter((dest) => {
+      //   if (!tagRows) {
+      //     return true;
+      //   }
+      //   const destTagIds = dest.destinationTags.map((tag) => tag.tagId);
+      //   return tagRows.every((tag) => destTagIds.includes(tag.id));
+      // });
+
+      // if (dests2.length === 0) {
+      //   return [];
+      // }
+      // const destsWithTags = await Promise.all(
+      //   dests2.map(async (dest) => {
+      //     return {
+      //       tags: dest.destinationTags.map((tagRow) => {
+      //         return {
+      //           id: tagRow.tag!.id,
+      //           text: tagRow.tag!.name,
+      //         };
+      //       }),
+      //       ...dest,
+      //     };
+      //   }),
+      // );
+      console.log("hi");
+      // const destsWithTags2 = await ctx.db
+      //   .select({
+      //     destination: destinations,
+      //     tagName: tags.name,
+      //   })
+      //   .from(destinations)
+      //   .innerJoin(
+      //     destinationTags,
+      //     eq(destinations.id, destinationTags.destinationId),
+      //   )
+      //   .innerJoin(tags, eq(destinationTags.tagId, tags.id))
+      //   .where(
+      //     sql`${destinations.id} IN (${dests2.toSQL()})`, // Filter posts using the subquery
+      //   );
+
+      const destTags = await ctx.db
+        .select()
+        .from(destinationTags)
+        .innerJoin(tags, eq(destinationTags.tagId, tags.id))
+        .where(
+          inArray(
+            destinationTags.destinationId,
+            dests2.map((dest) => dest.destination.id),
+          ),
+        );
+
+      console.log("hiya", destTags);
+
+      const returnDestinations = dests2.map((dest) => {
+        return {
+          tags: destTags
+            .filter(
+              (tag) => tag.destination_tag.destinationId == dest.destination.id,
+            )
+            .map((tag) => {
+              return {
+                id: tag.tag.id,
+                text: tag.tag.name,
+              };
+            }),
+          ...dest.destination,
+        };
+      });
+      return returnDestinations;
     }),
   update: protectedMutationProcedure
     .input(updateDestinationSchema)

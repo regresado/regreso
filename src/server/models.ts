@@ -66,3 +66,13 @@ export const updateDestinationSchema = z.object({
   id: z.number(),
   ...destinationSchema.shape,
 });
+
+export const destinationSearchSchema = z.object({
+  type: z.enum(destinationTypes).optional().nullable(),
+  tags: z.array(z.string()).optional(),
+  sortBy: z.enum(["createdAt", "updatedAt"]).optional(),
+  order: z.enum(["ASC", "DESC"]).optional(),
+  searchString: z.string().nullable().optional(),
+  limit: z.number().optional().default(5),
+  offset: z.number().optional().default(0),
+});
