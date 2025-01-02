@@ -8,8 +8,8 @@ import { api } from "~/trpc/react";
 import { TagInput, type Tag } from "emblor";
 import { Loader2, Search, X } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { Destination, destinationSearchSchema } from "~/server/models";
+import { type z } from "zod";
+import { destinationSearchSchema, type Destination } from "~/server/models";
 
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
@@ -109,7 +109,7 @@ export default function SearchPage() {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <div className="lg:gap-3  flex-col flex items-center space-y-4 lg:space-y-0 flex-grow">
-            <div className=" flex flex-row space-x-4 flex-grow w-full">
+            <div className=" flex flex-row space-x-3 flex-grow w-full">
               <FormField
                 control={form.control}
                 name="type"
@@ -174,6 +174,7 @@ export default function SearchPage() {
               render={({ field }) => (
                 <FormControl>
                   <TagInput
+                    {...field}
                     placeholder="Search with tags..."
                     tags={tags}
                     className="sm:min-w-[450px]"
