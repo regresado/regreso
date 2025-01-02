@@ -1,8 +1,9 @@
 "use client";
 
 import { cloneElement, isValidElement } from "react";
+import { usePathname } from "next/navigation";
 
-import { Home } from "lucide-react";
+import { Home, Search } from "lucide-react";
 import type { User } from "~/server/models";
 
 import {
@@ -27,6 +28,30 @@ interface ClientLayoutProps {
 }
 
 export function ClientLayout({ children, user }: ClientLayoutProps) {
+  const platformPages = [
+    {
+      render: (
+        <BreadcrumbItem>
+          <Home size="16" />
+          <BreadcrumbLink href="/dashboard">Home</BreadcrumbLink>
+        </BreadcrumbItem>
+      ),
+      name: "Home",
+      route: "dashboard",
+    },
+    {
+      render: (
+        <BreadcrumbItem>
+          <Search size="16" />
+          <BreadcrumbLink href="/pins">Search</BreadcrumbLink>
+        </BreadcrumbItem>
+      ),
+      name: "Search",
+      route: "pins",
+    },
+  ];
+  const pathname = usePathname();
+  const platformRoute = pathname.split("/")[1]?.split("/")[0];
   return (
     <SidebarProvider>
       <TooltipProvider delayDuration={0}>
@@ -39,10 +64,12 @@ export function ClientLayout({ children, user }: ClientLayoutProps) {
               <Separator orientation="vertical" className="mr-2 h-4" />
               <Breadcrumb>
                 <BreadcrumbList>
-                  <BreadcrumbItem>
-                    <Home size="16" />
-                    <BreadcrumbLink href="/dashboard">Home</BreadcrumbLink>
-                  </BreadcrumbItem>
+                  {platformPages.find((item) => item.route == platformRoute)
+                    ?.render ?? (
+                    <BreadcrumbItem>
+                      <BreadcrumbLink href="#">Unknown Route</BreadcrumbLink>
+                    </BreadcrumbItem>
+                  )}
                   {/* <BreadcrumbItem>
                 <BreadcrumbLink href="/dashboard/workspace/">
                   🖼️ Frontend Development
