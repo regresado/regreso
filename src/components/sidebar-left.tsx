@@ -38,15 +38,7 @@ const data = {
   navMain: [
     {
       title: "Search",
-      render: (
-        <div>
-          Search{" "}
-          <Badge className="ml-2" variant="secondary">
-            Soon!
-          </Badge>
-        </div>
-      ),
-      url: "#search",
+      url: "/pins",
       icon: Search,
     },
     {
