@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, inArray, or, sql } from "drizzle-orm";
+import { and, asc, desc, eq, ilike, inArray, or, sql } from "drizzle-orm";
 import { z } from "zod";
 import {
   destinationSchema,
@@ -83,15 +83,37 @@ export const destinationRouter = createTRPCRouter({
       const dests = await ctx.db
         .select({ destination: destinations })
         .from(destinations)
-        .innerJoin(
+        .leftJoin(
           destinationTags,
-          eq(destinations.id, destinationTags.destinationId),
-        )
-        .innerJoin(tags, eq(destinationTags.tagId, tags.id))
-        .where(
           tagNames.length > 0
-            ? or(inArray(tags.name, tagNames), inArray(tags.shortcut, tagNames))
-            : undefined,
+            ? eq(destinations.id, destinationTags.destinationId)
+            : sql`1 = 0`,
+        )
+        .leftJoin(
+          tags,
+          tagNames.length > 0 ? eq(destinationTags.tagId, tags.id) : sql`1 = 0`,
+        )
+        .where(
+          and(
+            and(
+              input.searchString && input.searchString.length > 0
+                ? sql`(setweight(to_tsvector('english', ${destinations.name}), 'A') ||
+                      setweight(to_tsvector('english', ${destinations.body}), 'B'))
+                      @@ websearch_to_tsquery  ('english', ${input.searchString})`
+                : undefined,
+            ),
+            input.location
+              ? sql`regexp_replace(${destinations.location}, '^https?://', '') SIMILAR TO ${input.location}`
+              : undefined,
+            input.type ? eq(destinations.type, input.type) : undefined,
+            tagNames.length > 0
+              ? or(
+                  inArray(tags.name, tagNames),
+                  inArray(tags.shortcut, tagNames),
+                )
+              : undefined,
+            eq(destinations.userId, ctx.user.id),
+          ),
         )
         .groupBy(destinations.id)
         .having(
@@ -106,7 +128,6 @@ export const destinationRouter = createTRPCRouter({
         )
         .limit(input.limit)
         .offset(input.offset);
-
       const destTags = await ctx.db
         .select()
         .from(destinationTags)

@@ -73,6 +73,7 @@ export const destinationSearchSchema = z.object({
   sortBy: z.enum(["createdAt", "updatedAt"]).optional(),
   order: z.enum(["ASC", "DESC"]).optional(),
   searchString: z.string().nullable().optional(),
+  location: z.string().nullable().optional(),
   limit: z.number().optional().default(5),
   offset: z.number().optional().default(0),
 });
