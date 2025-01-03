@@ -59,7 +59,7 @@ export function ClientLayout({ children, user }: ClientLayoutProps) {
 
         <SidebarInset>
           <header className="flex items-center justify-between p-4 border-">
-            <div className="flex flex-1 items-center gap-2 px-3">
+            <div className="flex flex-1 items-center gap-2">
               <SidebarTrigger />
               <Separator orientation="vertical" className="mr-2 h-4" />
               <Breadcrumb>
@@ -70,17 +70,6 @@ export function ClientLayout({ children, user }: ClientLayoutProps) {
                       <BreadcrumbLink href="#">Unknown Route</BreadcrumbLink>
                     </BreadcrumbItem>
                   )}
-                  {/* <BreadcrumbItem>
-                <BreadcrumbLink href="/dashboard/workspace/">
-                  🖼️ Frontend Development
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage className="line-clamp-1">
-                  🎨 Design Components
-                </BreadcrumbPage>
-              </BreadcrumbItem> */}
                 </BreadcrumbList>
               </Breadcrumb>
             </div>
