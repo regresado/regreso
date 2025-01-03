@@ -498,6 +498,7 @@ export function RecentDestinations() {
     isFetching,
   } = api.destination.getMany.useQuery({
     limit: 3,
+    order: "DESC",
   });
 
   return (
@@ -558,10 +559,7 @@ export function DestinationCard(props: Destination) {
         {props.type == "location" ? (
           <p className="truncate text-xs">
             <Button variant="link" asChild className="p-0 truncate">
-              <Link
-                href={props.location ?? "#"}
-                className="text-primary-foreground truncate"
-              >
+              <Link href={props.location ?? "#"} className="truncate">
                 {props.location}
               </Link>
             </Button>
@@ -571,9 +569,9 @@ export function DestinationCard(props: Destination) {
         {props.tags && props.tags?.length > 0 ? (
           <div className="flex flex-wrap gap-1 mt-2">
             {props.tags.map((tag) => (
-              <Badge key={tag.id} variant="secondary">
-                {tag.text}
-              </Badge>
+              <Link key={tag.id} href={`/pins?tags=${tag.text}`}>
+                <Badge variant="secondary">{tag.text}</Badge>
+              </Link>
             ))}
           </div>
         ) : null}
