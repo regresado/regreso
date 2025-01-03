@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,6 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { Separator } from "~/components/ui/separator";
 
 import { DestinationCard } from "../_components/destination";
 
@@ -49,11 +50,12 @@ export default function SearchPage() {
 
   function updateUrl(data: z.infer<typeof destinationSearchSchema>) {
     const newParams = [
-      ["type", data.type ?? null],
+      ["type", data.type ?? ""],
       ["search", data.searchString],
       ["sortBy", data.sortBy],
       ["order", data.order],
       ["tags", data.tags ? data.tags.join(",") : ""],
+      ["location", data.location],
     ];
 
     return newParams
@@ -83,8 +85,35 @@ export default function SearchPage() {
           typeof destinationSearchSchema
         >["order"]) ?? "DESC",
       searchString: searchParams.get("search") ?? "",
+      location: searchParams.get("location") ?? "",
     },
   });
+
+  useEffect(() => {
+    const newTags =
+      searchParams.get("tags") &&
+      searchParams.get("tags")!.split(",").length > 0
+        ? searchParams
+            .get("tags")!
+            .split(",")
+            .map(
+              (tag, index) =>
+                ({
+                  text: tag,
+                  id: index.toString(),
+                }) as Tag,
+            )
+        : [];
+    if (newTags != tags) {
+      setTags(newTags);
+      form.setValue(
+        "tags",
+        newTags.map((tag) => tag.text),
+        { shouldDirty: false },
+      );
+      form.handleSubmit(onSubmit)();
+    }
+  }, [searchParams]);
 
   const [submitValues, setSubmitValues] = useState(form.getValues());
 
@@ -109,18 +138,18 @@ export default function SearchPage() {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <div className="lg:gap-3  flex-col flex items-center space-y-4 lg:space-y-0 flex-grow">
-            <div className=" flex flex-row space-x-3 flex-grow w-full">
+            <div className="flex flex-row lg:flex-nowrap sm:flex-wrap gap-4 flex-grow w-full">
               <FormField
                 control={form.control}
                 name="type"
                 render={({ field }) => (
-                  <FormItem className="flex flex-row space-x-2 space-y-0">
+                  <FormItem className="flex flex-row  space-x-2 space-y-0 ">
                     <Select
                       onValueChange={field.onChange}
                       value={field.value ?? undefined}
                     >
                       <FormControl>
-                        <SelectTrigger className="w-[120px] space-between">
+                        <SelectTrigger className="w-[110px] space-between">
                           <SelectValue placeholder="Any Type" />
                         </SelectTrigger>
                       </FormControl>
@@ -153,6 +182,21 @@ export default function SearchPage() {
                   </FormItem>
                 )}
               />
+              {form.watch("type") == "location" ? (
+                <FormField
+                  control={form.control}
+                  name="location"
+                  render={({ field }) => (
+                    <FormItem>
+                      <Input
+                        placeholder="URL RegExp"
+                        {...field}
+                        value={field.value ?? ""}
+                      />
+                    </FormItem>
+                  )}
+                />
+              ) : null}
 
               <FormField
                 control={form.control}
@@ -198,7 +242,7 @@ export default function SearchPage() {
               )}
             />
           </div>
-          <div className="flex space-x-2 justify-end">
+          <div className="flex gap-4 flex-row flex-wrap justify-end">
             <FormField
               control={form.control}
               name="sortBy"
@@ -208,7 +252,7 @@ export default function SearchPage() {
                   defaultValue={field.value}
                 >
                   <FormControl>
-                    <SelectTrigger className="w-[180px]">
+                    <SelectTrigger className="w-[120px]">
                       <SelectValue placeholder="Sort By" />
                     </SelectTrigger>
                   </FormControl>
@@ -232,7 +276,7 @@ export default function SearchPage() {
                   defaultValue={field.value}
                 >
                   <FormControl>
-                    <SelectTrigger className="w-[180px]">
+                    <SelectTrigger className="w-[120px]">
                       <SelectValue placeholder="Order" />
                     </SelectTrigger>
                   </FormControl>
