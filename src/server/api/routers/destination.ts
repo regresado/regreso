@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, ilike, inArray, or, sql } from "drizzle-orm";
+import { and, asc, desc, eq, inArray, or, sql } from "drizzle-orm";
 import { z } from "zod";
 import {
   destinationSchema,
@@ -105,7 +105,9 @@ export const destinationRouter = createTRPCRouter({
             input.location
               ? sql`regexp_replace(${destinations.location}, '^https?://', '') SIMILAR TO ${input.location}`
               : undefined,
-            input.type ? eq(destinations.type, input.type) : undefined,
+            input.type && input.type != "any"
+              ? eq(destinations.type, input.type)
+              : undefined,
             tagNames.length > 0
               ? or(
                   inArray(tags.name, tagNames),

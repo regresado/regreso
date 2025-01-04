@@ -10,7 +10,8 @@ import { WelcomeCard } from "~/components/welcome-card";
 import {
   CreateDestination,
   RecentDestinations,
-} from "~/app/(platform)/_components/destination";
+} from "../_components/destination";
+import { RecentLists } from "../_components/list";
 
 const DashboardHome: React.FC = (props: { user?: User }) => {
   return (
@@ -40,7 +41,11 @@ const DashboardHome: React.FC = (props: { user?: User }) => {
             <RecentDestinations />
           </div>
         </div>
-        <div className="col-span-1 min-h-[100vh] flex-1 rounded-xl bg-muted/50 p-4 md:min-h-min xl:col-span-3" />
+        <div className="col-span-1 xl:col-span-3">
+          <div className="rounded-xl bg-muted/50">
+            <RecentLists />
+          </div>
+        </div>
       </div>
     </>
   );
