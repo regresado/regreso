@@ -2,10 +2,14 @@ import React from "react";
 
 import { getPostData, getSortedPostsData } from "~/lib/knowledge";
 
-import { SiteContent } from "~/components/site-content";
+import { SiteContent } from "../_components/content";
 
 export async function generateStaticParams() {
-  return getSortedPostsData();
+  return getSortedPostsData().map(({ id }) => ({
+    params: {
+      slug: id,
+    },
+  }));
 }
 
 export default async function ContentPage({
