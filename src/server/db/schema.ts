@@ -186,7 +186,7 @@ export const lists = createTable(
   {
     id: serial("id").primaryKey(),
     name: varchar("name", { length: 256 }).notNull(),
-    description: varchar("name", { length: 256 }),
+    description: varchar("description", { length: 256 }),
     userId: integer("user_id")
       .notNull()
       .references(() => users.id),
