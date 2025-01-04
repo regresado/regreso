@@ -4,10 +4,10 @@ import * as React from "react";
 
 import {
   Calendar,
-  Command,
   Home,
   MessageCircleQuestion,
   Network,
+  Sailboat,
   Search,
   Settings,
 } from "lucide-react";
@@ -30,8 +30,8 @@ import { TeamSwitcher } from "~/components/team-switcher";
 const data = {
   teams: [
     {
-      name: "My Squad",
-      logo: Command,
+      name: "My Crew",
+      logo: Sailboat,
       plan: "Enterprise",
     },
   ],
