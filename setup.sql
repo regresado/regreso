@@ -41,7 +41,8 @@ CREATE TABLE "regreso_list_tag" (
 
 CREATE TABLE "regreso_list" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"name" varchar(256),
+	"name" varchar(256) NOT NULL,
+	"description" varchar(256),
 	"user_id" integer NOT NULL,
 	"created_at" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	CONSTRAINT "regreso_list_user_id_name_unique" UNIQUE("user_id","name")
@@ -132,7 +133,7 @@ ALTER TABLE "regreso_totp_credential" ADD CONSTRAINT "regreso_totp_credential_us
 CREATE INDEX "destination_search_index" ON "regreso_destination" USING gin ((setweight(to_tsvector('english', "name"), 'A') ||
           setweight(to_tsvector('english', "body"), 'B')));
 CREATE INDEX "list_search_index" ON "regreso_list" USING gin ((setweight(to_tsvector('english', "name"), 'A') ||
-            setweight(to_tsvector('english', "name"), 'B')));
+            setweight(to_tsvector('english', "description"), 'B')));
 CREATE INDEX "tag_search_index" ON "regreso_tag" USING gin ((setweight(to_tsvector('english', "shortcut"), 'A') ||
           setweight(to_tsvector('english', "name"), 'B')));
 CREATE INDEX "email_index" ON "regreso_user" USING btree ("email");
