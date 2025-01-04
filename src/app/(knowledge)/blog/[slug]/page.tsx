@@ -4,7 +4,8 @@ import Link from "next/link";
 import { getPostData, getSortedPostsData } from "~/lib/knowledge";
 
 import { Button } from "~/components/ui/button";
-import { SiteContent } from "~/components/site-content";
+
+import { SiteContent } from "../../_components/content";
 
 export async function generateStaticParams() {
   const posts = getSortedPostsData();
