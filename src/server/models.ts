@@ -39,6 +39,17 @@ export interface Destination {
   updatedAt: Date | null;
 }
 
+export interface List {
+  id: number;
+  name: string;
+  description: string | null;
+  userId: number;
+  createdAt: Date;
+  size?: number;
+  updatedAt?: Date | null;
+  tags?: { id: number; text: string }[];
+}
+
 const destinationTypes = ["location", "note", "file"] as const;
 
 export const destinationSchema = z.object({
@@ -62,18 +73,44 @@ export const destinationSchema = z.object({
   attachments: z.array(z.string()),
 });
 
+export const listSchema = z.object({
+  name: z
+    .string()
+    .min(1, {
+      message: "The name must be at least 1 characters.",
+    })
+    .max(100, {
+      message: "The name must be less than 100 characters.",
+    }),
+  description: z.string().min(0).max(200, {
+    message: "The description must be less than 200 characters.",
+  }),
+  tags: z.array(z.object({ id: z.string(), text: z.string() })).min(0),
+});
+
 export const updateDestinationSchema = z.object({
   id: z.number(),
   ...destinationSchema.shape,
 });
 
+const destinationSearchTypes = ["location", "note", "any"] as const;
+
 export const destinationSearchSchema = z.object({
-  type: z.enum(destinationTypes).optional().nullable(),
+  type: z.enum(destinationSearchTypes).optional().nullable(),
   tags: z.array(z.string()).optional(),
-  sortBy: z.enum(["createdAt", "updatedAt"]).optional(),
+  sortBy: z.enum(["createdAt", "updatedAt", "name"]).optional(),
   order: z.enum(["ASC", "DESC"]).optional(),
   searchString: z.string().nullable().optional(),
   location: z.string().nullable().optional(),
+  limit: z.number().optional().default(5),
+  offset: z.number().optional().default(0),
+});
+
+export const listSearchSchema = z.object({
+  tags: z.array(z.string()).optional(),
+  sortBy: z.enum(["createdAt", "updatedAt", "name", "size"]).optional(),
+  order: z.enum(["ASC", "DESC"]).optional(),
+  searchString: z.string().nullable().optional(),
   limit: z.number().optional().default(5),
   offset: z.number().optional().default(0),
 });

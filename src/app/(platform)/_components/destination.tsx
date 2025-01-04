@@ -140,7 +140,7 @@ function DestinationForm(props: DestinationFormProps) {
     defaultValues: {
       type: "location",
       location: props.defaultValues?.location ?? null,
-      name: props.defaultValues?.name ?? "hi",
+      name: props.defaultValues?.name ?? "",
       body: props.defaultValues?.body ?? "",
       tags: props.defaultValues?.tags ?? [],
       attachments: [],
@@ -401,7 +401,8 @@ function DestinationForm(props: DestinationFormProps) {
                       />
                     </FormControl>
                     <FormDescription>
-                      These are the topics that you&apos;re interested in.
+                      These are tags which can be used to categorize and search
+                      for your destination.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -505,7 +506,7 @@ export function RecentDestinations() {
     <TiltCard>
       <Card>
         <CardHeader>
-          <Link href="/search">
+          <Link href="/search/pins">
             <CardTitle className="flex items-center">
               <MapPin className="mr-2 h-5 w-5" /> Recent Destinations
             </CardTitle>
@@ -523,7 +524,7 @@ export function RecentDestinations() {
           )}
           <div className="flex space-x-2">
             <Button size="sm" variant="secondary" disabled={isFetching} asChild>
-              <Link href="/search">
+              <Link href="/search/pins">
                 <GalleryVerticalEnd />
                 See All
               </Link>
@@ -569,7 +570,7 @@ export function DestinationCard(props: Destination) {
         {props.tags && props.tags?.length > 0 ? (
           <div className="flex flex-wrap gap-1 mt-2">
             {props.tags.map((tag) => (
-              <Link key={tag.id} href={`/search?tags=${tag.text}`}>
+              <Link key={tag.id} href={`/search/pins?tags=${tag.text}`}>
                 <Badge variant="secondary">{tag.text}</Badge>
               </Link>
             ))}
