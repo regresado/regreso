@@ -505,7 +505,7 @@ export function RecentDestinations() {
     <TiltCard>
       <Card>
         <CardHeader>
-          <Link href="/pins">
+          <Link href="/search">
             <CardTitle className="flex items-center">
               <MapPin className="mr-2 h-5 w-5" /> Recent Destinations
             </CardTitle>
@@ -523,7 +523,7 @@ export function RecentDestinations() {
           )}
           <div className="flex space-x-2">
             <Button size="sm" variant="secondary" disabled={isFetching} asChild>
-              <Link href="/pins">
+              <Link href="/search">
                 <GalleryVerticalEnd />
                 See All
               </Link>
@@ -569,7 +569,7 @@ export function DestinationCard(props: Destination) {
         {props.tags && props.tags?.length > 0 ? (
           <div className="flex flex-wrap gap-1 mt-2">
             {props.tags.map((tag) => (
-              <Link key={tag.id} href={`/pins?tags=${tag.text}`}>
+              <Link key={tag.id} href={`/search?tags=${tag.text}`}>
                 <Badge variant="secondary">{tag.text}</Badge>
               </Link>
             ))}
