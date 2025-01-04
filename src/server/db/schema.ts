@@ -190,9 +190,17 @@ export const lists = createTable(
     userId: integer("user_id")
       .notNull()
       .references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
   },
   (list) => ({
     uniqueListName: unique().on(list.userId, list.name),
+    searchIndex: index("list_search_index").using(
+      "gin",
+      sql`setweight(to_tsvector('english', ${list.name}), 'A') ||
+            setweight(to_tsvector('english', ${list.description}), 'B')`,
+    ),
   }),
 );
 
@@ -211,6 +219,27 @@ export const listTags = createTable(
   },
   (listTag) => ({
     uniqueListTag: unique().on(listTag.listId, listTag.tagId),
+  }),
+);
+
+export const destinationLists = createTable(
+  "destination_list",
+  {
+    id: serial("id").primaryKey(),
+    destinationId: integer("destination_id").references(() => destinations.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }),
+    listId: integer("list_id").references(() => lists.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }),
+  },
+  (destinationList) => ({
+    uniqueDestinationList: unique().on(
+      destinationList.destinationId,
+      destinationList.listId,
+    ),
   }),
 );
 
@@ -281,6 +310,7 @@ export const tagsRelations = relations(tags, ({ one, many }) => ({
     references: [users.id],
   }),
   destinationTags: many(destinationTags),
+  listTags: many(listTags),
 }));
 
 export const destinationsRelations = relations(
@@ -291,5 +321,39 @@ export const destinationsRelations = relations(
       references: [users.id],
     }),
     destinationTags: many(destinationTags),
+  }),
+);
+
+export const listsRelations = relations(lists, ({ one, many }) => ({
+  tags: many(listTags),
+  destinations: many(destinationLists),
+  user: one(users, {
+    fields: [lists.userId],
+    references: [users.id],
+  }),
+}));
+
+export const listTagsRelations = relations(listTags, ({ one }) => ({
+  list: one(lists, {
+    fields: [listTags.listId],
+    references: [lists.id],
+  }),
+  tag: one(tags, {
+    fields: [listTags.tagId],
+    references: [tags.id],
+  }),
+}));
+
+export const destinationListsRelations = relations(
+  destinationLists,
+  ({ one }) => ({
+    destination: one(destinations, {
+      fields: [destinationLists.destinationId],
+      references: [destinations.id],
+    }),
+    list: one(lists, {
+      fields: [destinationLists.listId],
+      references: [lists.id],
+    }),
   }),
 );
