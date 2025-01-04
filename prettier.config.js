@@ -1,4 +1,4 @@
-/** @type {import('prettier').Config & import('prettier-plugin-tailwindcss').PluginOptions & import('@ianvs/prettier-plugin-sort-imports').PluginConfig} */
+/** @type {import('prettier').Config & import('prettier-plugin-tailwindcss').PluginOptions} */
 export default {
   importOrder: [
     "^(react/(.*)$)|^(react$)",
@@ -19,14 +19,14 @@ export default {
     "",
     "^[./]",
   ],
-  importOrderSeparation: false,
-  importOrderSortSpecifiers: true,
-  importOrderBuiltinModulesToTop: true,
-  importOrderParserPlugins: ["typescript", "jsx"],
-  importOrderMergeDuplicateImports: true,
-  importOrderCombineTypeAndValueImports: true,
+  // importOrderSeparation: false,
+  // importOrderSortSpecifiers: true,
+  // importOrderBuiltinModulesToTop: true,
+  // importOrderParserPlugins: ["typescript", "jsx"],
+  // importOrderMergeDuplicateImports: true,
+  // importOrderCombineTypeAndValueImports: true,
   plugins: [
-    "prettier-plugin-tailwindcss",
     "@ianvs/prettier-plugin-sort-imports",
+    "prettier-plugin-tailwindcss",
   ],
 };
