@@ -12,13 +12,13 @@ import { api } from "~/trpc/react";
 import { TagInput, type Tag } from "emblor";
 import {
   ArrowRight,
+  GalleryVerticalEnd,
   Loader2,
   MapPin,
   MapPinPlus,
   Pencil,
   Plus,
   RefreshCw,
-  Search,
 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -524,8 +524,8 @@ export function RecentDestinations() {
           <div className="flex space-x-2">
             <Button size="sm" variant="secondary" disabled={isFetching} asChild>
               <Link href="/pins">
-                <Search />
-                Search
+                <GalleryVerticalEnd />
+                See All
               </Link>
             </Button>
             <Button
