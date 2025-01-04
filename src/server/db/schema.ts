@@ -181,6 +181,39 @@ export const destinationTags = createTable(
   }),
 );
 
+export const lists = createTable(
+  "list",
+  {
+    id: serial("id").primaryKey(),
+    name: varchar("name", { length: 256 }).notNull(),
+    description: varchar("name", { length: 256 }),
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id),
+  },
+  (list) => ({
+    uniqueListName: unique().on(list.userId, list.name),
+  }),
+);
+
+export const listTags = createTable(
+  "list_tag",
+  {
+    id: serial("id").primaryKey(),
+    listId: integer("list_id").references(() => lists.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }),
+    tagId: integer("tag_id").references(() => tags.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }),
+  },
+  (listTag) => ({
+    uniqueListTag: unique().on(listTag.listId, listTag.tagId),
+  }),
+);
+
 export const usersRelations = relations(users, ({ many }) => ({
   passwordResetSessions: many(passwordResetSessions),
   securityKeyCredentials: many(securityKeyCredentials),
