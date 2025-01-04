@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { Command } from "lucide-react";
+import { Sailboat } from "lucide-react";
 import type { User } from "~/server/models";
 
 import { WelcomeCard } from "~/components/welcome-card";
@@ -21,8 +21,8 @@ const DashboardHome: React.FC = (props: { user?: User }) => {
             <WelcomeCard
               teams={[
                 {
-                  name: "My Squad",
-                  logo: Command,
+                  name: "My Crew",
+                  logo: Sailboat,
                   plan: "Free",
                 },
               ]}
