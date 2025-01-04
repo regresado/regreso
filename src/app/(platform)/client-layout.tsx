@@ -43,11 +43,11 @@ export function ClientLayout({ children, user }: ClientLayoutProps) {
       render: (
         <BreadcrumbItem>
           <Search size="16" />
-          <BreadcrumbLink href="/pins">Search</BreadcrumbLink>
+          <BreadcrumbLink href="/search">Search</BreadcrumbLink>
         </BreadcrumbItem>
       ),
       name: "Search",
-      route: "pins",
+      route: "search",
     },
   ];
   const pathname = usePathname();

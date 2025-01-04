@@ -38,7 +38,7 @@ const data = {
   navMain: [
     {
       title: "Search",
-      url: "/pins",
+      url: "/search",
       icon: Search,
     },
     {
