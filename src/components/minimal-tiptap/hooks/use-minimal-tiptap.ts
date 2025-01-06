@@ -17,7 +17,7 @@ import {
   Color,
   FileHandler,
   HorizontalRule,
-  Image,
+  // Image,
   Link,
   ResetMarksOnEnter,
   Selection,
@@ -50,115 +50,115 @@ export const createExtensions = (placeholder: string) => [
   }),
   Link,
   Underline,
-  Image.configure({
-    allowedMimeTypes: ["image/*"],
-    maxFileSize: 5 * 1024 * 1024,
-    allowBase64: true,
-    uploadFn: async (file) => {
-      // NOTE: This is a fake upload function. Replace this with your own upload logic.
-      // This function should return the uploaded image URL.
+  // Image.configure({
+  //   allowedMimeTypes: ["image/*"],
+  //   maxFileSize: 5 * 1024 * 1024,
+  //   allowBase64: true,
+  // uploadFn: async (file) => {
+  //   // NOTE: This is a fake upload function. Replace this with your own upload logic.
+  //   // This function should return the uploaded image URL.
 
-      // wait 3s to simulate upload
-      await new Promise((resolve) => setTimeout(resolve, 3000));
+  //   // wait 3s to simulate upload
+  //   await new Promise((resolve) => setTimeout(resolve, 3000));
 
-      const src = await fileToBase64(file);
+  //   const src = await fileToBase64(file);
 
-      // either return { id: string | number, src: string } or just src
-      // return src;
-      return { id: randomId(), src };
-    },
-    onToggle(editor, files, pos) {
-      editor.commands.insertContentAt(
-        pos,
-        files.map((image) => {
-          const blobUrl = URL.createObjectURL(image);
-          const id = randomId();
+  //   // either return { id: string | number, src: string } or just src
+  //   // return src;
+  //   return { id: randomId(), src };
+  // },
+  //   onToggle(editor, files, pos) {
+  //     editor.commands.insertContentAt(
+  //       pos,
+  //       files.map((image) => {
+  //         const blobUrl = URL.createObjectURL(image);
+  //         const id = randomId();
 
-          return {
-            type: "image",
-            attrs: {
-              id,
-              src: blobUrl,
-              alt: image.name,
-              title: image.name,
-              fileName: image.name,
-            },
-          };
-        }),
-      );
-    },
-    onImageRemoved({ id, src }) {
-      console.log("Image removed", { id, src });
-    },
-    onValidationError(errors) {
-      const { toast } = useToast();
-      errors.forEach((error) => {
-        toast({
-          title: "Image validation error",
-          variant: "destructive",
-          description: error.reason,
-        });
-      });
-    },
-    onActionSuccess({ action }) {
-      const { toast } = useToast();
-      const mapping = {
-        copyImage: "Copy Image",
-        copyLink: "Copy Link",
-        download: "Download",
-      };
-      toast({
-        title: mapping[action],
-        description: "Image action success",
-      });
-    },
-    onActionError(error, { action }) {
-      const { toast } = useToast();
-      const mapping = {
-        copyImage: "Copy Image",
-        copyLink: "Copy Link",
-        download: "Download",
-      };
-      toast({
-        title: `Failed to ${mapping[action]}`,
-        variant: "destructive",
-        description: error.message,
-      });
-    },
-  }),
-  FileHandler.configure({
-    allowBase64: true,
-    allowedMimeTypes: ["image/*"],
-    maxFileSize: 5 * 1024 * 1024,
-    onDrop: (editor, files, pos) => {
-      files.forEach(async (file) => {
-        const src = await fileToBase64(file);
-        editor.commands.insertContentAt(pos, {
-          type: "image",
-          attrs: { src },
-        });
-      });
-    },
-    onPaste: (editor, files) => {
-      files.forEach(async (file) => {
-        const src = await fileToBase64(file);
-        editor.commands.insertContent({
-          type: "image",
-          attrs: { src },
-        });
-      });
-    },
-    onValidationError: (errors) => {
-      const { toast } = useToast();
-      errors.forEach((error) => {
-        toast({
-          title: "Image validation error",
-          variant: "destructive",
-          description: error.reason,
-        });
-      });
-    },
-  }),
+  //         return {
+  //           type: "image",
+  //           attrs: {
+  //             id,
+  //             src: blobUrl,
+  //             alt: image.name,
+  //             title: image.name,
+  //             fileName: image.name,
+  //           },
+  //         };
+  //       }),
+  //     );
+  //   },
+  //   onImageRemoved({ id, src }) {
+  //     console.log("Image removed", { id, src });
+  //   },
+  //   onValidationError(errors) {
+  //     const { toast } = useToast();
+  //     errors.forEach((error) => {
+  //       toast({
+  //         title: "Image validation error",
+  //         variant: "destructive",
+  //         description: error.reason,
+  //       });
+  //     });
+  //   },
+  //   onActionSuccess({ action }) {
+  //     const { toast } = useToast();
+  //     const mapping = {
+  //       copyImage: "Copy Image",
+  //       copyLink: "Copy Link",
+  //       download: "Download",
+  //     };
+  //     toast({
+  //       title: mapping[action],
+  //       description: "Image action success",
+  //     });
+  //   },
+  //   onActionError(error, { action }) {
+  //     const { toast } = useToast();
+  //     const mapping = {
+  //       copyImage: "Copy Image",
+  //       copyLink: "Copy Link",
+  //       download: "Download",
+  //     };
+  //     toast({
+  //       title: `Failed to ${mapping[action]}`,
+  //       variant: "destructive",
+  //       description: error.message,
+  //     });
+  //   },
+  // }),
+  // FileHandler.configure({
+  //   allowBase64: true,
+  //   allowedMimeTypes: ["image/*"],
+  //   maxFileSize: 5 * 1024 * 1024,
+  // onDrop: (editor, files, pos) => {
+  //   files.forEach(async (file) => {
+  //     const src = await fileToBase64(file);
+  //     editor.commands.insertContentAt(pos, {
+  //       type: "image",
+  //       attrs: { src },
+  //     });
+  //   });
+  // },
+  // onPaste: (editor, files) => {
+  //   files.forEach(async (file) => {
+  //     const src = await fileToBase64(file);
+  //     editor.commands.insertContent({
+  //       type: "image",
+  //       attrs: { src },
+  //     });
+  //   });
+  // },
+  //   onValidationError: (errors) => {
+  //     const { toast } = useToast();
+  //     errors.forEach((error) => {
+  //       toast({
+  //         title: "Image validation error",
+  //         variant: "destructive",
+  //         description: error.reason,
+  //       });
+  //     });
+  //   },
+  // }),
   Color,
   TextStyle,
   Selection,
