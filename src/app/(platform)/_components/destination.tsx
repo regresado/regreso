@@ -180,10 +180,21 @@ export function DestinationForm(props: DestinationFormProps) {
         tags: props.defaultValues?.tags ?? [],
         attachments: [],
       });
-
-      setLoading2(false);
+      setTags(props.defaultValues?.tags ?? []);
     }
   }, [props.defaultValues, form, loading2, props.update]);
+
+  useEffect(() => {
+    if (
+      loading2 &&
+      form.watch("type") === "location" &&
+      form.watch("location") &&
+      props.defaultValues?.body == form.watch("body")
+    ) {
+      console.log(form.watch("body"));
+      setLoading2(false);
+    }
+  }, [form.watch("location"), loading2]);
 
   useEffect(() => {
     if (!detailsState.error) {
@@ -210,8 +221,6 @@ export function DestinationForm(props: DestinationFormProps) {
   // watch for when destinationTypeForm.watch("type") changes
   const type = destinationTypeForm.watch("type");
   useEffect(() => {
-    setTags([]);
-
     if (destinationTypeForm.watch("type") === "note") {
       form.reset({
         type: "note",
@@ -260,7 +269,6 @@ export function DestinationForm(props: DestinationFormProps) {
 
   return (
     <>
-      {JSON.stringify(props.defaultValues)}
       <Form {...destinationTypeForm}>
         <form
           action={action}
@@ -357,14 +365,14 @@ export function DestinationForm(props: DestinationFormProps) {
         </form>
       </Form>
       <Form {...form}>
-        {((!loading && destinationTypeForm.watch("type") === "note") ||
-          (form.watch("type") === "location" && form.watch("location")) ||
-          props.update) &&
-        !loading2 ? (
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="w-full space-y-4"
-          >
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="w-full space-y-4"
+        >
+          {((!loading && destinationTypeForm.watch("type") === "note") ||
+            (form.watch("type") === "location" && form.watch("location")) ||
+            props.update) &&
+          !loading2 ? (
             <>
               <FormField
                 control={form.control}
@@ -376,6 +384,11 @@ export function DestinationForm(props: DestinationFormProps) {
                       <Input
                         placeholder="Coolest Pelicans in the World"
                         {...field}
+                        value={
+                          field.value && field.value.length > 0
+                            ? field.value
+                            : props.defaultValues?.name
+                        }
                       />
                     </FormControl>
                     <FormMessage />
@@ -390,7 +403,7 @@ export function DestinationForm(props: DestinationFormProps) {
                     <FormLabel>Body</FormLabel>
                     <FormControl>
                       <MinimalTiptapEditor
-                        value={field.value}
+                        value={props.defaultValues?.body}
                         onChange={field.onChange}
                         className="w-full"
                         editorContentClassName="p-5"
@@ -435,47 +448,47 @@ export function DestinationForm(props: DestinationFormProps) {
                   </FormItem>
                 )}
               />
+              <Button
+                type="submit"
+                disabled={
+                  submitMutation.isPending ||
+                  (!form.watch("name") && form.watch("type") === "note") ||
+                  (form.watch("type") === "location" &&
+                    (!form.watch("location") ||
+                      destinationTypeForm.watch("location") !=
+                        form.watch("location")))
+                }
+                size="sm"
+              >
+                {props.update ? (
+                  <>
+                    {submitMutation.isPending ? (
+                      <Loader2 className="animate-spin" />
+                    ) : (
+                      <Pencil />
+                    )}
+
+                    {submitMutation.isPending
+                      ? "Updating Destination..."
+                      : "Update Destination"}
+                  </>
+                ) : (
+                  <>
+                    {submitMutation.isPending ? (
+                      <Loader2 className="animate-spin" />
+                    ) : (
+                      <Plus />
+                    )}
+
+                    {submitMutation.isPending
+                      ? "Creating Destination..."
+                      : "Create Destination"}
+                  </>
+                )}
+              </Button>
             </>
-            <Button
-              type="submit"
-              disabled={
-                submitMutation.isPending ||
-                (!form.watch("name") && form.watch("type") === "note") ||
-                (form.watch("type") === "location" &&
-                  (!form.watch("location") ||
-                    destinationTypeForm.watch("location") !=
-                      form.watch("location")))
-              }
-              size="sm"
-            >
-              {props.update ? (
-                <>
-                  {submitMutation.isPending ? (
-                    <Loader2 className="animate-spin" />
-                  ) : (
-                    <Pencil />
-                  )}
-
-                  {submitMutation.isPending
-                    ? "Updating Destination..."
-                    : "Update Destination"}
-                </>
-              ) : (
-                <>
-                  {submitMutation.isPending ? (
-                    <Loader2 className="animate-spin" />
-                  ) : (
-                    <Plus />
-                  )}
-
-                  {submitMutation.isPending
-                    ? "Creating Destination..."
-                    : "Create Destination"}
-                </>
-              )}
-            </Button>
-          </form>
-        ) : null}
+          ) : null}
+        </form>
       </Form>
     </>
   );
