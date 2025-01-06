@@ -60,11 +60,8 @@ import {
 import { Separator } from "~/components/ui/separator";
 import { toast } from "~/components/hooks/use-toast";
 
-import {
-  DestinationCard,
-  DestinationForm,
-} from "../../_components/destination";
-import { ListCard, ListForm } from "../../_components/list";
+import { DestinationCard, DestinationForm } from "./destination";
+import { ListCard, ListForm } from "./list";
 
 export function SearchForm({ searchType }: { searchType: "maps" | "pins" }) {
   const router = useRouter();
