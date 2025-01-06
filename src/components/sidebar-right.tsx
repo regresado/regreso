@@ -23,7 +23,7 @@ const data = {
   calendars: [
     {
       name: "My Calendars",
-      items: ["Reminders", "General"],
+      items: [],
     },
     {
       name: "Maps",
