@@ -4,6 +4,7 @@ import { useActionState, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+import { Active, Over, useDraggable } from "@dnd-kit/core";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { type TRPCClientErrorLike } from "@trpc/client";
@@ -12,6 +13,7 @@ import { api } from "~/trpc/react";
 import { TagInput, type Tag } from "emblor";
 import {
   ArrowRight,
+  CalendarDaysIcon,
   GalleryVerticalEnd,
   Loader2,
   MapPin,
@@ -533,7 +535,18 @@ export function CreateDestination() {
   );
 }
 
-export function RecentDestinations() {
+export function RecentDestinations({
+  dragEnd,
+  setDragEnd,
+}: {
+  dragEnd: { over: Over; active: Active } | null;
+  setDragEnd: React.Dispatch<
+    React.SetStateAction<{
+      over: Over;
+      active: Active;
+    } | null>
+  >;
+}) {
   const {
     data: recentDestinations = { items: [], count: 0 },
     refetch,
@@ -556,7 +569,15 @@ export function RecentDestinations() {
         <CardContent className="space-y-4 px-6">
           {recentDestinations.items.length > 0 ? (
             recentDestinations?.items.map((dest: Destination) => {
-              return <DestinationCard key={dest.id} {...dest} />;
+              return (
+                <DestinationCard
+                  key={dest.id}
+                  {...dest}
+                  {...(dragEnd && dragEnd.active && dest.id == dragEnd.active.id
+                    ? { dragEnd, setDragEnd }
+                    : null)}
+                />
+              );
             })
           ) : (
             <p className="text-sm text-muted-foreground">
@@ -587,9 +608,62 @@ export function RecentDestinations() {
   );
 }
 
-export function DestinationCard(props: Destination) {
+export function DestinationCard(
+  props: Destination & {
+    setDragEnd?: React.Dispatch<
+      React.SetStateAction<{ over: Over; active: Active } | null>
+    >;
+    dragEnd?: { over: Over | null; active: Active | null };
+  },
+) {
+  const utils = api.useUtils();
+
+  const addToLists = api.destination.addToLists.useMutation({
+    onSuccess: async () => {
+      await utils.destination.invalidate();
+      toast({
+        title: "Destination added to list(s)",
+        description: "Destination has been added to the selected list(s).",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Failed to add destination to list(s)",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+  useEffect(() => {
+    if (
+      props.dragEnd &&
+      props.setDragEnd &&
+      props.dragEnd.over &&
+      props.dragEnd.active &&
+      props.dragEnd.active.id == props.id
+    ) {
+      addToLists.mutate({
+        lists: [
+          typeof props.dragEnd.over.id === "number"
+            ? props.dragEnd.over.id
+            : parseInt(String(props.dragEnd.over.id)),
+        ],
+        destinationId: props.id,
+      });
+      props.setDragEnd(null);
+    }
+  }, [props.dragEnd, props.setDragEnd]);
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id: props.id,
+  });
+  const style = transform
+    ? {
+        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+      }
+    : undefined;
+
   return (
-    <Card>
+    <Card ref={setNodeRef} style={style} {...listeners} {...attributes}>
       <CardHeader className="px-3 pb-2 pt-4 text-sm">
         <CardTitle className="truncate">
           <Link href={`/pin/${props.id}`}>

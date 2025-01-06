@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+import { useDroppable } from "@dnd-kit/core";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type TRPCClientErrorLike } from "@trpc/client";
 import { type UseTRPCMutationResult } from "@trpc/react-query/shared";
@@ -19,6 +20,7 @@ import {
   Plus,
   RefreshCw,
 } from "lucide-react";
+import { motion, useAnimation } from "motion/react";
 import { useForm } from "react-hook-form";
 import { type z } from "zod";
 import {
@@ -74,42 +76,76 @@ import { TiltCard } from "~/components/tilt-card";
 
 import { DestinationCard } from "./destination";
 
+const getRandomDelay = () => -(Math.random() * 0.7 + 0.05);
+
+const randomDuration = () => Math.random() * 0.07 + 0.23;
+
+const variants = {
+  start: (i: number) => ({
+    rotate: i % 2 === 0 ? [-1, 1.3, 0] : [1, -1.4, 0],
+    transition: {
+      delay: getRandomDelay(),
+      repeat: Infinity,
+      duration: randomDuration(),
+    },
+  }),
+  reset: {
+    rotate: 0,
+  },
+};
+
 export function ListCard(props: List) {
+  const controls = useAnimation();
+
+  const { isOver, setNodeRef } = useDroppable({
+    id: props.id,
+  });
+  useEffect(() => {
+    if (isOver) {
+      controls.start("start");
+    } else {
+      controls.stop();
+      controls.set("reset");
+    }
+  }, [isOver]);
+
   return (
-    <Card>
-      <CardHeader className="px-3 pb-2 pt-4 text-sm">
-        <CardTitle className="truncate">
-          <Link href={`/map/${props.id}`}>{props.name ?? "Unnamed Map"}</Link>
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-2 px-3 pb-3 pt-0 text-sm">
-        <p className="text-muted-foreground">
-          {props.description ?? "No description provided."}
-        </p>
+    <motion.div custom={1} variants={variants} animate={controls}>
+      <Card ref={setNodeRef}>
+        <CardHeader className="px-3 pb-2 pt-4 text-sm">
+          <CardTitle className="truncate">
+            <Link href={`/map/${props.id}`}>{props.name ?? "Unnamed Map"}</Link>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-2 px-3 pb-3 pt-0 text-sm">
+          <p className="text-muted-foreground">
+            {props.description ?? "No description provided."}
+          </p>
 
-        <div className="mt-2 flex flex-wrap gap-2">
-          {props.size && (
-            <p className="font-muted text-sm">{props.size} destinations</p>
-          )}
-          <p>•</p>
-          {(props.updatedAt &&
-            "Updated " + timeSince(props.updatedAt) + " ago") ??
-            "Updated " + timeSince(props.createdAt) + " ago"}
+          <div className="mt-2 flex flex-wrap gap-2">
+            {props.size && (
+              <p className="font-muted text-sm">{props.size} destinations</p>
+            )}
+            <p>•</p>
+            {(props.updatedAt &&
+              "Updated " + timeSince(props.updatedAt) + " ago") ??
+              "Updated " + timeSince(props.createdAt) + " ago"}
 
-          {props.tags && props.tags?.length > 0
-            ? props.tags.map((tag) => (
-                <div key={tag.id} className="flex items-center gap-2">
-                  <p>•</p>
+            {props.tags && props.tags?.length > 0
+              ? props.tags.map((tag) => (
+                  <div key={tag.id} className="flex items-center gap-2">
+                    <p>•</p>
 
-                  <Link href={`/search/pins?tags=${tag.text}`}>
-                    <Badge variant="secondary">{tag.text}</Badge>
-                  </Link>
-                </div>
-              ))
-            : null}
-        </div>
-      </CardContent>
-    </Card>
+                    <Link href={`/search/pins?tags=${tag.text}`}>
+                      <Badge variant="secondary">{tag.text}</Badge>
+                    </Link>
+                  </div>
+                ))
+              : null}
+          </div>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 }
 
