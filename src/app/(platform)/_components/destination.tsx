@@ -185,7 +185,7 @@ export function DestinationForm(props: DestinationFormProps) {
       setTags(props.defaultValues?.tags ?? []);
     }
   }, [props.defaultValues, form, loadingUpdate, props.update]);
-
+  const location = form.watch("location");
   useEffect(() => {
     if (
       loadingUpdate &&
@@ -195,7 +195,7 @@ export function DestinationForm(props: DestinationFormProps) {
     ) {
       setLoadingUpdate(false);
     }
-  }, [form.watch("location"), loadingUpdate]);
+  }, [location, loadingUpdate, form, props.defaultValues?.body]);
 
   useEffect(() => {
     if (!detailsState.error) {
