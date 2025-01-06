@@ -1,6 +1,6 @@
 import { ListPage } from "~/app/(platform)/_components/list";
 
-export default async function Post({
+export default async function MapPage({
   params,
 }: {
   params: Promise<{ mapId: string }>;
