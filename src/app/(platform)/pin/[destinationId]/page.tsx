@@ -1,6 +1,6 @@
 import { DestinationDialog } from "~/app/(platform)/_components/destination";
 
-export default async function Post({
+export default async function DestinationPage({
   params,
 }: {
   params: Promise<{ destinationId: string }>;
