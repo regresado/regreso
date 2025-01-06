@@ -28,7 +28,7 @@ const DashboardHome: React.FC = (props: { user?: User }) => {
   return (
     <>
       <DndContext onDragEnd={handleDragEnd}>
-        <div className="grid grid-cols-1 gap-4 p-4 xl:grid-cols-5">
+        <div className="z-10 grid grid-cols-1 gap-4 p-4 xl:grid-cols-5">
           <div className="col-span-1 xl:col-span-2">
             <div className="rounded-xl bg-muted/50">
               <WelcomeCard
