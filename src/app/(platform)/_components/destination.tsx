@@ -4,7 +4,7 @@ import { useActionState, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { Active, Over, useDraggable } from "@dnd-kit/core";
+import { useDraggable, type Active, type Over } from "@dnd-kit/core";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { type TRPCClientErrorLike } from "@trpc/client";
@@ -13,7 +13,6 @@ import { api } from "~/trpc/react";
 import { TagInput, type Tag } from "emblor";
 import {
   ArrowRight,
-  CalendarDaysIcon,
   GalleryVerticalEnd,
   Loader2,
   MapPin,
@@ -573,7 +572,7 @@ export function RecentDestinations({
                 <DestinationCard
                   key={dest.id}
                   {...dest}
-                  {...(dragEnd && dragEnd.active && dest.id == dragEnd.active.id
+                  {...(dragEnd?.active?.id === dest.id
                     ? { dragEnd, setDragEnd }
                     : null)}
                 />
@@ -634,25 +633,26 @@ export function DestinationCard(
       });
     },
   });
+  const { dragEnd, setDragEnd, id } = props;
   useEffect(() => {
     if (
-      props.dragEnd &&
-      props.setDragEnd &&
-      props.dragEnd.over &&
-      props.dragEnd.active &&
-      props.dragEnd.active.id == props.id
+      dragEnd &&
+      setDragEnd &&
+      dragEnd.over &&
+      dragEnd.active &&
+      dragEnd.active.id == id
     ) {
       addToLists.mutate({
         lists: [
-          typeof props.dragEnd.over.id === "number"
-            ? props.dragEnd.over.id
-            : parseInt(String(props.dragEnd.over.id)),
+          typeof dragEnd.over.id === "number"
+            ? dragEnd.over.id
+            : parseInt(String(dragEnd.over.id)),
         ],
-        destinationId: props.id,
+        destinationId: id,
       });
-      props.setDragEnd(null);
+      setDragEnd(null);
     }
-  }, [props.dragEnd, props.setDragEnd]);
+  }, [dragEnd, setDragEnd, addToLists, id]);
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: props.id,
   });

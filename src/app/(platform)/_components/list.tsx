@@ -102,12 +102,12 @@ export function ListCard(props: List) {
   });
   useEffect(() => {
     if (isOver) {
-      controls.start("start");
+      void controls.start("start");
     } else {
       controls.stop();
       controls.set("reset");
     }
-  }, [isOver]);
+  }, [isOver, controls]);
 
   return (
     <motion.div custom={1} variants={variants} animate={controls}>
