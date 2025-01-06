@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
@@ -436,7 +436,7 @@ export default function SearchPage({
             form.reset();
             setTags([]);
             if (form.getValues() != submitValues) {
-              form.handleSubmit(onSubmit)();
+              void form.handleSubmit(onSubmit)();
             }
           }}
         >
@@ -458,7 +458,7 @@ export default function SearchPage({
                             "offset",
                             (form.getValues("offset") ?? 0) + 6,
                           );
-                          form.handleSubmit(onSubmit)();
+                          void form.handleSubmit(onSubmit)();
                         }}
                       />
                     </PaginationItem>
@@ -507,7 +507,7 @@ export default function SearchPage({
                             }
                             onClick={() => {
                               form.setValue("offset", (page - 1) * 6);
-                              form.handleSubmit(onSubmit)();
+                              void form.handleSubmit(onSubmit)();
                             }}
                           >
                             {page}
@@ -534,7 +534,7 @@ export default function SearchPage({
                         disabled={!form.watch("offset")}
                         onClick={() => {
                           form.setValue("offset", (pageNumber - 1) * 6);
-                          form.handleSubmit(onSubmit)();
+                          void form.handleSubmit(onSubmit)();
                         }}
                       >
                         {isFetching ? (
@@ -557,7 +557,7 @@ export default function SearchPage({
                           "offset",
                           (form.getValues("offset") ?? 0) + 6,
                         );
-                        form.handleSubmit(onSubmit)();
+                        void form.handleSubmit(onSubmit)();
                       }}
                     />
                   </PaginationItem>
