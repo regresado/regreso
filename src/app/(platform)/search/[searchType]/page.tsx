@@ -1,6 +1,6 @@
 import React from "react";
 
-import { SearchPage } from "../_components/search";
+import { SearchPage } from "../../_components/search";
 
 export async function generateStaticParams() {
   return ["maps", "pins"].map((searchType) => ({
