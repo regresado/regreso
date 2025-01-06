@@ -886,7 +886,6 @@ function ListComboBox({
         </PopoverTrigger>
         <PopoverContent className="w-[200px] p-0" align="start">
           <StatusList
-            setOpen={setOpen}
             selectedList={selectedList}
             handleListAdds={(list) => {
               handleListAdds(list);
@@ -924,7 +923,6 @@ function ListComboBox({
       <DrawerContent>
         <div className="mt-4 border-t">
           <StatusList
-            setOpen={setOpen}
             selectedList={selectedList}
             handleListAdds={handleListAdds}
             handleListRemovals={handleListRemovals}
