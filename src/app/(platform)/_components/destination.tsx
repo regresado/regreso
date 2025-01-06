@@ -133,7 +133,9 @@ type DestinationFormProps =
 
 export function DestinationForm(props: DestinationFormProps) {
   const [loading, setLoading] = useState(false);
-  const [loading2, setLoading2] = useState(props.update ? true : false);
+  const [loadingUpdate, setLoadingUpdate] = useState(
+    props.update ? true : false,
+  );
 
   const [tags, setTags] = useState<Tag[]>([]);
 
@@ -170,7 +172,7 @@ export function DestinationForm(props: DestinationFormProps) {
       props.update &&
       props.defaultValues?.location != "" &&
       props.defaultValues != undefined &&
-      loading2
+      loadingUpdate
     ) {
       form.reset({
         type: "location",
@@ -182,19 +184,18 @@ export function DestinationForm(props: DestinationFormProps) {
       });
       setTags(props.defaultValues?.tags ?? []);
     }
-  }, [props.defaultValues, form, loading2, props.update]);
+  }, [props.defaultValues, form, loadingUpdate, props.update]);
 
   useEffect(() => {
     if (
-      loading2 &&
+      loadingUpdate &&
       form.watch("type") === "location" &&
       form.watch("location") &&
       props.defaultValues?.body == form.watch("body")
     ) {
-      console.log(form.watch("body"));
-      setLoading2(false);
+      setLoadingUpdate(false);
     }
-  }, [form.watch("location"), loading2]);
+  }, [form.watch("location"), loadingUpdate]);
 
   useEffect(() => {
     if (!detailsState.error) {
@@ -232,7 +233,7 @@ export function DestinationForm(props: DestinationFormProps) {
       });
       setTags(props.defaultValues?.tags ?? []);
       setLoading(false);
-      setLoading2(false);
+      setLoadingUpdate(false);
     }
   }, [
     type,
@@ -372,7 +373,7 @@ export function DestinationForm(props: DestinationFormProps) {
           {((!loading && destinationTypeForm.watch("type") === "note") ||
             (form.watch("type") === "location" && form.watch("location")) ||
             props.update) &&
-          !loading2 ? (
+          !loadingUpdate ? (
             <>
               <FormField
                 control={form.control}
