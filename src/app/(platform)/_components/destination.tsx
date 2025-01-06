@@ -25,12 +25,24 @@ import { z } from "zod";
 import {
   destinationSchema,
   type Destination,
+  type List,
   type updateDestinationSchema,
 } from "~/server/models";
+
+import { useMediaQuery } from "~/hooks/use-media-query";
 
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { Checkbox } from "~/components/ui/checkbox";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "~/components/ui/command";
 import {
   Dialog,
   DialogClose,
@@ -41,6 +53,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "~/components/ui/dialog";
+import { Drawer, DrawerContent, DrawerTrigger } from "~/components/ui/drawer";
 import {
   Form,
   FormControl,
@@ -51,6 +64,11 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "~/components/ui/popover";
 import {
   Select,
   SelectContent,
@@ -113,7 +131,7 @@ type DestinationFormProps =
       defaultValues?: z.infer<typeof destinationSchema>;
     };
 
-function DestinationForm(props: DestinationFormProps) {
+export function DestinationForm(props: DestinationFormProps) {
   const [loading, setLoading] = useState(false);
   const [loading2, setLoading2] = useState(props.update ? true : false);
 
@@ -141,22 +159,31 @@ function DestinationForm(props: DestinationFormProps) {
       type: "location",
       location: props.defaultValues?.location ?? null,
       name: props.defaultValues?.name ?? "",
-      body: props.defaultValues?.body ?? "",
+      body: props.defaultValues?.body ?? '<p class="text-node"></p>',
       tags: props.defaultValues?.tags ?? [],
       attachments: [],
     },
   });
 
   useEffect(() => {
-    form.reset({
-      type: "location",
-      location: props.defaultValues?.location ?? null,
-      name: props.defaultValues?.name ?? "",
-      body: props.defaultValues?.body ?? "",
-      tags: props.defaultValues?.tags ?? [],
-      attachments: [],
-    });
-    setLoading2(false);
+    if (
+      props.update &&
+      props.defaultValues?.location != "" &&
+      props.defaultValues != undefined &&
+      loading2
+    ) {
+      form.reset({
+        type: "location",
+        location: props.defaultValues?.location ?? null,
+        name: props.defaultValues?.name ?? "",
+        body: props.defaultValues?.body ?? '<p class="text-node"></p>',
+        tags: props.defaultValues?.tags ?? [],
+        attachments: [],
+      });
+      alert(props.defaultValues?.body);
+
+      setLoading2(false);
+    }
   }, [props.defaultValues, form]);
 
   useEffect(() => {
@@ -234,6 +261,7 @@ function DestinationForm(props: DestinationFormProps) {
 
   return (
     <>
+      {JSON.stringify(props.defaultValues)}
       <Form {...destinationTypeForm}>
         <form
           action={action}
@@ -255,7 +283,7 @@ function DestinationForm(props: DestinationFormProps) {
             className={`flex w-full flex-row flex-wrap items-end gap-3 overflow-y-auto`}
           >
             <div
-              className={`w-${destinationTypeForm.watch("type") === "location" ? "1/3" : "full"} min-w-[100px] `}
+              className={`w-${destinationTypeForm.watch("type") === "location" ? "1/3" : "full"} min-w-[100px]`}
             >
               <FormField
                 control={destinationTypeForm.control}
@@ -481,7 +509,7 @@ export function CreateDestination() {
             <MapPinPlus className="mr-2 h-5 w-5" /> Create Destination
           </CardTitle>
         </CardHeader>
-        <CardContent className="px-6 space-y-4">
+        <CardContent className="space-y-4 px-6">
           <DestinationForm
             update={false}
             destinationMutation={createDestination}
@@ -494,7 +522,7 @@ export function CreateDestination() {
 
 export function RecentDestinations() {
   const {
-    data: recentDestinations = [],
+    data: recentDestinations = { items: [], count: 0 },
     refetch,
     isFetching,
   } = api.destination.getMany.useQuery({
@@ -513,8 +541,8 @@ export function RecentDestinations() {
           </Link>
         </CardHeader>
         <CardContent className="space-y-4 px-6">
-          {recentDestinations.length > 0 ? (
-            recentDestinations.map((dest: Destination) => {
+          {recentDestinations.items.length > 0 ? (
+            recentDestinations?.items.map((dest: Destination) => {
               return <DestinationCard key={dest.id} {...dest} />;
             })
           ) : (
@@ -549,17 +577,17 @@ export function RecentDestinations() {
 export function DestinationCard(props: Destination) {
   return (
     <Card>
-      <CardHeader className="px-3 pt-4 pb-2 text-sm">
+      <CardHeader className="px-3 pb-2 pt-4 text-sm">
         <CardTitle className="truncate">
           <Link href={`/pin/${props.id}`}>
             {props.name ?? "Unnamed Destination"}
           </Link>
         </CardTitle>
       </CardHeader>
-      <CardContent className="px-3 pb-3 pt-0 text-sm ">
+      <CardContent className="px-3 pb-3 pt-0 text-sm">
         {props.type == "location" ? (
           <p className="truncate text-xs">
-            <Button variant="link" asChild className="p-0 truncate">
+            <Button variant="link" asChild className="truncate p-0">
               <Link href={props.location ?? "#"} className="truncate">
                 {props.location}
               </Link>
@@ -567,15 +595,19 @@ export function DestinationCard(props: Destination) {
           </p>
         ) : null}
         <DestinationDialogRender data={props} />
-        {props.tags && props.tags?.length > 0 ? (
-          <div className="flex flex-wrap gap-1 mt-2">
-            {props.tags.map((tag) => (
-              <Link key={tag.id} href={`/search/pins?tags=${tag.text}`}>
-                <Badge variant="secondary">{tag.text}</Badge>
-              </Link>
-            ))}
-          </div>
-        ) : null}
+        <div className="mt-2 flex flex-wrap gap-1">
+          <Badge className="mr-2">
+            {String(props.type).charAt(0).toUpperCase() +
+              String(props.type).slice(1)}
+          </Badge>
+          {props.tags && props.tags?.length > 0
+            ? props.tags.map((tag) => (
+                <Link key={tag.id} href={`/search/pins?tags=${tag.text}`}>
+                  <Badge variant="secondary">{tag.text}</Badge>
+                </Link>
+              ))
+            : null}
+        </div>
       </CardContent>
     </Card>
   );
@@ -585,7 +617,7 @@ function DestinationDialogRender(props: { data?: Destination }) {
   const editor = useEditor({
     extensions: createExtensions(""),
     editable: false,
-    content: props.data?.body ?? "howdy",
+    content: props.data?.body ?? "",
   });
   return <EditorContent editor={editor} />;
 }
@@ -635,10 +667,68 @@ export function DestinationDialog(props: { id: string }) {
       { enabled: !!destinationId },
     );
 
+  const {
+    data: searchResults = { count: 0, items: [] },
+    refetch,
+    isFetching,
+  } = api.list.getMany.useQuery({
+    limit: 100,
+    sortBy: "updatedAt",
+  });
+
   function handleOpenChange(openStatus: boolean) {
     setOpen(openStatus);
     if (!openStatus) {
       router.push("/dashboard");
+    }
+  }
+  const addToLists = api.destination.addToLists.useMutation({
+    onSuccess: async () => {
+      await utils.destination.invalidate();
+      toast({
+        title: "Destination added to list(s)",
+        description: "Destination has been added to the selected list(s).",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Failed to add destination to list(s)",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+  const removeFromLists = api.destination.removeFromLists.useMutation({
+    onSuccess: async () => {
+      await utils.destination.invalidate();
+      toast({
+        title: "Destination removed from list(s)",
+        description: "Destination has been removed from the selected list(s).",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Failed to remove destination from lists",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+  function addLists(lists: List[] | null) {
+    if (lists) {
+      addToLists.mutate({
+        lists: lists.map((l) => l.id),
+        destinationId: parseInt(props.id),
+      });
+    }
+  }
+
+  function removeLists(lists: List[] | null) {
+    if (lists) {
+      removeFromLists.mutate({
+        lists: lists.map((l) => l.id),
+        destinationId: parseInt(props.id),
+      });
     }
   }
 
@@ -648,7 +738,7 @@ export function DestinationDialog(props: { id: string }) {
         <DialogHeader>
           <DialogTitle>
             {editing
-              ? "Update Destination"
+              ? "Edit Destination"
               : data
                 ? data.name
                 : "Couldn't find Destination"}
@@ -661,6 +751,7 @@ export function DestinationDialog(props: { id: string }) {
             update={true}
             defaultValues={{
               ...data,
+              body: data.body ?? '<p class="text-node"></p>',
               name: data.name ?? "",
               type: data.type as "location" | "note" | "file",
               attachments: [],
@@ -675,15 +766,15 @@ export function DestinationDialog(props: { id: string }) {
           />
         ) : (
           <Dialog>
-            <main className="pt-0 flex h-[480px] flex-1 flex-col space-y-6 ">
+            <main className="flex h-[480px] flex-1 flex-col space-y-6 pt-0">
               {data?.type === "location" ? (
                 <p className="truncate text-sm">
                   <>
                     Location:{" "}
-                    <Button variant="link" asChild className="p-0 truncate ">
+                    <Button variant="link" asChild className="truncate p-0">
                       <Link
                         href={data?.location ?? "#"}
-                        className="text-primary-foreground truncate"
+                        className="truncate text-primary-foreground"
                       >
                         {data?.location}
                       </Link>
@@ -697,7 +788,7 @@ export function DestinationDialog(props: { id: string }) {
                 />
               ) : null}
               {data?.tags && data?.tags?.length > 0 ? (
-                <div className="flex flex-wrap gap-2 mt-2">
+                <div className="mt-2 flex flex-wrap gap-2">
                   Tags:{" "}
                   {data?.tags.map((tag) => (
                     <Badge key={tag.id} variant="secondary">
@@ -710,22 +801,30 @@ export function DestinationDialog(props: { id: string }) {
                 <div className="block">
                   <Separator className="my-4" />
 
-                  <p className="font-semibold text-sm mb-4">
+                  <p className="mb-4 text-sm font-semibold">
                     Destination actions:
                   </p>
-                  <Button
-                    size="sm"
-                    onClick={() => {
-                      setEditing(true);
-                    }}
-                  >
-                    Update Destination
-                  </Button>
-                  <DialogTrigger asChild className="ml-4">
-                    <Button size="sm" variant="destructive">
-                      Delete Destination
+                  <div className="flex flex-row flex-wrap items-center gap-3">
+                    <Button
+                      size="sm"
+                      onClick={() => {
+                        setEditing(true);
+                      }}
+                    >
+                      Edit Destination
                     </Button>
-                  </DialogTrigger>
+                    <ListComboBox
+                      defaultList={data.lists ?? []}
+                      recentLists={searchResults.items ?? []}
+                      handleListAdds={addLists}
+                      handleListRemovals={removeLists}
+                    />
+                    <DialogTrigger asChild>
+                      <Button size="sm" variant="destructive">
+                        Delete Destination
+                      </Button>
+                    </DialogTrigger>
+                  </div>
                 </div>
               ) : null}
             </main>
@@ -734,7 +833,7 @@ export function DestinationDialog(props: { id: string }) {
                 <DialogTitle>Are you absolutely sure?</DialogTitle>
                 <DialogDescription>
                   This action cannot be undone. Are you sure you want to
-                  permanently delete this destination permanently?
+                  permanently delete this destination?
                 </DialogDescription>
               </DialogHeader>
               <DialogFooter>
@@ -754,5 +853,137 @@ export function DestinationDialog(props: { id: string }) {
         )}
       </DialogContent>
     </Dialog>
+  );
+}
+
+function ListComboBox({
+  defaultList,
+  recentLists,
+  handleListAdds,
+  handleListRemovals,
+}: {
+  defaultList: List[];
+  recentLists: List[];
+  handleListAdds: (status: List[] | null) => void;
+  handleListRemovals: (status: List[] | null) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const isDesktop = useMediaQuery("(min-width: 768px)");
+  const [selectedList, setSelectedList] = useState<List[]>(defaultList);
+
+  if (isDesktop) {
+    return (
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button variant="outline" className="justify-start">
+            {selectedList.length > 0 && selectedList[0] ? (
+              <>
+                {selectedList[0].name}{" "}
+                {selectedList.length > 1
+                  ? "+ " + (selectedList.length - 1).toString() + " more"
+                  : null}{" "}
+              </>
+            ) : (
+              <> + Add to List</>
+            )}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[200px] p-0" align="start">
+          <StatusList
+            setOpen={setOpen}
+            selectedList={selectedList}
+            handleListAdds={(list) => {
+              handleListAdds(list);
+              setSelectedList([...selectedList, ...(list ?? [])]);
+            }}
+            handleListRemovals={(list) => {
+              handleListRemovals(list);
+              setSelectedList(
+                selectedList.filter((l) => l && !list?.includes(l)),
+              );
+            }}
+            recentLists={recentLists}
+          />
+        </PopoverContent>
+      </Popover>
+    );
+  }
+
+  return (
+    <Drawer open={open} onOpenChange={setOpen}>
+      <DrawerTrigger asChild>
+        <Button variant="outline" className="justify-start">
+          {selectedList.length > 0 && selectedList[0] ? (
+            <>
+              {selectedList[0].name}{" "}
+              {selectedList.length > 1
+                ? "+ " + (selectedList.length - 1).toString() + " more"
+                : null}{" "}
+            </>
+          ) : (
+            <> + Add to List</>
+          )}
+        </Button>
+      </DrawerTrigger>
+      <DrawerContent>
+        <div className="mt-4 border-t">
+          <StatusList
+            setOpen={setOpen}
+            selectedList={selectedList}
+            handleListAdds={handleListAdds}
+            handleListRemovals={handleListRemovals}
+            recentLists={recentLists}
+          />
+        </div>
+      </DrawerContent>
+    </Drawer>
+  );
+}
+
+function StatusList({
+  setOpen,
+  recentLists,
+  selectedList,
+  handleListAdds,
+  handleListRemovals,
+}: {
+  setOpen: (open: boolean) => void;
+  recentLists: List[];
+  selectedList: List[];
+  handleListAdds: (list: List[] | null) => void;
+  handleListRemovals: (list: List[] | null) => void;
+}) {
+  return (
+    <Command>
+      <CommandInput placeholder="Filter status..." />
+      <CommandList>
+        <CommandEmpty>No results found.</CommandEmpty>
+        <CommandGroup>
+          {recentLists.map((list) => (
+            <CommandItem key={list.id} value={list.name}>
+              <Checkbox
+                checked={
+                  !!selectedList.find((priority) => priority.id === list.id)
+                }
+                onCheckedChange={(checked) => {
+                  if (!checked) {
+                    handleListRemovals(
+                      selectedList.filter(
+                        (priority) => priority.id === list.id,
+                      ),
+                    );
+                  } else {
+                    handleListAdds(
+                      recentLists.filter((priority) => priority.id === list.id),
+                    );
+                  }
+                }}
+              />
+              {list.name}
+            </CommandItem>
+          ))}
+        </CommandGroup>
+      </CommandList>
+    </Command>
   );
 }

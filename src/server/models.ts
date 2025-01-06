@@ -37,6 +37,7 @@ export interface Destination {
   createdAt: Date;
   tags?: { id: number; text: string }[];
   updatedAt: Date | null;
+  lists?: List[];
 }
 
 export interface List {
@@ -93,6 +94,11 @@ export const updateDestinationSchema = z.object({
   ...destinationSchema.shape,
 });
 
+export const updateListSchema = z.object({
+  id: z.number(),
+  ...listSchema.shape,
+});
+
 const destinationSearchTypes = ["location", "note", "any"] as const;
 
 export const destinationSearchSchema = z.object({
@@ -100,15 +106,16 @@ export const destinationSearchSchema = z.object({
   tags: z.array(z.string()).optional(),
   sortBy: z.enum(["createdAt", "updatedAt", "name"]).optional(),
   order: z.enum(["ASC", "DESC"]).optional(),
+  lists: z.array(z.number()).optional(),
   searchString: z.string().nullable().optional(),
   location: z.string().nullable().optional(),
-  limit: z.number().optional().default(5),
+  limit: z.number().max(30).optional().default(5),
   offset: z.number().optional().default(0),
 });
 
 export const listSearchSchema = z.object({
   tags: z.array(z.string()).optional(),
-  sortBy: z.enum(["createdAt", "updatedAt", "name", "size"]).optional(),
+  sortBy: z.enum(["createdAt", "updatedAt", "size", "name"]).optional(),
   order: z.enum(["ASC", "DESC"]).optional(),
   searchString: z.string().nullable().optional(),
   limit: z.number().optional().default(5),
