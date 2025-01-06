@@ -553,7 +553,7 @@ export function SearchPage({ searchType }: { searchType: "maps" | "pins" }) {
           size="sm"
           className="gap-2"
           onClick={() => {
-            setCreating(searchType as "maps" | "pins");
+            setCreating(searchType);
           }}
         >
           {searchType === "maps" ? <ListPlus /> : <MapPinPlus />}
@@ -565,7 +565,7 @@ export function SearchPage({ searchType }: { searchType: "maps" | "pins" }) {
           </div>
         </Button>
       </div>
-      <SearchForm searchType={searchType as "maps" | "pins"} />
+      <SearchForm searchType={searchType} />
       <Dialog open={creating == "maps"} onOpenChange={() => setCreating(null)}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
