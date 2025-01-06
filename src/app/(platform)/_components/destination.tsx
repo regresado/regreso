@@ -744,123 +744,122 @@ export function DestinationDialog(props: { id: string }) {
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="overflow-y-auto md:max-h-[500px] md:max-w-[700px] lg:max-w-[800px]">
-        <DialogHeader>
-          <DialogTitle>
-            {editing
-              ? "Edit Destination"
-              : data
-                ? data.name
-                : "Couldn't find Destination"}
-          </DialogTitle>
-        </DialogHeader>
-        {editing &&
-        data != undefined &&
-        (data.name != undefined || data.location != undefined) ? (
-          <DestinationForm
-            update={true}
-            defaultValues={{
-              ...data,
-              body: data.body ?? '<p class="text-node"></p>',
-              name: data.name ?? "",
-              type: data.type as "location" | "note" | "file",
-              attachments: [],
-              tags:
-                data.tags?.map((tag) => ({
-                  id: tag.id.toString(),
-                  text: tag.text,
-                })) ?? [],
-            }}
-            updateId={parseInt(props.id)}
-            destinationMutation={updateDestination}
-          />
-        ) : (
-          <Dialog>
-            <main className="flex h-[480px] flex-1 flex-col space-y-6 pt-0">
-              {data?.type === "location" ? (
-                <p className="truncate text-sm">
-                  <>
+      <DialogContent className="overflow-y-auto sm:max-h-full md:max-h-[500px] md:max-w-[700px] lg:max-w-[800px]">
+        <div className="flex w-full flex-1 flex-col space-y-6 pt-0">
+          <DialogHeader>
+            <DialogTitle className="break-words">
+              {editing
+                ? "Edit Destination"
+                : data
+                  ? data.name
+                  : "Couldn't find Destination"}
+            </DialogTitle>
+          </DialogHeader>
+          {editing &&
+          data != undefined &&
+          (data.name != undefined || data.location != undefined) ? (
+            <DestinationForm
+              update={true}
+              defaultValues={{
+                ...data,
+                body: data.body ?? '<p class="text-node"></p>',
+                name: data.name ?? "",
+                type: data.type as "location" | "note" | "file",
+                attachments: [],
+                tags:
+                  data.tags?.map((tag) => ({
+                    id: tag.id.toString(),
+                    text: tag.text,
+                  })) ?? [],
+              }}
+              updateId={parseInt(props.id)}
+              destinationMutation={updateDestination}
+            />
+          ) : (
+            <Dialog>
+              <main className="space-y-6 pt-0">
+                {data?.type === "location" ? (
+                  <div className="text-sm">
                     Location:{" "}
-                    <Button variant="link" asChild className="truncate p-0">
-                      <Link
-                        href={data?.location ?? "#"}
-                        className="truncate text-primary-foreground"
-                      >
-                        {data?.location}
-                      </Link>
+                    <Button asChild variant="link" className="text-wrap p-0">
+                      <Link href={data?.location ?? "#"}>{data?.location}</Link>
                     </Button>
-                  </>
-                </p>
-              ) : null}
-              {data?.body ? (
-                <DestinationDialogRender
-                  data={data?.id !== undefined ? data : undefined}
-                />
-              ) : null}
-              {data?.tags && data?.tags?.length > 0 ? (
-                <div className="mt-2 flex flex-wrap gap-2">
-                  Tags:{" "}
-                  {data?.tags.map((tag) => (
-                    <Badge key={tag.id} variant="secondary">
-                      {tag.text}
-                    </Badge>
-                  ))}
-                </div>
-              ) : null}
-              {data != undefined ? (
-                <div className="block">
-                  <Separator className="my-4" />
+                  </div>
+                ) : null}
+                {data?.body ? (
+                  <div className="w-full">
+                    <DestinationDialogRender
+                      data={data?.id !== undefined ? data : undefined}
+                    />
+                  </div>
+                ) : null}
+                {data?.tags && data?.tags?.length > 0 ? (
+                  <div className="flex flex-wrap gap-2">
+                    Tags:{" "}
+                    {data?.tags.map((tag) => (
+                      <Badge key={tag.id} variant="secondary">
+                        {tag.text}
+                      </Badge>
+                    ))}
+                  </div>
+                ) : null}
+                <DialogFooter>
+                  {data != undefined ? (
+                    <div className="w-full">
+                      <Separator className="my-4" />
+                      <p className="mb-4 text-sm font-semibold">
+                        Destination actions:
+                      </p>
+                      <div className="flex flex-wrap items-center gap-3">
+                        <Button
+                          size="sm"
+                          onClick={() => {
+                            setEditing(true);
+                          }}
+                        >
+                          Edit Destination
+                        </Button>
+                        <ListComboBox
+                          defaultList={data.lists ?? []}
+                          recentLists={searchResults.items ?? []}
+                          handleListAdds={addLists}
+                          handleListRemovals={removeLists}
+                        />
+                        <DialogTrigger asChild>
+                          <Button size="sm" variant="destructive">
+                            Delete Destination
+                          </Button>
+                        </DialogTrigger>
+                      </div>
+                    </div>
+                  ) : null}
+                </DialogFooter>
+              </main>
 
-                  <p className="mb-4 text-sm font-semibold">
-                    Destination actions:
-                  </p>
-                  <div className="flex flex-row flex-wrap items-center gap-3">
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Are you absolutely sure?</DialogTitle>
+                  <DialogDescription>
+                    This action cannot be undone. Are you sure you want to
+                    permanently delete this destination?
+                  </DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                  <DialogClose asChild>
                     <Button
-                      size="sm"
+                      type="button"
                       onClick={() => {
-                        setEditing(true);
+                        deleteDestination.mutate({ id: parseInt(props.id) });
                       }}
                     >
-                      Edit Destination
+                      Confirm
                     </Button>
-                    <ListComboBox
-                      defaultList={data.lists ?? []}
-                      recentLists={searchResults.items ?? []}
-                      handleListAdds={addLists}
-                      handleListRemovals={removeLists}
-                    />
-                    <DialogTrigger asChild>
-                      <Button size="sm" variant="destructive">
-                        Delete Destination
-                      </Button>
-                    </DialogTrigger>
-                  </div>
-                </div>
-              ) : null}
-            </main>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Are you absolutely sure?</DialogTitle>
-                <DialogDescription>
-                  This action cannot be undone. Are you sure you want to
-                  permanently delete this destination?
-                </DialogDescription>
-              </DialogHeader>
-              <DialogFooter>
-                <DialogClose asChild>
-                  <Button
-                    type="button"
-                    onClick={() => {
-                      deleteDestination.mutate({ id: parseInt(props.id) });
-                    }}
-                  >
-                    Confirm
-                  </Button>
-                </DialogClose>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        )}
+                  </DialogClose>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          )}
+        </div>
       </DialogContent>
     </Dialog>
   );
