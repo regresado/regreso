@@ -125,7 +125,6 @@ export const destinationRouter = createTRPCRouter({
               ? eq(destinationTags.tagId, tags.id)
               : sql`1 = 0`,
           )
-          // Add joins for list tags
           .leftJoin(
             listTags,
             tagNames.length > 0
