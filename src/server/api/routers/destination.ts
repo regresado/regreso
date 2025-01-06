@@ -12,7 +12,13 @@ import {
   protectedMutationProcedure,
   protectedQueryProcedure,
 } from "~/server/api/trpc";
-import { destinations, destinationTags, tags } from "~/server/db/schema";
+import {
+  destinationLists,
+  destinations,
+  destinationTags,
+  lists,
+  tags,
+} from "~/server/db/schema";
 
 export const destinationRouter = createTRPCRouter({
   create: protectedMutationProcedure
@@ -78,86 +84,117 @@ export const destinationRouter = createTRPCRouter({
     }),
   getMany: protectedQueryProcedure
     .input(destinationSearchSchema)
-    .query(async ({ ctx, input }): Promise<Destination[]> => {
-      const tagNames = input.tags ?? [];
-      const dests = await ctx.db
-        .select({ destination: destinations })
-        .from(destinations)
-        .leftJoin(
-          destinationTags,
-          tagNames.length > 0
-            ? eq(destinations.id, destinationTags.destinationId)
-            : sql`1 = 0`,
-        )
-        .leftJoin(
-          tags,
-          tagNames.length > 0 ? eq(destinationTags.tagId, tags.id) : sql`1 = 0`,
-        )
-        .where(
-          and(
+    .query(
+      async ({
+        ctx,
+        input,
+      }): Promise<{ items: Destination[]; count: number }> => {
+        const tagNames = input.tags ?? [];
+        const listIds = input.lists ?? [];
+        const dests = await ctx.db
+          .select({
+            destination: destinations,
+            count: sql<number>`count(*) over()`,
+          })
+          .from(destinations)
+          .leftJoin(
+            destinationLists,
+            listIds.length > 0
+              ? eq(destinationLists.destinationId, destinations.id)
+              : sql`1 = 0`,
+          )
+          .leftJoin(
+            destinationTags,
+            tagNames.length > 0
+              ? eq(destinations.id, destinationTags.destinationId)
+              : sql`1 = 0`,
+          )
+
+          .leftJoin(
+            tags,
+            tagNames.length > 0
+              ? eq(destinationTags.tagId, tags.id)
+              : sql`1 = 0`,
+          )
+
+          .where(
             and(
-              input.searchString && input.searchString.length > 0
-                ? sql`(setweight(to_tsvector('english', ${destinations.name}), 'A') ||
+              and(
+                input.searchString && input.searchString.length > 0
+                  ? sql`(setweight(to_tsvector('english', ${destinations.name}), 'A') ||
                       setweight(to_tsvector('english', ${destinations.body}), 'B'))
                       @@ websearch_to_tsquery  ('english', ${input.searchString})`
+                  : undefined,
+              ),
+              input.location
+                ? sql`regexp_replace(${destinations.location}, '^https?://', '') SIMILAR TO ${input.location}`
+                : undefined,
+              input.type && input.type != "any"
+                ? eq(destinations.type, input.type)
+                : undefined,
+              tagNames.length > 0
+                ? or(
+                    inArray(tags.name, tagNames),
+                    inArray(tags.shortcut, tagNames),
+                  )
+                : undefined,
+              listIds.length > 0
+                ? inArray(destinationLists.listId, listIds)
+                : undefined,
+              eq(destinations.userId, ctx.user.id),
+            ),
+          )
+          .groupBy(destinations.id)
+          .having(
+            and(
+              tagNames.length > 0
+                ? sql`COUNT(DISTINCT ${tags.id}) = ${tagNames.length}`
+                : undefined,
+              listIds.length > 0
+                ? sql`COUNT(DISTINCT ${destinationLists.listId}) = ${listIds.length}`
                 : undefined,
             ),
-            input.location
-              ? sql`regexp_replace(${destinations.location}, '^https?://', '') SIMILAR TO ${input.location}`
-              : undefined,
-            input.type && input.type != "any"
-              ? eq(destinations.type, input.type)
-              : undefined,
-            tagNames.length > 0
-              ? or(
-                  inArray(tags.name, tagNames),
-                  inArray(tags.shortcut, tagNames),
-                )
-              : undefined,
-            eq(destinations.userId, ctx.user.id),
-          ),
-        )
-        .groupBy(destinations.id)
-        .having(
-          tagNames.length > 0
-            ? sql`COUNT(DISTINCT ${tags.name}) = ${tagNames.length}`
-            : undefined,
-        )
-        .orderBy(
-          input.order == "ASC"
-            ? asc(destinations[input.sortBy ?? "createdAt"])
-            : desc(destinations[input.sortBy ?? "createdAt"]),
-        )
-        .limit(input.limit)
-        .offset(input.offset);
-      const destTags = await ctx.db
-        .select()
-        .from(destinationTags)
-        .innerJoin(tags, eq(destinationTags.tagId, tags.id))
-        .where(
-          inArray(
-            destinationTags.destinationId,
-            dests.map((dest) => dest.destination.id),
-          ),
-        );
+          )
+          .orderBy(
+            input.order == "ASC"
+              ? asc(destinations[input.sortBy ?? "createdAt"])
+              : desc(destinations[input.sortBy ?? "createdAt"]),
+          )
+          .limit(input.limit)
+          .offset(input.offset);
+        const destTags = await ctx.db
+          .select()
+          .from(destinationTags)
+          .innerJoin(tags, eq(destinationTags.tagId, tags.id))
+          .where(
+            inArray(
+              destinationTags.destinationId,
+              dests.map((dest) => dest.destination.id),
+            ),
+          );
 
-      const returnDestinations = dests.map((dest) => {
+        const returnDestinations = dests.map((dest) => {
+          return {
+            tags: destTags
+              .filter(
+                (tag) =>
+                  tag.destination_tag.destinationId == dest.destination.id,
+              )
+              .map((tag) => {
+                return {
+                  id: tag.tag.id,
+                  text: tag.tag.name,
+                };
+              }),
+            ...dest.destination,
+          };
+        });
         return {
-          tags: destTags
-            .filter(
-              (tag) => tag.destination_tag.destinationId == dest.destination.id,
-            )
-            .map((tag) => {
-              return {
-                id: tag.tag.id,
-                text: tag.tag.name,
-              };
-            }),
-          ...dest.destination,
+          items: returnDestinations,
+          count: dests[0]?.count ?? 0,
         };
-      });
-      return returnDestinations;
-    }),
+      },
+    ),
   update: protectedMutationProcedure
     .input(updateDestinationSchema)
     .mutation(async ({ ctx, input }) => {
@@ -256,6 +293,22 @@ export const destinationRouter = createTRPCRouter({
 
       return {
         ...dest,
+        lists: dest
+          ? await ctx.db.query.destinationLists
+              .findMany({
+                where: eq(destinationLists.destinationId, dest.id),
+                with: {
+                  list: true,
+                },
+              })
+              .then((res) =>
+                res.map((listRow) => {
+                  return {
+                    ...listRow.list,
+                  };
+                }),
+              )
+          : undefined,
         tags: dest
           ? await ctx.db.query.destinationTags
               .findMany({
@@ -273,6 +326,73 @@ export const destinationRouter = createTRPCRouter({
                 }),
               )
           : undefined,
+      };
+    }),
+  addToLists: protectedMutationProcedure
+    .input(z.object({ destinationId: z.number(), lists: z.array(z.number()) }))
+    .mutation(async ({ ctx, input }) => {
+      const destination = await ctx.db.query.destinations.findFirst({
+        where: and(
+          eq(destinations.id, input.destinationId),
+          eq(destinations.userId, ctx.user.id),
+        ),
+      });
+
+      if (!destination) {
+        throw new Error("Destination not found or does not belong to the user");
+      }
+
+      const validLists = await ctx.db.query.lists.findMany({
+        where: and(
+          inArray(lists.id, input.lists),
+          eq(lists.userId, ctx.user.id),
+        ),
+      });
+
+      await ctx.db.insert(destinationLists).values(
+        validLists.map((list) => {
+          return {
+            destinationId: input.destinationId,
+            listId: list.id,
+          };
+        }),
+      );
+      return {
+        success: true,
+      };
+    }),
+  removeFromLists: protectedMutationProcedure
+    .input(z.object({ destinationId: z.number(), lists: z.array(z.number()) }))
+    .mutation(async ({ ctx, input }) => {
+      const destination = await ctx.db.query.destinations.findFirst({
+        where: and(
+          eq(destinations.id, input.destinationId),
+          eq(destinations.userId, ctx.user.id),
+        ),
+      });
+
+      if (!destination) {
+        throw new Error("Destination not found or does not belong to the user");
+      }
+
+      const validLists = await ctx.db.query.lists.findMany({
+        where: and(
+          inArray(lists.id, input.lists),
+          eq(lists.userId, ctx.user.id),
+        ),
+      });
+
+      await ctx.db.delete(destinationLists).where(
+        and(
+          eq(destinationLists.destinationId, input.destinationId),
+          inArray(
+            destinationLists.listId,
+            validLists.map((list) => list.id),
+          ),
+        ),
+      );
+      return {
+        success: true,
       };
     }),
 });

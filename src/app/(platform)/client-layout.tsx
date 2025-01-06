@@ -1,9 +1,9 @@
 "use client";
 
-import { cloneElement, isValidElement } from "react";
-import { usePathname } from "next/navigation";
+import { cloneElement, isValidElement, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 
-import { Home, Search } from "lucide-react";
+import { ChevronsUpDown, FileQuestion, Home, Map, Search } from "lucide-react";
 import type { User } from "~/server/models";
 
 import {
@@ -11,7 +11,17 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
+  BreadcrumbSeparator,
 } from "~/components/ui/breadcrumb";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
 import { Separator } from "~/components/ui/separator";
 import {
   SidebarInset,
@@ -28,6 +38,14 @@ interface ClientLayoutProps {
 }
 
 export function ClientLayout({ children, user }: ClientLayoutProps) {
+  const pathname = usePathname();
+  const platformRoute = pathname.split("/")[1]?.split("/") ?? ["unknown"];
+  const [searchType, setSearchType] = useState(platformRoute[1]);
+  const router = useRouter();
+  function selectSearchType(value: string) {
+    router.push(`/search/${value}`);
+    setSearchType(value);
+  }
   const platformPages = [
     {
       render: (
@@ -42,32 +60,72 @@ export function ClientLayout({ children, user }: ClientLayoutProps) {
     {
       render: (
         <BreadcrumbItem>
+          <Map size="16" />
+          <BreadcrumbLink href="/search/maps">Maps</BreadcrumbLink>
+        </BreadcrumbItem>
+      ),
+      name: "Map",
+      route: "map",
+    },
+    {
+      render: (
+        <BreadcrumbItem>
           <Search size="16" />
-          <BreadcrumbLink href="/search">Search</BreadcrumbLink>
+          {platformRoute[0] == "search" ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger className="ml-2 flex items-center gap-1">
+                {searchType == "maps" ? "Map" : "Destination"}
+                <ChevronsUpDown size="16" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuLabel>Search Type</DropdownMenuLabel>
+                <DropdownMenuRadioGroup
+                  value={platformRoute[1]}
+                  onValueChange={selectSearchType}
+                >
+                  <DropdownMenuRadioItem value="pins" className="pl-3">
+                    Destination
+                  </DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="maps" className="pl-3">
+                    Map
+                  </DropdownMenuRadioItem>
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : null}
+          Search
         </BreadcrumbItem>
       ),
       name: "Search",
       route: "search",
     },
   ];
-  const pathname = usePathname();
-  const platformRoute = pathname.split("/")[1]?.split("/")[0];
+
   return (
     <SidebarProvider>
       <TooltipProvider delayDuration={0}>
         <SidebarLeft />
 
         <SidebarInset>
-          <header className="flex items-center justify-between p-4 border-">
+          <header className="sticky top-0 z-10 flex h-14 shrink-0 items-center gap-2 border-b bg-background px-4">
             <div className="flex flex-1 items-center gap-2">
               <SidebarTrigger />
               <Separator orientation="vertical" className="mr-2 h-4" />
               <Breadcrumb>
                 <BreadcrumbList>
-                  {platformPages.find((item) => item.route == platformRoute)
+                  <BreadcrumbItem className="hidden lg:block">
+                    <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator className="hidden lg:block" />
+                  {platformPages.find((item) => item.route == platformRoute[0]!)
                     ?.render ?? (
                     <BreadcrumbItem>
-                      <BreadcrumbLink href="#">Unknown Route</BreadcrumbLink>
+                      <BreadcrumbLink
+                        href="#"
+                        className="flex flex-row items-center gap-2"
+                      >
+                        <FileQuestion size="16" /> Unknown Route
+                      </BreadcrumbLink>
                     </BreadcrumbItem>
                   )}
                 </BreadcrumbList>
