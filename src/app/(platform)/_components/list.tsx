@@ -20,12 +20,12 @@ import {
   RefreshCw,
 } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { type z } from "zod";
 import {
   listSchema,
-  updateListSchema,
   type Destination,
   type List,
+  type updateListSchema,
 } from "~/server/models";
 
 import { timeSince } from "~/lib/utils";
@@ -284,7 +284,6 @@ export function RecentLists() {
     limit: 3,
     order: "DESC",
   });
-  const router = useRouter();
   const [open, setOpen] = useState(false);
 
   const createList = (callback?: () => void) =>
@@ -562,7 +561,7 @@ export function ListPage(props: { id: string }) {
                       onClick={() => {
                         setPageNumber(pageNumber - 1);
 
-                        refetch();
+                        void refetch();
                       }}
                     />
                   </PaginationItem>
@@ -606,7 +605,7 @@ export function ListPage(props: { id: string }) {
                           isActive={pageNumber == page}
                           onClick={() => {
                             setPageNumber(page);
-                            refetch();
+                            void refetch();
                           }}
                         >
                           {page}
@@ -631,7 +630,7 @@ export function ListPage(props: { id: string }) {
                       type="submit"
                       className="h-8 min-w-8"
                       onClick={() => {
-                        refetch();
+                        void refetch();
                       }}
                     >
                       {isFetching ? (
@@ -651,7 +650,7 @@ export function ListPage(props: { id: string }) {
                     href="#"
                     onClick={() => {
                       setPageNumber(pageNumber + 1);
-                      refetch();
+                      void refetch();
                     }}
                   />
                 </PaginationItem>

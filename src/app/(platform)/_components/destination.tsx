@@ -180,11 +180,10 @@ export function DestinationForm(props: DestinationFormProps) {
         tags: props.defaultValues?.tags ?? [],
         attachments: [],
       });
-      alert(props.defaultValues?.body);
 
       setLoading2(false);
     }
-  }, [props.defaultValues, form]);
+  }, [props.defaultValues, form, loading2, props.update]);
 
   useEffect(() => {
     if (!detailsState.error) {
@@ -667,14 +666,11 @@ export function DestinationDialog(props: { id: string }) {
       { enabled: !!destinationId },
     );
 
-  const {
-    data: searchResults = { count: 0, items: [] },
-    refetch,
-    isFetching,
-  } = api.list.getMany.useQuery({
-    limit: 100,
-    sortBy: "updatedAt",
-  });
+  const { data: searchResults = { count: 0, items: [] } } =
+    api.list.getMany.useQuery({
+      limit: 100,
+      sortBy: "updatedAt",
+    });
 
   function handleOpenChange(openStatus: boolean) {
     setOpen(openStatus);
@@ -941,13 +937,11 @@ function ListComboBox({
 }
 
 function StatusList({
-  setOpen,
   recentLists,
   selectedList,
   handleListAdds,
   handleListRemovals,
 }: {
-  setOpen: (open: boolean) => void;
   recentLists: List[];
   selectedList: List[];
   handleListAdds: (list: List[] | null) => void;
