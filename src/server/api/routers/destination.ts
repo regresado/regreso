@@ -1,4 +1,13 @@
-import { and, asc, desc, eq, inArray, or, sql } from "drizzle-orm";
+import {
+  aliasedTable,
+  and,
+  asc,
+  desc,
+  eq,
+  inArray,
+  or,
+  sql,
+} from "drizzle-orm";
 import { z } from "zod";
 import {
   destinationSchema,
@@ -17,6 +26,7 @@ import {
   destinations,
   destinationTags,
   lists,
+  listTags,
   tags,
 } from "~/server/db/schema";
 
@@ -99,7 +109,7 @@ export const destinationRouter = createTRPCRouter({
           .from(destinations)
           .leftJoin(
             destinationLists,
-            listIds.length > 0
+            listIds.length > 0 || tagNames.length > 0
               ? eq(destinationLists.destinationId, destinations.id)
               : sql`1 = 0`,
           )
@@ -109,21 +119,32 @@ export const destinationRouter = createTRPCRouter({
               ? eq(destinations.id, destinationTags.destinationId)
               : sql`1 = 0`,
           )
-
           .leftJoin(
             tags,
             tagNames.length > 0
               ? eq(destinationTags.tagId, tags.id)
               : sql`1 = 0`,
           )
-
+          // Add joins for list tags
+          .leftJoin(
+            listTags,
+            tagNames.length > 0
+              ? eq(destinationLists.listId, listTags.listId)
+              : sql`1 = 0`,
+          )
+          .leftJoin(
+            aliasedTable(tags, "list_tags"),
+            tagNames.length > 0
+              ? eq(listTags.tagId, sql`list_tags.id`)
+              : sql`1 = 0`,
+          )
           .where(
             and(
               and(
                 input.searchString && input.searchString.length > 0
                   ? sql`(setweight(to_tsvector('english', ${destinations.name}), 'A') ||
                       setweight(to_tsvector('english', ${destinations.body}), 'B'))
-                      @@ websearch_to_tsquery  ('english', ${input.searchString})`
+                      @@ websearch_to_tsquery('english', ${input.searchString})`
                   : undefined,
               ),
               input.location
@@ -136,6 +157,8 @@ export const destinationRouter = createTRPCRouter({
                 ? or(
                     inArray(tags.name, tagNames),
                     inArray(tags.shortcut, tagNames),
+                    inArray(sql`list_tags.name`, tagNames),
+                    inArray(sql`list_tags.shortcut`, tagNames),
                   )
                 : undefined,
               listIds.length > 0
@@ -148,7 +171,10 @@ export const destinationRouter = createTRPCRouter({
           .having(
             and(
               tagNames.length > 0
-                ? sql`COUNT(DISTINCT ${tags.id}) = ${tagNames.length}`
+                ? sql`COUNT(DISTINCT CASE 
+                    WHEN ${tags.id} IS NOT NULL THEN ${tags.id} 
+                    WHEN list_tags.id IS NOT NULL THEN list_tags.id 
+                    END) = ${tagNames.length}`
                 : undefined,
               listIds.length > 0
                 ? sql`COUNT(DISTINCT ${destinationLists.listId}) = ${listIds.length}`
