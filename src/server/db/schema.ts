@@ -186,6 +186,8 @@ export const lists = createTable(
   {
     id: serial("id").primaryKey(),
     name: varchar("name", { length: 256 }).notNull(),
+    emoji: varchar("emoji", { length: 256 }).default("🗺️").notNull(),
+
     description: varchar("description", { length: 256 }),
     userId: integer("user_id")
       .notNull()

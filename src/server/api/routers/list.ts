@@ -175,8 +175,6 @@ export const listRouter = createTRPCRouter({
           .limit(input.limit)
           .offset(input.offset);
 
-        // ...rest of the code remains the same...
-
         const lstTags = await ctx.db
           .select()
           .from(listTags)
@@ -287,6 +285,7 @@ export const listRouter = createTRPCRouter({
           id: lists.id,
           name: lists.name,
           description: lists.description,
+          emoji: lists.emoji,
           createdAt: lists.createdAt,
           userId: lists.userId,
           count: sql<number>`count(*) over()`,
