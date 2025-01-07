@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { useDroppable } from "@dnd-kit/core";
+import data from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type TRPCClientErrorLike } from "@trpc/client";
 import { type UseTRPCMutationResult } from "@trpc/react-query/shared";
@@ -114,7 +116,10 @@ export function ListCard(props: List) {
       <Card ref={setNodeRef}>
         <CardHeader className="px-3 pb-2 pt-4 text-sm">
           <CardTitle className="truncate">
-            <Link href={`/map/${props.id}`}>{props.name ?? "Unnamed Map"}</Link>
+            <Link href={`/map/${props.id}`}>
+              <span className="mr-2">{props?.emoji ?? "❔"}</span>
+              {props.name ?? "Unnamed Map"}
+            </Link>
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-2 px-3 pb-3 pt-0 text-sm">
@@ -167,15 +172,12 @@ type ListFormProps =
       defaultValues?: z.infer<typeof listSchema>;
     }
   | {
-      listMutation: (callback?: () => void) => UseTRPCMutationResult<
+      listMutation: (
+        callback?: () => void,
+      ) => UseTRPCMutationResult<
         { success: boolean },
-        TRPCClientErrorLike<{
-          input: z.infer<typeof listSchema>;
-          output: { success: boolean };
-          transformer: true;
-          errorShape: { message: string };
-        }>,
-        z.infer<typeof listSchema>,
+        TRPCClientErrorLike<any>,
+        any,
         unknown
       >;
       update: false;
@@ -191,7 +193,8 @@ export function ListForm(props: ListFormProps) {
       name: props.defaultValues?.name ?? "",
       description: props.defaultValues?.description ?? "",
       tags: props.defaultValues?.tags ?? [],
-    },
+      emoji: props.defaultValues?.emoji ?? "🗺️",
+    } as z.infer<typeof listSchema>,
   });
 
   useEffect(() => {
@@ -217,19 +220,53 @@ export function ListForm(props: ListFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-4">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input placeholder="Pelican Resources" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="flex w-full flex-row items-end gap-4">
+          <FormField
+            control={form.control}
+            name="emoji"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Emoji</FormLabel>
+                <FormControl>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline">
+                        {form.watch("emoji") != undefined &&
+                        form.watch("emoji").length > 0
+                          ? form.watch("emoji")
+                          : "❔"}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="p-0">
+                      <Picker
+                        data={data}
+                        value={form.watch("emoji")}
+                        onEmojiSelect={(emoji: any) => {
+                          form.setValue("emoji", emoji.native);
+                        }}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem className="grow">
+                <FormLabel>Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Pelican Resources" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
         <FormField
           control={form.control}
           name="description"
@@ -481,16 +518,18 @@ export function ListPage(props: { id: string }) {
         {editing && data != undefined ? (
           <ListForm
             update={true}
-            defaultValues={{
-              ...data,
-              name: data.name ?? "",
-              description: data.description ?? "",
-              tags:
-                data.tags?.map((tag) => ({
-                  id: tag.id.toString(),
-                  text: tag.text,
-                })) ?? [],
-            }}
+            defaultValues={
+              {
+                name: data.name ?? "",
+                description: data.description ?? "",
+                emoji: data.emoji || "🗺️",
+                tags:
+                  data.tags?.map((tag) => ({
+                    id: tag.id.toString(),
+                    text: tag.text,
+                  })) ?? [],
+              } as z.infer<typeof listSchema>
+            }
             updateId={parseInt(props.id)}
             listMutation={updateList}
           />
@@ -529,7 +568,11 @@ export function ListPage(props: { id: string }) {
     <div className="w-full space-y-4 p-6">
       <div className="flex w-full flex-row flex-wrap items-center justify-between gap-4">
         <div className="space-y-1">
-          <h1>{data?.name ?? "Unnamed Map"}</h1>
+          <div className="flex items-center">
+            <span className="mr-2 text-2xl">{data?.emoji ?? "❔"}</span>
+
+            <h1>{data?.name ?? "Unnamed Map"}</h1>
+          </div>
           <p className="text-sm text-muted-foreground">
             {data?.description ?? "No description provided."}
           </p>

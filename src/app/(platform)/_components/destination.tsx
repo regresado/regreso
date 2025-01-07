@@ -20,6 +20,7 @@ import {
   Pencil,
   Plus,
   RefreshCw,
+  Telescope,
 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -561,7 +562,7 @@ export function RecentDestinations({
         <CardHeader>
           <Link href="/search/pins">
             <CardTitle className="flex items-center">
-              <MapPin className="mr-2 h-5 w-5" /> Recent Destinations
+              <Telescope className="mr-2 h-5 w-5" /> Recent Destinations
             </CardTitle>
           </Link>
         </CardHeader>
@@ -650,6 +651,7 @@ export function DestinationCard(
         ],
         destinationId: id,
       });
+      alert(1);
       setDragEnd(null);
     }
   }, [dragEnd, setDragEnd, addToLists, id]);
