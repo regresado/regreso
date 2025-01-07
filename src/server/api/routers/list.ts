@@ -87,7 +87,6 @@ export const listRouter = createTRPCRouter({
       async ({ ctx, input }): Promise<{ items: List[]; count: number }> => {
         const tagNames = input.tags ?? [];
 
-        // Define the CTE first
         const stats = ctx.db.$with("list_stats").as(
           ctx.db
             .select({
@@ -199,6 +198,15 @@ export const listRouter = createTRPCRouter({
             size: list.size,
             updatedAt: list.latestCreatedAt,
             ...list.list,
+            emoji: list.list?.emoji
+              ? list.list?.emoji.match(
+                  /(\p{Emoji_Presentation}|\p{Extended_Pictographic})/gu,
+                )
+                ? (list.list?.emoji.match(
+                    /(\p{Emoji_Presentation}|\p{Extended_Pictographic})/gu,
+                  )?.[0] ?? null)
+                : null
+              : null,
           };
         });
         return { items: returnLists, count: lsts[0]?.count ?? 0 };
@@ -321,6 +329,15 @@ export const listRouter = createTRPCRouter({
 
       return {
         ...lst,
+        emoji: lst?.emoji
+          ? lst?.emoji.match(
+              /(\p{Emoji_Presentation}|\p{Extended_Pictographic})/gu,
+            )
+            ? (lst?.emoji.match(
+                /(\p{Emoji_Presentation}|\p{Extended_Pictographic})/gu,
+              )?.[0] ?? null)
+            : null
+          : null,
         tags: lst
           ? await ctx.db.query.listTags
               .findMany({

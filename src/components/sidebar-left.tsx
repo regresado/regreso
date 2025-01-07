@@ -2,6 +2,7 @@
 
 import * as React from "react";
 
+import { api } from "~/trpc/react";
 import {
   Calendar,
   Home,
@@ -152,6 +153,13 @@ const data = {
 export function SidebarLeft({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
+  const utils = api.useUtils();
+
+  const { data: recentLists = { items: [], count: 0 } } =
+    api.list.getMany.useQuery({
+      limit: 3,
+      order: "DESC",
+    });
   return (
     <Sidebar className="border-r-0" {...props}>
       <SidebarHeader>
@@ -159,7 +167,16 @@ export function SidebarLeft({
         <NavMain items={data.navMain} />
       </SidebarHeader>
       <SidebarContent>
-        <NavLists lists={data.lists} />
+        <NavLists
+          lists={recentLists.items.map((l) => {
+            return {
+              id: l.id,
+              name: l.name,
+              emoji: l.emoji ?? "❔",
+              url: "/map/" + l.id,
+            };
+          })}
+        />
       </SidebarContent>
       <SidebarFooter>
         <NavWorkspaces workspaces={data.workspaces} />

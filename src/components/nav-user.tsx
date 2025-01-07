@@ -146,13 +146,13 @@ export function NavUser({ user }: { user: User | null }) {
                     <Lock />
                     Account
                   </DropdownMenuItem>
-
+                  {/* 
                   <DropdownMenuItem
                     onSelect={() => router.push("/settings/notifications")}
                   >
                     <Bell />
                     Notifications
-                  </DropdownMenuItem>
+                  </DropdownMenuItem> */}
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem

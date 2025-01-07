@@ -43,7 +43,7 @@ export interface Destination {
 export interface List {
   id: number;
   name: string;
-  emoji: string;
+  emoji: string | null;
   description: string | null;
   userId: number;
   createdAt: Date;
@@ -84,8 +84,8 @@ export const listSchema = z.object({
     .max(100, {
       message: "The name must be less than 100 characters.",
     }),
-  emoji: z.string().min(1).max(100, {
-    message: "The emoji must be less than 100 characters.",
+  emoji: z.string().min(1).max(5, {
+    message: "The emoji must be 1 character.",
   }),
   description: z.string().min(0).max(200, {
     message: "The description must be less than 200 characters.",
