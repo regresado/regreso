@@ -26,6 +26,7 @@ import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
+  SidebarTriggerRight,
 } from "~/components/ui/sidebar";
 import { TooltipProvider } from "~/components/ui/tooltip";
 import { SidebarLeft } from "~/components/sidebar-left";
@@ -103,11 +104,11 @@ export function ClientLayout({ children, user }: ClientLayoutProps) {
   return (
     <SidebarProvider>
       <TooltipProvider delayDuration={0}>
-        <SidebarLeft />
+        <SidebarLeft side="left" />
 
         <SidebarInset>
-          <header className="sticky top-0 z-20 flex h-14 shrink-0 items-center gap-2 border-b bg-background px-4">
-            <div className="flex flex-1 items-center gap-2">
+          <header className="sticky top-0 z-20 flex h-14 shrink-0 items-center justify-between border-b bg-background px-4">
+            <div className="flex items-center gap-2">
               <SidebarTrigger />
               <Separator orientation="vertical" className="mr-2 h-4" />
               <Breadcrumb>
@@ -130,6 +131,8 @@ export function ClientLayout({ children, user }: ClientLayoutProps) {
                 </BreadcrumbList>
               </Breadcrumb>
             </div>
+
+            <SidebarTriggerRight />
           </header>
           {children && isValidElement(children) ? (
             cloneElement(children, { props: { user } } as {
@@ -142,7 +145,7 @@ export function ClientLayout({ children, user }: ClientLayoutProps) {
             </p>
           )}
         </SidebarInset>
-        <SidebarRight user={user} />
+        <SidebarRight side="right" user={user} />
       </TooltipProvider>
     </SidebarProvider>
   );
