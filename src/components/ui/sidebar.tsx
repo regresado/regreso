@@ -20,9 +20,26 @@ import {
   TooltipTrigger,
 } from "~/components/ui/tooltip";
 
-const SIDEBAR_COOKIE_NAME = "sidebar:state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
 const SIDEBAR_WIDTH = "16rem";
+
+// Parse initial state from cookies if available
+const getInitialSidebarState = () => {
+  if (typeof document === "undefined") return { left: true, right: true };
+
+  const leftState = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("sidebar:left="));
+  const rightState = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("sidebar:right="));
+
+  return {
+    left: leftState ? leftState.split("=")[1] === "true" : true,
+    right: rightState ? rightState.split("=")[1] === "true" : true,
+  };
+};
+
 const SIDEBAR_WIDTH_MOBILE = "18rem";
 const SIDEBAR_WIDTH_ICON = "3rem";
 const SIDEBAR_KEYBOARD_SHORTCUT = "b";
@@ -77,10 +94,12 @@ const SidebarProvider = React.forwardRef<
     [],
   );
   const [_open, _setOpen] = React.useState(
-    props.defaultOpen ?? { left: true, right: true },
+    props.defaultOpen ?? getInitialSidebarState(),
   );
 
   const open = props.open ?? _open;
+
+  const { onOpenChange } = props;
 
   const setOpen = React.useCallback(
     (side: "left" | "right", value: boolean) => {
@@ -92,7 +111,7 @@ const SidebarProvider = React.forwardRef<
       }
       document.cookie = `sidebar:${side}=${value}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
     },
-    [props.onOpenChange, open],
+    [onOpenChange, open],
   );
 
   const toggleSidebar = React.useCallback(
