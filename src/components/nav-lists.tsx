@@ -29,7 +29,6 @@ function SidebarList({
   url,
   emoji,
   name,
-  id,
 }: {
   url: string;
   emoji: string;

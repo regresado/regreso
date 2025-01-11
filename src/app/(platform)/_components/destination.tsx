@@ -15,7 +15,6 @@ import {
   ArrowRight,
   GalleryVerticalEnd,
   Loader2,
-  MapPin,
   MapPinPlus,
   Pencil,
   Plus,
@@ -217,11 +216,8 @@ export function DestinationForm(props: DestinationFormProps) {
       );
     }
     setLoading(false);
-
-    // confirmLocation(true);
   }, [detailsState, destinationTypeForm, form]);
 
-  // watch for when destinationTypeForm.watch("type") changes
   const type = destinationTypeForm.watch("type");
   useEffect(() => {
     if (destinationTypeForm.watch("type") === "note") {
