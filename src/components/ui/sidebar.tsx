@@ -191,6 +191,8 @@ const Sidebar = React.forwardRef<
         className={cn(
           "relative flex h-full flex-col",
           "transition-all duration-300 ease-in-out",
+          "data-[state=collapsed]:w-0",
+
           "w-[var(--sidebar-width)]",
           side === "left"
             ? "data-[state=collapsed]:-translate-x-full"
