@@ -124,7 +124,9 @@ function SidebarList({
                 toast({
                   title: "Link copied to clipboard!",
                 });
-                navigator.clipboard.writeText(window.location.origin + url);
+                void navigator.clipboard.writeText(
+                  window.location.origin + url,
+                );
               }}
             >
               <Link className="text-muted-foreground" />

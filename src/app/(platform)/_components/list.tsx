@@ -479,7 +479,7 @@ export function ListPage(props: { id: string }) {
         });
       },
     });
-  const favoriteListMutation = updateList(() => {});
+  const favoriteListMutation = updateList();
 
   const { data }: { data: List | undefined } = api.list.get.useQuery(
     { id: parseInt(listId ?? "0", 10) },
