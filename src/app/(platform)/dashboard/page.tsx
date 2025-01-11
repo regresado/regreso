@@ -2,7 +2,12 @@
 
 import React from "react";
 
-import { type Active, DndContext, type DragEndEvent, type Over } from "@dnd-kit/core";
+import {
+  DndContext,
+  type Active,
+  type DragEndEvent,
+  type Over,
+} from "@dnd-kit/core";
 import { Sailboat } from "lucide-react";
 import type { User } from "~/server/models";
 
