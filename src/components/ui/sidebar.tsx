@@ -4,7 +4,7 @@ import * as React from "react";
 
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
-import { PanelLeft, Settings } from "lucide-react";
+import { PanelLeft, PanelRight } from "lucide-react";
 
 import { cn } from "~/lib/utils";
 import { useIsMobile } from "~/hooks/use-mobile";
@@ -138,7 +138,9 @@ const SidebarProvider = React.forwardRef<
           } as React.CSSProperties
         }
         className={cn(
-          "group/sidebar-wrapper flex min-h-svh w-full has-[[data-variant=inset]]:bg-sidebar",
+          "grid min-h-svh w-full",
+          "grid-cols-[auto_1fr_auto]",
+          "has-[[data-variant=inset]]:bg-sidebar",
           props.className,
         )}
         ref={ref}
@@ -150,7 +152,6 @@ const SidebarProvider = React.forwardRef<
   );
 });
 SidebarProvider.displayName = "SidebarProvider";
-
 const Sidebar = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<"div"> & {
@@ -160,24 +161,20 @@ const Sidebar = React.forwardRef<
   }
 >(
   (
-    { className, side, variant = "sidebar", collapsible = "none", ...props },
+    { side, variant = "sidebar", collapsible = "none", className, ...props },
     ref,
   ) => {
     const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
     const isOpen = openMobile[side];
-    const sideState = state[side];
 
     if (isMobile) {
       return (
         <Sheet open={isOpen} onOpenChange={(open) => setOpenMobile(side, open)}>
-          <SheetContent side={side} className="w-[--sidebar-width-mobile]">
-            <div
-              ref={ref}
-              data-side={side}
-              data-variant={variant}
-              {...props}
-              className={cn("relative flex h-full w-full flex-col", className)}
-            />
+          <SheetContent
+            side={side}
+            className={cn("w-[var(--sidebar-width)]", className)}
+          >
+            <div ref={ref} className="flex h-full flex-col" {...props} />
           </SheetContent>
         </Sheet>
       );
@@ -187,14 +184,18 @@ const Sidebar = React.forwardRef<
       <div
         ref={ref}
         data-side={side}
-        data-state={sideState}
+        data-state={state[side]}
         data-variant={variant}
         data-collapsible={collapsible}
         {...props}
         className={cn(
-          "peer relative flex h-full flex-col",
-          "w-[--sidebar-width] data-[state=collapsed]:w-[--sidebar-width-icon]",
-          "transition-[width,margin] duration-300 ease-in-out",
+          "relative flex h-full flex-col",
+          "transition-all duration-300 ease-in-out",
+          "w-[var(--sidebar-width)]",
+          side === "left"
+            ? "data-[state=collapsed]:-translate-x-full"
+            : "data-[state=collapsed]:translate-x-full",
+          "data-[state=collapsed]:invisible data-[state=collapsed]:opacity-0",
           variant === "floating" && "m-2",
           className,
         )}
@@ -202,6 +203,28 @@ const Sidebar = React.forwardRef<
     );
   },
 );
+Sidebar.displayName = "Sidebar";
+
+const SidebarInset = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentProps<"main">
+>(({ className, ...props }, ref) => {
+  return (
+    <main
+      ref={ref}
+      className={cn(
+        "relative flex min-h-svh flex-1 flex-col bg-background",
+        "transition-[width,margin] duration-300",
+        "peer-data-[variant=inset]:min-h-[calc(100svh-theme(spacing.4))]",
+        "md:peer-data-[variant=inset]:m-2",
+        "md:peer-data-[variant=inset]:rounded-xl",
+        "md:peer-data-[variant=inset]:shadow",
+        className,
+      )}
+      {...props}
+    />
+  );
+});
 
 const SidebarTrigger = React.forwardRef<
   React.ElementRef<typeof Button>,
@@ -248,7 +271,7 @@ const SidebarTriggerRight = React.forwardRef<
       }}
       {...props}
     >
-      <Settings />
+      <PanelRight />
       <span className="sr-only">Toggle right sidebar</span>
     </Button>
   );
@@ -284,22 +307,6 @@ const SidebarRail = React.forwardRef<
 });
 SidebarRail.displayName = "SidebarRail";
 
-const SidebarInset = React.forwardRef<
-  HTMLDivElement,
-  React.ComponentProps<"main">
->(({ className, ...props }, ref) => {
-  return (
-    <main
-      ref={ref}
-      className={cn(
-        "relative flex min-h-svh flex-1 flex-col bg-background",
-        "peer-data-[variant=inset]:min-h-[calc(100svh-theme(spacing.4))] md:peer-data-[variant=inset]:m-2 md:peer-data-[state=collapsed]:peer-data-[variant=inset]:ml-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow",
-        className,
-      )}
-      {...props}
-    />
-  );
-});
 SidebarInset.displayName = "SidebarInset";
 
 const SidebarInput = React.forwardRef<
@@ -431,7 +438,6 @@ const SidebarGroupAction = React.forwardRef<
       data-sidebar="group-action"
       className={cn(
         "absolute right-3 top-3.5 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground outline-none ring-sidebar-ring transition-transform hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0",
-        // Increases the hit area of the button on mobile.
         "after:absolute after:-inset-2 after:md:hidden",
         "group-data-[collapsible=icon]:hidden",
         className,
@@ -578,7 +584,6 @@ const SidebarMenuAction = React.forwardRef<
       data-sidebar="menu-action"
       className={cn(
         "absolute right-1 top-1.5 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground outline-none ring-sidebar-ring transition-transform hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 peer-hover/menu-button:text-sidebar-accent-foreground [&>svg]:size-4 [&>svg]:shrink-0",
-        // Increases the hit area of the button on mobile.
         "after:absolute after:-inset-2 after:md:hidden",
         "peer-data-[size=sm]/menu-button:top-1",
         "peer-data-[size=default]/menu-button:top-1.5",
@@ -621,7 +626,6 @@ const SidebarMenuSkeleton = React.forwardRef<
     showIcon?: boolean;
   }
 >(({ className, showIcon = false, ...props }, ref) => {
-  // Random width between 50 to 90%.
   const width = React.useMemo(() => {
     return `${Math.floor(Math.random() * 40) + 50}%`;
   }, []);

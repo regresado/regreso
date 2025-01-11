@@ -102,9 +102,14 @@ export function ClientLayout({ children, user }: ClientLayoutProps) {
   ];
 
   return (
-    <SidebarProvider>
+    <SidebarProvider className="grid h-svh w-full grid-cols-[auto_1fr_auto] overflow-hidden">
       <TooltipProvider delayDuration={0}>
-        <SidebarLeft side="left" />
+        <div
+          className="h-svh w-fit overflow-hidden"
+          style={{ maxWidth: "var(--sidebar-width)" }}
+        >
+          <SidebarLeft side="left" className="h-full" />
+        </div>
 
         <SidebarInset>
           <header className="sticky top-0 z-20 flex h-14 shrink-0 items-center justify-between border-b bg-background px-4">
@@ -134,18 +139,27 @@ export function ClientLayout({ children, user }: ClientLayoutProps) {
 
             <SidebarTriggerRight />
           </header>
-          {children && isValidElement(children) ? (
-            cloneElement(children, { props: { user } } as {
-              props: { user: User };
-            })
-          ) : (
-            <p>
-              🌌 Nothing to display on the dashboard right now. Try selecting a
-              menu item.
-            </p>
-          )}
+
+          <div className="h-[calc(100vh-3.5rem)] overflow-auto">
+            {children && isValidElement(children) ? (
+              cloneElement(children, { props: { user } } as {
+                props: { user: User };
+              })
+            ) : (
+              <p>
+                🌌 Nothing to display on the dashboard right now. Try selecting
+                a menu item.
+              </p>
+            )}
+          </div>
         </SidebarInset>
-        <SidebarRight side="right" user={user} />
+
+        <div
+          className="h-svh w-fit overflow-hidden"
+          style={{ maxWidth: "var(--sidebar-width)" }}
+        >
+          <SidebarRight side="right" user={user} className="h-full" />
+        </div>
       </TooltipProvider>
     </SidebarProvider>
   );
