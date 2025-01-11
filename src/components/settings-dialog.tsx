@@ -119,30 +119,39 @@ export function SettingsDialog({ children }: { children: React.ReactNode }) {
         <DialogDescription className="sr-only">
           Customize your settings here.
         </DialogDescription>
-        <SidebarProvider className="items-start">
-          <Sidebar collapsible="none" className="hidden py-2 md:flex">
-            <SidebarContent>
-              <SidebarGroup>
-                <SidebarGroupContent>
-                  <SidebarMenu>
-                    {data.nav.map((item) => (
-                      <SidebarMenuItem key={item.name}>
-                        <SidebarMenuButton
-                          asChild
-                          isActive={item.name == settingsName}
-                        >
-                          <a href={item.url}>
-                            <item.icon />
-                            <span>{item.render ?? item.name}</span>
-                          </a>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    ))}
-                  </SidebarMenu>
-                </SidebarGroupContent>
-              </SidebarGroup>
-            </SidebarContent>
-          </Sidebar>
+        <SidebarProvider className="flex flex-row items-start">
+          <div
+            className="hidden w-fit overflow-hidden md:flex"
+            style={{ maxWidth: "var(--sidebar-width)" }}
+          >
+            <Sidebar
+              side="left"
+              collapsible="none"
+              className="hidden w-fit py-2 md:flex"
+            >
+              <SidebarContent>
+                <SidebarGroup>
+                  <SidebarGroupContent>
+                    <SidebarMenu>
+                      {data.nav.map((item) => (
+                        <SidebarMenuItem key={item.name}>
+                          <SidebarMenuButton
+                            asChild
+                            isActive={item.name == settingsName}
+                          >
+                            <a href={item.url}>
+                              <item.icon />
+                              <span>{item.render ?? item.name}</span>
+                            </a>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                      ))}
+                    </SidebarMenu>
+                  </SidebarGroupContent>
+                </SidebarGroup>
+              </SidebarContent>
+            </Sidebar>
+          </div>
           <main className="flex h-[480px] flex-1 flex-col overflow-hidden">
             <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
               <div className="flex items-center gap-2 px-4">
