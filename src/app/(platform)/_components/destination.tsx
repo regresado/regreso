@@ -647,7 +647,6 @@ export function DestinationCard(
         ],
         destinationId: id,
       });
-      alert(1);
       setDragEnd(null);
     }
   }, [dragEnd, setDragEnd, addToLists, id]);
