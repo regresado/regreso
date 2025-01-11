@@ -100,7 +100,12 @@ export const updateDestinationSchema = z.object({
 
 export const updateListSchema = z.object({
   id: z.number(),
-  ...listSchema.shape,
+  newTags: z.array(z.string()).optional(),
+  removedTags: z.array(z.string()).optional(),
+  name: listSchema.shape.name.optional(),
+  emoji: listSchema.shape.emoji.optional(),
+  description: listSchema.shape.description.optional(),
+  tags: listSchema.shape.tags.optional(),
 });
 
 const destinationSearchTypes = ["location", "note", "any"] as const;
@@ -122,6 +127,7 @@ export const listSearchSchema = z.object({
   sortBy: z.enum(["createdAt", "updatedAt", "size", "name"]).optional(),
   order: z.enum(["ASC", "DESC"]).optional(),
   searchString: z.string().nullable().optional(),
+  onlyFavorites: z.boolean().optional(),
   limit: z.number().optional().default(5),
   offset: z.number().optional().default(0),
 });
