@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useEffect, useState, type ComponentProps } from "react";
 
 import { api } from "~/trpc/react";
 import {
@@ -134,14 +134,19 @@ const data = {
   ],
 };
 
-export function SidebarLeft({
-  ...props
-}: React.ComponentProps<typeof Sidebar>) {
-  const { data: recentLists = { items: [], count: 0 } } =
+export function SidebarLeft({ ...props }: ComponentProps<typeof Sidebar>) {
+  const [mode, setMode] = useState<"fav" | "rec">("rec");
+
+  const { data: recentLists = { items: [], count: 0 }, refetch } =
     api.list.getMany.useQuery({
       limit: 3,
       order: "DESC",
+      tags: mode === "fav" ? ["favorite maps"] : undefined,
     });
+
+  useEffect(() => {
+    refetch();
+  }, [mode]);
   return (
     <Sidebar className="border-r-0" {...props}>
       <SidebarHeader>
@@ -150,12 +155,16 @@ export function SidebarLeft({
       </SidebarHeader>
       <SidebarContent>
         <NavLists
+          mode={mode}
+          refetch={refetch}
+          setMode={setMode}
           lists={recentLists.items.map((l) => {
             return {
               id: l.id,
               name: l.name,
               emoji: l.emoji ?? "❔",
               url: "/map/" + l.id,
+              favorite: !!l.tags?.find((t) => t.text == "favorite maps"),
             };
           })}
         />

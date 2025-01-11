@@ -21,6 +21,8 @@ import {
   Pencil,
   Plus,
   RefreshCw,
+  Star,
+  StarOff,
 } from "lucide-react";
 import { motion, useAnimation } from "motion/react";
 import { useForm } from "react-hook-form";
@@ -453,7 +455,6 @@ export function RecentLists() {
 export function ListPage(props: { id: string }) {
   const utils = api.useUtils();
 
-  const router = useRouter();
   const listId = props.id;
   const [editing, setEditing] = useState(false);
 
@@ -461,6 +462,10 @@ export function ListPage(props: { id: string }) {
     api.list.update.useMutation({
       onSuccess: async () => {
         await utils.list.invalidate();
+        toast({
+          title: "Map updated",
+          description: "Successfully updated map properties.",
+        });
         if (typeof callback === "function") {
           callback();
         }
@@ -474,19 +479,7 @@ export function ListPage(props: { id: string }) {
         });
       },
     });
-  const deleteList = api.list.delete.useMutation({
-    onSuccess: async () => {
-      await utils.list.invalidate();
-      router.push("/search/maps");
-    },
-    onError: (error) => {
-      toast({
-        title: "Failed to update map",
-        description: error.message,
-        variant: "destructive",
-      });
-    },
-  });
+  const favoriteListMutation = updateList(() => {});
 
   const { data }: { data: List | undefined } = api.list.get.useQuery(
     { id: parseInt(listId ?? "0", 10) },
@@ -534,32 +527,13 @@ export function ListPage(props: { id: string }) {
           />
         ) : null}
         <Dialog>
-          <DialogTrigger asChild>
-            <Button size="sm" variant="destructive">
-              Delete Map
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Are you absolutely sure?</DialogTitle>
-              <DialogDescription>
-                This action cannot be undone. Are you sure you want to
-                permanently delete this map?
-              </DialogDescription>
-            </DialogHeader>
-            <DialogFooter>
-              <DialogClose asChild>
-                <Button
-                  type="button"
-                  onClick={() => {
-                    deleteList.mutate({ id: parseInt(props.id) });
-                  }}
-                >
-                  Confirm
-                </Button>
-              </DialogClose>
-            </DialogFooter>
-          </DialogContent>
+          <DeleteList id={parseInt(props.id)} routePath="/search/maps">
+            <DialogTrigger asChild>
+              <Button size="sm" variant="destructive">
+                Delete Map
+              </Button>
+            </DialogTrigger>
+          </DeleteList>
         </Dialog>
       </DialogContent>
     </Dialog>
@@ -576,14 +550,48 @@ export function ListPage(props: { id: string }) {
             {data?.description ?? "No description provided."}
           </p>
         </div>
-        <Button
-          size="sm"
-          onClick={() => {
-            setEditing(true);
-          }}
-        >
-          <Pencil /> Edit Map
-        </Button>
+        <div className="flex flex-row gap-2">
+          {data?.tags ? (
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => {
+                if (
+                  data?.tags &&
+                  !!data?.tags.find((t) => t.text == "favorite maps")
+                ) {
+                  favoriteListMutation.mutate({
+                    id: parseInt(props.id),
+                    removedTags: ["favorite maps"],
+                  });
+                } else {
+                  favoriteListMutation.mutate({
+                    id: parseInt(props.id),
+                    newTags: ["favorite maps"],
+                  });
+                }
+              }}
+            >
+              {!!data?.tags.find((t) => t.text == "favorite maps") ? (
+                <>
+                  <StarOff /> Unfavorite Map
+                </>
+              ) : (
+                <>
+                  <Star /> Favorite Map
+                </>
+              )}
+            </Button>
+          ) : null}
+          <Button
+            size="sm"
+            onClick={() => {
+              setEditing(true);
+            }}
+          >
+            <Pencil /> Edit Map
+          </Button>
+        </div>
       </div>
       {data?.tags && data?.tags?.length > 0 ? (
         <div className="mt-2 flex flex-wrap gap-2 text-sm">
@@ -738,5 +746,59 @@ export function ListPage(props: { id: string }) {
         </div>
       ) : null}
     </div>
+  );
+}
+
+export function DeleteList({
+  id,
+  children,
+  routePath,
+}: {
+  id: number;
+  children: React.ReactNode;
+  routePath: string;
+}) {
+  const router = useRouter();
+
+  const utils = api.useUtils();
+
+  const deleteList = api.list.delete.useMutation({
+    onSuccess: async () => {
+      await utils.list.invalidate();
+      router.push(routePath);
+    },
+    onError: (error) => {
+      toast({
+        title: "Failed to update map",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+  return (
+    <Dialog>
+      {children}
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Are you absolutely sure?</DialogTitle>
+          <DialogDescription>
+            This action cannot be undone. Are you sure you want to permanently
+            delete this map?
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button
+              type="button"
+              onClick={() => {
+                deleteList.mutate({ id: parseInt(id.toString()) });
+              }}
+            >
+              Confirm
+            </Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
