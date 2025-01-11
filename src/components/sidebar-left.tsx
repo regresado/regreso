@@ -136,6 +136,7 @@ const data = {
 
 export function SidebarLeft({ ...props }: ComponentProps<typeof Sidebar>) {
   const [mode, setMode] = useState<"fav" | "rec">("rec");
+  const [oldMode, setOldMode] = useState<"fav" | "rec">("rec");
 
   const { data: recentLists = { items: [], count: 0 }, refetch } =
     api.list.getMany.useQuery({
@@ -145,8 +146,11 @@ export function SidebarLeft({ ...props }: ComponentProps<typeof Sidebar>) {
     });
 
   useEffect(() => {
-    refetch();
-  }, [mode]);
+    if (mode !== oldMode) {
+      void refetch();
+      setOldMode(mode);
+    }
+  }, [mode, refetch, oldMode, setOldMode]);
   return (
     <Sidebar className="border-r-0" {...props}>
       <SidebarHeader>
