@@ -23,7 +23,6 @@ import {
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
 const SIDEBAR_WIDTH = "16rem";
 
-// Parse initial state from cookies if available
 const getInitialSidebarState = () => {
   if (typeof document === "undefined") return { left: true, right: true };
 
@@ -40,9 +39,7 @@ const getInitialSidebarState = () => {
   };
 };
 
-const SIDEBAR_WIDTH_MOBILE = "18rem";
 const SIDEBAR_WIDTH_ICON = "3rem";
-const SIDEBAR_KEYBOARD_SHORTCUT = "b";
 
 type SidebarContext = {
   state: {
@@ -104,8 +101,8 @@ const SidebarProvider = React.forwardRef<
   const setOpen = React.useCallback(
     (side: "left" | "right", value: boolean) => {
       const newState = { ...open, [side]: value };
-      if (props.onOpenChange) {
-        props.onOpenChange(side, value);
+      if (onOpenChange) {
+        onOpenChange(side, value);
       } else {
         _setOpen(newState);
       }
@@ -125,17 +122,12 @@ const SidebarProvider = React.forwardRef<
     [isMobile, setOpen, open, openMobile, setOpenMobile],
   );
 
-  const state: {
-    left: "expanded" | "collapsed";
-    right: "expanded" | "collapsed";
-  } = {
-    left: open.left ? "expanded" : "collapsed",
-    right: open.right ? "expanded" : "collapsed",
-  };
-
   const contextValue = React.useMemo<SidebarContext>(
     () => ({
-      state,
+      state: {
+        left: open.left ? "expanded" : "collapsed",
+        right: open.right ? "expanded" : "collapsed",
+      },
       open,
       setOpen,
       isMobile,
@@ -143,7 +135,7 @@ const SidebarProvider = React.forwardRef<
       setOpenMobile,
       toggleSidebar,
     }),
-    [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar],
+    [open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar],
   );
 
   return (

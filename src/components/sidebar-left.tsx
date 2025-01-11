@@ -87,23 +87,7 @@ const data = {
       icon: MessageCircleQuestion,
     },
   ],
-  lists: [
-    // {
-    //   name: "Project Management & Task Tracking",
-    //   url: "#",
-    //   emoji: "📊",
-    // },
-    // {
-    //   name: "Family Recipe Collection & Meal Planning",
-    //   url: "#",
-    //   emoji: "🍳",
-    // },
-    // {
-    //   name: "Fitness Tracker & Workout Routines",
-    //   url: "#",
-    //   emoji: "💪",
-    // },
-  ],
+  lists: [],
   workspaces: [
     // {
     //   name: "Personal Life Management",
@@ -153,8 +137,6 @@ const data = {
 export function SidebarLeft({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
-  const utils = api.useUtils();
-
   const { data: recentLists = { items: [], count: 0 } } =
     api.list.getMany.useQuery({
       limit: 3,

@@ -172,12 +172,15 @@ type ListFormProps =
       defaultValues?: z.infer<typeof listSchema>;
     }
   | {
-      listMutation: (
-        callback?: () => void,
-      ) => UseTRPCMutationResult<
+      listMutation: (callback?: () => void) => UseTRPCMutationResult<
         { success: boolean },
-        TRPCClientErrorLike<any>,
-        any,
+        TRPCClientErrorLike<{
+          input: z.infer<typeof updateListSchema>;
+          output: { success: boolean };
+          transformer: true;
+          errorShape: { message: string };
+        }>,
+        z.infer<typeof listSchema>,
         unknown
       >;
       update: false;
@@ -224,7 +227,7 @@ export function ListForm(props: ListFormProps) {
           <FormField
             control={form.control}
             name="emoji"
-            render={({ field }) => (
+            render={() => (
               <FormItem className="flex flex-col">
                 <FormLabel>Emoji</FormLabel>
                 <FormControl>
@@ -241,7 +244,7 @@ export function ListForm(props: ListFormProps) {
                       <Picker
                         data={data}
                         value={form.watch("emoji")}
-                        onEmojiSelect={(emoji: any) => {
+                        onEmojiSelect={(emoji: { native: string }) => {
                           form.setValue("emoji", emoji.native);
                         }}
                       />
@@ -376,10 +379,6 @@ export function RecentLists() {
         });
       },
     });
-
-  //   const { data }: { data: List | undefined } = api.list.getMany.useQuery(
-  //     ,
-  //   );
 
   return (
     <Dialog open={open} onOpenChange={() => setOpen(false)}>
@@ -522,7 +521,7 @@ export function ListPage(props: { id: string }) {
               {
                 name: data.name ?? "",
                 description: data.description ?? "",
-                emoji: data.emoji || "🗺️",
+                emoji: data.emoji ?? "🗺️",
                 tags:
                   data.tags?.map((tag) => ({
                     id: tag.id.toString(),
