@@ -118,7 +118,6 @@ export const listRouter = createTRPCRouter({
           })
           .from(lists)
           .leftJoin(stats, eq(lists.id, stats.listId))
-          // ...existing code...
           .leftJoin(
             listTags,
             tagNames.length > 0 ? eq(lists.id, listTags.listId) : sql`1 = 0`,
@@ -215,60 +214,133 @@ export const listRouter = createTRPCRouter({
   update: protectedMutationProcedure
     .input(updateListSchema)
     .mutation(async ({ ctx, input }) => {
-      const listRows = await ctx.db
-        .update(lists)
-        .set({
-          name: input.name,
-          description: input.description,
-        })
-        .where(and(eq(lists.id, input.id), eq(lists.userId, ctx.user.id)))
-        .returning({
-          id: lists.id,
-        });
-      if (input.tags.length > 0) {
-        const existingTagRows = await ctx.db.query.tags.findMany({
-          where: or(
-            inArray(
-              tags.name,
-              input.tags.map((tag) => tag.text),
-            ),
-            inArray(
-              tags.shortcut,
-              input.tags.map((tag) => tag.text),
-            ),
-          ),
-          with: {
-            destinationTags: true,
-          },
-        });
-        const newTagRows = await ctx.db
-          .insert(tags)
-          .values(
-            input.tags.map((tag) => {
-              return {
-                userId: ctx.user.id,
-                name: tag.text,
-                shortcut: tag.text.toLowerCase().replace(/\s/g, "-"),
-              };
-            }),
-          )
-          .onConflictDoNothing()
+      let listRows = null;
+      if (input.name || input.emoji || input.description) {
+        listRows = await ctx.db
+          .update(lists)
+          .set({
+            name: input.name,
+            description: input.description,
+            emoji: input.emoji,
+          })
+          .where(and(eq(lists.id, input.id), eq(lists.userId, ctx.user.id)))
           .returning({
-            id: tags.id,
+            id: lists.id,
           });
+      } else {
+        listRows = await ctx.db.query.lists.findMany({
+          columns: { id: true },
+          where: and(eq(lists.id, input.id), eq(lists.userId, ctx.user.id)),
+        });
+      }
+      if (
+        (input.tags && input.tags.length > 0) ||
+        (input.newTags && input.newTags?.length > 0) ||
+        (input.removedTags && input.removedTags.length > 0)
+      ) {
+        const existingTagRows =
+          input.tags || input.newTags
+            ? await ctx.db.query.tags.findMany({
+                where: or(
+                  inArray(
+                    tags.name,
+                    input.tags
+                      ? input.tags.map((tag) => tag.text)
+                      : input.newTags
+                        ? input.newTags?.map((tag) => tag)
+                        : [],
+                  ),
+                  inArray(
+                    tags.shortcut,
+                    input.tags
+                      ? input.tags.map((tag) => tag.text)
+                      : input.newTags
+                        ? input.newTags?.map((tag) => tag)
+                        : [],
+                  ),
+                ),
+                with: {
+                  destinationTags: true,
+                },
+              })
+            : [];
+        const newTagValues = [
+          ...(input.tags
+            ? input.tags.map((tag) => {
+                return {
+                  userId: ctx.user.id,
+                  name: tag.text,
+                  shortcut: tag.text.toLowerCase().replace(/\s/g, "-"),
+                };
+              })
+            : []),
+          ...(input.newTags
+            ? input.newTags.map((tag) => {
+                return {
+                  userId: ctx.user.id,
+                  name: tag,
+                  shortcut: tag.toLowerCase().replace(/\s/g, "-"),
+                };
+              })
+            : []),
+        ];
+        let newTagRows: { id: number }[] = [];
+        console.log(newTagValues);
+        if (newTagValues.length > 0) {
+          newTagRows = await ctx.db
+            .insert(tags)
+            .values(newTagValues)
+            .onConflictDoNothing()
+            .returning({
+              id: tags.id,
+            });
+        }
+
+        if (input.removedTags && input.removedTags.length > 0) {
+          console.log("removing tags");
+          await ctx.db.delete(listTags).where(
+            and(
+              eq(listTags.listId, input.id),
+              exists(
+                ctx.db
+                  .select()
+                  .from(lists)
+                  .where(
+                    and(
+                      eq(lists.id, listTags.listId),
+                      eq(lists.userId, ctx.user.id),
+                    ),
+                  ),
+              ),
+              exists(
+                ctx.db
+                  .select()
+                  .from(tags)
+                  .where(
+                    and(
+                      eq(tags.id, listTags.tagId),
+                      inArray(tags.name, input.removedTags),
+                    ),
+                  ),
+              ),
+            ),
+          );
+        }
 
         const tagRows = [...newTagRows, ...existingTagRows];
-        await ctx.db
-          .insert(listTags)
-          .values(
-            tagRows.map((tag) => {
-              return {
-                listId: listRows[0]!.id,
-                tagId: tag.id,
-              };
-            }),
-          )
-          .onConflictDoNothing();
+        if (tagRows.length > 0) {
+          await ctx.db
+            .insert(listTags)
+            .values(
+              tagRows.map((tag) => {
+                return {
+                  listId: listRows[0]!.id,
+                  tagId: tag.id,
+                };
+              }),
+            )
+            .onConflictDoNothing();
+        }
       }
       return {
         success: true,
