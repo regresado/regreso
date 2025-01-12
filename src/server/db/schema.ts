@@ -129,6 +129,7 @@ export const destinations = createTable(
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull()
       .$onUpdate(() => new Date()),
+    workspaceId: integer("workspace_id").references(() => users.id),
   },
   (destination) => ({
     searchIndex: index("destination_search_index").using(
@@ -195,6 +196,7 @@ export const lists = createTable(
     createdAt: timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
+    workspaceId: integer("workspace_id").references(() => users.id),
   },
   (list) => ({
     uniqueListName: unique().on(list.userId, list.name),
@@ -242,6 +244,22 @@ export const destinationLists = createTable(
       destinationList.destinationId,
       destinationList.listId,
     ),
+  }),
+);
+
+export const workspaces = createTable(
+  "workspace",
+  {
+    id: serial("id").primaryKey(),
+    name: varchar("name", { length: 256 }).notNull(),
+    description: varchar("description", { length: 256 }),
+    emoji: varchar("emoji", { length: 256 }),
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id),
+  },
+  (workspace) => ({
+    uniqueWorkspaceName: unique().on(workspace.userId, workspace.name),
   }),
 );
 
