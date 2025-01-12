@@ -24,22 +24,24 @@ export default async function PlatformLayout({
 
   const cookieStore = await cookies();
 
-  if (user) {
-    if (session == null) {
-      return redirect("/log-in");
-    } else {
-      if (!user.emailVerified && !user.githubId && !user.googleId) {
-        return redirect("/verify-email");
-      }
-      if (user.registered2FA && !session.twoFactorVerified) {
-        return redirect("/2fa");
-      }
-      if (
-        !user.registered2FA &&
-        cookieStore.get("disable2FAReminder")?.value != "yes"
-      ) {
-        return redirect("/2fa/setup");
-      }
+  if (!user) {
+    return redirect("/log-in");
+  }
+
+  if (session == null) {
+    return redirect("/log-in");
+  } else {
+    if (!user.emailVerified && !user.githubId && !user.googleId) {
+      return redirect("/verify-email");
+    }
+    if (user.registered2FA && !session.twoFactorVerified) {
+      return redirect("/2fa");
+    }
+    if (
+      !user.registered2FA &&
+      cookieStore.get("disable2FAReminder")?.value != "yes"
+    ) {
+      return redirect("/2fa/setup");
     }
   }
 
