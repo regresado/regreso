@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 
 import { Github } from "lucide-react";
+import { useTheme } from "next-themes";
 
 import { Button } from "~/components/ui/button";
 import { MacbookScroll } from "~/components/ui/macbook-scroll";
@@ -12,6 +13,8 @@ import Hero from "~/components/hero";
 import { LandingNavigation } from "~/components/landing-navigation";
 
 function MacbookScrollDemo() {
+  const { theme } = useTheme();
+
   return (
     <div className="w-full overflow-hidden bg-white dark:bg-[#0B0B0F]">
       <MacbookScroll
@@ -20,8 +23,7 @@ function MacbookScrollDemo() {
             Use Anywhere <br /> No kidding.
           </span>
         }
-        // badge={<Badge className="h-10 w-10 -rotate-12 transform" />}
-        src="/dashboard-screenshot.png"
+        src={`/dashboard-screenshot-${theme ?? "dark"}.png`}
         showGradient={false}
       />
     </div>
