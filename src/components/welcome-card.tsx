@@ -1,10 +1,7 @@
 import Link from "next/link";
 
-import { motion } from "motion";
 import { Binoculars, Rocket } from "lucide-react";
-
-import { useOnborda } from "onborda";
-
+import { motion } from "motion/react";
 import { useOnborda } from "onborda";
 
 import { Button } from "~/components/ui/button";
@@ -41,11 +38,11 @@ export function WelcomeCard({
       }}
     >
       <TiltCard>
-      <Card id="welcome-card">
+        <Card id="welcome-card">
           <CardHeader>
             <CardTitle>
-            👋 Welcome{name ? " back, " + name : " to Regreso"},
-          </CardTitle>
+              👋 Welcome{name ? " back, " + name : " to Regreso"},
+            </CardTitle>
             <CardDescription>
               Learn the basics of how to use Regreso.
             </CardDescription>
@@ -55,23 +52,23 @@ export function WelcomeCard({
 
             <div className="mt-4 flex gap-2">
               <Button size="sm" variant="outline" asChild>
-              <Link href="/guide">
+                <Link href="/guide">
                   <Rocket />
                   Setup Guide
                 </Link>
-            </Button>
+              </Button>
               <Button
-              size="sm"
-              onClick={() => {
-                startOnborda("welcome-tour");
-              }}
-            >
+                size="sm"
+                onClick={() => {
+                  startOnborda("welcome-tour");
+                }}
+              >
                 <Binoculars /> Start Tour
               </Button>
             </div>
           </CardContent>
         </Card>
-    </TiltCard>
+      </TiltCard>
     </motion.div>
   );
 }
