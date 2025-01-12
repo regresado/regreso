@@ -3,18 +3,18 @@
 [![Netlify Status](https://api.netlify.com/api/v1/badges/9186e8eb-17c0-4d34-bdd9-e2add4200741/deploy-status)](https://app.netlify.com/sites/regreso/deploys)
 [![wakatime](https://wakatime.com/badge/user/7482ea9d-3085-4e9b-95ad-1ca78a14d948/project/2972fea6-6fe2-4f55-afb8-a47ff01540ad.svg)](https://wakatime.com/badge/user/7482ea9d-3085-4e9b-95ad-1ca78a14d948/project/2972fea6-6fe2-4f55-afb8-a47ff01540ad)
 
-## ⭐ About
+## 👋 Introduction
 
-Regreso is an open source application that allows you to sync, manage, and track bookmarks and resources you wish to "return" to later.
+Regreso is an open source application that allows you to create, sync, manage, and find "destinations" (bookmarked links, files, and resources) you wish to "return" to later.
 
-## ⚡ Quick Links
+Destinations may be added to "maps", which enable graphing and visualizing relationships using tags, "journies" (saved sessions), and references. "Trunks" allow one to separate maps by subject, topic, or project.
 
-- [Landing Page](https://regreso.netlify.app)
-- [Dashboard](https://regreso.netlify.app/dashboard) - Can be used without an account and offline!
+## 📌 Quick Links
+
+- [Website](https://regreso.netlify.app)
+- [Dashboard](https://regreso.netlify.app/dashboard)
 - [Guide](https://regreso.netlify.app/guide)
-- [Blog](https://regreso.netlify.app/blog)
-- [Credits](https://regreso.netlify.app/credits)
-- [Technical Wiki](https://regreso.netlify.app/wiki)
+- [Wiki](https://regreso.netlify.app/wiki)
 - [Roadmap](https://regreso.netlify.app/roadmap)
 
 ## 🚀 Development
@@ -23,9 +23,19 @@ To fork/extend Regreso, it is recommended that you use Supabase or any other Pos
 
 Many environment variables are also required for Regreso development. These are also documented in the `.env.example` file.
 
+To install dependencies, run `pnpm install` and to build/start server, use `pnpm run dev` or `pnpm run build && pnpm run start`.
+
+## 🤝 Contributing
+
+Regreso is licensed under the [MIT license](LICENSE.md), a permissive license which allows you to modify, fork, extend, or redistribute the source code.
+
+We accept contributions of new features and bug fixes through [Pull Requests](/pulls) and general suggestions/bug reports through [Issues](/issues). Before opening either of these, please check if a similar issue/PR has already been opened/assigned and if unsure about its assignment/development status, please ask before potentially creating a duplicate.
+
+**For security reports, please [submit](/security) a private vulnerability disclosure with the relevant information!**
+
 ## ⚙️ Tech Overview
 
-This project uses the [T3 Webdev Stack](https://create.t3.gg/) made by [@t3oss](https://github.com/t3oss):
+This project uses the [T3 Stack](https://create.t3.gg/) made by [@t3oss](https://github.com/t3oss):
 
 <ul>
 <li>
@@ -100,13 +110,13 @@ This project uses the [T3 Webdev Stack](https://create.t3.gg/) made by [@t3oss](
 </li>
 </ul>
 
-**With my own custom additions of:**
+**With custom additions of:**
 
 <ul>
 <li>
 <details>
 <summary> 
-<a href="https://ui.shadcn.com/">Shadcn-ui</a> copy-pasted components
+<a href="https://ui.shadcn.com/">shadcn/ui</a> copy-pasted components
 </summary>
 <ul>
 <li>
@@ -124,14 +134,25 @@ This project uses the [T3 Webdev Stack](https://create.t3.gg/) made by [@t3oss](
 <li>
 <a href="https://ui.aceternity.com/">Aceternity UI</a> animated landing page features
 </li>
+<li>
+<a href="https://github.com/Aslam97/shadcn-minimal-tiptap/">Shadcn Minimal Tiptap</a> component
+</li>
+<li>
+<a href="https://emblor.jaleelbennett.com/introduction">Emblor</a> tag selections
+</li>
+<li>
+<a href="https://www.npmjs.com/package/react-day-picker">React Day Picker</a> calendar picker
+</li>
+<li>
+<a href="https://tiptap.dev">TipTap</a> rich text editor
+</li>
 </ul>
 </details>
 </li>
 </ul>
 
 - [Motion](https://motion.dev/) page animations
-- [Lucide](https://lucide.dev/) Icons
-- [Boring](https://boringavatars.com/) Avatars
+- [Lucide](https://lucide.dev/) Icons and [Boring](https://boringavatars.com/) Avatars
 
 <ul>
 <li>
@@ -144,7 +165,7 @@ This project uses the [T3 Webdev Stack](https://create.t3.gg/) made by [@t3oss](
 <a href="https://arcticjs.dev/">Arctic</a> OAuth 2.0 Providers
 </li>
 <li>
-<a href="https://oslojs.dev/">React Day Picker</a> calendar picker
+<a href="https://oslojs.dev/">Oslo</a> auth packages
 </li>
 <li>
 <a href="https://node-rs.dev/">Node-RS</a> bindings for Argon2
@@ -161,3 +182,4 @@ This project uses the [T3 Webdev Stack](https://create.t3.gg/) made by [@t3oss](
 </ul>
 
 - [UploadThing](https://uploadthing.com/) for handling user file uplaods
+- [Gray Matter](https://www.npmjs.com/package/gray-matter/) and [Remark (react-markdown)](https://remark.js.org/) for blog/site content rendering

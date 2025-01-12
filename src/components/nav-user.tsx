@@ -1,22 +1,22 @@
 "use client";
 
 import { startTransition, useActionState } from "react";
-
 import { redirect, useRouter } from "next/navigation";
 
+import BoringAvatar from "boring-avatars";
 import {
   Bell,
   ChevronsUpDown,
   CircleUser,
-  LogOut,
-  LogIn,
   Lock,
+  LogIn,
+  LogOut,
 } from "lucide-react";
-
-import BoringAvatar from "boring-avatars";
+import type { User } from "~/server/models";
 
 import { cn } from "~/lib/utils";
 
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,9 +32,6 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "~/components/ui/sidebar";
-import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-
-import type { User } from "~/server/models";
 
 import { logoutAction } from "~/app/(platform)/actions";
 
@@ -138,26 +135,24 @@ export function NavUser({ user }: { user: User | null }) {
               <>
                 <DropdownMenuGroup>
                   <DropdownMenuItem
-                    onSelect={() => router.push("/dashboard/settings/profile")}
+                    onSelect={() => router.push("/settings/profile")}
                   >
                     <CircleUser />
                     Profile
                   </DropdownMenuItem>
                   <DropdownMenuItem
-                    onSelect={() => router.push("/dashboard/settings/account")}
+                    onSelect={() => router.push("/settings/account")}
                   >
                     <Lock />
                     Account
                   </DropdownMenuItem>
-
+                  {/* 
                   <DropdownMenuItem
-                    onSelect={() =>
-                      router.push("/dashboard/settings/notifications")
-                    }
+                    onSelect={() => router.push("/settings/notifications")}
                   >
                     <Bell />
                     Notifications
-                  </DropdownMenuItem>
+                  </DropdownMenuItem> */}
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem

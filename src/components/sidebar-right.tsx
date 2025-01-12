@@ -1,10 +1,9 @@
 import * as React from "react";
-import { Plus } from "lucide-react";
 
-import { Calendars } from "~/components/calendars";
-import { DatePicker } from "~/components/date-picker";
-import { NavUser } from "~/components/nav-user";
+import { Plus } from "lucide-react";
 import type { User } from "~/server/models";
+
+import { Badge } from "~/components/ui/badge";
 import {
   Sidebar,
   SidebarContent,
@@ -15,40 +14,30 @@ import {
   SidebarMenuItem,
   SidebarSeparator,
 } from "~/components/ui/sidebar";
+import { Calendars } from "~/components/calendars";
+import { DatePicker } from "~/components/date-picker";
+import { NavUser } from "~/components/nav-user";
 
 // This is sample data.
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   calendars: [
     {
       name: "My Calendars",
-      items: ["Personal", "Work", "Family"],
+      items: [],
     },
     {
-      name: "Favorites",
-      items: ["Holidays", "Birthdays"],
-    },
-    {
-      name: "Other",
-      items: ["Travel", "Reminders", "Deadlines"],
+      name: "Maps",
+      items: [],
     },
   ],
 };
 
 export function SidebarRight({
   user,
-  ...props
+  ..._props
 }: { user: User | null } & React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar
-      collapsible="none"
-      className="sticky top-0 hidden h-svh border-l lg:flex"
-      {...props}
-    >
+    <Sidebar side="right" className="">
       <SidebarHeader className="h-16 border-b border-sidebar-border">
         <NavUser user={user} />
       </SidebarHeader>
@@ -62,7 +51,12 @@ export function SidebarRight({
           <SidebarMenuItem>
             <SidebarMenuButton>
               <Plus />
-              <span>New Calendar</span>
+              <span>
+                New Calendar
+                <Badge className="ml-2" variant="secondary">
+                  Soon!
+                </Badge>
+              </span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

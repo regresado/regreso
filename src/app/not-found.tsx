@@ -1,7 +1,7 @@
 import * as React from "react";
 
-import NotFound from "~/components/not-found";
 import { LandingNavigation } from "~/components/landing-navigation";
+import NotFound from "~/components/not-found";
 
 export default function NotFoundPage() {
   return (

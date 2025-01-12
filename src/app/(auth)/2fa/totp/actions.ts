@@ -4,19 +4,16 @@ import { redirect } from "next/navigation";
 
 import { verifyTOTP } from "@oslojs/otp";
 
+import { globalPOSTRateLimit } from "~/server/request";
+import { getCurrentSession, setSessionAs2FAVerified } from "~/server/session";
+import { getUserTOTPKey, totpBucket } from "~/server/totp";
+
 type VerifyTOTP = (
   key: Uint8Array,
   step: number,
   digits: number,
   token: string,
 ) => boolean;
-
-import { getCurrentSession, setSessionAs2FAVerified } from "~/server/session";
-
-import { totpBucket } from "~/server/totp";
-import { getUserTOTPKey } from "~/server/totp";
-
-import { globalPOSTRateLimit } from "~/server/request";
 
 export async function verify2FAAction(
   _prev: ActionResult,

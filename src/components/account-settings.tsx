@@ -1,25 +1,24 @@
 "use client";
 
-import { useState, useActionState } from "react";
+import { useActionState, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AlertCircle } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { AlertCircle } from "lucide-react";
-
-import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
+import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import {
   Form,
+  FormControl,
   FormField,
   FormItem,
-  FormControl,
   FormLabel,
   FormMessage,
 } from "~/components/ui/form";
+import { Input } from "~/components/ui/input";
 
 import {
   deletePasskeyAction,
@@ -28,7 +27,8 @@ import {
   regenerateRecoveryCodeAction,
   updateEmailAction,
   updatePasswordAction,
-} from "~/app/(platform)/dashboard/settings/account/actions";
+} from "~/app/(platform)/settings/account/actions";
+
 import { CardDescription } from "./ui/card";
 
 const initialUpdatePasswordState = {

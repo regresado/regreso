@@ -1,7 +1,9 @@
 "use server";
 
-import { redirect } from "next/navigation";
 import { cookies, headers } from "next/headers";
+import { redirect } from "next/navigation";
+
+import type { SessionFlags } from "~/server/models";
 
 import { checkEmailAvailability, verifyEmailInput } from "~/server/email";
 import {
@@ -10,17 +12,14 @@ import {
   setEmailVerificationRequestCookie,
 } from "~/server/email-verification";
 import { verifyPasswordStrength } from "~/server/password";
+import { RefillingTokenBucket } from "~/server/rate-limit";
+import { globalPOSTRateLimit } from "~/server/request";
 import {
   createSession,
   generateSessionToken,
   setSessionTokenCookie,
 } from "~/server/session";
 import { createUser, verifyUsernameInput } from "~/server/user";
-
-import { RefillingTokenBucket } from "~/server/rate-limit";
-import { globalPOSTRateLimit } from "~/server/request";
-
-import type { SessionFlags } from "~/server/models";
 
 const ipBucket = new RefillingTokenBucket<string>(3, 10);
 

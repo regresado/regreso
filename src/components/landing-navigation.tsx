@@ -1,17 +1,14 @@
 import Link from "next/link";
 
-import { MenuIcon, ChevronRightIcon, ExternalLink } from "lucide-react";
+import { ChevronRightIcon, ExternalLink, MenuIcon } from "lucide-react";
 
 import { Button } from "~/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "~/components/ui/collapsible";
 import { ModeToggle } from "~/components/ui/mode-toggle";
-
-import { Logo } from "~/components/logo";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -20,7 +17,9 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "~/components/ui/navigation-menu";
+import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
 import { ThemeToggle } from "~/components/landing-theme-toggle";
+import { Logo } from "~/components/logo";
 
 // TODO: Make Side Navigation Sheet share component with marketing one
 export function LandingNavigation() {
@@ -149,7 +148,7 @@ export function LandingNavigation() {
                           prefetch={false}
                         >
                           <div className="text-sm font-medium leading-none group-hover:underline">
-                            Technical Wiki
+                            Wiki
                           </div>
                           <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
                             Learn how Regreso works and implement it yourself.
@@ -330,7 +329,7 @@ export function LandingNavigation() {
                           prefetch={false}
                         >
                           <div className="text-sm font-medium leading-none group-hover:underline">
-                            Technical Wiki
+                            Wiki
                           </div>
                           <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
                             Learn how Regreso works and implement it yourself.

@@ -1,11 +1,11 @@
 import React from "react";
-
 import Link from "next/link";
 
-import { Button } from "~/components/ui/button";
-import { SiteContent } from "~/components/site-content";
-
 import { getPostData, getSortedPostsData } from "~/lib/knowledge";
+
+import { Button } from "~/components/ui/button";
+
+import { SiteContent } from "../../_components/content";
 
 export async function generateStaticParams() {
   const posts = getSortedPostsData();

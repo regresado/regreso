@@ -1,19 +1,17 @@
 import crypto from "node:crypto";
 import { cookies } from "next/headers";
 
+import { ObjectParser } from "@pilcrowjs/object-parser";
 import { decodeIdToken, type OAuth2Tokens } from "arctic";
 
-import { ObjectParser } from "@pilcrowjs/object-parser";
-
+import { google } from "~/server/oauth";
+import { globalGETRateLimit } from "~/server/request";
 import {
-  generateSessionToken,
   createSession,
+  generateSessionToken,
   setSessionTokenCookie,
 } from "~/server/session";
 import { createUser, getUserFromGoogleId } from "~/server/user";
-import { google } from "~/server/oauth";
-
-import { globalGETRateLimit } from "~/server/request";
 
 export async function GET(request: Request): Promise<Response> {
   if (!(await globalGETRateLimit())) {

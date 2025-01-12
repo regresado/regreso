@@ -1,21 +1,19 @@
 "use client";
 
-import * as React from "react";
+import { useEffect, useState, type ComponentProps } from "react";
+
+import { api } from "~/trpc/react";
 import {
   Calendar,
-  Network,
-  Command,
   Home,
   MessageCircleQuestion,
+  Network,
+  Sailboat,
   Search,
   Settings,
 } from "lucide-react";
 
-import { NavFavorites } from "~/components/nav-favorites";
-import { NavMain } from "~/components/nav-main";
-import { NavSecondary } from "~/components/nav-secondary";
-import { NavWorkspaces } from "~/components/nav-workspaces";
-import { TeamSwitcher } from "~/components/team-switcher";
+import { Badge } from "~/components/ui/badge";
 import {
   Sidebar,
   SidebarContent,
@@ -23,20 +21,25 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "~/components/ui/sidebar";
+import { NavLists } from "~/components/nav-lists";
+import { NavMain } from "~/components/nav-main";
+import { NavSecondary } from "~/components/nav-secondary";
+import { NavWorkspaces } from "~/components/nav-workspaces";
+import { TeamSwitcher } from "~/components/team-switcher";
 
 // This is sample data.
 const data = {
   teams: [
     {
-      name: "My Team",
-      logo: Command,
+      name: "My Crew",
+      logo: Sailboat,
       plan: "Enterprise",
     },
   ],
   navMain: [
     {
       title: "Search",
-      url: "#search",
+      url: "/search",
       icon: Search,
     },
     {
@@ -47,11 +50,27 @@ const data = {
     },
     {
       title: "Graph",
+      render: (
+        <div>
+          Graph{" "}
+          <Badge className="ml-2" variant="secondary">
+            Soon!
+          </Badge>
+        </div>
+      ),
       url: "#graph",
       icon: Network,
     },
     {
       title: "Calendar",
+      render: (
+        <div>
+          Calendar{" "}
+          <Badge className="ml-2" variant="secondary">
+            Soon!
+          </Badge>
+        </div>
+      ),
       url: "#calendar",
       icon: Calendar,
     },
@@ -59,7 +78,7 @@ const data = {
   navSecondary: [
     {
       title: "Settings",
-      url: "/dashboard/settings",
+      url: "/settings",
       icon: Settings,
     },
     {
@@ -68,72 +87,70 @@ const data = {
       icon: MessageCircleQuestion,
     },
   ],
-  lists: [
-    {
-      name: "Project Management & Task Tracking",
-      url: "#",
-      emoji: "📊",
-    },
-    {
-      name: "Family Recipe Collection & Meal Planning",
-      url: "#",
-      emoji: "🍳",
-    },
-    {
-      name: "Fitness Tracker & Workout Routines",
-      url: "#",
-      emoji: "💪",
-    },
-  ],
+  lists: [],
   workspaces: [
-    {
-      name: "Personal Life Management",
-      emoji: "🏠",
-      pages: [
-        {
-          name: "Daily Journal & Reflection",
-          url: "#",
-          emoji: "📔",
-        },
-        {
-          name: "Health & Wellness Tracker",
-          url: "#",
-          emoji: "🍏",
-        },
-        {
-          name: "Personal Growth & Learning Goals",
-          url: "#",
-          emoji: "🌟",
-        },
-      ],
-    },
-    {
-      name: "Professional Development",
-      emoji: "💼",
-      pages: [
-        {
-          name: "Career Objectives & Milestones",
-          url: "#",
-          emoji: "🎯",
-        },
-        {
-          name: "Skill Acquisition & Training Log",
-          url: "#",
-          emoji: "🧠",
-        },
-        {
-          name: "Networking Contacts & Events",
-          url: "#",
-          emoji: "🤝",
-        },
-      ],
-    },
+    // {
+    //   name: "Personal Life Management",
+    //   emoji: "🏠",
+    //   pages: [
+    //     {
+    //       name: "Daily Journal & Reflection",
+    //       url: "#",
+    //       emoji: "📔",
+    //     },
+    //     {
+    //       name: "Health & Wellness Tracker",
+    //       url: "#",
+    //       emoji: "🍏",
+    //     },
+    //     {
+    //       name: "Personal Growth & Learning Goals",
+    //       url: "#",
+    //       emoji: "🌟",
+    //     },
+    //   ],
+    // },
+    // {
+    //   name: "Professional Development",
+    //   emoji: "💼",
+    //   pages: [
+    //     {
+    //       name: "Career Objectives & Milestones",
+    //       url: "#",
+    //       emoji: "🎯",
+    //     },
+    //     {
+    //       name: "Skill Acquisition & Training Log",
+    //       url: "#",
+    //       emoji: "🧠",
+    //     },
+    //     {
+    //       name: "Networking Contacts & Events",
+    //       url: "#",
+    //       emoji: "🤝",
+    //     },
+    //   ],
+    // },
   ],
 };
 
-export function SidebarLeft({
-  ...props
-}: React.ComponentProps<typeof Sidebar>) {
+export function SidebarLeft({ ...props }: ComponentProps<typeof Sidebar>) {
+  const [mode, setMode] = useState<"fav" | "rec">("rec");
+  const [oldMode, setOldMode] = useState<"fav" | "rec">("rec");
+
+  const { data: recentLists = { items: [], count: 0 }, refetch } =
+    api.list.getMany.useQuery({
+      limit: 3,
+      order: "DESC",
+      tags: mode === "fav" ? ["favorite maps"] : undefined,
+    });
+
+  useEffect(() => {
+    if (mode !== oldMode) {
+      void refetch();
+      setOldMode(mode);
+    }
+  }, [mode, refetch, oldMode, setOldMode]);
   return (
     <Sidebar className="border-r-0" {...props}>
       <SidebarHeader>
@@ -141,7 +158,20 @@ export function SidebarLeft({
         <NavMain items={data.navMain} />
       </SidebarHeader>
       <SidebarContent>
-        <NavFavorites favorites={data.lists} />
+        <NavLists
+          mode={mode}
+          refetch={refetch}
+          setMode={setMode}
+          lists={recentLists.items.map((l) => {
+            return {
+              id: l.id,
+              name: l.name,
+              emoji: l.emoji ?? "❔",
+              url: "/map/" + l.id,
+              favorite: !!l.tags?.find((t) => t.text == "favorite maps"),
+            };
+          })}
+        />
       </SidebarContent>
       <SidebarFooter>
         <NavWorkspaces workspaces={data.workspaces} />
