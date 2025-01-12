@@ -4,15 +4,14 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { decodeBase64, encodeBase64 } from "@oslojs/encoding";
-
 import { AlertCircle } from "lucide-react";
 
+import { createChallenge } from "~/lib/client/webauthn";
+
+import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { Button } from "~/components/ui/button";
-import { Alert, AlertTitle, AlertDescription } from "~/components/ui/alert";
 
 import { verify2FAWithSecurityKeyAction } from "~/app/(auth)/reset-password/2fa/security-key/actions";
-
-import { createChallenge } from "~/lib/client/webauthn";
 
 export function Verify2FAWithSecurityKeyButton(props: {
   encodedCredentialIds: string[];

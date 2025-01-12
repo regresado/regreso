@@ -3,65 +3,70 @@
 import React from "react";
 
 import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbList,
-  BreadcrumbLink,
-} from "~/components/ui/breadcrumb";
-import { Separator } from "~/components/ui/separator";
+  DndContext,
+  type Active,
+  type DragEndEvent,
+  type Over,
+} from "@dnd-kit/core";
+import { Sailboat } from "lucide-react";
+import type { User } from "~/server/models";
+
 import { WelcomeCard } from "~/components/welcome-card";
-import { SidebarTrigger } from "~/components/ui/sidebar";
 
-import { Home } from "lucide-react";
+import {
+  CreateDestination,
+  RecentDestinations,
+} from "../_components/destination";
+import { RecentLists } from "../_components/list";
 
-const Page: React.FC = () => {
+const DashboardHome: React.FC = (props: { user?: User }) => {
+  const [dragEnd, setDragEnd] = React.useState<{
+    over: Over;
+    active: Active;
+  } | null>(null);
+  function handleDragEnd(event: DragEndEvent) {
+    const { over, active } = event;
+    if (over && active) {
+      setDragEnd({ over: over, active: active });
+    }
+  }
   return (
     <>
-      <header className="sticky top-0 flex h-14 shrink-0 items-center gap-2 bg-background">
-        <div className="flex flex-1 items-center gap-2 px-3">
-          <SidebarTrigger />
-          <Separator orientation="vertical" className="mr-2 h-4" />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <Home size="16" />
-                <BreadcrumbLink href="/dashboard">Home</BreadcrumbLink>
-              </BreadcrumbItem>
-              {/* <BreadcrumbItem>
-                <BreadcrumbLink href="/dashboard/workspace/">
-                  🖼️ Frontend Development
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage className="line-clamp-1">
-                  🎨 Design Components
-                </BreadcrumbPage>
-              </BreadcrumbItem> */}
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
-      </header>
-      <div className="flex flex-1 flex-col gap-4 p-4">
-        <div className="grid auto-rows-min gap-4 md:grid-cols-2">
-          <div className="rounded-xl bg-muted/50">
-            <WelcomeCard
-              teams={[
-                {
-                  name: "My Team",
-                  logo: Home,
-                  plan: "Free",
-                },
-              ]}
-              name={"John Doe"}
-            />
+      <DndContext onDragEnd={handleDragEnd}>
+        <div className="z-10 grid grid-cols-1 gap-4 p-4 xl:grid-cols-5">
+          <div className="col-span-1 xl:col-span-2">
+            <div className="rounded-xl bg-muted/50">
+              <WelcomeCard
+                teams={[
+                  {
+                    name: "My Crew",
+                    logo: Sailboat,
+                    plan: "Free",
+                  },
+                ]}
+                name={props.user?.displayName}
+              />
+            </div>
           </div>
-          <div className="rounded-xl bg-muted/50" />
+          <div className="col-span-1 xl:col-span-3">
+            <div className="rounded-xl bg-muted/50">
+              <CreateDestination />
+            </div>
+          </div>
+          <div className="z-50 col-span-1 xl:col-span-2">
+            <div className="rounded-xl bg-muted/50">
+              <RecentDestinations dragEnd={dragEnd} setDragEnd={setDragEnd} />
+            </div>
+          </div>
+          <div className="col-span-1 xl:col-span-3">
+            <div className="rounded-xl bg-muted/50">
+              <RecentLists />
+            </div>
+          </div>
         </div>
-        <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
-      </div>
+      </DndContext>
     </>
   );
 };
 
-export default Page;
+export default DashboardHome;

@@ -1,18 +1,18 @@
 "use client";
 
-import { useState, useEffect, useActionState } from "react";
-
-import { decodeBase64, encodeBase64 } from "@oslojs/encoding";
+import { useActionState, useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { decodeBase64, encodeBase64 } from "@oslojs/encoding";
+import { AlertCircle } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import type { User } from "~/server/models";
 
-import { AlertCircle } from "lucide-react";
+import { createChallenge } from "~/lib/client/webauthn";
 
+import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
-
 import {
   Form,
   FormControl,
@@ -22,12 +22,9 @@ import {
   FormLabel,
   FormMessage,
 } from "~/components/ui/form";
-import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
-
-import { createChallenge } from "~/lib/client/webauthn";
+import { Input } from "~/components/ui/input";
 
 import { registerPasskeyAction } from "~/app/(auth)/2fa/passkey/register/actions";
-import type { User } from "~/server/models";
 
 const initialRegisterPasskeyState = {
   message: "",

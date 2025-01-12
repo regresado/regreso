@@ -1,18 +1,17 @@
+import { eq } from "drizzle-orm";
+import type { User } from "~/server/models";
+
 import { db } from "~/server/db";
 import {
-  users,
-  sessions,
-  totpCredentials,
   passkeyCredentials,
   securityKeyCredentials,
+  sessions,
+  totpCredentials,
+  users,
 } from "~/server/db/schema";
-
-import { generateRandomRecoveryCode } from "~/server/utils";
-import { ExpiringTokenBucket } from "~/server/rate-limit";
 import { decryptToString, encryptString } from "~/server/encryption";
-
-import type { User } from "~/server/models";
-import { eq } from "drizzle-orm";
+import { ExpiringTokenBucket } from "~/server/rate-limit";
+import { generateRandomRecoveryCode } from "~/server/utils";
 
 export const recoveryCodeBucket = new ExpiringTokenBucket<number>(3, 60 * 60);
 
@@ -87,7 +86,6 @@ export async function resetUser2FAWithRecoveryCode(
         .delete(securityKeyCredentials)
         .where(eq(securityKeyCredentials.userId, userId));
     } catch (e) {
-      console.error(e);
       if (e instanceof Error) {
         if (!e.toString().includes("Rollback")) {
           tx.rollback();

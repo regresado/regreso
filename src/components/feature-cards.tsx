@@ -1,7 +1,8 @@
 "use client";
 
-import { Zap, Code, Users } from "lucide-react";
-import { motion } from "framer-motion";
+import { Code, Database, Zap } from "lucide-react";
+import { motion } from "motion/react";
+
 // import { useInView } from "react-intersection-observer";
 
 type Feature = {
@@ -15,19 +16,19 @@ const features: Feature[] = [
     icon: <Zap className="h-10 w-10 text-cyan-500" />,
     title: "Smart Bookmarking",
     description:
-      "Organize and categorize your visited websites and resources. Search with tags.",
+      "Treat internet places like locations: organize and search for websites and resources.",
   },
   {
     icon: <Code className="h-10 w-10 text-cyan-500" />,
-    title: "Open Source",
+    title: "Self-hostable",
     description:
-      "Fully open-source, allowing community contributions and transparency.",
+      "Painlessly set up, host, and run your own instance of Regreso.",
   },
   {
-    icon: <Users className="h-10 w-10 text-cyan-500" />,
-    title: "Collaborative (Coming soon!)",
+    icon: <Database className="h-10 w-10 text-cyan-500" />,
+    title: "Connect Your Data",
     description:
-      "Share and collaborate on digital trails with your team or community.",
+      "Easily import, export, migrate, or delete your data at any time.",
   },
 ];
 

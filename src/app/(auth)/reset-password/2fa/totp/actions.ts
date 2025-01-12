@@ -5,12 +5,11 @@ import { redirect } from "next/navigation";
 import { verifyTOTP } from "@oslojs/otp";
 
 import {
-  setPasswordResetSessionAs2FAVerified,
   getCurrentPasswordResetSession,
+  setPasswordResetSessionAs2FAVerified,
 } from "~/server/password-reset";
-import { getUserTOTPKey, totpBucket } from "~/server/totp";
-
 import { globalPOSTRateLimit } from "~/server/request";
+import { getUserTOTPKey, totpBucket } from "~/server/totp";
 
 export async function verifyPasswordReset2FAWithTOTPAction(
   _prev: ActionResult,

@@ -1,38 +1,35 @@
 "use client";
 
-import { useState, useActionState, useEffect } from "react";
+import { useActionState, useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import BoringAvatar from "boring-avatars";
+import { X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
-import { X } from "lucide-react";
-import BoringAvatar from "boring-avatars";
-
 import type { User } from "~/server/models";
 
-import { Button } from "~/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-
-import { Input } from "~/components/ui/input";
-import { Textarea } from "~/components/ui/textarea";
-import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-import {
-  Form,
-  FormLabel,
-  FormControl,
-  FormItem,
-  FormMessage,
-  FormField,
-} from "~/components/ui/form";
 import { UploadButton } from "~/lib/client/uploadthing";
 
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { Button } from "~/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "~/components/ui/form";
+import { Input } from "~/components/ui/input";
+import { Textarea } from "~/components/ui/textarea";
 import { toast } from "~/components/hooks/use-toast";
 
 import {
-  updateProfileAction,
   clearProfilePictureAction,
-} from "~/app/(platform)/dashboard/settings/profile/actions";
+  updateProfileAction,
+} from "~/app/(platform)/settings/profile/actions";
 
 const FormSchema = z.object({
   displayName: z
@@ -59,10 +56,7 @@ const pfpClearInitialState = {
 export default function ProfileEdit(props: { user: User }) {
   const [avatarUrl, setAvatarUrl] = useState(props.user.avatarUrl ?? "");
 
-  const [updateProfileState, action] = useActionState(
-    updateProfileAction,
-    initialState,
-  );
+  const [, action] = useActionState(updateProfileAction, initialState);
   const [pfpClearState, deletePfpAction] = useActionState(
     clearProfilePictureAction,
     pfpClearInitialState,
@@ -81,29 +75,19 @@ export default function ProfileEdit(props: { user: User }) {
   } = form;
 
   useEffect(() => {
-    if (updateProfileState.message.length > 0) {
-      toast({
-        description: updateProfileState.message,
-      });
-    }
-  }, [updateProfileState]);
-
-  useEffect(() => {
     if (pfpClearState.message === "ok") {
       setAvatarUrl("");
     } else {
-      if (pfpClearState.message.length > 0) {
-        toast({
-          description: pfpClearState.message,
-        });
-      }
+      toast({
+        description: pfpClearState.message,
+      });
     }
   }, [pfpClearState]);
 
   return (
-    <>
+    <div className="max-w-2/3 space-y-6 overflow-y-scroll px-3">
       <Form {...form}>
-        <div className="space-y-2 px-3">
+        <div className="space-y-2">
           <FormItem className="w-full">
             <FormLabel>Profile Picture</FormLabel>
             <div className="flex items-center space-x-4">
@@ -197,22 +181,24 @@ export default function ProfileEdit(props: { user: User }) {
           <CardTitle>Profile Preview</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex justify-between space-x-4">
+          <div className="flex space-x-4">
             <Avatar>
               <AvatarImage src={avatarUrl} />
               <AvatarFallback>
-                {form
-                  .getValues()
-                  .displayName.split(" ")
-                  .map((n) => n[0])
-                  .join("")
-                  .toUpperCase()}
+                <BoringAvatar
+                  aria-label={`@${props.user?.name}'s profile picture`}
+                  name={props.user?.name ?? "anonymous"}
+                  variant="beam"
+                />
               </AvatarFallback>
             </Avatar>
             <div className="space-y-1">
-              <h4 className="text-sm font-semibold">
-                {form.getValues().displayName}
-              </h4>
+              <div className="flex space-x-1 align-middle">
+                <h4 className="text-sm font-semibold">
+                  {form.getValues().displayName}
+                </h4>
+                <h4 className="text-sm">@{props.user?.name}</h4>
+              </div>
               <p className="text-sm text-muted-foreground">
                 {form.getValues().bio}
               </p>
@@ -220,6 +206,6 @@ export default function ProfileEdit(props: { user: User }) {
           </div>
         </CardContent>
       </Card>
-    </>
+    </div>
   );
 }

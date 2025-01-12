@@ -1,6 +1,8 @@
-import { isRedirectError } from "next/dist/client/components/redirect";
-import { toast } from "~/components/hooks/use-toast";
+import { isRedirectError } from "next/dist/client/components/redirect-error";
+
 import { z } from "zod";
+
+import { toast } from "~/components/hooks/use-toast";
 
 export function getErrorMessage(err: unknown) {
   const unknownError = "Something went wrong, please try again later.";

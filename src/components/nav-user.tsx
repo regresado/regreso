@@ -1,22 +1,22 @@
 "use client";
 
 import { startTransition, useActionState } from "react";
-
 import { redirect, useRouter } from "next/navigation";
 
+import BoringAvatar from "boring-avatars";
 import {
   Bell,
   ChevronsUpDown,
   CircleUser,
-  LogOut,
-  LogIn,
   Lock,
+  LogIn,
+  LogOut,
 } from "lucide-react";
-
-import BoringAvatar from "boring-avatars";
+import type { User } from "~/server/models";
 
 import { cn } from "~/lib/utils";
 
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,9 +32,6 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "~/components/ui/sidebar";
-import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-
-import type { User } from "~/server/models";
 
 import { logoutAction } from "~/app/(platform)/actions";
 
@@ -121,23 +118,6 @@ export function NavUser({ user }: { user: User | null }) {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <ProfilePicture user={user} className="!h-8 !w-8" />
-                {/* <Avatar>
-                  <AvatarImage
-                    src={user?.avatarUrl ?? ""}
-                    alt={`@${user?.name}`}
-                  />
-                  <AvatarFallback>
-                    <BoringAvatar
-                      name={user?.name ?? "anonymous"}
-                      variant="beam"
-                    />
-                  </AvatarFallback>
-                </Avatar> */}
-
-                {/* <AvatarComp className="h-8 w-8 rounded-lg"> */}
-                {/* <AvatarImage src={user.avatar} alt={user.name} /> */}
-                {/* <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-                </AvatarComp> */}
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">
                     {user?.displayName ?? "Anonymous"}
@@ -155,26 +135,24 @@ export function NavUser({ user }: { user: User | null }) {
               <>
                 <DropdownMenuGroup>
                   <DropdownMenuItem
-                    onSelect={() => router.push("/dashboard/settings/profile")}
+                    onSelect={() => router.push("/settings/profile")}
                   >
                     <CircleUser />
                     Profile
                   </DropdownMenuItem>
                   <DropdownMenuItem
-                    onSelect={() => router.push("/dashboard/settings/account")}
+                    onSelect={() => router.push("/settings/account")}
                   >
                     <Lock />
                     Account
                   </DropdownMenuItem>
-
+                  {/* 
                   <DropdownMenuItem
-                    onSelect={() =>
-                      router.push("/dashboard/settings/notifications")
-                    }
+                    onSelect={() => router.push("/settings/notifications")}
                   >
                     <Bell />
                     Notifications
-                  </DropdownMenuItem>
+                  </DropdownMenuItem> */}
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem

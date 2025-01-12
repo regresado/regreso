@@ -1,20 +1,18 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
+import { globalGETRateLimit } from "~/server/request";
+import { getCurrentSession } from "~/server/session";
+
 import { Button } from "~/components/ui/button";
 import {
   Card,
   CardContent,
-  CardHeader,
   CardDescription,
+  CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-
 import { TwoFactorVerificationForm } from "~/components/2fa-verify";
-
-import { getCurrentSession } from "~/server/session";
-
-import { globalGETRateLimit } from "~/server/request";
 
 export default async function Page() {
   if (!(await globalGETRateLimit())) {

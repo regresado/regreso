@@ -1,13 +1,17 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
-import { LampContainer } from "~/components/ui/lamp";
-import { Input } from "~/components/ui/input";
+import Link from "next/link";
+
 import { ArrowRight } from "lucide-react";
+import { motion } from "motion/react";
+
 import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { LampContainer } from "~/components/ui/lamp";
 
 export default function Hero() {
+  const [email, setEmail] = React.useState("");
   return (
     <section className="pt-16 md:pt-16">
       {" "}
@@ -50,12 +54,19 @@ export default function Hero() {
         >
           <Input
             type="email"
+            value={email}
+            onChange={(event) => setEmail(event?.target.value)}
             placeholder="Enter your email"
             className="rounded-full border-gray-300 bg-white text-gray-900 placeholder-gray-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:placeholder-slate-400"
           />
-          <Button className="group rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 px-8 py-2 font-medium text-white transition-all duration-300 ease-in-out hover:scale-105 hover:opacity-90 hover:shadow-lg">
-            Get Started
-            <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+          <Button
+            className="group rounded-md bg-gradient-to-r from-cyan-500 to-indigo-500 px-5 py-2 font-medium text-white transition-all duration-300 ease-in-out hover:scale-105 hover:opacity-90 hover:shadow-lg"
+            asChild
+          >
+            <Link href={`/sign-up?email=${email}`}>
+              Get Started
+              <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </Link>
           </Button>
         </motion.div>
       </LampContainer>

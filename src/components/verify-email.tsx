@@ -3,17 +3,11 @@
 import { useActionState, useEffect } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AlertCircle } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { AlertCircle } from "lucide-react";
-
-import {
-  verifyEmailAction,
-  resendEmailVerificationCodeAction,
-} from "~/app/(auth)/verify-email/actions";
-import { logoutAction } from "~/app/(platform)/actions";
-
+import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { Button } from "~/components/ui/button";
 import {
   Form,
@@ -27,12 +21,16 @@ import {
 import {
   InputOTP,
   InputOTPGroup,
-  InputOTPSlot,
   InputOTPSeparator,
+  InputOTPSlot,
 } from "~/components/ui/input-otp";
-import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
-
 import { toast } from "~/components/hooks/use-toast";
+
+import {
+  resendEmailVerificationCodeAction,
+  verifyEmailAction,
+} from "~/app/(auth)/verify-email/actions";
+import { logoutAction } from "~/app/(platform)/actions";
 
 const FormSchema = z.object({
   code: z

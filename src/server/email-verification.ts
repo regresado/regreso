@@ -1,23 +1,16 @@
 import { cache } from "react";
-
 import { cookies } from "next/headers";
 
+import { encodeBase32 } from "@oslojs/encoding";
 import { and, eq } from "drizzle-orm";
-
 import nodemailer from "nodemailer";
 
-import { encodeBase32 } from "@oslojs/encoding";
-
-import { getBaseOrigin } from "~/lib/utils";
-
-import { generateRandomOTP } from "~/server/utils";
-
 import { db } from "~/server/db";
-
 import { emailVerificationRequests } from "~/server/db/schema";
-import { getCurrentSession } from "~/server/session";
-
 import { ExpiringTokenBucket } from "~/server/rate-limit";
+import { getCurrentSession } from "~/server/session";
+import { generateRandomOTP } from "~/server/utils";
+import { getBaseOrigin } from "~/lib/utils";
 
 export async function getUserEmailVerificationRequest(
   userId: number,

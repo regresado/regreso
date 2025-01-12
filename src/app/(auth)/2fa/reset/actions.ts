@@ -3,9 +3,8 @@
 import { redirect } from "next/navigation";
 
 import { recoveryCodeBucket, resetUser2FAWithRecoveryCode } from "~/server/2fa";
-import { getCurrentSession } from "~/server/session";
-
 import { globalPOSTRateLimit } from "~/server/request";
+import { getCurrentSession } from "~/server/session";
 
 export async function reset2FAAction(
   _prev: ActionResult,

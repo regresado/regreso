@@ -1,23 +1,20 @@
 "use server";
 
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { headers, cookies } from "next/headers";
 
+import { get2FARedirect } from "~/server/2fa";
+import type { SessionFlags } from "~/server/db/schema";
 import { verifyEmailInput } from "~/server/email";
 import { verifyPasswordHash } from "~/server/password";
-import { get2FARedirect } from "~/server/2fa";
-
+import { RefillingTokenBucket, Throttler } from "~/server/rate-limit";
+import { globalPOSTRateLimit } from "~/server/request";
 import {
   createSession,
   generateSessionToken,
   setSessionTokenCookie,
 } from "~/server/session";
 import { getUserFromEmail, getUserPasswordHash } from "~/server/user";
-
-import { RefillingTokenBucket, Throttler } from "~/server/rate-limit";
-import { globalPOSTRateLimit } from "~/server/request";
-
-import type { SessionFlags } from "~/server/db/schema";
 
 const throttler = new Throttler<number>([1, 2, 4, 8, 16, 30, 60, 180, 300]);
 const ipBucket = new RefillingTokenBucket<string>(20, 1);

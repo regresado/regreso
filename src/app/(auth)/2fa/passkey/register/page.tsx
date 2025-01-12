@@ -3,14 +3,13 @@ import { redirect } from "next/navigation";
 import { bigEndian } from "@oslojs/binary";
 import { encodeBase64 } from "@oslojs/encoding";
 
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { RegisterPasskeyForm } from "~/components/register-passkey";
-
-import { getCurrentSession } from "~/server/session";
 import { get2FARedirect } from "~/server/2fa";
+import { globalGETRateLimit } from "~/server/request";
+import { getCurrentSession } from "~/server/session";
 import { getUserPasskeyCredentials } from "~/server/webauthn";
 
-import { globalGETRateLimit } from "~/server/request";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { RegisterPasskeyForm } from "~/components/register-passkey";
 
 export default async function Page() {
   if (!(await globalGETRateLimit())) {
@@ -19,7 +18,7 @@ export default async function Page() {
 
   const { session, user } = await getCurrentSession();
   if (session === null || user === null) {
-    return redirect("/login");
+    return redirect("/log-in");
   }
   if (!user.emailVerified) {
     return redirect("/verify-email");

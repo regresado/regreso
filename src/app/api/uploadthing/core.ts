@@ -1,13 +1,11 @@
-import { createUploadthing, type FileRouter } from "uploadthing/next";
-import { UploadThingError } from "uploadthing/server";
-import { UTApi } from "uploadthing/server";
-
 import { eq } from "drizzle-orm";
+import { createUploadthing, type FileRouter } from "uploadthing/next";
+import { UploadThingError, UTApi } from "uploadthing/server";
 
 import { db } from "~/server/db";
 import { users } from "~/server/db/schema";
-
 import { getCurrentSession } from "~/server/session";
+
 const f = createUploadthing();
 
 // FileRouter for your app, can contain multiple FileRoutes

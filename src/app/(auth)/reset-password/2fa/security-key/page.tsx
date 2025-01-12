@@ -3,16 +3,14 @@ import { redirect } from "next/navigation";
 
 import { encodeBase64 } from "@oslojs/encoding";
 
+import { getPasswordReset2FARedirect } from "~/server/2fa";
+import { getCurrentPasswordResetSession } from "~/server/password-reset";
+import { globalGETRateLimit } from "~/server/request";
+import { getUserSecurityKeyCredentials } from "~/server/webauthn";
+
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-
 import { Verify2FAWithSecurityKeyButton } from "~/components/reset-with-security-key";
-
-import { getUserSecurityKeyCredentials } from "~/server/webauthn";
-import { getCurrentPasswordResetSession } from "~/server/password-reset";
-import { getPasswordReset2FARedirect } from "~/server/2fa";
-
-import { globalGETRateLimit } from "~/server/request";
 
 export default async function Page() {
   if (!(await globalGETRateLimit())) {

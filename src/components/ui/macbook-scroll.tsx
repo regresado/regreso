@@ -1,31 +1,34 @@
 "use client";
+
 import React, { useEffect, useRef, useState } from "react";
-import type { MotionValue } from "framer-motion";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { cn } from "~/lib/utils";
+import Image from "next/image";
+
 import {
-  SunDim,
-  Sun,
-  SquareChevronUp,
-  ChevronUp,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
-  Mic,
-  SkipForward,
-  Search,
-  Rewind,
-  Table2,
-  Moon,
+  ChevronUp,
+  Command,
   FastForward,
-  VolumeX,
+  Globe,
+  Loader,
+  Mic,
+  Moon,
+  Rewind,
+  Search,
+  SkipForward,
+  SquareChevronUp,
+  Sun,
+  SunDim,
+  Table2,
   Volume1,
   Volume2,
-  Globe,
-  Command,
-  Loader,
+  VolumeX,
 } from "lucide-react";
-import Image from "next/image";
+import type { MotionValue } from "motion/react";
+import { motion, useScroll, useTransform } from "motion/react";
+
+import { cn } from "~/lib/utils";
 
 export const MacbookScroll = ({
   src,
@@ -170,8 +173,9 @@ export const Lid = ({
         <Image
           src={src!}
           alt="aceternity logo"
-          fill
-          className="absolute inset-0 h-full w-full rounded-lg object-cover object-left-top"
+          width={3900}
+          height={2790}
+          className="absolute inset-0 h-full w-full rounded-lg object-cover object-center"
         />
       </motion.div>
     </div>

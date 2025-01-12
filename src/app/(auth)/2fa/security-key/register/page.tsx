@@ -3,15 +3,13 @@ import { redirect } from "next/navigation";
 import { bigEndian } from "@oslojs/binary";
 import { encodeBase64 } from "@oslojs/encoding";
 
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-
-import { RegisterSecurityKey } from "~/components/register-security-key";
-
-import { getCurrentSession } from "~/server/session";
 import { get2FARedirect } from "~/server/2fa";
+import { globalGETRateLimit } from "~/server/request";
+import { getCurrentSession } from "~/server/session";
 import { getUserSecurityKeyCredentials } from "~/server/webauthn";
 
-import { globalGETRateLimit } from "~/server/request";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { RegisterSecurityKey } from "~/components/register-security-key";
 
 export default async function Page() {
   if (!(await globalGETRateLimit())) {

@@ -1,17 +1,14 @@
-// Example model schema from the Drizzle docs
-// https://orm.drizzle.team/docs/sql-schema-declaration
-
-import { type InferSelectModel, relations } from "drizzle-orm";
-import { sql } from "drizzle-orm/sql";
+import { relations, sql, type InferSelectModel } from "drizzle-orm";
 import {
+  boolean,
   index,
+  integer,
+  pgTableCreator,
   serial,
   text,
-  integer,
-  boolean,
-  varchar,
-  pgTableCreator,
   timestamp,
+  unique,
+  varchar,
 } from "drizzle-orm/pg-core";
 
 /**
@@ -59,35 +56,6 @@ export type SessionSchema = InferSelectModel<typeof sessions>;
 export interface SessionFlags {
   twoFactorVerified: boolean;
 }
-
-export const destinations = createTable("post", {
-  id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
-  name: varchar("name", { length: 256 }),
-  location: varchar("location", { length: 256 }),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
-  updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
-    () => new Date(),
-  ),
-});
-
-export const posts = createTable(
-  "destination",
-  {
-    id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
-    name: varchar("name", { length: 256 }),
-    createdAt: timestamp("created_at", { withTimezone: true })
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
-      () => new Date(),
-    ),
-  },
-  (example) => ({
-    nameIndex: index("name_idx").on(example.name),
-  }),
-);
 
 export const emailVerificationRequests = createTable(
   "email_verification_request",
@@ -143,6 +111,158 @@ export const securityKeyCredentials = createTable("security_key_credential", {
   publicKey: text("public_key").notNull(),
 });
 
+export const destinations = createTable(
+  "destination",
+  {
+    id: serial("id").primaryKey(),
+    name: varchar("name", { length: 256 }),
+    location: varchar("location", { length: 256 }).unique(),
+    type: varchar("type", { length: 256 }).notNull(),
+    body: text("body"),
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull()
+      .$onUpdate(() => new Date()),
+    workspaceId: integer("workspace_id").references(() => users.id),
+  },
+  (destination) => ({
+    searchIndex: index("destination_search_index").using(
+      "gin",
+      sql`setweight(to_tsvector('english', ${destination.name}), 'A') ||
+          setweight(to_tsvector('english', ${destination.body}), 'B')`,
+    ),
+  }),
+);
+
+export const tags = createTable(
+  "tag",
+  {
+    id: serial("id").primaryKey(),
+    shortcut: varchar("shortcut", { length: 256 }),
+    name: varchar("name", { length: 256 }).notNull(),
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id),
+  },
+  (tag) => ({
+    searchIndex: index("tag_search_index").using(
+      "gin",
+      sql`setweight(to_tsvector('english', ${tag.shortcut}), 'A') ||
+          setweight(to_tsvector('english', ${tag.name}), 'B')`,
+    ),
+    uniqueTagName: unique().on(tag.userId, tag.name),
+    uniqueTagShortcut: unique().on(tag.userId, tag.shortcut),
+  }),
+);
+
+export const destinationTags = createTable(
+  "destination_tag",
+  {
+    id: serial("id").primaryKey(),
+    destinationId: integer("destination_id").references(() => destinations.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }),
+    tagId: integer("tag_id").references(() => tags.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }),
+  },
+  (destinationTag) => ({
+    uniqueTagDestination: unique().on(
+      destinationTag.destinationId,
+      destinationTag.tagId,
+    ),
+  }),
+);
+
+export const lists = createTable(
+  "list",
+  {
+    id: serial("id").primaryKey(),
+    name: varchar("name", { length: 256 }).notNull(),
+    emoji: varchar("emoji", { length: 256 }),
+
+    description: varchar("description", { length: 256 }),
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    workspaceId: integer("workspace_id").references(() => users.id),
+  },
+  (list) => ({
+    uniqueListName: unique().on(list.userId, list.name),
+    searchIndex: index("list_search_index").using(
+      "gin",
+      sql`setweight(to_tsvector('english', ${list.name}), 'A') ||
+            setweight(to_tsvector('english', ${list.description}), 'B')`,
+    ),
+  }),
+);
+
+export const listTags = createTable(
+  "list_tag",
+  {
+    id: serial("id").primaryKey(),
+    listId: integer("list_id").references(() => lists.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }),
+    tagId: integer("tag_id").references(() => tags.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }),
+  },
+  (listTag) => ({
+    uniqueListTag: unique().on(listTag.listId, listTag.tagId),
+  }),
+);
+
+export const destinationLists = createTable(
+  "destination_list",
+  {
+    id: serial("id").primaryKey(),
+    destinationId: integer("destination_id").references(() => destinations.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }),
+    listId: integer("list_id").references(() => lists.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }),
+  },
+  (destinationList) => ({
+    uniqueDestinationList: unique().on(
+      destinationList.destinationId,
+      destinationList.listId,
+    ),
+  }),
+);
+
+export const workspaces = createTable(
+  "workspace",
+  {
+    id: serial("id").primaryKey(),
+    name: varchar("name", { length: 256 }).notNull(),
+    description: varchar("description", { length: 256 }),
+    emoji: varchar("emoji", { length: 256 }),
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id),
+  },
+  (workspace) => ({
+    uniqueWorkspaceName: unique().on(workspace.userId, workspace.name),
+  }),
+);
+
 export const usersRelations = relations(users, ({ many }) => ({
   passwordResetSessions: many(passwordResetSessions),
   securityKeyCredentials: many(securityKeyCredentials),
@@ -186,6 +306,74 @@ export const passkeyCredentialsRelations = relations(
     user: one(users, {
       fields: [passkeyCredentials.userId],
       references: [users.id],
+    }),
+  }),
+);
+
+export const destinationTagsRelations = relations(
+  destinationTags,
+  ({ one }) => ({
+    destination: one(destinations, {
+      fields: [destinationTags.destinationId],
+      references: [destinations.id],
+    }),
+    tag: one(tags, {
+      fields: [destinationTags.tagId],
+      references: [tags.id],
+    }),
+  }),
+);
+
+export const tagsRelations = relations(tags, ({ one, many }) => ({
+  user: one(users, {
+    fields: [tags.userId],
+    references: [users.id],
+  }),
+  destinationTags: many(destinationTags),
+  listTags: many(listTags),
+}));
+
+export const destinationsRelations = relations(
+  destinations,
+  ({ one, many }) => ({
+    user: one(users, {
+      fields: [destinations.userId],
+      references: [users.id],
+    }),
+    destinationTags: many(destinationTags),
+  }),
+);
+
+export const listsRelations = relations(lists, ({ one, many }) => ({
+  tags: many(listTags),
+  destinations: many(destinationLists),
+  user: one(users, {
+    fields: [lists.userId],
+    references: [users.id],
+  }),
+}));
+
+export const listTagsRelations = relations(listTags, ({ one }) => ({
+  list: one(lists, {
+    fields: [listTags.listId],
+    references: [lists.id],
+  }),
+  tag: one(tags, {
+    fields: [listTags.tagId],
+    references: [tags.id],
+  }),
+}));
+
+export const destinationListsRelations = relations(
+  destinationLists,
+  ({ one }) => ({
+    destination: one(destinations, {
+      fields: [destinationLists.destinationId],
+      references: [destinations.id],
+    }),
+    list: one(lists, {
+      fields: [destinationLists.listId],
+      references: [lists.id],
     }),
   }),
 );

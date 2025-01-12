@@ -1,16 +1,17 @@
 "use client";
 
 import React, { useActionState } from "react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AlertCircle } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { AlertCircle } from "lucide-react";
-
-import { Label } from "~/components/ui/label";
+import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
+import { BottomGradient } from "~/components/ui/bottom-gradient";
 import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
 import {
   Card,
   CardContent,
@@ -18,6 +19,7 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
+import { Checkbox } from "~/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -27,8 +29,8 @@ import {
   FormLabel,
   FormMessage,
 } from "~/components/ui/form";
-import { BottomGradient } from "~/components/ui/bottom-gradient";
-import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
 
 import { signupAction } from "~/app/(auth)/sign-up/actions";
 
@@ -61,12 +63,14 @@ const FormSchema = z.object({
 
 export function SignupForm() {
   const [state, action] = useActionState(signupAction, initialState);
+  const searchParams = useSearchParams();
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       username: "",
       displayName: "",
-      email: "",
+      email: searchParams.get("email") ?? "",
       password: "",
     },
   });
@@ -95,7 +99,7 @@ export function SignupForm() {
               }
               e.currentTarget?.requestSubmit();
             }}
-            className="space-y-3"
+            className="space-y-6"
           >
             <FormField
               control={form.control}
@@ -167,8 +171,26 @@ export function SignupForm() {
               )}
             />
 
+            <div className="flex items-center space-x-2">
+              <Checkbox id="terms" />
+              <label
+                htmlFor="terms"
+                className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                By continuing, you agree to the{" "}
+                <Button asChild variant="link" type="button" className="px-0">
+                  <Link href="/terms">Terms of Service</Link>
+                </Button>{" "}
+                and{" "}
+                <Button asChild variant="link" type="button" className="px-0">
+                  <Link href="/privacy">Privacy Policy</Link>
+                </Button>
+                .
+              </label>
+            </div>
+
             <Button
-              className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-indigo-500 to-violet-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
+              className="group/btn relative block h-10 w-full rounded-md bg-primary font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
               type="submit"
             >
               Sign up &rarr;
@@ -203,7 +225,7 @@ export function SignupForm() {
                 </span>
                 <BottomGradient />
               </button>
-              <button className="group/btn relative flex h-10 w-full items-center justify-start space-x-2 rounded-md bg-gray-50 px-4 font-medium text-black shadow-input dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]">
+              {/* <button className="group/btn relative flex h-10 w-full items-center justify-start space-x-2 rounded-md bg-gray-50 px-4 font-medium text-black shadow-input dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]">
                 <svg
                   role="img"
                   className="h-5 w-5"
@@ -250,7 +272,7 @@ export function SignupForm() {
                   Slack
                 </span>
                 <BottomGradient />
-              </button>
+              </button> */}
             </div>
           </form>
         </Form>

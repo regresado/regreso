@@ -1,4 +1,5 @@
 import { headers } from "next/headers";
+
 import { RefillingTokenBucket } from "~/server/rate-limit";
 
 export const globalBucket = new RefillingTokenBucket<string>(100, 1);
