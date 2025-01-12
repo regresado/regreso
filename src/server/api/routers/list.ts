@@ -285,7 +285,6 @@ export const listRouter = createTRPCRouter({
             : []),
         ];
         let newTagRows: { id: number }[] = [];
-        console.log(newTagValues);
         if (newTagValues.length > 0) {
           newTagRows = await ctx.db
             .insert(tags)
@@ -297,7 +296,6 @@ export const listRouter = createTRPCRouter({
         }
 
         if (input.removedTags && input.removedTags.length > 0) {
-          console.log("removing tags");
           await ctx.db.delete(listTags).where(
             and(
               eq(listTags.listId, input.id),
