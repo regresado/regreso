@@ -102,8 +102,8 @@ importers:
         specifier: ^2.10.4
         version: 2.10.4(@tiptap/core@2.11.2(@tiptap/pm@2.10.4))(@tiptap/extension-text-style@2.11.2(@tiptap/core@2.11.2(@tiptap/pm@2.10.4)))
       '@tiptap/extension-heading':
-        specifier: ^2.10.4
-        version: 2.10.4(@tiptap/core@2.11.2(@tiptap/pm@2.10.4))
+        specifier: ^2.11.2
+        version: 2.11.2(@tiptap/core@2.10.4(@tiptap/pm@2.10.4))
       '@tiptap/extension-horizontal-rule':
         specifier: ^2.10.4
         version: 2.10.4(@tiptap/core@2.11.2(@tiptap/pm@2.10.4))(@tiptap/pm@2.10.4)
@@ -2098,8 +2098,8 @@ packages:
     peerDependencies:
       '@tiptap/core': ^2.7.0
 
-  '@tiptap/extension-heading@2.10.4':
-    resolution: {integrity: sha512-7D0h0MIvE97Gx3Qwuo2xnPDK07WfCnyh4tpOPBOus4e1g6sgxVkwDwhbkYWiwvIrf4BUVJflnke/DEDCVp6/Eg==}
+  '@tiptap/extension-heading@2.11.2':
+    resolution: {integrity: sha512-y/wAEXYB0a8y5WmSYGCIXAhus1ydudn0pokKIzT/OD00XutAVh14qOB5h/+m8iXwGU/UYMP7SUCtK82txZqwKA==}
     peerDependencies:
       '@tiptap/core': ^2.7.0
 
@@ -6292,7 +6292,7 @@ snapshots:
     dependencies:
       '@tiptap/core': 2.11.2(@tiptap/pm@2.11.2)
 
-  '@tiptap/extension-heading@2.10.4(@tiptap/core@2.11.2(@tiptap/pm@2.10.4))':
+  '@tiptap/extension-heading@2.11.2(@tiptap/core@2.10.4(@tiptap/pm@2.10.4))':
     dependencies:
       '@tiptap/core': 2.11.2(@tiptap/pm@2.11.2)
 
@@ -6419,7 +6419,6 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       use-sync-external-store: 1.4.0(react@18.3.1)
-
   '@tiptap/starter-kit@2.11.2':
     dependencies:
       '@tiptap/core': 2.11.2(@tiptap/pm@2.11.2)
@@ -6443,7 +6442,6 @@ snapshots:
       '@tiptap/extension-text': 2.11.2(@tiptap/core@2.11.2(@tiptap/pm@2.10.4))
       '@tiptap/extension-text-style': 2.11.2(@tiptap/core@2.11.2(@tiptap/pm@2.10.4))
       '@tiptap/pm': 2.11.2
-
   '@trpc/client@11.0.0-rc.666(@trpc/server@11.0.0-rc.666(typescript@5.7.2))(typescript@5.7.2)':
     dependencies:
       '@trpc/server': 11.0.0-rc.666(typescript@5.7.2)
