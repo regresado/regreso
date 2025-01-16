@@ -35,7 +35,7 @@ We accept contributions of new features and bug fixes through [Pull Requests](/p
 
 ## ⚙️ Tech Overview
 
-This project uses the [T3 Stack](https://create.t3.gg/) made by [@t3oss](https://github.com/t3oss):
+This project uses the [T3 Stack](https://create.t3.gg/) made by [@t3-oss](https://github.com/t3-oss):
 
 <ul>
 <li>
