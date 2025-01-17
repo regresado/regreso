@@ -23,7 +23,7 @@ function MacbookScrollDemo() {
             Use Anywhere <br /> No kidding.
           </span>
         }
-        src={`/dashboard-screenshot-${theme ?? "dark"}.png`}
+        src={`/dashboard-screenshot-${theme == "system" ? "dark" : theme}.png`}
         showGradient={false}
       />
     </div>
