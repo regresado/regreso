@@ -160,6 +160,16 @@ export const getCurrentSession = cache(
   },
 );
 
+export async function getSession(
+  token: string,
+): Promise<SessionValidationResult> {
+  if (token === null) {
+    return { session: null, user: null };
+  }
+  const result = await validateSessionToken(token);
+  return result;
+}
+
 type SessionValidationResult =
   | { session: Session; user: User }
   | { session: null; user: null };
