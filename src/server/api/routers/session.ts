@@ -6,7 +6,7 @@ import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 export const sessionRouter = createTRPCRouter({
   sayHello: publicProcedure
     .meta({
-      openapi: { method: "GET", path: "/say-hello", protect: true },
+      openapi: { method: "GET", path: "/v1/say-hello", protect: true },
     })
     .input(z.object({ name: z.string() }))
     .output(z.object({ greeting: z.string() }))
