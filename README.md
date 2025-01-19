@@ -17,6 +17,10 @@ Destinations may be added to "maps", which enable graphing and visualizing relat
 - [Wiki](https://regreso.netlify.app/wiki)
 - [Roadmap](https://regreso.netlify.app/roadmap)
 
+## 📺 Demo Video
+
+https://github.com/user-attachments/assets/96565cff-49d1-4a43-8629-4c17b4dc6669
+
 ## 🚀 Development
 
 To fork/extend Regreso, it is recommended that you use Supabase or any other Postgres database provider. To develop locally, you can run the `start-database.sh` file to easily create a new Postgres database with Docker. Alternatively, the `setup.sql` provides the full database schema.
@@ -183,3 +187,5 @@ This project uses the [T3 Stack](https://create.t3.gg/) made by [@t3-oss](https:
 
 - [UploadThing](https://uploadthing.com/) for handling user file uplaods
 - [Gray Matter](https://www.npmjs.com/package/gray-matter/) and [Remark (react-markdown)](https://remark.js.org/) for blog/site content rendering
+
+## 🙌 Acknowledgements
