@@ -43,7 +43,7 @@ export async function getPostData(
   let fileContents = null;
   try {
     fileContents = fs.readFileSync(fullPath, "utf8");
-  } catch (err) {
+  } catch {
     return "not found";
   }
 
