@@ -1,13 +1,14 @@
 import * as React from "react";
+
 import {
-  Root,
-  List,
-  Item,
-  Trigger,
   Content,
-  Link,
-  Viewport,
   Indicator,
+  Item,
+  Link,
+  List,
+  Root,
+  Trigger,
+  Viewport,
 } from "@radix-ui/react-navigation-menu";
 import { cva } from "class-variance-authority";
 import { ChevronDown } from "lucide-react";

@@ -3,13 +3,21 @@
 import * as React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTheme } from "next-themes";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
-import { useTheme } from "next-themes";
-
 import type { User } from "~/server/models";
 
+import { Badge } from "~/components/ui/badge";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "~/components/ui/form";
 import {
   Select,
   SelectContent,
@@ -18,16 +26,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import {
-  Form,
-  FormLabel,
-  FormControl,
-  FormItem,
-  FormMessage,
-  FormField,
-  FormDescription,
-} from "~/components/ui/form";
-import { Badge } from "~/components/ui/badge";
 
 const uiModes = ["light", "dark", "system"] as const;
 const uiThemes = ["default"] as const;

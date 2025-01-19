@@ -1,17 +1,5 @@
 "use server";
 
-import { ObjectParser } from "@pilcrowjs/object-parser";
-import { decodeBase64 } from "@oslojs/encoding";
-import {
-  ClientDataType,
-  coseAlgorithmES256,
-  coseAlgorithmRS256,
-  createAssertionSignatureMessage,
-  parseAuthenticatorData,
-  parseClientDataJSON,
-} from "@oslojs/webauthn";
-import type { AuthenticatorData, ClientData } from "@oslojs/webauthn";
-import { sha256 } from "@oslojs/crypto/sha2";
 import {
   decodePKIXECDSASignature,
   decodeSEC1PublicKey,
@@ -23,17 +11,26 @@ import {
   sha256ObjectIdentifier,
   verifyRSASSAPKCS1v15Signature,
 } from "@oslojs/crypto/rsa";
+import { sha256 } from "@oslojs/crypto/sha2";
+import { decodeBase64 } from "@oslojs/encoding";
+import {
+  ClientDataType,
+  coseAlgorithmES256,
+  coseAlgorithmRS256,
+  createAssertionSignatureMessage,
+  parseAuthenticatorData,
+  parseClientDataJSON,
+} from "@oslojs/webauthn";
+import type { AuthenticatorData, ClientData } from "@oslojs/webauthn";
+import { ObjectParser } from "@pilcrowjs/object-parser";
 
-import { getBaseOrigin, getBaseHost } from "~/lib/utils";
-
+import { globalPOSTRateLimit } from "~/server/request";
 import { getCurrentSession, setSessionAs2FAVerified } from "~/server/session";
-
 import {
   getUserPasskeyCredential,
   verifyWebAuthnChallenge,
 } from "~/server/webauthn";
-
-import { globalPOSTRateLimit } from "~/server/request";
+import { getBaseHost, getBaseOrigin } from "~/lib/utils";
 
 export async function verify2FAWithPasskeyAction(
   data: unknown,

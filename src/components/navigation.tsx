@@ -4,26 +4,25 @@ import { ExternalLink } from "lucide-react";
 
 import { Button } from "~/components/ui/button";
 import {
-  Sheet,
-  SheetTrigger,
-  SheetTitle,
-  SheetContent,
-} from "~/components/ui/sheet";
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "~/components/ui/collapsible";
 import { ModeToggle } from "~/components/ui/mode-toggle";
 import {
-  Collapsible,
-  CollapsibleTrigger,
-  CollapsibleContent,
-} from "~/components/ui/collapsible";
-import {
   NavigationMenu,
-  NavigationMenuList,
-  NavigationMenuLink,
-  NavigationMenuItem,
-  NavigationMenuTrigger,
   NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
 } from "~/components/ui/navigation-menu";
-
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+} from "~/components/ui/sheet";
 import { Logo } from "~/components/logo";
 
 export default function Navigation() {
@@ -144,7 +143,7 @@ export default function Navigation() {
                     prefetch={false}
                   >
                     <div className="text-sm font-medium leading-none group-hover:underline">
-                      Technical Wiki
+                      Wiki
                     </div>
                     <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
                       Learn how Regreso works and implement it yourself.
@@ -304,7 +303,7 @@ export default function Navigation() {
                     prefetch={false}
                   >
                     <div className="text-sm font-medium leading-none group-hover:underline">
-                      Technical Wiki
+                      Wiki
                     </div>
                     <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
                       Learn how Regreso works and implement it yourself.

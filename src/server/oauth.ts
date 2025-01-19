@@ -1,5 +1,4 @@
-import { Google } from "arctic";
-import { GitHub } from "arctic";
+import { GitHub, Google } from "arctic";
 
 export const google = new Google(
   process.env.GOOGLE_CLIENT_ID ?? "",

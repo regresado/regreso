@@ -1,11 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { type Config } from "tailwindcss";
-import { fontFamily } from "tailwindcss/defaultTheme";
-
 import tailwindCssAnimate from "tailwindcss-animate";
+import { fontFamily } from "tailwindcss/defaultTheme";
 // @ts-expect-error there is no type definition for this package
 import flattenColorPalette from "tailwindcss/lib/util/flattenColorPalette";
-
 import { withUt } from "uploadthing/tw";
 
 /** @type {import('tailwindcss').Config} */

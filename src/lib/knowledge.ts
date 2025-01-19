@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+
 import matter from "gray-matter";
 
 const contentDirectory = path.join(
@@ -8,7 +9,7 @@ const contentDirectory = path.join(
 );
 
 export function getSortedPostsData(dir = "") {
-  // Get file names under /posts
+  // Get file names under /${dir}
   const fileNames = fs.readdirSync(path.join(contentDirectory, dir));
   const allPostsData = fileNames
     .map((fileName) => {
@@ -47,10 +48,9 @@ export async function getPostData(id: string, dir = ""): Promise<PostData> {
   // Use gray-matter to parse the post metadata section
   const matterResult = matter(fileContents);
 
-  // Combine the data with the id
+  // Combine the data with the id and content
   return {
     id,
-    // contentHtml,
     content: matterResult.content,
     ...(matterResult.data as PostMatter),
   } as PostData;

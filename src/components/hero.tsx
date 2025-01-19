@@ -1,15 +1,14 @@
 "use client";
 
 import React from "react";
-
 import Link from "next/link";
 
-import { motion } from "framer-motion";
-
-import { LampContainer } from "~/components/ui/lamp";
-import { Input } from "~/components/ui/input";
 import { ArrowRight } from "lucide-react";
+import { motion } from "motion/react";
+
 import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { LampContainer } from "~/components/ui/lamp";
 
 export default function Hero() {
   const [email, setEmail] = React.useState("");
