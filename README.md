@@ -7,7 +7,7 @@
 
 Regreso is an open source application that allows you to create, sync, manage, and find "destinations" (bookmarked links, files, and resources) you wish to "return" to later.
 
-Regreso is an open source application that allows you to sync, manage, and track bookmarks and resources you wish to "return" to later.
+Destinations may be added to "maps", which enable graphing and visualizing relationships using tags, and eventually "journies" (saved sessions), and "trunks" which will allow one to separate maps by subject, topic, or project.
 
 ## 📌 Quick Links
 
@@ -18,6 +18,8 @@ Regreso is an open source application that allows you to sync, manage, and track
 - [Roadmap](https://regreso.netlify.app/roadmap)
 
 ## 📺 Demo Video
+
+https://github.com/user-attachments/assets/96565cff-49d1-4a43-8629-4c17b4dc6669
 
 ## 🚀 Development
 
