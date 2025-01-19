@@ -17,7 +17,7 @@ export function SiteContent(props: { postData: PostData }) {
         <div className="flex flex-row items-end space-x-3">
           <h1 className="text-3xl font-extrabold">{props.postData.title}</h1>
           <a
-            href={`${process.env.REPO_URL}/blob/${process.env.REPO_MAIN_BRANCH ?? "main"}/src/app/(knowledge)/blog/[slug]/${props.postData.id}.md`}
+            href={`${process.env.NEXT_PUBLIC_REPO_URL}/blob/${process.env.NEXT_PUBLIC_MAIN_BRANCH ?? "main"}/src/app/(knowledge)/blog/[slug]/${props.postData.id}.md`}
             className="p-0"
           >
             <p className="align-end text-muted-foreground">
@@ -67,7 +67,7 @@ export function SiteContent(props: { postData: PostData }) {
                     </span>
                   ))
                 : null}
-              <Link href={process.env.REPO_URL ?? "/"}>
+              <Link href={process.env.NEXT_PUBLIC_REPO_URL ?? "/"}>
                 {props.postData.authors.length > 4
                   ? `+${props.postData.authors.length - 4} more`
                   : ""}
