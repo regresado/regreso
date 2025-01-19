@@ -9,7 +9,7 @@ export async function GET() {
   return new Response(null, {
     status: 302,
     headers: {
-      Location: process.env.REPO_URL + "/projects",
+      Location: process.env.NEXT_PUBLIC_REPO_URL + "/projects",
     },
   });
 }
