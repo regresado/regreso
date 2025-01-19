@@ -79,9 +79,11 @@ export function SiteContent(props: { postData: PostData }) {
           <p className="text-muted-foreground">{props.postData.description}</p>
         </div>
       </div>
-      <ReactMarkdown remarkPlugins={[remarkGfm]}>
-        {props.postData.content}
-      </ReactMarkdown>
+      <div className="react-markdown flex flex-col space-y-3">
+        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+          {props.postData.content}
+        </ReactMarkdown>
+      </div>
     </>
   );
 }
