@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { ChevronRightIcon, ExternalLink, MenuIcon } from "lucide-react";
+import { ChevronRightIcon, ExternalLink, Github, MenuIcon } from "lucide-react";
 
 import { Button } from "~/components/ui/button";
 import {
@@ -406,5 +406,89 @@ export function LandingNavigation() {
         </div>
       </div>
     </nav>
+  );
+}
+
+export function Footer() {
+  return (
+    <footer className="bg-white py-10 dark:bg-slate-950">
+      <div className="container mx-auto px-4">
+        <div className="flex flex-wrap justify-between">
+          <div className="mb-6 w-full md:mb-0 md:w-1/3">
+            <h3 className="mb-4 text-xl font-bold">Regreso</h3>
+
+            <p className="text-gray-600 dark:text-slate-400">
+              Your digital breadcrumbs, always at your fingertips.
+            </p>
+          </div>
+
+          <div className="mb-6 w-full md:mb-0 md:w-1/3">
+            <h4 className="mb-4 text-lg font-semibold">Quick Links</h4>
+
+            <ul className="space-y-2">
+              <li>
+                <Link
+                  href="/guide"
+                  className="text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
+                >
+                  Guide
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/blog"
+                  className="text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
+                >
+                  Blog
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/repository"
+                  className="text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
+                >
+                  Source Code
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/credits"
+                  className="text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
+                >
+                  Credits
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  href="/privacy"
+                  className="text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
+                >
+                  Privacy Policy
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          <div className="w-full md:w-1/3">
+            <h4 className="mb-4 text-lg font-semibold">Follow</h4>
+
+            <div className="flex space-x-4">
+              <Link
+                href="https://github.com/your-repo"
+                aria-label="GitHub Repository for Regreso"
+                className="text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
+              >
+                <Github className="h-6 w-6" />
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-8 border-t border-gray-200 pt-8 text-center text-gray-600 dark:border-slate-800 dark:text-slate-400">
+          <p>&copy; {new Date().getFullYear()} Regreso. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
   );
 }

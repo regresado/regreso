@@ -9,7 +9,8 @@ export async function GET() {
   return new Response(null, {
     status: 302,
     headers: {
-      Location: process.env.NEXT_PUBLIC_REPO_URL ?? "/",
+      Location:
+        process.env.NEXT_PUBLIC_REPO_URL + "/discussions/new?category=q-a",
     },
   });
 }
