@@ -7,7 +7,7 @@
 
 Regreso is an open source application that allows you to create, sync, manage, and find "destinations" (bookmarked links, files, and resources) you wish to "return" to later.
 
-Destinations may be added to "maps", which enable graphing and visualizing relationships using tags, "journies" (saved sessions), and references. "Trunks" allow one to separate maps by subject, topic, or project.
+Destinations may be added to "maps", which enable graphing and visualizing relationships using tags, and eventually "journies" (saved sessions), and "trunks" which will allow one to separate maps by subject, topic, or project.
 
 ## 📌 Quick Links
 
