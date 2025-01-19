@@ -7,7 +7,7 @@
 
 Regreso is an open source application that allows you to create, sync, manage, and find "destinations" (bookmarked links, files, and resources) you wish to "return" to later.
 
-Destinations may be added to "maps", which enable graphing and visualizing relationships using tags, "journies" (saved sessions), and references. "Trunks" allow one to separate maps by subject, topic, or project.
+Regreso is an open source application that allows you to sync, manage, and track bookmarks and resources you wish to "return" to later.
 
 ## 📌 Quick Links
 
@@ -16,8 +16,6 @@ Destinations may be added to "maps", which enable graphing and visualizing relat
 - [Guide](https://regreso.netlify.app/guide)
 - [Wiki](https://regreso.netlify.app/wiki)
 - [Roadmap](https://regreso.netlify.app/roadmap)
-
-## 📺 Demo Video
 
 ## 🚀 Development
 
@@ -184,6 +182,5 @@ This project uses the [T3 Stack](https://create.t3.gg/) made by [@t3-oss](https:
 </ul>
 
 - [UploadThing](https://uploadthing.com/) for handling user file uplaods
-- [Gray Matter](https://www.npmjs.com/package/gray-matter/) and [Remark (react-markdown)](https://remark.js.org/) for blog/site content rendering
 
 ## 🙌 Acknowledgements
