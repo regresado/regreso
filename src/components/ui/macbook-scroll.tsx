@@ -173,8 +173,9 @@ export const Lid = ({
         <Image
           src={src!}
           alt="aceternity logo"
-          width={3900}
-          height={2790}
+          width={729}
+          quality={50}
+          height={521}
           className="absolute inset-0 h-full w-full rounded-lg object-cover object-center"
         />
       </motion.div>

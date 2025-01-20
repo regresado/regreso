@@ -7,7 +7,10 @@
 
 Regreso is an open source application that allows you to create, sync, manage, and find "destinations" (bookmarked links, files, and resources) you wish to "return" to later.
 
-Destinations may be added to "maps", which enable graphing and visualizing relationships using tags, "journies" (saved sessions), and references. "Trunks" allow one to separate maps by subject, topic, or project.
+Destinations may be added to "maps", which enable graphing and visualizing relationships using tags, and eventually "journies" (saved sessions), and "trunks" which will allow one to separate maps by subject, topic, or project.
+
+> [!NOTE]  
+> If Regreso interests you or you want to receieve notifications for key releases/updates, **please consider giving it a star [on GitHub](https://regreso.netlify.app/repository)!**
 
 ## 📌 Quick Links
 
@@ -16,6 +19,10 @@ Destinations may be added to "maps", which enable graphing and visualizing relat
 - [Guide](https://regreso.netlify.app/guide)
 - [Wiki](https://regreso.netlify.app/wiki)
 - [Roadmap](https://regreso.netlify.app/roadmap)
+
+## 📺 Demo Video
+
+https://github.com/user-attachments/assets/96565cff-49d1-4a43-8629-4c17b4dc6669
 
 ## 🚀 Development
 
@@ -77,7 +84,7 @@ This project uses the [T3 Stack](https://create.t3.gg/) made by [@t3-oss](https:
 <li>
 <details>
 <summary> 
-<a href="https://tailwindcss.com/">Tailwind CSS</a>
+<a href="https://tailwindcss.com/">Tailwind</a> CSS
 
 </summary>
 <ul>
@@ -182,4 +189,5 @@ This project uses the [T3 Stack](https://create.t3.gg/) made by [@t3-oss](https:
 </ul>
 
 - [UploadThing](https://uploadthing.com/) for handling user file uplaods
-- [Gray Matter](https://www.npmjs.com/package/gray-matter/) and [Remark (react-markdown)](https://remark.js.org/) for blog/site content rendering
+
+## 🙌 Acknowledgements

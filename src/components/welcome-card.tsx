@@ -37,11 +37,11 @@ export function WelcomeCard({
           <TeamSwitcher teams={teams} />
 
           <div className="mt-4 flex gap-2">
-            <Button size="sm" variant="outline">
+            <Button disabled size="sm" variant="outline">
               <Rocket />
               Setup Guide
             </Button>
-            <Button size="sm">
+            <Button disabled size="sm">
               <Binoculars /> Start Tour
             </Button>
           </div>

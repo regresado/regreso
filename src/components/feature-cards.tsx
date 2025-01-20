@@ -66,7 +66,7 @@ const FeatureCard = ({ feature }: { feature: Feature }) => {
         <h3 className="mb-2 text-xl font-bold text-black dark:text-white">
           {feature.title}
         </h3>
-        <p className="text-white dark:text-gray-100">{feature.description}</p>
+        <p className="text-black dark:text-white">{feature.description}</p>
       </div>
       <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-500 to-blue-500"></div>
     </motion.div>

@@ -156,7 +156,7 @@ export function LoginForm() {
                 </span>
                 <BottomGradient />
               </Link>
-              <Link
+              {/* <Link
                 className="group/btn relative flex h-10 w-full items-center justify-start space-x-2 rounded-md bg-gray-50 px-4 font-medium text-black shadow-input dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
                 href="/log-in/google"
               >
@@ -174,7 +174,7 @@ export function LoginForm() {
                   Google
                 </span>
                 <BottomGradient />
-              </Link>
+              </Link> */}
               {/* <button className="group/btn relative flex h-10 w-full items-center justify-start space-x-2 rounded-md bg-gray-50 px-4 font-medium text-black shadow-input dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]">
                 <svg
                   role="img"
