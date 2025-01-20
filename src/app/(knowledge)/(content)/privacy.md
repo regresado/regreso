@@ -12,7 +12,7 @@ We use services provided by GitHub (Log in with GitHub) in order to more seamles
 
 Your email, GitHub account details, and other authentication information with the exception of username and display name will **never** be shared or visible to other users of Regreso except for admins.
 
-We reserve the right to use provided information for analytics purposes, with the same deletion guidelines from above still applying.
+Regreso also uses Posthog Cloud (hosted in US) for Analytics. Their privacy policy can be found on [their website](https://posthog.com/privacy).
 
 Additionally, Regreso is currently hosted with Netlify, whose privacy policy can be found [on their website](https://www.netlify.com/privacy/).
 
