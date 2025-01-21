@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 import dynamic from "next/dynamic";
 
 import { type ThemeProviderProps } from "next-themes";
