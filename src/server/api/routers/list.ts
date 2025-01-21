@@ -545,20 +545,20 @@ export const listRouter = createTRPCRouter({
         protect: true,
       },
     })
-    .input(z.object({ destinations: z.array(z.number()), listId: z.number() }))
+    .input(z.object({ destinations: z.array(z.number()), id: z.number() }))
     .output(z.object({ success: z.boolean() }))
 
     .mutation(async ({ ctx, input }) => {
       await ctx.db.delete(destinationLists).where(
         and(
-          eq(destinationLists.listId, input.listId),
+          eq(destinationLists.id, input.id),
           inArray(destinationLists.destinationId, input.destinations),
           exists(
             ctx.db
               .select()
               .from(lists)
               .where(
-                and(eq(lists.id, input.listId), eq(lists.userId, ctx.user.id)),
+                and(eq(lists.id, input.id), eq(lists.userId, ctx.user.id)),
               ),
           ),
           exists(
