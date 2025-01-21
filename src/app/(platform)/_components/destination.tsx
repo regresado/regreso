@@ -24,7 +24,7 @@ import {
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
-  destinationSchema,
+  destinationFormSchema,
   type Destination,
   type List,
   type updateDestinationSchema,
@@ -114,22 +114,22 @@ type DestinationFormProps =
       >;
       update: true;
       updateId: number;
-      defaultValues?: z.infer<typeof destinationSchema>;
+      defaultValues?: z.infer<typeof destinationFormSchema>;
     }
   | {
       destinationMutation: (callback?: () => void) => UseTRPCMutationResult<
         { success: boolean },
         TRPCClientErrorLike<{
-          input: z.infer<typeof destinationSchema>;
+          input: z.infer<typeof destinationFormSchema>;
           output: { success: boolean };
           transformer: true;
           errorShape: { message: string };
         }>,
-        z.infer<typeof destinationSchema>,
+        z.infer<typeof destinationFormSchema>,
         unknown
       >;
       update: false;
-      defaultValues?: z.infer<typeof destinationSchema>;
+      defaultValues?: z.infer<typeof destinationFormSchema>;
     };
 
 export function DestinationForm(props: DestinationFormProps) {
@@ -156,8 +156,8 @@ export function DestinationForm(props: DestinationFormProps) {
     },
   });
 
-  const form = useForm<z.infer<typeof destinationSchema>>({
-    resolver: zodResolver(destinationSchema),
+  const form = useForm<z.infer<typeof destinationFormSchema>>({
+    resolver: zodResolver(destinationFormSchema),
     defaultValues: {
       type: "location",
       location: props.defaultValues?.location ?? null,
@@ -244,7 +244,7 @@ export function DestinationForm(props: DestinationFormProps) {
 
   const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
 
-  function onSubmit(data: z.infer<typeof destinationSchema>) {
+  function onSubmit(data: z.infer<typeof destinationFormSchema>) {
     if (props.update) {
       if (!props.updateId) {
         return;
@@ -408,7 +408,6 @@ export function DestinationForm(props: DestinationFormProps) {
                         editorContentClassName="p-5"
                         output="html"
                         placeholder="Type your note here..."
-                        editable={true}
                         editorClassName="focus:outline-none"
                       />
                     </FormControl>
@@ -645,7 +644,7 @@ export function DestinationCard(
             ? dragEnd.over.id
             : parseInt(String(dragEnd.over.id)),
         ],
-        destinationId: id,
+        id,
       });
       setDragEnd(null);
     }
@@ -799,7 +798,7 @@ export function DestinationDialog(props: { id: string }) {
     if (lists) {
       addToLists.mutate({
         lists: lists.map((l) => l.id),
-        destinationId: parseInt(props.id),
+        id: parseInt(props.id),
       });
     }
   }
@@ -808,7 +807,7 @@ export function DestinationDialog(props: { id: string }) {
     if (lists) {
       removeFromLists.mutate({
         lists: lists.map((l) => l.id),
-        destinationId: parseInt(props.id),
+        id: parseInt(props.id),
       });
     }
   }

@@ -8,11 +8,11 @@
  * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will
  * need to use are documented accordingly near the end.
  */
-import { NextRequest } from "next/server";
+import { type NextRequest } from "next/server";
 
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
-import { OpenApiMeta } from "trpc-to-openapi";
+import { type OpenApiMeta } from "trpc-to-openapi";
 import { ZodError } from "zod";
 
 import { db } from "~/server/db";
