@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { and, asc, desc, eq, exists, inArray, or, sql } from "drizzle-orm";
 import { z } from "zod";
 import {
+  listFormSchema,
   listSchema,
   listSearchSchema,
   updateListSchema,
@@ -23,7 +24,15 @@ import {
 
 export const listRouter = createTRPCRouter({
   create: protectedMutationProcedure
-    .input(listSchema)
+    .meta({
+      openapi: {
+        method: "POST",
+        path: "/v1/lists",
+        protect: true,
+      },
+    })
+    .input(listFormSchema)
+    .output(z.object({ success: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
       const listRows = await ctx.db
         .insert(lists)
@@ -82,7 +91,20 @@ export const listRouter = createTRPCRouter({
       };
     }),
   getMany: protectedQueryProcedure
+    .meta({
+      openapi: {
+        method: "GET",
+        path: "/v1/lists",
+        protect: true,
+      },
+    })
     .input(listSearchSchema)
+    .output(
+      z.object({
+        items: z.array(listSchema),
+        count: z.number(),
+      }),
+    )
     .query(
       async ({ ctx, input }): Promise<{ items: List[]; count: number }> => {
         const tagNames = input.tags ?? [];
@@ -208,11 +230,25 @@ export const listRouter = createTRPCRouter({
               : null,
           };
         });
+        if (!lsts || lsts.length === 0) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "No lists found",
+          });
+        }
         return { items: returnLists, count: lsts[0]?.count ?? 0 };
       },
     ),
   update: protectedMutationProcedure
+    .meta({
+      openapi: {
+        method: "PATCH",
+        path: "/v1/list/{id}",
+        protect: true,
+      },
+    })
     .input(updateListSchema)
+    .output(z.object({ success: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
       let listRows = null;
       if (input.name || input.emoji || input.description) {
@@ -345,7 +381,15 @@ export const listRouter = createTRPCRouter({
       };
     }),
   delete: protectedMutationProcedure
+    .meta({
+      openapi: {
+        method: "DELETE",
+        path: "/v1/list/{id}",
+        protect: true,
+      },
+    })
     .input(z.object({ id: z.number() }))
+    .output(z.object({ success: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
       await ctx.db
         .delete(lists)
@@ -356,7 +400,15 @@ export const listRouter = createTRPCRouter({
     }),
 
   get: protectedQueryProcedure
+    .meta({
+      openapi: {
+        method: "GET",
+        path: "/v1/list/{id}",
+        protect: true,
+      },
+    })
     .input(z.object({ id: z.number() }))
+    .output(listSchema)
     .query(async ({ ctx, input }) => {
       const lstData = await ctx.db
         .select({
@@ -397,17 +449,25 @@ export const listRouter = createTRPCRouter({
             }
           : undefined;
 
+      if (!lst) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "List not found or access denied",
+        });
+      }
+
       return {
         ...lst,
-        emoji: lst?.emoji
-          ? lst?.emoji.match(
-              /(\p{Emoji_Presentation}|\p{Extended_Pictographic})/gu,
-            )
-            ? (lst?.emoji.match(
+        emoji:
+          (lst?.emoji
+            ? lst?.emoji.match(
                 /(\p{Emoji_Presentation}|\p{Extended_Pictographic})/gu,
-              )?.[0] ?? null)
-            : null
-          : null,
+              )
+              ? (lst?.emoji.match(
+                  /(\p{Emoji_Presentation}|\p{Extended_Pictographic})/gu,
+                )?.[0] ?? null)
+              : null
+            : null) ?? "❔",
         tags: lst
           ? await ctx.db.query.listTags
               .findMany({
@@ -429,11 +489,18 @@ export const listRouter = createTRPCRouter({
     }),
 
   addDestinations: protectedMutationProcedure
-    .input(z.object({ destinations: z.array(z.number()), listId: z.number() }))
+    .meta({
+      openapi: {
+        method: "POST",
+        path: "/v1/list/{id}/add-destinations",
+        protect: true,
+      },
+    })
+    .input(z.object({ destinations: z.array(z.number()), id: z.number() }))
+    .output(z.object({ success: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
-      // Verify list ownership
       const list = await ctx.db.query.lists.findFirst({
-        where: and(eq(lists.id, input.listId), eq(lists.userId, ctx.user.id)),
+        where: and(eq(lists.id, input.id), eq(lists.userId, ctx.user.id)),
       });
 
       if (!list) {
@@ -443,7 +510,6 @@ export const listRouter = createTRPCRouter({
         });
       }
 
-      // Verify all destinations belong to user
       const destinationCount = await ctx.db
         .select({ count: sql<number>`count(*)` })
         .from(destinations)
@@ -461,11 +527,10 @@ export const listRouter = createTRPCRouter({
         });
       }
 
-      // Insert if all checks pass
       await ctx.db.insert(destinationLists).values(
         input.destinations.map((id) => ({
           destinationId: id,
-          listId: input.listId,
+          listId: input.id,
         })),
       );
 
@@ -473,19 +538,27 @@ export const listRouter = createTRPCRouter({
     }),
 
   removeDestinations: protectedMutationProcedure
-    .input(z.object({ destinations: z.array(z.number()), listId: z.number() }))
+    .meta({
+      openapi: {
+        method: "POST",
+        path: "/v1/list/{id}/remove-destinations",
+        protect: true,
+      },
+    })
+    .input(z.object({ destinations: z.array(z.number()), id: z.number() }))
+    .output(z.object({ success: z.boolean() }))
+
     .mutation(async ({ ctx, input }) => {
-      // Verify list ownership and destination ownership in one query
       await ctx.db.delete(destinationLists).where(
         and(
-          eq(destinationLists.listId, input.listId),
+          eq(destinationLists.id, input.id),
           inArray(destinationLists.destinationId, input.destinations),
           exists(
             ctx.db
               .select()
               .from(lists)
               .where(
-                and(eq(lists.id, input.listId), eq(lists.userId, ctx.user.id)),
+                and(eq(lists.id, input.id), eq(lists.userId, ctx.user.id)),
               ),
           ),
           exists(
