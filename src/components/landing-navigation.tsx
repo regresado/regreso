@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { ChevronRightIcon, ExternalLink, Github, MenuIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { Button } from "~/components/ui/button";
 import {
@@ -23,6 +24,7 @@ import { Logo } from "~/components/logo";
 
 // TODO: Make Side Navigation Sheet share component with marketing one
 export function LandingNavigation() {
+  const t = useTranslations("Navigation");
   return (
     <nav className="fixed top-0 z-50 w-full bg-white/50 backdrop-blur-md dark:bg-slate-900/50">
       <div className="container mx-auto w-full px-4 lg:px-8">
@@ -56,67 +58,69 @@ export function LandingNavigation() {
                 </Link>
                 <div className="grid gap-2 py-6">
                   <Link
-                    href="/dashboard"
+                    href={t("tabs.dashboard.link")}
                     className="flex w-full items-center py-2 text-lg font-semibold"
                     prefetch={false}
                   >
-                    <span className="mr-2 inline align-middle">Dashboard </span>
+                    <span className="mr-2 inline align-middle">
+                      {t("tabs.dashboard.name")}{" "}
+                    </span>
 
                     <ExternalLink size="18" className="inline align-middle" />
                   </Link>
                   <Collapsible className="grid gap-4">
                     <CollapsibleTrigger className="flex w-full items-center text-lg font-semibold [&[data-state=open]>svg]:rotate-90">
-                      About{" "}
+                      {t("tabs.about.name")}{" "}
                       <ChevronRightIcon className="ml-auto h-5 w-5 transition-all" />
                     </CollapsibleTrigger>
                     <CollapsibleContent>
                       <div className="-mx-6 grid gap-6 bg-muted p-6">
                         <Link
-                          href="/features"
+                          href={t("submenus.features.link")}
                           className="group grid h-auto w-full justify-start gap-1"
                           prefetch={false}
                         >
                           <div className="text-sm font-medium leading-none group-hover:underline">
-                            Features
+                            {t("submenus.features.name")}
                           </div>
                           <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            Learn about Regreso&apos;s capabilities.
+                            {t("submenus.features.description")}
                           </div>
                         </Link>
                         <Link
-                          href="/repository"
+                          href={t("submenus.repo.link")}
                           className="group grid h-auto w-full justify-start gap-1"
                           prefetch={false}
                         >
                           <div className="text-sm font-medium leading-none group-hover:underline">
-                            Source Code
+                            {t("submenus.repo.name")}
                           </div>
                           <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            Browse and contribute to the source code.
+                            {t("submenus.repo.description")}
                           </div>
                         </Link>
                         <Link
-                          href="/credits"
+                          href={t("submenus.credits.link")}
                           className="group grid h-auto w-full justify-start gap-1"
                           prefetch={false}
                         >
                           <div className="text-sm font-medium leading-none group-hover:underline">
-                            Credits
+                            {t("submenus.credits.name")}
                           </div>
                           <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            Say thanks to those who made Regreso possible.
+                            {t("submenus.credits.description")}
                           </div>
                         </Link>
                         <Link
-                          href="/[rivacy"
+                          href={t("submenus.privacy.link")}
                           className="group grid h-auto w-full justify-start gap-1"
                           prefetch={false}
                         >
                           <div className="text-sm font-medium leading-none group-hover:underline">
-                            Privacy Policy
+                            {t("submenus.privacy.name")}
                           </div>
                           <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            Learn how we use your data and protect your privacy.
+                            {t("submenus.privacy.description")}
                           </div>
                         </Link>
                       </div>
@@ -125,75 +129,75 @@ export function LandingNavigation() {
 
                   <Collapsible className="grid gap-4">
                     <CollapsibleTrigger className="flex w-full items-center text-lg font-semibold [&[data-state=open]>svg]:rotate-90">
-                      Resources{" "}
+                      {t("tabs.resources.name")}{" "}
                       <ChevronRightIcon className="ml-auto h-5 w-5 transition-all" />
                     </CollapsibleTrigger>
                     <CollapsibleContent>
                       <div className="-mx-6 grid gap-6 bg-muted p-6">
                         <Link
-                          href="/guide"
+                          href={t("submenus.guide.link")}
                           className="group grid h-auto w-full justify-start gap-1"
                           prefetch={false}
                         >
                           <div className="text-sm font-medium leading-none group-hover:underline">
-                            Guide
+                            {t("submenus.guide.name")}
                           </div>
                           <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            Learn how to use Regreso and get the most out of it.
+                            {t("submenus.guide.description")}
                           </div>
                         </Link>
                         <Link
-                          href="/wiki"
+                          href={t("submenus.wiki.link")}
                           className="group grid h-auto w-full justify-start gap-1"
                           prefetch={false}
                         >
                           <div className="text-sm font-medium leading-none group-hover:underline">
-                            Wiki
+                            {t("submenus.wiki.name")}
                           </div>
                           <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            Learn how Regreso works and implement it yourself.
+                            {t("submenus.wiki.description")}
                           </div>
                         </Link>
                         <Link
-                          href="/roadmap"
+                          href={t("submenus.roadmap.link")}
                           className="group grid h-auto w-full justify-start gap-1"
                           prefetch={false}
                         >
                           <div className="text-sm font-medium leading-none group-hover:underline">
-                            Roadmap
+                            {t("submenus.roadmap.name")}
                           </div>
                           <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            See planned and upcoming Regreso features.
+                            {t("submenus.roadmap.description")}
                           </div>
                         </Link>
                         <Link
-                          href="/help"
+                          href={t("submenus.discussions.link")}
                           className="group grid h-auto w-full justify-start gap-1"
                           prefetch={false}
                         >
                           <div className="text-sm font-medium leading-none group-hover:underline">
-                            Discussions
+                            {t("submenus.discussions.name")}
                           </div>
                           <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            Get help from other users and developers.
+                            {t("submenus.discussions.description")}
                           </div>
                         </Link>
                       </div>
                     </CollapsibleContent>
                   </Collapsible>
                   <Link
-                    href="/blog"
+                    href={t("tabs.blog.link")}
                     className="flex w-full items-center py-2 text-lg font-semibold"
                     prefetch={false}
                   >
-                    Blog
+                    {t("tabs.blog.name")}
                   </Link>
                   <div className="flex w-full items-center justify-start gap-4">
                     <Button className="w-full" variant="outline" size="sm">
-                      Log in
+                      {t("loginBtn")}
                     </Button>
                     <Button className="w-full bg-cyan-500" size="sm">
-                      Sign up
+                      {t("signupBtn")}
                     </Button>
                   </div>
                 </div>
@@ -228,13 +232,13 @@ export function LandingNavigation() {
                 <NavigationMenuItem>
                   <NavigationMenuLink asChild>
                     <Link
-                      href="/dashboard"
+                      href={t("tabs.dashboard.link")}
                       target="_blank"
                       className="group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
                       prefetch={false}
                     >
                       <span className="mr-2 inline align-middle">
-                        Dashboard{" "}
+                        {t("tabs.dashboard.name")}{" "}
                       </span>
 
                       <ExternalLink size="16" className="inline align-middle" />
@@ -242,62 +246,64 @@ export function LandingNavigation() {
                   </NavigationMenuLink>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger>About</NavigationMenuTrigger>
+                  <NavigationMenuTrigger>
+                    {t("tabs.about.name")}
+                  </NavigationMenuTrigger>
                   <NavigationMenuContent>
                     <div className="grid w-[400px] p-2">
                       <NavigationMenuLink asChild>
                         <Link
-                          href="/features"
+                          href={t("submenus.features.link")}
                           className="group grid h-auto w-full items-center justify-start gap-1 rounded-md bg-background p-4 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
                           prefetch={false}
                         >
                           <div className="text-sm font-medium leading-none group-hover:underline">
-                            Features
+                            {t("submenus.features.name")}
                           </div>
                           <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            Learn about Regreso&apos;s capabilities.
+                            {t("submenus.features.description")}
                           </div>
                         </Link>
                       </NavigationMenuLink>
                       <NavigationMenuLink asChild>
                         <Link
-                          href="/repository"
+                          href={t("submenus.repo.link")}
                           className="group grid h-auto w-full items-center justify-start gap-1 rounded-md bg-background p-4 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
                           prefetch={false}
                         >
                           <div className="text-sm font-medium leading-none group-hover:underline">
-                            Source Code
+                            {t("submenus.repo.name")}
                           </div>
                           <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            Browse and contribute to the source code.
+                            {t("submenus.repo.description")}
                           </div>
                         </Link>
                       </NavigationMenuLink>
                       <NavigationMenuLink asChild>
                         <Link
-                          href="/credits"
+                          href={t("submenus.credits.link")}
                           className="group grid h-auto w-full items-center justify-start gap-1 rounded-md bg-background p-4 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
                           prefetch={false}
                         >
                           <div className="text-sm font-medium leading-none group-hover:underline">
-                            Credits
+                            {t("submenus.credits.name")}
                           </div>
                           <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            Say thanks to those who made Regreso possible.
+                            {t("submenus.credits.description")}
                           </div>
                         </Link>
                       </NavigationMenuLink>
                       <NavigationMenuLink asChild>
                         <Link
-                          href="/privacy"
+                          href={t("submenus.privacy.link")}
                           className="group grid h-auto w-full items-center justify-start gap-1 rounded-md bg-background p-4 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
                           prefetch={false}
                         >
                           <div className="text-sm font-medium leading-none group-hover:underline">
-                            Privacy Policy
+                            {t("submenus.privacy.name")}
                           </div>
                           <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            Learn how we use your data and protect your privacy.
+                            {t("submenus.privacy.description")}
                           </div>
                         </Link>
                       </NavigationMenuLink>
@@ -310,57 +316,57 @@ export function LandingNavigation() {
                     <div className="grid w-[550px] grid-cols-2 p-2">
                       <NavigationMenuLink asChild>
                         <Link
-                          href="/guide"
+                          href={t("submenus.guide.link")}
                           className="group grid h-auto w-full items-center justify-start gap-1 rounded-md bg-background p-4 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
                           prefetch={false}
                         >
                           <div className="text-sm font-medium leading-none group-hover:underline">
-                            Guide
+                            {t("submenus.guide.name")}
                           </div>
                           <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            Learn how to use Regreso and get the most out of it.
+                            {t("submenus.guide.description")}
                           </div>
                         </Link>
                       </NavigationMenuLink>
                       <NavigationMenuLink asChild>
                         <Link
-                          href="/wiki"
+                          href={t("submenus.wiki.link")}
                           className="group grid h-auto w-full items-center justify-start gap-1 rounded-md bg-background p-4 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
                           prefetch={false}
                         >
                           <div className="text-sm font-medium leading-none group-hover:underline">
-                            Wiki
+                            {t("submenus.wiki.name")}
                           </div>
                           <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            Learn how Regreso works and implement it yourself.
+                            {t("submenus.wiki.description")}
                           </div>
                         </Link>
                       </NavigationMenuLink>
                       <NavigationMenuLink asChild>
                         <Link
-                          href="/roadmap"
+                          href={t("submenus.roadmap.link")}
                           className="group grid h-auto w-full items-center justify-start gap-1 rounded-md bg-background p-4 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
                           prefetch={false}
                         >
                           <div className="text-sm font-medium leading-none group-hover:underline">
-                            Roadmap
+                            {t("submenus.roadmap.name")}
                           </div>
                           <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            See planned and upcoming Regreso features.
+                            {t("submenus.roadmap.description")}
                           </div>
                         </Link>
                       </NavigationMenuLink>
                       <NavigationMenuLink asChild>
                         <Link
-                          href="/help"
+                          href={t("submenus.discussions.link")}
                           className="group grid h-auto w-full items-center justify-start gap-1 rounded-md bg-background p-4 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
                           prefetch={false}
                         >
                           <div className="text-sm font-medium leading-none group-hover:underline">
-                            Discussions
+                            {t("submenus.discussions.name")}
                           </div>
                           <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            Get help from other users and developers.
+                            {t("submenus.discussions.description")}
                           </div>
                         </Link>
                       </NavigationMenuLink>
@@ -370,11 +376,11 @@ export function LandingNavigation() {
                 <NavigationMenuItem>
                   <NavigationMenuLink asChild>
                     <Link
-                      href="/blog"
+                      href={t("tabs.blog.link")}
                       className="group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
                       prefetch={false}
                     >
-                      Blog
+                      {t("tabs.blog.name")}
                     </Link>
                   </NavigationMenuLink>
                 </NavigationMenuItem>
@@ -392,14 +398,14 @@ export function LandingNavigation() {
                 className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
                 asChild
               >
-                <Link href="/log-in">Log in</Link>
+                <Link href="/log-in">{t("loginBtn")}</Link>
               </Button>
 
               <Button
                 className="bg-cyan-700 text-white hover:bg-cyan-800"
                 asChild
               >
-                <Link href="/sign-up">Sign up</Link>
+                <Link href="/sign-up">{t("signupBtn")}</Link>
               </Button>
             </div>
           </div>
@@ -410,6 +416,9 @@ export function LandingNavigation() {
 }
 
 export function Footer() {
+  const t = useTranslations("LandingFooter");
+  const quickLinks = ["guide", "blog", "repo", "credits", "privacy"] as const;
+
   return (
     <footer className="bg-white py-10 dark:bg-slate-950">
       <div className="container mx-auto px-4">
@@ -417,61 +426,28 @@ export function Footer() {
           <div className="mb-6 w-full md:mb-0 md:w-1/3">
             <h3 className="mb-4 text-xl font-bold">Regreso</h3>
 
-            <p className="text-gray-600 dark:text-slate-400">
-              Your digital breadcrumbs, always at your fingertips.
-            </p>
+            <p className="text-gray-600 dark:text-slate-400">{t("subtitle")}</p>
           </div>
 
           <div className="mb-6 w-full md:mb-0 md:w-1/3">
             <h4 className="mb-4 text-lg font-semibold">Quick Links</h4>
 
             <ul className="space-y-2">
-              <li>
-                <Link
-                  href="/guide"
-                  className="text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
-                >
-                  Guide
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/blog"
-                  className="text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
-                >
-                  Blog
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/repository"
-                  className="text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
-                >
-                  Source Code
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/credits"
-                  className="text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
-                >
-                  Credits
-                </Link>
-              </li>
-
-              <li>
-                <Link
-                  href="/privacy"
-                  className="text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
-                >
-                  Privacy Policy
-                </Link>
-              </li>
+              {quickLinks.map((key) => (
+                <li key={key}>
+                  <Link
+                    href={t(`links.${key}.link`)}
+                    className="text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
+                  >
+                    {t(`links.${key}.name`)}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
           <div className="w-full md:w-1/3">
-            <h4 className="mb-4 text-lg font-semibold">Follow</h4>
+            <h4 className="mb-4 text-lg font-semibold">{t("socialsTitle")}</h4>
 
             <div className="flex space-x-4">
               <Link
@@ -486,7 +462,9 @@ export function Footer() {
         </div>
 
         <div className="mt-8 border-t border-gray-200 pt-8 text-center text-gray-600 dark:border-slate-800 dark:text-slate-400">
-          <p>&copy; {new Date().getFullYear()} Regreso. All rights reserved.</p>
+          <p>
+            &copy; {new Date().getFullYear()} Regreso. {t("copyright")}
+          </p>
         </div>
       </div>
     </footer>

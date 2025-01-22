@@ -172,9 +172,9 @@ export const Lid = ({
         <div className="absolute inset-0 rounded-lg bg-[#272729]" />
         <Image
           src={src!}
-          alt="aceternity logo"
+          alt="regreso screenshot"
           width={729}
-          quality={50}
+          quality={100}
           height={521}
           className="absolute inset-0 h-full w-full rounded-lg object-cover object-center"
         />
