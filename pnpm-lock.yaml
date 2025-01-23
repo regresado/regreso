@@ -134,6 +134,9 @@ importers:
       '@tiptap/starter-kit':
         specifier: ^2.11.2
         version: 2.11.2
+      '@tolgee/react':
+        specifier: ^6.0.1
+        version: 6.0.1(react@18.3.1)
       '@trpc/client':
         specifier: ^11.0.0-rc.666
         version: 11.0.0-rc.666(@trpc/server@11.0.0-rc.666(typescript@5.7.2))(typescript@5.7.2)
@@ -2222,6 +2225,17 @@ packages:
 
   '@tiptap/starter-kit@2.11.2':
     resolution: {integrity: sha512-FUIblP9BSmBzskf/aX7AIcUK5XP5Gi/VqUqm5evCkzlR1FrggLoy+vY+CX0me4oE/WYk4KAgIRXkE9tcbwotQA==}
+
+  '@tolgee/core@6.0.1':
+    resolution: {integrity: sha512-CUMCHAhqWy/eQGDS5yDINt/5Me0Cb8oVz9DDQCMast2ILitoqckliC4/M+FjF3MreF/emEb3LpVmXfB2X1PTJA==}
+
+  '@tolgee/react@6.0.1':
+    resolution: {integrity: sha512-pg34K9Lrd4q1gU3hv4/Llmvb96ulUw8HqPKEGI+zqmlU6a1bniWcwTGi9LSgojuvgeIJN6Lw11HSbVy/jnBJNw==}
+    peerDependencies:
+      react: ^16.14.0 || ^17.0.1 || ^18.1.0 || ^19
+
+  '@tolgee/web@6.0.1':
+    resolution: {integrity: sha512-chTq5v4LnGGRjtQVohUewR7jGIyALa1yOLxW5iYPxdbsFGlV1v+SR7nJy60+6xJrXrBOaMNYUR9Ps4dvbXuKsw==}
 
   '@trpc/client@11.0.0-rc.666':
     resolution: {integrity: sha512-BP3H0bktY03m7haVT5QoPR4sn30DNJcvFHsA3Msj3uPRY8JLVE03MR4rVG6T7VbcglORKpyMlRxjpUgdRmJErA==}
@@ -6660,6 +6674,17 @@ snapshots:
       '@tiptap/extension-text': 2.11.2(@tiptap/core@2.11.2(@tiptap/pm@2.11.2))
       '@tiptap/extension-text-style': 2.11.2(@tiptap/core@2.11.2(@tiptap/pm@2.11.2))
       '@tiptap/pm': 2.11.2
+
+  '@tolgee/core@6.0.1': {}
+
+  '@tolgee/react@6.0.1(react@18.3.1)':
+    dependencies:
+      '@tolgee/web': 6.0.1
+      react: 18.3.1
+
+  '@tolgee/web@6.0.1':
+    dependencies:
+      '@tolgee/core': 6.0.1
 
   '@trpc/client@11.0.0-rc.666(@trpc/server@11.0.0-rc.666(typescript@5.7.2))(typescript@5.7.2)':
     dependencies:
