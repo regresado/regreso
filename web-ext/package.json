@@ -4,13 +4,17 @@
   "description": "Save links and resources to Regreso with a single click (or keyboard shortcut)!",
   "main": "index.js",
   "scripts": {
-    "build:chrome": "run-script-os",
-    "build:chrome:windows": "copy manifest-chromium.json manifest.json",
-    "build:chrome:linux": "cp manifest-chromium.json manifest.json",
-    "build:firefox": "run-script-os",
-    "build:firefox:linux": "cp manifest-firefox.json manifest.json",
-    "build:firefox:windows": "copy manifest-firefox.json manifest.json",
-    "build:firefox:default": "cp manifest-firefox.json manifest.json"
+    "generate:chrome": "run-script-os",
+    "generate:chrome:windows": "copy manifest-chromium.json manifest.json",
+    "generate:chrome:linux": "cp manifest-chromium.json manifest.json",
+    "generate:firefox": "run-script-os",
+    "generate:firefox:linux": "cp manifest-firefox.json manifest.json",
+    "generate:firefox:windows": "copy manifest-firefox.json manifest.json",
+    "generate:firefox:default": "cp manifest-firefox.json manifest.json",
+    "dev:firefox": "web-ext run --devtools",
+    "dev:chrome": "web-ext run --devtools --target chromium",
+    "build": "web-ext build --verbose",
+    "lint": "web-ext lint"
   },
   "keywords": [
     "bookmarking",
