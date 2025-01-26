@@ -28,7 +28,7 @@ import { motion, useAnimation } from "motion/react";
 import { useForm } from "react-hook-form";
 import { type z } from "zod";
 import {
-  listSchema,
+  listFormSchema,
   type Destination,
   type List,
   type updateListSchema,
@@ -171,7 +171,7 @@ type ListFormProps =
       >;
       update: true;
       updateId: number;
-      defaultValues?: z.infer<typeof listSchema>;
+      defaultValues?: z.infer<typeof listFormSchema>;
     }
   | {
       listMutation: (callback?: () => void) => UseTRPCMutationResult<
@@ -182,24 +182,24 @@ type ListFormProps =
           transformer: true;
           errorShape: { message: string };
         }>,
-        z.infer<typeof listSchema>,
+        z.infer<typeof listFormSchema>,
         unknown
       >;
       update: false;
-      defaultValues?: z.infer<typeof listSchema>;
+      defaultValues?: z.infer<typeof listFormSchema>;
     };
 
 export function ListForm(props: ListFormProps) {
   const [tags, setTags] = useState<Tag[]>([]);
   const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
-  const form = useForm<z.infer<typeof listSchema>>({
-    resolver: zodResolver(listSchema),
+  const form = useForm<z.infer<typeof listFormSchema>>({
+    resolver: zodResolver(listFormSchema),
     defaultValues: {
       name: props.defaultValues?.name ?? "",
       description: props.defaultValues?.description ?? "",
       tags: props.defaultValues?.tags ?? [],
       emoji: props.defaultValues?.emoji ?? "🗺️",
-    } as z.infer<typeof listSchema>,
+    } as z.infer<typeof listFormSchema>,
   });
 
   useEffect(() => {
@@ -211,7 +211,7 @@ export function ListForm(props: ListFormProps) {
     setTags([]);
   });
 
-  function onSubmit(data: z.infer<typeof listSchema>) {
+  function onSubmit(data: z.infer<typeof listFormSchema>) {
     if (props.update) {
       if (!props.updateId) {
         return;
@@ -520,7 +520,7 @@ export function ListPage(props: { id: string }) {
                     id: tag.id.toString(),
                     text: tag.text,
                   })) ?? [],
-              } as z.infer<typeof listSchema>
+              } as z.infer<typeof listFormSchema>
             }
             updateId={parseInt(props.id)}
             listMutation={updateList}
