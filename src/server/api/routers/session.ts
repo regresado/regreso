@@ -1,8 +1,8 @@
-import { cookies, headers } from "next/headers";
+import { headers } from "next/headers";
 
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import type { Session, SessionFlags, User } from "~/server/models";
+import type { SessionFlags, User } from "~/server/models";
 
 import {
   createTRPCRouter,
@@ -15,14 +15,10 @@ import { verifyPasswordHash } from "~/server/password";
 import { RefillingTokenBucket, Throttler } from "~/server/rate-limit";
 import {
   createSession,
-  deleteSessionTokenCookie,
   generateSessionToken,
   invalidateSession,
 } from "~/server/session";
 import { getUserFromEmail, getUserPasswordHash } from "~/server/user";
-
-import { loginAction } from "~/app/(auth)/log-in/actions";
-import { logoutAction } from "~/app/(platform)/actions";
 
 const throttler = new Throttler<number>([1, 2, 4, 8, 16, 30, 60, 180, 300]);
 
@@ -78,7 +74,7 @@ export const sessionRouter = createTRPCRouter({
         }),
       ]),
     )
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ input }) => {
       // FIXME: Assumes X-Forwarded-For is always included.
       const clientIP = (await headers()).get("X-Forwarded-For");
       if (clientIP !== null && !ipBucket.check(clientIP, 1)) {
