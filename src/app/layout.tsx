@@ -1,10 +1,14 @@
 import "~/styles/globals.css";
 
+import React, { ReactNode } from "react";
 import { type Metadata } from "next";
+import { notFound } from "next/navigation";
 
+import { TolgeeStaticData } from "@tolgee/react";
+import { TolgeeNextProvider } from "~/tolgee/client";
+import { getLanguage } from "~/tolgee/language";
+import { getTolgee } from "~/tolgee/server";
 import { GeistSans } from "geist/font/sans";
-import { NextIntlClientProvider } from "next-intl";
-import { getLocale, getMessages } from "next-intl/server";
 
 import { ThemeProvider } from "~/app/providers";
 
@@ -22,9 +26,14 @@ export const metadata: Metadata = {
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const locale = await getLocale();
+  const locale = await getLanguage();
+  const tolgee = await getTolgee();
+  // serializable data that are passed to client components
+  const translations = await tolgee.loadRequired();
+  const staticData: TolgeeStaticData = {
+    translations: { en: translations as any },
+  };
 
-  const messages = await getMessages();
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <CSPostHogProvider>
@@ -35,9 +44,9 @@ export default async function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <NextIntlClientProvider messages={messages}>
+            <TolgeeNextProvider language={locale} staticData={staticData}>
               {children}
-            </NextIntlClientProvider>
+            </TolgeeNextProvider>
           </ThemeProvider>
         </body>
       </CSPostHogProvider>

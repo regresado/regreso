@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslate } from "@tolgee/react";
 import { Code, Database, Zap } from "lucide-react";
 import { motion } from "motion/react";
 
@@ -7,36 +8,26 @@ import { motion } from "motion/react";
 
 type Feature = {
   icon: JSX.Element;
-  title: string;
-  description: string;
+  id: string;
 };
 
 const features: Feature[] = [
   {
     icon: <Zap className="h-10 w-10 text-cyan-500" />,
-    title: "Smart Bookmarking",
-    description:
-      "Treat internet places like locations: organize and search for websites and resources.",
+    id: "smart",
   },
   {
     icon: <Code className="h-10 w-10 text-cyan-500" />,
-    title: "Self-hostable",
-    description:
-      "Painlessly set up, host, and run your own instance of Regreso.",
+    id: "host",
   },
   {
     icon: <Database className="h-10 w-10 text-cyan-500" />,
-    title: "Connect Your Data",
-    description:
-      "Easily import, export, migrate, or delete your data at any time.",
+    id: "data",
   },
 ];
 
 const FeatureCard = ({ feature }: { feature: Feature }) => {
-  // const [ref, inView] = useInView({
-  //   triggerOnce: true,
-  //   threshold: 0.1,
-  // });
+  const { t } = useTranslate("LandingPage");
 
   const cardVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -64,9 +55,12 @@ const FeatureCard = ({ feature }: { feature: Feature }) => {
           {feature.icon}
         </div>
         <h3 className="mb-2 text-xl font-bold text-black dark:text-white">
-          {feature.title}
+          {t(`features.${feature.id}.title`)}
         </h3>
-        <p className="text-black dark:text-white">{feature.description}</p>
+        <p className="text-black dark:text-white">
+          {" "}
+          {t(`features.${feature.id}.description`)}
+        </p>
       </div>
       <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-500 to-blue-500"></div>
     </motion.div>
@@ -76,8 +70,8 @@ const FeatureCard = ({ feature }: { feature: Feature }) => {
 export const FeatureCards = () => {
   return (
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {features.map((feature, index) => (
-        <FeatureCard key={index} feature={feature} />
+      {features.map((feat) => (
+        <FeatureCard key={feat.id} feature={feat} />
       ))}
     </div>
   );

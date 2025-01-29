@@ -3,9 +3,9 @@
 import React from "react";
 import Link from "next/link";
 
+import { useTranslate } from "@tolgee/react";
 import { ArrowRight } from "lucide-react";
 import { motion } from "motion/react";
-import { useTranslations } from "next-intl";
 
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -13,7 +13,7 @@ import { LampContainer } from "~/components/ui/lamp";
 
 export default function Hero() {
   const [email, setEmail] = React.useState("");
-  const t = useTranslations("LandingHero");
+  const { t } = useTranslate("LandingPage");
   return (
     <section className="pt-16 md:pt-16">
       {" "}
@@ -28,7 +28,7 @@ export default function Hero() {
           }}
           className="mt-16 bg-gradient-to-br from-gray-900 to-gray-600 bg-clip-text py-4 text-center text-4xl font-medium tracking-tight text-transparent dark:from-slate-300 dark:to-slate-500 md:text-7xl"
         >
-          {t("title.1")} <br /> {t("title.2")}
+          {t("LandingHero.title.1")} <br /> {t("LandingHero.title.2")}
         </motion.h1>
         <motion.div
           initial={{ opacity: 0, y: 100 }}
@@ -40,7 +40,7 @@ export default function Hero() {
           }}
           className="mx-auto mt-6 max-w-2xl text-center text-lg text-gray-700 dark:text-slate-300"
         >
-          {t("subtitle")}
+          {t("LandingHero.subtitle")}
         </motion.div>
         <motion.div
           initial={{ opacity: 0, y: 100 }}
@@ -56,7 +56,7 @@ export default function Hero() {
             type="email"
             value={email}
             onChange={(event) => setEmail(event?.target.value)}
-            placeholder={t("ctaInputPlaceholder")}
+            placeholder={t("LandingHero.ctaInputPlaceholder")}
             className="rounded-full border-gray-300 bg-white text-gray-900 placeholder-gray-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:placeholder-slate-400"
           />
           <Button
@@ -64,7 +64,7 @@ export default function Hero() {
             asChild
           >
             <Link href={`/sign-up?email=${email}`}>
-              {t("ctaButton")}
+              {t("LandingHero.ctaButton")}
               <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
           </Button>

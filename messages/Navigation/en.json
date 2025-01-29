@@ -1,0 +1,76 @@
+{
+  "loginBtn": "Log in",
+  "signupBtn": "Sign up",
+
+  "Navigation": {
+    "submenus": {
+      "credits": {
+        "description": "Say thanks to those who made Regreso possible.",
+        "name": "Credits",
+        "link": "/credits"
+      },
+      "discussions": {
+        "description": "Get help from other users and developers.",
+        "name": "Discussions",
+        "link": "/discussions"
+      },
+      "features": {
+        "description": "Learn about Regreso's capabilities.",
+        "name": "Features",
+        "link": "/features"
+      },
+      "guide": {
+        "description": "Learn how to use Regreso and get the most out of it.",
+        "name": "Guide",
+        "link": "/guide"
+      },
+      "privacy": {
+        "description": "Learn how we use your data and protect your privacy.",
+        "name": "Privacy Policy",
+        "link": "/privacy"
+      },
+      "repo": {
+        "description": "Browse and contribute to the source code.",
+        "name": "Source Code",
+        "link": "/repository"
+      },
+      "roadmap": {
+        "description": "See planned and upcoming Regreso features.",
+        "name": "Roadmap",
+        "link": "/roadmap"
+      },
+      "wiki": {
+        "description": "Learn how Regreso works and implement it yourself.",
+        "name": "Wiki",
+        "link": "/wiki"
+      },
+      "blog": {
+        "description": "Read the latest news and updates from the Regreso team.",
+        "name": "Blog",
+        "link": "/blog"
+      }
+    },
+    "tabs": {
+      "about": {
+        "name": "About",
+        "link": "/about"
+      },
+      "blog": {
+        "name": "Blog",
+        "link": "/blog"
+      },
+      "dashboard": {
+        "name": "Dashboard",
+        "link": "/dashboard"
+      },
+      "resources": {
+        "name": "Resources",
+        "link": "/resources"
+      }
+    },
+    "footerLinkTitle": "Quick Links",
+    "footerSocialsTitle": "Follow",
+    "copyright": "All rights reserved.",
+    "footerSubtitle": "Never lose your digital trail again."
+  }
+}

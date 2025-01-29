@@ -3,8 +3,8 @@
 import React from "react";
 import Link from "next/link";
 
+import { useTranslate } from "@tolgee/react";
 import { Github } from "lucide-react";
-import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 
 import { Button } from "~/components/ui/button";
@@ -15,14 +15,15 @@ import { Footer, LandingNavigation } from "~/components/landing-navigation";
 
 function MacbookScrollDemo() {
   const { theme } = useTheme();
-  const t = useTranslations("LandingPage");
+  const { t } = useTranslate("LandingPage");
 
   return (
     <div className="w-full overflow-hidden bg-white dark:bg-[#0B0B0F]">
       <MacbookScroll
         title={
           <span>
-            {t("macbookTitle.1")} <br /> {t("macbookTitle.2")}
+            {t("LandingPage.macbookTitle.1")} <br />{" "}
+            {t("LandingPage.macbookTitle.2")}
           </span>
         }
         src={`/dashboard-screenshot-${theme == "system" ? "dark" : theme}.png`}
@@ -33,7 +34,7 @@ function MacbookScrollDemo() {
 }
 
 export default function LandingPage() {
-  const t = useTranslations("LandingPage");
+  const { t } = useTranslate("LandingPage");
 
   return (
     <>
@@ -44,7 +45,7 @@ export default function LandingPage() {
         <section className="py-20 dark:bg-slate-900">
           <div className="container mx-auto px-4">
             <h2 className="mb-12 text-center text-3xl font-bold">
-              {t("featuresTitle")}
+              {t("LandingPage.featuresTitle")}
             </h2>
 
             <FeatureCards />
@@ -53,17 +54,22 @@ export default function LandingPage() {
         {/* <TabsDemo /> */}
         <section className="bg-gradient-to-b from-white to-gray-50 py-20 dark:from-slate-950 dark:to-slate-900">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="mb-6 text-3xl font-bold">{t("openTitle")}</h2>
+            <h2 className="mb-6 text-3xl font-bold">
+              {t("LandingPage.openTitle")}
+            </h2>
 
             <p
               className="mx-auto mb-8 max-w-2xl text-gray-600 dark:text-slate-300"
-              dangerouslySetInnerHTML={{ __html: t.raw("openDescription") }}
+              dangerouslySetInnerHTML={{
+                __html: t("LandingPage.openDescription"),
+              }}
             ></p>
 
             <div className="flex justify-center space-x-4">
               <Link href={process.env.NEXT_PUBLIC_REPO_URL ?? "#"} passHref>
                 <Button className="bg-gray-800 text-white hover:bg-gray-700 dark:bg-slate-800 dark:hover:bg-slate-700">
-                  <Github className="mr-2 h-4 w-4" /> {t("repoButton")}
+                  <Github className="mr-2 h-4 w-4" />{" "}
+                  {t("LandingPage.repoButton")}
                 </Button>
               </Link>
 
@@ -76,21 +82,25 @@ export default function LandingPage() {
                 }
                 passHref
               >
-                <Button variant="outline">{t("contributeButton")}</Button>
+                <Button variant="outline">
+                  {t("LandingPage.contributeButton")}
+                </Button>
               </Link>
             </div>
           </div>
         </section>
         <section className="bg-gray-50 py-20 dark:bg-slate-900">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="mb-6 text-3xl font-bold">{t("finaleTitle")}</h2>
+            <h2 className="mb-6 text-3xl font-bold">
+              {t("LandingPage.finaleTitle")}
+            </h2>
 
             <p className="mx-auto mb-8 max-w-2xl text-gray-600 dark:text-slate-300">
-              {t("finaleSubtitle")}
+              {t("LandingPage.finaleSubtitle")}
             </p>
 
             <Button className="rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 px-8 py-3 text-lg text-white transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg">
-              {t("ctaButton")}
+              {t("LandingPage.ctaButton")}
             </Button>
           </div>
         </section>

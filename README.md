@@ -2,9 +2,10 @@
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/9186e8eb-17c0-4d34-bdd9-e2add4200741/deploy-status)](https://app.netlify.com/sites/regreso/deploys)
 [![wakatime](https://wakatime.com/badge/user/7482ea9d-3085-4e9b-95ad-1ca78a14d948/project/2972fea6-6fe2-4f55-afb8-a47ff01540ad.svg)](https://wakatime.com/badge/user/7482ea9d-3085-4e9b-95ad-1ca78a14d948/project/2972fea6-6fe2-4f55-afb8-a47ff01540ad)
-![MIT License](https://img.shields.io/github/license/joshpinto6/regreso)
-![Closed Pull Request Count](https://img.shields.io/github/issues-pr-closed/joshpinto6/regreso)
-![GitHub Repo stars](https://img.shields.io/github/stars/joshpinto6/regreso)
+![MIT License](https://img.shields.io/github/license/regresado/regreso)
+[![All Contributors](https://img.shields.io/github/all-contributors/regresado/projectName?color=ee8449&style=flat-square)](#-acknowledgements)
+![Closed Pull Request Count](https://img.shields.io/github/issues-pr-closed/regresado/regreso)
+![GitHub Repo stars](https://img.shields.io/github/stars/regresado/regreso)
 
 ## 👋 Introduction
 
@@ -39,9 +40,13 @@ To install dependencies, run `pnpm install` and to build/start server, use `pnpm
 
 Regreso is licensed under the [MIT license](LICENSE.md), a permissive license which allows you to modify, fork, extend, or redistribute the source code.
 
-We accept contributions of new features and bug fixes through [Pull Requests](/pulls) and general suggestions/bug reports through [Issues](/issues). Before opening either of these, please check if a similar issue/PR has already been opened/assigned and if unsure about its assignment/development status, please ask before potentially creating a duplicate.
+We accept contributions of new features and bug fixes through [Pull Requests](/pulls) and general suggestions/bug reports through [Issues](/issues). Before opening either of these, please check if a similar issue/PR has already been opened/assigned and if unsure about its assignment/development status, please ask before potentially creating a duplicate. After creating a PR, we ask that you follow [these steps](https://allcontributors.org/docs/en/bot/usage) to add yourself to our acknowledgements.
 
 **For security reports, please [submit](/security) a private vulnerability disclosure with the relevant information!**
+
+### 🌐 Translation
+
+To help translate Regreso, either register for Tolgee (for easier translation editing) or simply edit the JSON files within `messages/*.json` and create a Pull Request.
 
 ## ⚙️ Tech Overview
 
@@ -194,3 +199,14 @@ This project uses the [T3 Stack](https://create.t3.gg/) made by [@t3-oss](https:
 - [UploadThing](https://uploadthing.com/) for handling user file uplaods
 
 ## 🙌 Acknowledgements
+
+Regreso follows the all contributor specification.
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->

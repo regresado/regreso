@@ -1,7 +1,9 @@
+"use client";
+
 import Link from "next/link";
 
+import { useTranslate } from "@tolgee/react";
 import { ChevronRightIcon, ExternalLink, Github, MenuIcon } from "lucide-react";
-import { useTranslations } from "next-intl";
 
 import { Button } from "~/components/ui/button";
 import {
@@ -24,7 +26,7 @@ import { Logo } from "~/components/logo";
 
 // TODO: Make Side Navigation Sheet share component with marketing one
 export function LandingNavigation() {
-  const t = useTranslations("Navigation");
+  const { t } = useTranslate("Navigation");
   return (
     <nav className="fixed top-0 z-50 w-full bg-white/50 backdrop-blur-md dark:bg-slate-900/50">
       <div className="container mx-auto w-full px-4 lg:px-8">
@@ -58,69 +60,69 @@ export function LandingNavigation() {
                 </Link>
                 <div className="grid gap-2 py-6">
                   <Link
-                    href={t("tabs.dashboard.link")}
+                    href={t("Navigation.tabs.dashboard.link")}
                     className="flex w-full items-center py-2 text-lg font-semibold"
                     prefetch={false}
                   >
                     <span className="mr-2 inline align-middle">
-                      {t("tabs.dashboard.name")}{" "}
+                      {t("Navigation.tabs.dashboard.name", "Dashboard")}{" "}
                     </span>
 
                     <ExternalLink size="18" className="inline align-middle" />
                   </Link>
                   <Collapsible className="grid gap-4">
                     <CollapsibleTrigger className="flex w-full items-center text-lg font-semibold [&[data-state=open]>svg]:rotate-90">
-                      {t("tabs.about.name")}{" "}
+                      {t("Navigation.tabs.about.name", "About")}{" "}
                       <ChevronRightIcon className="ml-auto h-5 w-5 transition-all" />
                     </CollapsibleTrigger>
                     <CollapsibleContent>
                       <div className="-mx-6 grid gap-6 bg-muted p-6">
                         <Link
-                          href={t("submenus.features.link")}
+                          href={t("Navigation.submenus.features.link")}
                           className="group grid h-auto w-full justify-start gap-1"
                           prefetch={false}
                         >
                           <div className="text-sm font-medium leading-none group-hover:underline">
-                            {t("submenus.features.name")}
+                            {t("Navigation.submenus.features.name")}
                           </div>
                           <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            {t("submenus.features.description")}
+                            {t("Navigation.submenus.features.description")}
                           </div>
                         </Link>
                         <Link
-                          href={t("submenus.repo.link")}
+                          href={t("Navigation.submenus.repo.link")}
                           className="group grid h-auto w-full justify-start gap-1"
                           prefetch={false}
                         >
                           <div className="text-sm font-medium leading-none group-hover:underline">
-                            {t("submenus.repo.name")}
+                            {t("Navigation.submenus.repo.name")}
                           </div>
                           <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            {t("submenus.repo.description")}
+                            {t("Navigation.submenus.repo.description")}
                           </div>
                         </Link>
                         <Link
-                          href={t("submenus.credits.link")}
+                          href={t("Navigation.submenus.credits.link")}
                           className="group grid h-auto w-full justify-start gap-1"
                           prefetch={false}
                         >
                           <div className="text-sm font-medium leading-none group-hover:underline">
-                            {t("submenus.credits.name")}
+                            {t("Navigation.submenus.credits.name")}
                           </div>
                           <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            {t("submenus.credits.description")}
+                            {t("Navigation.submenus.credits.description")}
                           </div>
                         </Link>
                         <Link
-                          href={t("submenus.privacy.link")}
+                          href={t("Navigation.submenus.privacy.link")}
                           className="group grid h-auto w-full justify-start gap-1"
                           prefetch={false}
                         >
                           <div className="text-sm font-medium leading-none group-hover:underline">
-                            {t("submenus.privacy.name")}
+                            {t("Navigation.submenus.privacy.name")}
                           </div>
                           <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            {t("submenus.privacy.description")}
+                            {t("Navigation.submenus.privacy.description")}
                           </div>
                         </Link>
                       </div>
@@ -129,75 +131,75 @@ export function LandingNavigation() {
 
                   <Collapsible className="grid gap-4">
                     <CollapsibleTrigger className="flex w-full items-center text-lg font-semibold [&[data-state=open]>svg]:rotate-90">
-                      {t("tabs.resources.name")}{" "}
+                      {t("Navigation.tabs.resources.name", "Resources")}{" "}
                       <ChevronRightIcon className="ml-auto h-5 w-5 transition-all" />
                     </CollapsibleTrigger>
                     <CollapsibleContent>
                       <div className="-mx-6 grid gap-6 bg-muted p-6">
                         <Link
-                          href={t("submenus.guide.link")}
+                          href={t("Navigation.submenus.guide.link")}
                           className="group grid h-auto w-full justify-start gap-1"
                           prefetch={false}
                         >
                           <div className="text-sm font-medium leading-none group-hover:underline">
-                            {t("submenus.guide.name")}
+                            {t("Navigation.submenus.guide.name")}
                           </div>
                           <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            {t("submenus.guide.description")}
+                            {t("Navigation.submenus.guide.description")}
                           </div>
                         </Link>
                         <Link
-                          href={t("submenus.wiki.link")}
+                          href={t("Navigation.submenus.wiki.link")}
                           className="group grid h-auto w-full justify-start gap-1"
                           prefetch={false}
                         >
                           <div className="text-sm font-medium leading-none group-hover:underline">
-                            {t("submenus.wiki.name")}
+                            {t("Navigation.submenus.wiki.name")}
                           </div>
                           <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            {t("submenus.wiki.description")}
+                            {t("Navigation.submenus.wiki.description")}
                           </div>
                         </Link>
                         <Link
-                          href={t("submenus.roadmap.link")}
+                          href={t("Navigation.submenus.roadmap.link")}
                           className="group grid h-auto w-full justify-start gap-1"
                           prefetch={false}
                         >
                           <div className="text-sm font-medium leading-none group-hover:underline">
-                            {t("submenus.roadmap.name")}
+                            {t("Navigation.submenus.roadmap.name")}
                           </div>
                           <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            {t("submenus.roadmap.description")}
+                            {t("Navigation.submenus.roadmap.description")}
                           </div>
                         </Link>
                         <Link
-                          href={t("submenus.discussions.link")}
+                          href={t("Navigation.submenus.discussions.link")}
                           className="group grid h-auto w-full justify-start gap-1"
                           prefetch={false}
                         >
                           <div className="text-sm font-medium leading-none group-hover:underline">
-                            {t("submenus.discussions.name")}
+                            {t("Navigation.submenus.discussions.name")}
                           </div>
                           <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            {t("submenus.discussions.description")}
+                            {t("Navigation.submenus.discussions.description")}
                           </div>
                         </Link>
                       </div>
                     </CollapsibleContent>
                   </Collapsible>
                   <Link
-                    href={t("tabs.blog.link")}
+                    href={t("Navigation.tabs.blog.link", "Blog")}
                     className="flex w-full items-center py-2 text-lg font-semibold"
                     prefetch={false}
                   >
-                    {t("tabs.blog.name")}
+                    {t("Navigation.tabs.blog.name")}
                   </Link>
                   <div className="flex w-full items-center justify-start gap-4">
                     <Button className="w-full" variant="outline" size="sm">
-                      {t("loginBtn")}
+                      {t("loginBtn", "Log in")}
                     </Button>
                     <Button className="w-full bg-cyan-500" size="sm">
-                      {t("signupBtn")}
+                      {t("signupBtn", "Sign up")}
                     </Button>
                   </div>
                 </div>
@@ -232,13 +234,13 @@ export function LandingNavigation() {
                 <NavigationMenuItem>
                   <NavigationMenuLink asChild>
                     <Link
-                      href={t("tabs.dashboard.link")}
+                      href={t("Navigation.tabs.dashboard.link")}
                       target="_blank"
                       className="group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
                       prefetch={false}
                     >
                       <span className="mr-2 inline align-middle">
-                        {t("tabs.dashboard.name")}{" "}
+                        {t("Navigation.tabs.dashboard.name")}{" "}
                       </span>
 
                       <ExternalLink size="16" className="inline align-middle" />
@@ -247,63 +249,63 @@ export function LandingNavigation() {
                 </NavigationMenuItem>
                 <NavigationMenuItem>
                   <NavigationMenuTrigger>
-                    {t("tabs.about.name")}
+                    {t("Navigation.tabs.about.name")}
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>
                     <div className="grid w-[400px] p-2">
                       <NavigationMenuLink asChild>
                         <Link
-                          href={t("submenus.features.link")}
+                          href={t("Navigation.submenus.features.link")}
                           className="group grid h-auto w-full items-center justify-start gap-1 rounded-md bg-background p-4 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
                           prefetch={false}
                         >
                           <div className="text-sm font-medium leading-none group-hover:underline">
-                            {t("submenus.features.name")}
+                            {t("Navigation.submenus.features.name")}
                           </div>
                           <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            {t("submenus.features.description")}
+                            {t("Navigation.submenus.features.description")}
                           </div>
                         </Link>
                       </NavigationMenuLink>
                       <NavigationMenuLink asChild>
                         <Link
-                          href={t("submenus.repo.link")}
+                          href={t("Navigation.submenus.repo.link")}
                           className="group grid h-auto w-full items-center justify-start gap-1 rounded-md bg-background p-4 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
                           prefetch={false}
                         >
                           <div className="text-sm font-medium leading-none group-hover:underline">
-                            {t("submenus.repo.name")}
+                            {t("Navigation.submenus.repo.name")}
                           </div>
                           <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            {t("submenus.repo.description")}
+                            {t("Navigation.submenus.repo.description")}
                           </div>
                         </Link>
                       </NavigationMenuLink>
                       <NavigationMenuLink asChild>
                         <Link
-                          href={t("submenus.credits.link")}
+                          href={t("Navigation.submenus.credits.link")}
                           className="group grid h-auto w-full items-center justify-start gap-1 rounded-md bg-background p-4 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
                           prefetch={false}
                         >
                           <div className="text-sm font-medium leading-none group-hover:underline">
-                            {t("submenus.credits.name")}
+                            {t("Navigation.submenus.credits.name")}
                           </div>
                           <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            {t("submenus.credits.description")}
+                            {t("Navigation.submenus.credits.description")}
                           </div>
                         </Link>
                       </NavigationMenuLink>
                       <NavigationMenuLink asChild>
                         <Link
-                          href={t("submenus.privacy.link")}
+                          href={t("Navigation.submenus.privacy.link")}
                           className="group grid h-auto w-full items-center justify-start gap-1 rounded-md bg-background p-4 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
                           prefetch={false}
                         >
                           <div className="text-sm font-medium leading-none group-hover:underline">
-                            {t("submenus.privacy.name")}
+                            {t("Navigation.submenus.privacy.name")}
                           </div>
                           <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            {t("submenus.privacy.description")}
+                            {t("Navigation.submenus.privacy.description")}
                           </div>
                         </Link>
                       </NavigationMenuLink>
@@ -316,57 +318,57 @@ export function LandingNavigation() {
                     <div className="grid w-[550px] grid-cols-2 p-2">
                       <NavigationMenuLink asChild>
                         <Link
-                          href={t("submenus.guide.link")}
+                          href={t("Navigation.submenus.guide.link")}
                           className="group grid h-auto w-full items-center justify-start gap-1 rounded-md bg-background p-4 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
                           prefetch={false}
                         >
                           <div className="text-sm font-medium leading-none group-hover:underline">
-                            {t("submenus.guide.name")}
+                            {t("Navigation.submenus.guide.name")}
                           </div>
                           <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            {t("submenus.guide.description")}
+                            {t("Navigation.submenus.guide.description")}
                           </div>
                         </Link>
                       </NavigationMenuLink>
                       <NavigationMenuLink asChild>
                         <Link
-                          href={t("submenus.wiki.link")}
+                          href={t("Navigation.submenus.wiki.link")}
                           className="group grid h-auto w-full items-center justify-start gap-1 rounded-md bg-background p-4 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
                           prefetch={false}
                         >
                           <div className="text-sm font-medium leading-none group-hover:underline">
-                            {t("submenus.wiki.name")}
+                            {t("Navigation.submenus.wiki.name")}
                           </div>
                           <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            {t("submenus.wiki.description")}
+                            {t("Navigation.submenus.wiki.description")}
                           </div>
                         </Link>
                       </NavigationMenuLink>
                       <NavigationMenuLink asChild>
                         <Link
-                          href={t("submenus.roadmap.link")}
+                          href={t("Navigation.submenus.roadmap.link")}
                           className="group grid h-auto w-full items-center justify-start gap-1 rounded-md bg-background p-4 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
                           prefetch={false}
                         >
                           <div className="text-sm font-medium leading-none group-hover:underline">
-                            {t("submenus.roadmap.name")}
+                            {t("Navigation.submenus.roadmap.name")}
                           </div>
                           <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            {t("submenus.roadmap.description")}
+                            {t("Navigation.submenus.roadmap.description")}
                           </div>
                         </Link>
                       </NavigationMenuLink>
                       <NavigationMenuLink asChild>
                         <Link
-                          href={t("submenus.discussions.link")}
+                          href={t("Navigation.submenus.discussions.link")}
                           className="group grid h-auto w-full items-center justify-start gap-1 rounded-md bg-background p-4 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
                           prefetch={false}
                         >
                           <div className="text-sm font-medium leading-none group-hover:underline">
-                            {t("submenus.discussions.name")}
+                            {t("Navigation.submenus.discussions.name")}
                           </div>
                           <div className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            {t("submenus.discussions.description")}
+                            {t("Navigation.submenus.discussions.description")}
                           </div>
                         </Link>
                       </NavigationMenuLink>
@@ -376,11 +378,11 @@ export function LandingNavigation() {
                 <NavigationMenuItem>
                   <NavigationMenuLink asChild>
                     <Link
-                      href={t("tabs.blog.link")}
+                      href={t("Navigation.tabs.blog.link")}
                       className="group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
                       prefetch={false}
                     >
-                      {t("tabs.blog.name")}
+                      {t("Navigation.tabs.blog.name")}
                     </Link>
                   </NavigationMenuLink>
                 </NavigationMenuItem>
@@ -416,7 +418,7 @@ export function LandingNavigation() {
 }
 
 export function Footer() {
-  const t = useTranslations("LandingFooter");
+  const { t } = useTranslate("Navigation");
   const quickLinks = ["guide", "blog", "repo", "credits", "privacy"] as const;
 
   return (
@@ -426,20 +428,24 @@ export function Footer() {
           <div className="mb-6 w-full md:mb-0 md:w-1/3">
             <h3 className="mb-4 text-xl font-bold">Regreso</h3>
 
-            <p className="text-gray-600 dark:text-slate-400">{t("subtitle")}</p>
+            <p className="text-gray-600 dark:text-slate-400">
+              {t("Navigation.footerSubtitle")}
+            </p>
           </div>
 
           <div className="mb-6 w-full md:mb-0 md:w-1/3">
-            <h4 className="mb-4 text-lg font-semibold">Quick Links</h4>
+            <h4 className="mb-4 text-lg font-semibold">
+              {t("Navigation.footerLinkTitle")}
+            </h4>
 
             <ul className="space-y-2">
               {quickLinks.map((key) => (
                 <li key={key}>
                   <Link
-                    href={t(`links.${key}.link`)}
+                    href={t(`Navigation.submenus.${key}.link`)}
                     className="text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
                   >
-                    {t(`links.${key}.name`)}
+                    {t(`Navigation.submenus.${key}.name`)}
                   </Link>
                 </li>
               ))}
@@ -447,11 +453,13 @@ export function Footer() {
           </div>
 
           <div className="w-full md:w-1/3">
-            <h4 className="mb-4 text-lg font-semibold">{t("socialsTitle")}</h4>
+            <h4 className="mb-4 text-lg font-semibold">
+              {t("Navigation.footerSocialsTitle")}
+            </h4>
 
             <div className="flex space-x-4">
               <Link
-                href="https://github.com/your-repo"
+                href={"/repository"}
                 aria-label="GitHub Repository for Regreso"
                 className="text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
               >
@@ -463,7 +471,8 @@ export function Footer() {
 
         <div className="mt-8 border-t border-gray-200 pt-8 text-center text-gray-600 dark:border-slate-800 dark:text-slate-400">
           <p>
-            &copy; {new Date().getFullYear()} Regreso. {t("copyright")}
+            &copy; {new Date().getFullYear()} Regreso.{" "}
+            {t("Navigation.copyright")}
           </p>
         </div>
       </div>
