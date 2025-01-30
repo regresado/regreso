@@ -43,6 +43,10 @@ We accept contributions of new features and bug fixes through [Pull Requests](/p
 
 **For security reports, please [submit](/security) a private vulnerability disclosure with the relevant information!**
 
+### 🌐 Translation
+
+To help translate Regreso, either simply edit the JSON files found in the `messages` directory or contribute through [our Weblate project](https://hosted.weblate.org/projects/regreso/) **(recommended for less technically-savvy contributors!)**.
+
 ## ⚙️ Tech Overview
 
 This project uses the [T3 Stack](https://create.t3.gg/) made by [@t3-oss](https://github.com/t3-oss):
