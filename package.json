@@ -49,7 +49,7 @@
     "@radix-ui/react-toggle-group": "^1.1.1",
     "@radix-ui/react-tooltip": "^1.1.6",
     "@t3-oss/env-nextjs": "^0.11.1",
-    "@tanstack/react-query": "^5.50.0",
+    "@tanstack/react-query": "^5.66.0",
     "@tiptap/extension-code-block-lowlight": "^2.11.2",
     "@tiptap/extension-color": "^2.11.2",
     "@tiptap/extension-heading": "^2.11.2",
