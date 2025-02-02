@@ -71,7 +71,7 @@
     "boring-avatars": "^1.11.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
-    "cmdk": "1.0.0",
+    "cmdk": "1.0.4",
     "date-fns": "^3.6.0",
     "drizzle-orm": "^0.38.2",
     "emblor": "^1.4.7",
@@ -122,7 +122,7 @@
     "prettier": "^3.3.2",
     "prettier-plugin-tailwindcss": "^0.6.5",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.3"
   },
   "ct3aMetadata": {
     "initVersion": "7.38.1"
