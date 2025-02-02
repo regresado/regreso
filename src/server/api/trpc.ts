@@ -162,6 +162,12 @@ export const protectedQueryProcedure = t.procedure
     if (!ctx.session || !ctx.user) {
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }
+    if (!ctx.user.emailVerified) {
+      throw new TRPCError({ code: "UNAUTHORIZED" });
+    }
+    if (ctx.user.registered2FA && !ctx.session.twoFactorVerified) {
+      throw new TRPCError({ code: "UNAUTHORIZED" });
+    }
     return next({
       ctx: {
         // infers the `session` as non-nullable
@@ -174,6 +180,12 @@ export const protectedMutationProcedure = t.procedure
   .use(rateLimitMutationMiddleware)
   .use(({ ctx, next }) => {
     if (!ctx.session || !ctx.user) {
+      throw new TRPCError({ code: "UNAUTHORIZED" });
+    }
+    if (!ctx.user.emailVerified) {
+      throw new TRPCError({ code: "UNAUTHORIZED" });
+    }
+    if (ctx.user.registered2FA && !ctx.session.twoFactorVerified) {
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }
     return next({
