@@ -93,8 +93,8 @@ importers:
         specifier: ^0.11.1
         version: 0.11.1(typescript@5.7.3)(zod@3.24.1)
       '@tanstack/react-query':
-        specifier: ^5.50.0
-        version: 5.62.11(react@18.3.1)
+        specifier: ^5.66.0
+        version: 5.66.0(react@18.3.1)
       '@tiptap/extension-code-block-lowlight':
         specifier: ^2.11.2
         version: 2.11.2(@tiptap/core@2.11.2(@tiptap/pm@2.11.2))(@tiptap/extension-code-block@2.11.2(@tiptap/core@2.11.2(@tiptap/pm@2.11.2))(@tiptap/pm@2.11.2))(@tiptap/pm@2.11.2)(highlight.js@11.11.1)(lowlight@3.3.0)
@@ -139,7 +139,7 @@ importers:
         version: 11.0.0-rc.666(@trpc/server@11.0.0-rc.666(typescript@5.7.3))(typescript@5.7.3)
       '@trpc/react-query':
         specifier: ^11.0.0-rc.666
-        version: 11.0.0-rc.666(@tanstack/react-query@5.62.11(react@18.3.1))(@trpc/client@11.0.0-rc.666(@trpc/server@11.0.0-rc.666(typescript@5.7.3))(typescript@5.7.3))(@trpc/server@11.0.0-rc.666(typescript@5.7.3))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.7.3)
+        version: 11.0.0-rc.666(@tanstack/react-query@5.66.0(react@18.3.1))(@trpc/client@11.0.0-rc.666(@trpc/server@11.0.0-rc.666(typescript@5.7.3))(typescript@5.7.3))(@trpc/server@11.0.0-rc.666(typescript@5.7.3))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.7.3)
       '@trpc/server':
         specifier: ^11.0.0-rc.666
         version: 11.0.0-rc.666(typescript@5.7.3)
@@ -1972,11 +1972,11 @@ packages:
       typescript:
         optional: true
 
-  '@tanstack/query-core@5.62.9':
-    resolution: {integrity: sha512-lwePd8hNYhyQ4nM/iRQ+Wz2cDtspGeZZHFZmCzHJ7mfKXt+9S301fULiY2IR2byJYY6Z03T427E5PoVfMexHjw==}
+  '@tanstack/query-core@5.66.0':
+    resolution: {integrity: sha512-J+JeBtthiKxrpzUu7rfIPDzhscXF2p5zE/hVdrqkACBP8Yu0M96mwJ5m/8cPPYQE9aRNvXztXHlNwIh4FEeMZw==}
 
-  '@tanstack/react-query@5.62.11':
-    resolution: {integrity: sha512-Xb1nw0cYMdtFmwkvH9+y5yYFhXvLRCnXoqlzSw7UkqtCVFq3cG8q+rHZ2Yz1XrC+/ysUaTqbLKJqk95mCgC1oQ==}
+  '@tanstack/react-query@5.66.0':
+    resolution: {integrity: sha512-z3sYixFQJe8hndFnXgWu7C79ctL+pI0KAelYyW+khaNJ1m22lWrhJU2QrsTcRKMuVPtoZvfBYrTStIdKo+x0Xw==}
     peerDependencies:
       react: ^18 || ^19
 
@@ -4538,6 +4538,9 @@ packages:
   tailwind-merge@2.6.0:
     resolution: {integrity: sha512-P+Vu1qXfzediirmHOC3xKGAYeZtPcV9g76X+xg2FD4tYgR71ewMA35Y3sCz3zhiN/dwefRpJX0yBcgwi1fXNQA==}
 
+  tailwind-merge@3.0.1:
+    resolution: {integrity: sha512-AvzE8FmSoXC7nC+oU5GlQJbip2UO7tmOhOfQyOmPhrStOGXHU08j8mZEHZ4BmCqY5dWTCo4ClWkNyRNx1wpT0g==}
+
   tailwindcss-animate@1.0.7:
     resolution: {integrity: sha512-bl6mpH3T7I3UFxuvDEXLxy/VuFxBk5bbzplh7tXI68mwMokNYd1t9qPBHlnyTwfa4JGC4zP516I1hYYtQ/vspA==}
     peerDependencies:
@@ -6288,11 +6291,11 @@ snapshots:
     optionalDependencies:
       typescript: 5.7.3
 
-  '@tanstack/query-core@5.62.9': {}
+  '@tanstack/query-core@5.66.0': {}
 
-  '@tanstack/react-query@5.62.11(react@18.3.1)':
+  '@tanstack/react-query@5.66.0(react@18.3.1)':
     dependencies:
-      '@tanstack/query-core': 5.62.9
+      '@tanstack/query-core': 5.66.0
       react: 18.3.1
 
   '@tiptap/core@2.11.2(@tiptap/pm@2.11.2)':
@@ -6490,9 +6493,9 @@ snapshots:
       '@trpc/server': 11.0.0-rc.666(typescript@5.7.3)
       typescript: 5.7.3
 
-  '@trpc/react-query@11.0.0-rc.666(@tanstack/react-query@5.62.11(react@18.3.1))(@trpc/client@11.0.0-rc.666(@trpc/server@11.0.0-rc.666(typescript@5.7.3))(typescript@5.7.3))(@trpc/server@11.0.0-rc.666(typescript@5.7.3))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.7.3)':
+  '@trpc/react-query@11.0.0-rc.666(@tanstack/react-query@5.66.0(react@18.3.1))(@trpc/client@11.0.0-rc.666(@trpc/server@11.0.0-rc.666(typescript@5.7.3))(typescript@5.7.3))(@trpc/server@11.0.0-rc.666(typescript@5.7.3))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.7.3)':
     dependencies:
-      '@tanstack/react-query': 5.62.11(react@18.3.1)
+      '@tanstack/react-query': 5.66.0(react@18.3.1)
       '@trpc/client': 11.0.0-rc.666(@trpc/server@11.0.0-rc.666(typescript@5.7.3))(typescript@5.7.3)
       '@trpc/server': 11.0.0-rc.666(typescript@5.7.3)
       react: 18.3.1
@@ -7146,7 +7149,7 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       react-easy-sort: 1.6.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      tailwind-merge: 2.6.0
+      tailwind-merge: 3.0.1
       tsup: 6.7.0(postcss@8.4.49)(typescript@5.7.3)
     transitivePeerDependencies:
       - '@swc/core'
@@ -9332,6 +9335,8 @@ snapshots:
   supports-preserve-symlinks-flag@1.0.0: {}
 
   tailwind-merge@2.6.0: {}
+
+  tailwind-merge@3.0.1: {}
 
   tailwindcss-animate@1.0.7(tailwindcss@3.4.17):
     dependencies:
