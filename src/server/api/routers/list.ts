@@ -305,6 +305,7 @@ export const listRouter = createTRPCRouter({
             ? input.tags.map((tag) => {
                 return {
                   userId: ctx.user.id,
+                  workspaceId: ctx.user.workspaceId ?? 0,
                   name: tag.text,
                   shortcut: tag.text.toLowerCase().replace(/\s/g, "-"),
                 };
@@ -314,6 +315,8 @@ export const listRouter = createTRPCRouter({
             ? input.newTags.map((tag) => {
                 return {
                   userId: ctx.user.id,
+                  workspaceId: ctx.user.workspaceId ?? 0,
+
                   name: tag,
                   shortcut: tag.toLowerCase().replace(/\s/g, "-"),
                 };
@@ -418,6 +421,7 @@ export const listRouter = createTRPCRouter({
           emoji: lists.emoji,
           createdAt: lists.createdAt,
           userId: lists.userId,
+          workspaceId: lists.workspaceId,
           count: sql<number>`count(*) over()`,
           size: sql<number>`COUNT(${destinationLists}.id)`,
           updatedAt: sql<Date | null>`(
