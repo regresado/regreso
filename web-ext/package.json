@@ -20,6 +20,7 @@
   "license": "MIT",
   "devDependencies": {
     "run-script-os": "^1.1.6",
-    "web-ext": "^8.3.0"
+    "web-ext": "^8.3.0",
+    "webextension-polyfill": "^0.12.0"
   }
 }
