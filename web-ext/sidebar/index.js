@@ -8,7 +8,6 @@ document.getElementById("login-btn").addEventListener("click", function () {
   browser.runtime.sendMessage(
     { purpose: "log-in", data: { email, pw } },
     function (res) {
-      res;
       const { error } = res;
       if (error) {
         alert("An unknown error occurred while authenticating.");
@@ -36,7 +35,6 @@ document.getElementById("refresh-auth").addEventListener("click", function () {
 // for when the sidebar needs to be refreshed
 function refresh() {
   browser.runtime.sendMessage({ purpose: "get-session" }, function (res) {
-    res;
     const { error, data } = res;
     document.getElementById("login-status").style.display = "none";
 
@@ -52,35 +50,37 @@ function refresh() {
       document.getElementById("login").style.display = "none";
       document.getElementById("destinations").style.display = "block";
       document.getElementById("login-status").style.display = "block";
-      data;
 
       document.getElementById("user-name").innerText =
-        " (@" + data.user.name + ")";
       document.getElementById("user-displayName").innerText =
         data.user.displayName;
 
       browser.runtime.sendMessage(
         { purpose: "get-destinations" },
         function (res1) {
-          res1;
           const { data, error } = res1;
           if (error) {
             return;
           }
-          for (let i = 0; i < data.length; i++) {
-            const destination = data[i];
+          for (let i = 0; i < data.items.length; i++) {
+            const destination = data.items[i];
             const destinationElementTemplate = document.getElementById(
               "destination-template",
             );
             let destinationElement =
               destinationElementTemplate.content.cloneNode(true);
 
+            destinationElement.querySelectorAll("p.name")[0].textContent =
+              destination.name;
+            destinationElement.querySelectorAll("a.location")[0].textContent =
+              destination.location;
+            destinationElement.querySelectorAll("a.location")[0].href =
+              destination.location;
+
             document
               .getElementById("destinations")
               .appendChild(destinationElement);
           }
-
-          data;
         },
       );
     }

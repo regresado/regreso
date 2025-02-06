@@ -11,13 +11,11 @@ browser.runtime.onMessage.addListener(function (request, sender, sendResponse) {
               if (cookie) {
                 const sessionCookie = cookie.value;
                 if (!sessionCookie || sessionCookie === "") {
-                  ("why arent you authenticated?");
                   resolve({
                     error: "Unauthenticated",
                     data: null,
                   });
                 } else {
-                  "setting session cookie", cookie.value;
 
                   fetch("https://regreso.netlify.app/api/v1/session", {
                     method: "GET",
@@ -29,11 +27,9 @@ browser.runtime.onMessage.addListener(function (request, sender, sendResponse) {
                         session: cookie.value,
                       });
 
-                      "hi1", data, result;
 
                       const result1 =
                         await browser.storage.local.get("session");
-                      "hi1.1", result1;
 
                       resolve({ error: null, data });
                     })
@@ -43,7 +39,6 @@ browser.runtime.onMessage.addListener(function (request, sender, sendResponse) {
                     });
                 }
               } else {
-                ("Can't get cookie! Check the name!");
 
                 resolve({
                   error: "Unauthenticated",
@@ -63,7 +58,6 @@ browser.runtime.onMessage.addListener(function (request, sender, sendResponse) {
           })
             .then((response) => response.json())
             .then((data) => {
-              "hi2", data;
 
               resolve({ error: null, data });
             })
@@ -72,7 +66,6 @@ browser.runtime.onMessage.addListener(function (request, sender, sendResponse) {
       }),
     );
   } else if (request.purpose == "log-in") {
-    ("hi3");
     const { email, password } = request.data;
     JSON.stringify({ email, password });
     sendResponse(
@@ -83,22 +76,18 @@ browser.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         })
           .then((response) => response.json())
           .then((data) => {
-            "hi4", data;
             browser.storage.local.set({ session: data.sessionToken });
 
             resolve({ error: null, data });
           })
           .catch((error) => {
-            ("error logging in");
             resolve({ error: error.message });
           });
       }),
     );
   } else if (request.purpose == "log-out") {
-    ("logging out!");
     sendResponse(
       new Promise((resolve) => {
-        ("getting session");
         const storageResult = browser.storage.local.get("session");
         if (!storageResult || !storageResult.session) {
           browser.storage.local.remove("session");
@@ -108,7 +97,6 @@ browser.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         const session = storageResult.session;
         if (!session) {
           browser.storage.local.remove("session");
-          ("no session");
 
           resolve({ success: false });
           return;
@@ -133,10 +121,8 @@ browser.runtime.onMessage.addListener(function (request, sender, sendResponse) {
       }),
     );
   } else if (request.purpose == "get-destinations") {
-    ("getting destinations");
     sendResponse(
       new Promise(async (resolve) => {
-        ("getting destinations");
 
         const storageResult = await browser.storage.local.get("session");
         storageResult;
@@ -145,13 +131,11 @@ browser.runtime.onMessage.addListener(function (request, sender, sendResponse) {
           !storageResult.session ||
           storageResult == undefined
         ) {
-          ("no session");
           await browser.storage.local.remove("session");
           resolve({ data: null, error: "Unauthenticated" });
           return;
         }
         const session = storageResult.session;
-        "sesh", session;
 
         fetch("https://regreso.netlify.app/api/v1/destinations", {
           method: "GET",
