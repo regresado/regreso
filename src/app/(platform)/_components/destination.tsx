@@ -186,24 +186,16 @@ export function DestinationForm(props: DestinationFormProps) {
       setTags(props.defaultValues?.tags ?? []);
     }
   }, [props.defaultValues, form, loadingUpdate, props.update]);
-  const location = form.watch("location");
-  useEffect(() => {
-    if (
-      loadingUpdate &&
-      form.watch("type") === "location" &&
-      form.watch("location") &&
-      props.defaultValues?.body == form.watch("body")
-    ) {
-      setLoadingUpdate(false);
-    }
-  }, [location, loadingUpdate, form, props.defaultValues?.body]);
 
   useEffect(() => {
-    if (!detailsState.error) {
+    if (detailsState.title && detailsState.title.length > 0) {
       const names = detailsState.title.filter(String);
       const descriptions = detailsState.description.filter(String);
       form.setValue("name", names[0] ?? "");
-      form.setValue("body", `<p class="text-node">${descriptions[0]}</p>`);
+      form.setValue(
+        "body",
+        `<p class="text-node">${descriptions[0] ?? ""}</p>`,
+      );
     }
     if (detailsState.url) {
       form.setValue(
@@ -220,9 +212,9 @@ export function DestinationForm(props: DestinationFormProps) {
 
   const type = destinationTypeForm.watch("type");
   useEffect(() => {
-    if (destinationTypeForm.watch("type") === "note") {
+    if (props.update && destinationTypeForm.watch("type") === "note") {
       form.reset({
-        type: "note",
+        type: props.defaultValues?.type ?? "location",
         location: null,
         name: props.defaultValues?.name ?? "",
         body: props.defaultValues?.body ?? "",
@@ -363,15 +355,15 @@ export function DestinationForm(props: DestinationFormProps) {
           </div>
         </form>
       </Form>
+
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="w-full space-y-4"
         >
-          {((!loading && destinationTypeForm.watch("type") === "note") ||
-            (form.watch("type") === "location" && form.watch("location")) ||
-            props.update) &&
-          !loadingUpdate ? (
+          {(!loading && destinationTypeForm.watch("type") === "note") ||
+          (form.watch("type") === "location" && form.watch("location")) ||
+          props.update ? (
             <>
               <FormField
                 control={form.control}
@@ -383,11 +375,7 @@ export function DestinationForm(props: DestinationFormProps) {
                       <Input
                         placeholder="Coolest Pelicans in the World"
                         {...field}
-                        value={
-                          field.value && field.value.length > 0
-                            ? field.value
-                            : props.defaultValues?.name
-                        }
+                        value={field.value}
                       />
                     </FormControl>
                     <FormMessage />
@@ -402,7 +390,7 @@ export function DestinationForm(props: DestinationFormProps) {
                     <FormLabel>Body</FormLabel>
                     <FormControl>
                       <MinimalTiptapEditor
-                        value={props.defaultValues?.body}
+                        value={field.value}
                         onChange={field.onChange}
                         className="w-full"
                         editorContentClassName="p-5"
@@ -746,7 +734,10 @@ export function DestinationDialog(props: { id: string }) {
     },
   });
 
-  const { data }: { data: Destination | undefined } =
+  const {
+    data,
+    isPending,
+  }: { data: Destination | undefined; isPending: boolean } =
     api.destination.get.useQuery(
       { id: parseInt(destinationId ?? "0", 10) },
       { enabled: !!destinationId },
@@ -827,9 +818,7 @@ export function DestinationDialog(props: { id: string }) {
                   : "Couldn't find Destination"}
             </DialogTitle>
           </DialogHeader>
-          {editing &&
-          data != undefined &&
-          (data.name != undefined || data.location != undefined) ? (
+          {editing && data != undefined && !isPending ? (
             <DestinationForm
               update={true}
               defaultValues={{
