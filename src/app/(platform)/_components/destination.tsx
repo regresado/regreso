@@ -663,7 +663,9 @@ export function DestinationCard(
       <CardHeader className="px-3 pb-2 pt-4 text-sm">
         <CardTitle className="truncate">
           <Link href={`/pin/${props.id}`}>
-            {props.name ?? "Unnamed Destination"}
+            {props.name && props.name.length > 0
+              ? props.name
+              : "Unnamed Destination"}
           </Link>
         </CardTitle>
       </CardHeader>
