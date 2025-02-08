@@ -22,6 +22,7 @@ export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
 if (typeof window !== "undefined" && process.env.NEXT_PUBLIC_POSTHOG_KEY) {
   posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY, {
     api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
+    disable_session_recording: process.env.NODE_ENV === "development",
     person_profiles: "identified_only",
   });
 }
