@@ -81,7 +81,7 @@ export async function GET(request: Request): Promise<Response> {
     return new Response(null, {
       status: 302,
       headers: {
-        Location: "/dashboard",
+        Location: "/dashboard?loginState=signedIn",
       },
     });
   }
@@ -136,7 +136,7 @@ export async function GET(request: Request): Promise<Response> {
   return new Response(null, {
     status: 302,
     headers: {
-      Location: "/dashboard",
+      Location: "/dashboard?loginState=signedIn",
     },
   });
 }

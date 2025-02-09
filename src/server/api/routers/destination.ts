@@ -246,7 +246,6 @@ export const destinationRouter = createTRPCRouter({
           };
           return destination;
         });
-        console.log(dests[0]?.count);
         return {
           items: returnDestinations,
           count:

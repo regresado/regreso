@@ -86,6 +86,7 @@ export const destinationSchema = z.object({
   location: z.string().nullable(),
   body: z.string().nullable(),
   attachments: z.array(z.any()).optional(),
+  workspaceId: z.number().nullable().optional(),
 });
 
 export const listFormSchema = z.object({
@@ -112,8 +113,10 @@ export const listSchema = z.object({
   createdAt: z.date(),
   updatedAt: z.date().nullable().optional(),
   tags: z.array(z.object({ id: z.number(), text: z.string() })).optional(),
+  size: z.number().optional(),
   name: z.string(),
   emoji: z.string().nullable(),
+  workspaceId: z.number().nullable().optional(),
   description: z.string().nullable(),
 });
 
