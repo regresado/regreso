@@ -1,9 +1,15 @@
 "use client";
 
 import { cloneElement, isValidElement, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import {
+  redirect,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 
 import { ChevronsUpDown, FileQuestion, Home, Map, Search } from "lucide-react";
+import posthog from "posthog-js";
 import type { User } from "~/server/models";
 
 import {
@@ -42,6 +48,11 @@ export function ClientLayout({ children, user }: ClientLayoutProps) {
   const platformRoute = pathname.split("/")[1]?.split("/") ?? ["unknown"];
   const [searchType, setSearchType] = useState(platformRoute[1]);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  if (searchParams.get("loginState") == "signedIn" && user) {
+    posthog.identify(user.email);
+    redirect("/dashboard");
+  }
   function selectSearchType(value: string) {
     router.push(`/search/${value}`);
     setSearchType(value);
@@ -142,8 +153,10 @@ export function ClientLayout({ children, user }: ClientLayoutProps) {
 
           <div className="h-[calc(100vh-3.5rem)] overflow-auto">
             {children && isValidElement(children) ? (
-              cloneElement(children, { props: { user } } as {
-                props: { user: User };
+              cloneElement(children, { params: { user } } as {
+                params: {
+                  user: User;
+                };
               })
             ) : (
               <p>

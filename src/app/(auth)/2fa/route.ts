@@ -21,7 +21,7 @@ export async function GET() {
     return new Response(null, {
       status: 302,
       headers: {
-        Location: "/dashboard",
+        Location: "/dashboard?loginState=signedIn",
       },
     });
   }
