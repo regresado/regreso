@@ -672,7 +672,12 @@ export function DestinationCard(
         {props.type == "location" ? (
           <p className="truncate text-xs">
             <Button variant="link" asChild className="truncate p-0">
-              <Link href={props.location ?? "#"} className="truncate">
+              <Link
+                href={props.location ?? "#"}
+                className="truncate"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 {props.location}
               </Link>
             </Button>
@@ -854,7 +859,9 @@ export function DestinationDialog(props: { id: string }) {
                   <div className="text-sm">
                     Location:{" "}
                     <Button asChild variant="link" className="text-wrap p-0">
-                      <Link href={data?.location ?? "#"}>{data?.location}</Link>
+                      <Link href={data?.location ?? "#"} target="_blank">
+                        {data?.location}
+                      </Link>
                     </Button>
                   </div>
                 ) : null}
