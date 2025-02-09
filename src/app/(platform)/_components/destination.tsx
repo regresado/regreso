@@ -186,6 +186,17 @@ export function DestinationForm(props: DestinationFormProps) {
       setTags(props.defaultValues?.tags ?? []);
     }
   }, [props.defaultValues, form, loadingUpdate, props.update]);
+  const location = form.watch("location");
+  useEffect(() => {
+    if (
+      loadingUpdate &&
+      form.watch("type") === "location" &&
+      form.watch("location") &&
+      props.defaultValues?.body == form.watch("body")
+    ) {
+      setLoadingUpdate(false);
+    }
+  }, [location, loadingUpdate, form, props.defaultValues?.body]);
 
   useEffect(() => {
     if (detailsState.title && detailsState.title.length > 0) {
@@ -212,7 +223,7 @@ export function DestinationForm(props: DestinationFormProps) {
 
   const type = destinationTypeForm.watch("type");
   useEffect(() => {
-    if (props.update && destinationTypeForm.watch("type") === "note") {
+    if (props.update) {
       form.reset({
         type: props.defaultValues?.type ?? "location",
         location: null,
