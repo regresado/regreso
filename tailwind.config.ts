@@ -2,8 +2,6 @@
 import { type Config } from "tailwindcss";
 import tailwindCssAnimate from "tailwindcss-animate";
 import { fontFamily } from "tailwindcss/defaultTheme";
-// @ts-expect-error there is no type definition for this package
-import flattenColorPalette from "tailwindcss/lib/util/flattenColorPalette";
 import { withUt } from "uploadthing/tw";
 
 /** @type {import('tailwindcss').Config} */
@@ -82,20 +80,5 @@ export default withUt({
       },
     },
   },
-  plugins: [tailwindCssAnimate, addVariablesForColors],
+  plugins: [tailwindCssAnimate],
 }) satisfies Config;
-
-// This plugin adds each Tailwind color as a global CSS variable, e.g. var(--gray-200).
-// @ts-expect-error there is no type definition for this package
-function addVariablesForColors({ addBase, theme }) {
-  const allColors = flattenColorPalette(theme("colors")) as Record<
-    string,
-    string
-  >;
-  const newVars = Object.fromEntries(
-    Object.entries(allColors).map(([key, val]) => [`--${key}`, val]),
-  );
-  addBase({
-    ":root": newVars,
-  });
-}
