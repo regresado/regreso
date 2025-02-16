@@ -25,7 +25,7 @@ export default async function Page() {
     return redirect("/verify-email");
   }
   if (user.registered2FA) {
-    return redirect("/dashboard");
+    return redirect("/dashboard?loginState=signedIn");
   }
 
   return (

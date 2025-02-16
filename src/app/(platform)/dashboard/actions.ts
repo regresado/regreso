@@ -27,9 +27,9 @@ export async function getWebDetailsAction(
   if (htmlResponse === "Failed to fetch URL") {
     return {
       error: htmlResponse,
-      url: undefined,
-      title: [undefined],
-      description: [undefined],
+      url: url.startsWith("http") ? url : "https://" + url,
+      title: ["New Destination"],
+      description: [""],
     };
   }
 

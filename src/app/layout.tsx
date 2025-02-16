@@ -6,6 +6,7 @@ import { GeistSans } from "geist/font/sans";
 
 import { ThemeProvider } from "~/app/providers";
 
+import PostHogPageView from "./PostHogPageView";
 import { CSPostHogProvider } from "./providers";
 
 export const metadata: Metadata = {
@@ -30,6 +31,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+            <PostHogPageView />
             {children}
           </ThemeProvider>
         </body>

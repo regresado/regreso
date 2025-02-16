@@ -250,7 +250,12 @@ export const destinationRouter = createTRPCRouter({
         });
         return {
           items: returnDestinations,
-          count: dests[0]?.count ?? 0,
+          count:
+            typeof dests[0]?.count == "number"
+              ? dests[0]?.count
+              : typeof dests[0]?.count == "string"
+                ? parseInt(dests[0]?.count)
+                : 0,
         };
       },
     ),

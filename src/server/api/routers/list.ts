@@ -206,7 +206,7 @@ export const listRouter = createTRPCRouter({
             ),
           );
 
-        const returnLists = lsts.map((list) => {
+        const returnLists: List[] = lsts.map((list) => {
           return {
             tags: lstTags
               .filter((tag) => tag.list_tag.listId == list.list.id)
@@ -216,8 +216,14 @@ export const listRouter = createTRPCRouter({
                   text: tag.tag.name,
                 };
               }),
-            size: list.size,
-            updatedAt: list.latestCreatedAt,
+            size:
+              (typeof list.size == "string"
+                ? parseInt(list.size)
+                : list.size) ?? 0,
+            updatedAt:
+              typeof list.latestCreatedAt == "string"
+                ? new Date(list.latestCreatedAt)
+                : list.latestCreatedAt,
             ...list.list,
             emoji: list.list?.emoji
               ? list.list?.emoji.match(
@@ -236,7 +242,13 @@ export const listRouter = createTRPCRouter({
             message: "No lists found",
           });
         }
-        return { items: returnLists, count: lsts[0]?.count ?? 0 };
+        return {
+          items: returnLists,
+          count:
+            (typeof lsts[0]?.count == "string"
+              ? parseInt(lsts[0]?.count)
+              : lsts[0]?.count) ?? 0,
+        };
       },
     ),
   update: protectedMutationProcedure
@@ -448,8 +460,14 @@ export const listRouter = createTRPCRouter({
         lstData.length > 0
           ? {
               ...lstData[0],
-              size: lstData[0]?.size ?? 0,
-              updatedAt: lstData[0].updatedAt ?? null,
+              size:
+                (typeof lstData[0]?.size == "string"
+                  ? parseInt(lstData[0]?.size)
+                  : lstData[0]?.size) ?? 0,
+              updatedAt:
+                typeof lstData[0].updatedAt == "string"
+                  ? new Date(lstData[0].updatedAt)
+                  : lstData[0].updatedAt,
             }
           : undefined;
 
