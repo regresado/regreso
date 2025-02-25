@@ -241,6 +241,8 @@ export function DestinationForm(props: DestinationFormProps) {
     destinationTypeForm,
     form,
     props.defaultValues?.body,
+    props.defaultValues?.type,
+    props.update,
     props.defaultValues?.name,
     props.defaultValues?.tags,
   ]);

@@ -19,7 +19,7 @@ import { useForm } from "react-hook-form";
 import { type z } from "zod";
 import {
   destinationSearchSchema,
-  listSearchSchema,
+  listSearchSchema as originalListSearchSchema,
   type Destination,
   type List,
 } from "~/server/models";
@@ -63,6 +63,15 @@ import { toast } from "~/components/hooks/use-toast";
 import { DestinationCard, DestinationForm } from "./destination";
 import { ListCard, ListForm } from "./list";
 
+const listSearchSchema = originalListSearchSchema.extend({
+  sortBy: originalListSearchSchema.shape.sortBy.refine(
+    (val) => val !== "size",
+    {
+      message: "Invalid sortBy value",
+    },
+  ),
+});
+
 export function SearchForm({ searchType }: { searchType: "maps" | "pins" }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -86,7 +95,7 @@ export function SearchForm({ searchType }: { searchType: "maps" | "pins" }) {
   );
 
   const form = useForm<
-    z.infer<typeof destinationSearchSchema> | z.infer<typeof listSearchSchema>
+    z.infer<typeof listSearchSchema> | z.infer<typeof destinationSearchSchema>
   >({
     resolver: zodResolver(
       searchType === "maps" ? listSearchSchema : destinationSearchSchema,
@@ -129,11 +138,15 @@ export function SearchForm({ searchType }: { searchType: "maps" | "pins" }) {
     : api.destination.getMany.useQuery({
         ...submitValues,
         sortBy:
-          submitValues.sortBy === "updatedAt"
+          submitValues.sortBy === "updatedAt" ||
+          (submitType === "maps" &&
+            (submitValues.sortBy as
+              | "size"
+              | "createdAt"
+              | "updatedAt"
+              | "name") === "size")
             ? "createdAt"
-            : submitValues.sortBy === "size"
-              ? "createdAt"
-              : submitValues.sortBy,
+            : submitValues.sortBy!,
         limit: 6,
       });
   const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
