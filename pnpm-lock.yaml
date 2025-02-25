@@ -145,7 +145,7 @@ importers:
         version: 11.0.0-rc.666(typescript@5.7.3)
       '@uploadthing/react':
         specifier: ^7.1.5
-        version: 7.1.5(next@15.1.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(uploadthing@7.5.2(h3@1.13.1)(next@15.1.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(tailwindcss@3.4.17))
+        version: 7.1.5(next@15.1.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(uploadthing@7.5.2(h3@1.15.1)(next@15.1.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(tailwindcss@3.4.17))
       arctic:
         specifier: ^3.3.0
         version: 3.3.0
@@ -243,11 +243,11 @@ importers:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@3.4.17)
       trpc-to-openapi:
-        specifier: ^2.1.2
-        version: 2.1.2(@trpc/server@11.0.0-rc.666(typescript@5.7.3))(zod-openapi@4.2.2(zod@3.24.2))(zod@3.24.2)
+        specifier: ^2.1.3
+        version: 2.1.3(@trpc/server@11.0.0-rc.666(typescript@5.7.3))(zod-openapi@4.2.2(zod@3.24.2))(zod@3.24.2)
       uploadthing:
         specifier: ^7.5.2
-        version: 7.5.2(h3@1.13.1)(next@15.1.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(tailwindcss@3.4.17)
+        version: 7.5.2(h3@1.15.1)(next@15.1.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(tailwindcss@3.4.17)
       uqr:
         specifier: ^0.1.2
         version: 0.1.2
@@ -2606,10 +2606,6 @@ packages:
   concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
 
-  consola@3.4.0:
-    resolution: {integrity: sha512-EiPU8G6dQG0GFHNR8ljnZFki/8a+cQwEQ+7wpxdChl02Q8HXlwEZWD5lqAF8vC2sEC3Tehr8hy7vErz88LHyUA==}
-    engines: {node: ^14.18.0 || >=16.10.0}
-
   cookie-es@1.2.2:
     resolution: {integrity: sha512-+W7VmiVINB+ywl1HGXJXmrqkOhpKrIiVZV6tQuV54ZyQC7MMuBt81Vc336GMLoHBq5hV/F9eXgt5Mnx0Rha5Fg==}
 
@@ -2627,8 +2623,8 @@ packages:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
     engines: {node: '>= 8'}
 
-  crossws@0.3.1:
-    resolution: {integrity: sha512-HsZgeVYaG+b5zA+9PbIPGq4+J/CJynJuearykPsXx4V/eMhyQ5EDVg3Ak2FBZtVXCiOLu/U7IiwDHTr9MA+IKw==}
+  crossws@0.3.4:
+    resolution: {integrity: sha512-uj0O1ETYX1Bh6uSgktfPvwDiPYGQ3aI4qVsaC/LWpkIzGj1nUYm5FK3K+t11oOlpN01lGbprFCH4wBlKdJjVgw==}
 
   css-select@5.1.0:
     resolution: {integrity: sha512-nwoRF1rvRRnnCqqY7updORDsuqKzqYJ28+oSMaJMMgOauh3fvwHqMS7EZpIPqK8GL+g9mKxF1vP/ZjSeNjEVHg==}
@@ -3174,6 +3170,10 @@ packages:
     resolution: {integrity: sha512-VW6Pxhsrk0KAOqs3WEd0klDiF/+V7gQOpAvY1jVU/LHmaD/kQO4523aiJuikX/QAKYiW6x8Jh+RJej1almdtCA==}
     engines: {node: '>= 0.4'}
 
+  get-intrinsic@1.3.0:
+    resolution: {integrity: sha512-9fSjSaos/fRIVIp+xSJlE6lfwhES7LNtKaCBIamHsjr2na1BiABJPo0mOjjz8GJDURarmCPGqaiVg5mfjb98CQ==}
+    engines: {node: '>= 0.4'}
+
   get-nonce@1.0.1:
     resolution: {integrity: sha512-FJhYRoDaiatfEkUK8HKlicmu/3SGFD51q3itKDGoSTysQJBnfOcxU5GxnhE1E6soB76MbT0MBtnKJuXyAx+96Q==}
     engines: {node: '>=6'}
@@ -3235,8 +3235,8 @@ packages:
     resolution: {integrity: sha512-5v6yZd4JK3eMI3FqqCouswVqwugaA9r4dNZB1wwcmrD02QkV5H0y7XBQW8QwQqEaZY1pM9aqORSORhJRdNK44Q==}
     engines: {node: '>=6.0'}
 
-  h3@1.13.1:
-    resolution: {integrity: sha512-u/z6Z4YY+ANZ05cRRfsFJadTBrNA6e3jxdU+AN5UCbZSZEUwgHiwjvUEe0k1NoQmAvQmETwr+xB5jd7mhCJuIQ==}
+  h3@1.15.1:
+    resolution: {integrity: sha512-+ORaOBttdUm1E2Uu/obAyCguiI7MbBvsLTndc3gyK3zU+SYLoZXlyCP9Xgy0gikkGufFLTZXCXD6+4BsufnmHA==}
 
   has-bigints@1.1.0:
     resolution: {integrity: sha512-R3pbpkcIqv2Pm3dUwgjclDRVmWpTJW2DcMzcIhEXEx1oh/CEMObMm3KLmRJOdvhM7o4uQBnwr8pzRK2sJWIqfg==}
@@ -3754,11 +3754,6 @@ packages:
     resolution: {integrity: sha512-ZDY+bPm5zTTF+YpCrAU9nK0UgICYPT0QtT1NZWFv4s++TNkcgVaT0g6+4R2uI4MjQjzysHB1zxuWL50hzaeXiw==}
     engines: {node: '>= 0.6'}
 
-  mime@3.0.0:
-    resolution: {integrity: sha512-jSCU7/VB1loIWBZe14aEYHU/+1UMEHoaO7qxCOVJOw9GgH72VAWppxNcjU+x9a2k3GSIBXNKxXQFqRvvZ7vr3A==}
-    engines: {node: '>=10.0.0'}
-    hasBin: true
-
   mimic-fn@2.1.0:
     resolution: {integrity: sha512-OqbOk5oEQeAZ8WXWydlu9HJjz9WVdEIvamMCcXmuqUYjTknH/sqsWvhQ3vgwKFRR1HpjvNBKQ37nbJgYzGqGcg==}
     engines: {node: '>=6'}
@@ -3841,11 +3836,11 @@ packages:
       sass:
         optional: true
 
-  node-fetch-native@1.6.4:
-    resolution: {integrity: sha512-IhOigYzAKHd244OC0JIMIUrjzctirCmPkaIfhDeGcEETWof5zKYUW7e7MYvChGWh/4CJeXEgsRyGzuF334rOOQ==}
-
   node-html-parser@7.0.1:
     resolution: {integrity: sha512-KGtmPY2kS0thCWGK0VuPyOS+pBKhhe8gXztzA2ilAOhbUbxa9homF1bOyKvhGzMLXUoRds9IOmr/v5lr/lqNmA==}
+
+  node-mock-http@1.0.0:
+    resolution: {integrity: sha512-0uGYQ1WQL1M5kKvGRXWQ3uZCHtLTO8hln3oBjIusM75WoesZ909uQJs/Hb946i2SS+Gsrhkaa6iAO17jRIv6DQ==}
 
   nodemailer@6.10.0:
     resolution: {integrity: sha512-SQ3wZCExjeSatLE/HBaXS5vqUOQk6GtBdIIKxiFdmm01mOQZX/POJkO3SUX1wDiYcwUOJwT23scFSC9fY2H8IA==}
@@ -3897,9 +3892,6 @@ packages:
   object.values@1.2.1:
     resolution: {integrity: sha512-gXah6aZrcUxjWg2zR2MwouP2eHlCBzdV4pygudehaKXSGW4v2AsRQUK+lwwXhii6KFZcunEnmSUoYp5CXibxtA==}
     engines: {node: '>= 0.4'}
-
-  ohash@1.1.4:
-    resolution: {integrity: sha512-FlDryZAahJmEF3VR3w1KogSEdWX3WhA5GPakFx4J81kEAiHyLMpdLLElS8n8dfNadMgAne/MywcvmogzscVt4g==}
 
   onetime@5.1.2:
     resolution: {integrity: sha512-kbpaSSGJTWdAY5KPVeMOKXSrPtr8C8C7wodJbcsd51jRnmD+GZu8Y0VoU6Dm5Z4vWr0Ig/1NKuWRKf7j5aaYSg==}
@@ -3955,9 +3947,6 @@ packages:
   path-type@4.0.0:
     resolution: {integrity: sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==}
     engines: {node: '>=8'}
-
-  pathe@1.1.2:
-    resolution: {integrity: sha512-whLdWMYL2TwI08hn8/ZqAbrVemu0LNaNNJZX73O6qaIdCTfXutsLhMkjdENX0qhsQ9uIimo4/aQOmXkoon2nDQ==}
 
   picocolors@1.1.1:
     resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}
@@ -4638,8 +4627,8 @@ packages:
   trough@2.2.0:
     resolution: {integrity: sha512-tmMpK00BjZiUyVyvrBK7knerNgmgvcV/KLVyuma/SC+TQN167GrMRciANTz09+k3zW8L8t60jWO1GpfkZdjTaw==}
 
-  trpc-to-openapi@2.1.2:
-    resolution: {integrity: sha512-v6GmrXchDdHUGtPz0foviSYZBkNQePmZF4fvnw8TPhdyDFdiMpVHbkz8QNIWVeqPOG6qKAyCVAvXTO+14/dHWw==}
+  trpc-to-openapi@2.1.3:
+    resolution: {integrity: sha512-W5wKRHMVVBvq2zD4F8QU4enCLu/pWX54O2lvMvzQWjOXaY70C1GT9Kl6y1I+TBkIpuz1E1mdXbLM3esXQsLspQ==}
     peerDependencies:
       '@trpc/server': ^11.0.0-rc.648
       zod: ^3.23.8
@@ -4723,9 +4712,6 @@ packages:
 
   undici-types@6.20.0:
     resolution: {integrity: sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg==}
-
-  unenv@1.10.0:
-    resolution: {integrity: sha512-wY5bskBQFL9n3Eca5XnhH6KbUo/tfvkwm9OpcdCvLaeA7piBNbavbOKJySEwQ1V0RH6HvNlSAFRTpvTqgKRQXQ==}
 
   unified@11.0.5:
     resolution: {integrity: sha512-xKvGhPWw3k84Qjh8bI3ZeJjqnyadK+GEFtazSfZv/rKeTkTjOJho6mFqh2SM96iIcZokxiOpg78GazTSg8+KHA==}
@@ -4867,6 +4853,11 @@ packages:
 
   yaml@2.6.1:
     resolution: {integrity: sha512-7r0XPzioN/Q9kXBro/XPnA6kznR73DHq+GXh5ON7ZozRO6aMjbmiBuKste2wslTFkC5d1dw0GooOCepZXJ2SAg==}
+    engines: {node: '>= 14'}
+    hasBin: true
+
+  yaml@2.7.0:
+    resolution: {integrity: sha512-+hSoy/QHluxmC9kCIJyL/uyFmLmc+e5CFR5Wa+bpIhIj85LVb9ZH2nVnqrHoSvKogwODv0ClqZkmiSSaIH5LTA==}
     engines: {node: '>= 14'}
     hasBin: true
 
@@ -6726,12 +6717,12 @@ snapshots:
 
   '@uploadthing/mime-types@0.3.4': {}
 
-  '@uploadthing/react@7.1.5(next@15.1.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(uploadthing@7.5.2(h3@1.13.1)(next@15.1.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(tailwindcss@3.4.17))':
+  '@uploadthing/react@7.1.5(next@15.1.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(uploadthing@7.5.2(h3@1.15.1)(next@15.1.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(tailwindcss@3.4.17))':
     dependencies:
       '@uploadthing/shared': 7.1.5
       file-selector: 0.6.0
       react: 18.3.1
-      uploadthing: 7.5.2(h3@1.13.1)(next@15.1.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(tailwindcss@3.4.17)
+      uploadthing: 7.5.2(h3@1.15.1)(next@15.1.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(tailwindcss@3.4.17)
     optionalDependencies:
       next: 15.1.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
 
@@ -7025,8 +7016,6 @@ snapshots:
 
   concat-map@0.0.1: {}
 
-  consola@3.4.0: {}
-
   cookie-es@1.2.2: {}
 
   copy-anything@3.0.5:
@@ -7043,7 +7032,7 @@ snapshots:
       shebang-command: 2.0.0
       which: 2.0.2
 
-  crossws@0.3.1:
+  crossws@0.3.4:
     dependencies:
       uncrypto: 0.1.3
 
@@ -7745,6 +7734,19 @@ snapshots:
       hasown: 2.0.2
       math-intrinsics: 1.1.0
 
+  get-intrinsic@1.3.0:
+    dependencies:
+      call-bind-apply-helpers: 1.0.2
+      es-define-property: 1.0.1
+      es-errors: 1.3.0
+      es-object-atoms: 1.1.1
+      function-bind: 1.1.2
+      get-proto: 1.0.1
+      gopd: 1.2.0
+      has-symbols: 1.1.0
+      hasown: 2.0.2
+      math-intrinsics: 1.1.0
+
   get-nonce@1.0.1: {}
 
   get-proto@1.0.1:
@@ -7812,18 +7814,17 @@ snapshots:
       section-matter: 1.0.0
       strip-bom-string: 1.0.0
 
-  h3@1.13.1:
+  h3@1.15.1:
     dependencies:
       cookie-es: 1.2.2
-      crossws: 0.3.1
+      crossws: 0.3.4
       defu: 6.1.4
       destr: 2.0.3
       iron-webcrypto: 1.2.1
-      ohash: 1.1.4
+      node-mock-http: 1.0.0
       radix3: 1.1.2
       ufo: 1.5.4
       uncrypto: 0.1.3
-      unenv: 1.10.0
 
   has-bigints@1.1.0: {}
 
@@ -8542,8 +8543,6 @@ snapshots:
     dependencies:
       mime-db: 1.52.0
 
-  mime@3.0.0: {}
-
   mimic-fn@2.1.0: {}
 
   minimatch@3.1.2:
@@ -8616,12 +8615,12 @@ snapshots:
       - '@babel/core'
       - babel-plugin-macros
 
-  node-fetch-native@1.6.4: {}
-
   node-html-parser@7.0.1:
     dependencies:
       css-select: 5.1.0
       he: 1.2.0
+
+  node-mock-http@1.0.0: {}
 
   nodemailer@6.10.0: {}
 
@@ -8678,15 +8677,13 @@ snapshots:
       define-properties: 1.2.1
       es-object-atoms: 1.1.1
 
-  ohash@1.1.4: {}
-
   onetime@5.1.2:
     dependencies:
       mimic-fn: 2.1.0
 
   openapi3-ts@4.4.0:
     dependencies:
-      yaml: 2.6.1
+      yaml: 2.7.0
 
   optionator@0.9.4:
     dependencies:
@@ -8741,8 +8738,6 @@ snapshots:
       minipass: 7.1.2
 
   path-type@4.0.0: {}
-
-  pathe@1.1.2: {}
 
   picocolors@1.1.1: {}
 
@@ -9265,14 +9260,14 @@ snapshots:
     dependencies:
       call-bound: 1.0.3
       es-errors: 1.3.0
-      get-intrinsic: 1.2.7
+      get-intrinsic: 1.3.0
       object-inspect: 1.13.4
 
   side-channel-weakmap@1.0.2:
     dependencies:
       call-bound: 1.0.3
       es-errors: 1.3.0
-      get-intrinsic: 1.2.7
+      get-intrinsic: 1.3.0
       object-inspect: 1.13.4
       side-channel-map: 1.0.1
 
@@ -9497,11 +9492,11 @@ snapshots:
 
   trough@2.2.0: {}
 
-  trpc-to-openapi@2.1.2(@trpc/server@11.0.0-rc.666(typescript@5.7.3))(zod-openapi@4.2.2(zod@3.24.2))(zod@3.24.2):
+  trpc-to-openapi@2.1.3(@trpc/server@11.0.0-rc.666(typescript@5.7.3))(zod-openapi@4.2.2(zod@3.24.2))(zod@3.24.2):
     dependencies:
       '@trpc/server': 11.0.0-rc.666(typescript@5.7.3)
       co-body: 6.2.0
-      h3: 1.13.1
+      h3: 1.15.1
       openapi3-ts: 4.4.0
       zod: 3.24.2
       zod-openapi: 4.2.2(zod@3.24.2)
@@ -9607,14 +9602,6 @@ snapshots:
 
   undici-types@6.20.0: {}
 
-  unenv@1.10.0:
-    dependencies:
-      consola: 3.4.0
-      defu: 6.1.4
-      mime: 3.0.0
-      node-fetch-native: 1.6.4
-      pathe: 1.1.2
-
   unified@11.0.5:
     dependencies:
       '@types/unist': 3.0.3
@@ -9650,7 +9637,7 @@ snapshots:
 
   unpipe@1.0.0: {}
 
-  uploadthing@7.5.2(h3@1.13.1)(next@15.1.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(tailwindcss@3.4.17):
+  uploadthing@7.5.2(h3@1.15.1)(next@15.1.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(tailwindcss@3.4.17):
     dependencies:
       '@effect/platform': 0.72.0(effect@3.12.0)
       '@standard-schema/spec': 1.0.0-beta.4
@@ -9658,7 +9645,7 @@ snapshots:
       '@uploadthing/shared': 7.1.7
       effect: 3.12.0
     optionalDependencies:
-      h3: 1.13.1
+      h3: 1.15.1
       next: 15.1.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       tailwindcss: 3.4.17
 
@@ -9781,6 +9768,8 @@ snapshots:
   yaml@1.10.2: {}
 
   yaml@2.6.1: {}
+
+  yaml@2.7.0: {}
 
   yocto-queue@0.1.0: {}
 
