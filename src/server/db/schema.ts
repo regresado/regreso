@@ -263,6 +263,59 @@ export const workspaces = createTable(
   }),
 );
 
+export const feedDestinations = createTable("feed_destination", {
+  id: serial("id").primaryKey(),
+  listFeedId: integer("list_feed_id")
+    .notNull()
+    .references((): any => listFeeds.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }),
+  destinationId: integer("destination_id")
+    .unique()
+    .references(() => destinations.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }),
+  guid: text("guid").notNull(),
+});
+
+export const listFeeds = createTable(
+  "list_feed",
+  {
+    id: serial("id").primaryKey(),
+    listId: integer("list_id").references(() => lists.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }),
+    feedUrl: text("feed_url").notNull(),
+    feedName: text("feed_name").notNull(),
+    feedDescription: text("feed_description").notNull(),
+    active: boolean("active").default(true).notNull(),
+    lastFetchedAt: timestamp("last_fetched_at", { withTimezone: true }),
+    lastFetchedDestination: integer("last_fetched_destination").references(
+      () => destinations.id,
+    ),
+    lastFetchedGuid: text("last_fetched_guid").references(
+      () => feedDestinations.guid,
+    ),
+    failCount: integer("fail_count").default(0).notNull(),
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull()
+      .$onUpdate(() => new Date()),
+  },
+  (listFeed) => ({
+    uniqueListFeed: unique().on(listFeed.listId, listFeed.feedUrl),
+  }),
+);
+
 export const usersRelations = relations(users, ({ many }) => ({
   passwordResetSessions: many(passwordResetSessions),
   securityKeyCredentials: many(securityKeyCredentials),
@@ -340,6 +393,7 @@ export const destinationsRelations = relations(
       fields: [destinations.userId],
       references: [users.id],
     }),
+    feedDestinations: one(feedDestinations),
     destinationTags: many(destinationTags),
   }),
 );
@@ -351,6 +405,7 @@ export const listsRelations = relations(lists, ({ one, many }) => ({
     fields: [lists.userId],
     references: [users.id],
   }),
+  feeds: many(listFeeds),
 }));
 
 export const listTagsRelations = relations(listTags, ({ one }) => ({
@@ -377,3 +432,29 @@ export const destinationListsRelations = relations(
     }),
   }),
 );
+
+export const feedDestinationsRelations = relations(
+  feedDestinations,
+  ({ one }) => ({
+    feed: one(listFeeds, {
+      fields: [feedDestinations.listFeedId],
+      references: [listFeeds.id],
+    }),
+    destination: one(destinations, {
+      fields: [feedDestinations.destinationId],
+      references: [destinations.id],
+    }),
+  }),
+);
+
+export const listFeedsRelations = relations(listFeeds, ({ one, many }) => ({
+  list: one(lists, {
+    fields: [listFeeds.listId],
+    references: [lists.id],
+  }),
+  destinations: many(feedDestinations),
+  user: one(users, {
+    fields: [listFeeds.userId],
+    references: [users.id],
+  }),
+}));

@@ -1,2 +1,5 @@
 [build]
   ignore = "git log -1 --pretty=%B | grep dependabot || git diff --quiet $CIRCLE_BRANCH --relative web-ext/ || test $(git diff --name-only $CIRCLE_BRANCH | grep -v '^web-ext/')"
+
+[functions."rss-in"]
+schedule = "0 */6 * * *"
