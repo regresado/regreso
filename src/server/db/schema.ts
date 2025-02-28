@@ -30,7 +30,9 @@ export const users = createTable(
     recoveryCode: varchar("recovery_code").notNull(),
     avatarUrl: text("avatar_url"),
     bio: text("bio").default("Pelicans are epic"),
-    workspaceId: integer("workspace_id").references((): any => workspaces.id),
+    workspaceId: integer("workspace_id").references((): any => workspaces.id, {
+      onDelete: "cascade",
+    }),
   },
   (user) => ({
     emailIndex: index("email_index").on(user.email),
@@ -64,7 +66,9 @@ export const emailVerificationRequests = createTable(
     id: text("id").primaryKey(),
     userId: integer("user_id")
       .notNull()
-      .references(() => users.id),
+      .references(() => users.id, {
+        onDelete: "cascade",
+      }),
     code: text("code").notNull(),
     email: text("email").notNull(),
     expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
@@ -75,7 +79,9 @@ export const passwordResetSessions = createTable("password_reset_session", {
   id: text("id").primaryKey(),
   userId: integer("user_id")
     .notNull()
-    .references(() => users.id),
+    .references(() => users.id, {
+      onDelete: "cascade",
+    }),
   code: text("code").notNull(),
   email: text("email").notNull(),
   emailVerified: boolean("email_verified").default(false).notNull(),
@@ -88,7 +94,9 @@ export const totpCredentials = createTable("totp_credential", {
   userId: integer("user_id")
     .notNull()
     .unique()
-    .references(() => users.id),
+    .references(() => users.id, {
+      onDelete: "cascade",
+    }),
   key: text("key").notNull(),
 });
 
@@ -96,7 +104,9 @@ export const passkeyCredentials = createTable("passkey_credential", {
   id: text("id").notNull().primaryKey(),
   userId: integer("user_id")
     .notNull()
-    .references(() => users.id),
+    .references(() => users.id, {
+      onDelete: "cascade",
+    }),
   name: text("name").notNull(),
   algorithm: integer("algorithm").notNull(),
   publicKey: text("public_key").notNull(),
@@ -106,7 +116,9 @@ export const securityKeyCredentials = createTable("security_key_credential", {
   id: text("id").notNull().primaryKey(),
   userId: integer("user_id")
     .notNull()
-    .references(() => users.id),
+    .references(() => users.id, {
+      onDelete: "cascade",
+    }),
   name: text("name").notNull(),
   algorithm: integer("algorithm").notNull(),
   publicKey: text("public_key").notNull(),
@@ -122,7 +134,9 @@ export const destinations = createTable(
     body: text("body"),
     userId: integer("user_id")
       .notNull()
-      .references(() => users.id),
+      .references(() => users.id, {
+        onDelete: "cascade",
+      }),
     createdAt: timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
@@ -131,7 +145,9 @@ export const destinations = createTable(
       .notNull()
       .$onUpdate(() => new Date()),
     workspaceId: integer("workspace_id")
-      .references(() => workspaces.id)
+      .references(() => workspaces.id, {
+        onDelete: "cascade",
+      })
       .notNull(),
   },
   (destination) => ({
@@ -152,11 +168,14 @@ export const tags = createTable(
     name: varchar("name", { length: 256 }).notNull(),
     userId: integer("user_id")
       .notNull()
-      .references(() => users.id),
+      .references(() => users.id, {
+        onDelete: "cascade",
+      }),
     workspaceId: integer("workspace_id")
-      .references(() => workspaces.id)
-      .notNull()
-      .default(0),
+      .references(() => workspaces.id, {
+        onDelete: "cascade",
+      })
+      .notNull(),
   },
   (tag) => ({
     searchIndex: index("tag_search_index").using(
@@ -205,9 +224,10 @@ export const lists = createTable(
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     workspaceId: integer("workspace_id")
-      .references(() => workspaces.id)
-      .notNull()
-      .default(0),
+      .references(() => workspaces.id, {
+        onDelete: "cascade",
+      })
+      .notNull(),
   },
   (list) => ({
     uniqueListName: unique().on(list.userId, list.name),
@@ -267,7 +287,9 @@ export const workspaces = createTable(
     emoji: varchar("emoji", { length: 256 }),
     userId: integer("user_id")
       .notNull()
-      .references(() => users.id),
+      .references(() => users.id, {
+        onDelete: "cascade",
+      }),
   },
   (workspace) => ({
     uniqueWorkspaceName: unique().on(workspace.userId, workspace.name),
