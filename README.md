@@ -78,6 +78,9 @@ This project uses the [T3 Stack](https://create.t3.gg/) made by [@t3-oss](https:
 <li>
 <a href="https://www.postgresql.org/">PostgreSQL</a> database
 </li>
+<li>
+<a href="https://supabase.com">Supabase</a> postgres hosting
+</li>
 </ul>
 </details>
 </li>
@@ -115,6 +118,7 @@ This project uses the [T3 Stack](https://create.t3.gg/) made by [@t3-oss](https:
 <li>
 <a href="https://www.npmjs.com/package/server-only/">Server Only</a> for marking modules
 </li>
+
 </ul>
 </details>
 </li>
@@ -126,9 +130,14 @@ This project uses the [T3 Stack](https://create.t3.gg/) made by [@t3-oss](https:
 <li>
 <details>
 <summary> 
-<a href="https://ui.shadcn.com/">shadcn/ui</a> copy-pasted components
+<strong>
+User Interface
+</strong>
 </summary>
 <ul>
+<li>
+<a href="https://ui.shadcn.com/">shadcn/ui</a> copy-pasted components
+</li>
 <li>
 <a href="https://www.radix-ui.com/">Radix UI</a> primitives
 </li>
@@ -156,19 +165,34 @@ This project uses the [T3 Stack](https://create.t3.gg/) made by [@t3-oss](https:
 <li>
 <a href="https://tiptap.dev">TipTap</a> rich text editor
 </li>
+<li>
+<a href="https://dndkit.com/">Dnd-Kit</a> drag-and-drop toolkit
+</li>
+<li>
+<a href="https://learn.missiveapp.com/open/emoji-mart/">Emoji Mart</a> picker
+</li>
+<li>
+<a href="https://motion.dev/">Motion</a> page animations
+</li>
+<li>
+<a href="https://ludicde.dev/">Lucide</a> icons
+</li>
+<li>
+<a href="https://boringavatars.com/">Boring</a> avatars
+</li>
 </ul>
 </details>
 </li>
 </ul>
 
-- [Motion](https://motion.dev/) page animations
-- [Lucide](https://lucide.dev/) Icons and [Boring](https://boringavatars.com/) Avatars
-
 <ul>
 <li>
 <details>
 <summary> 
-<a href="https://lucia-auth.com/">Lucia Auth</a> implementation (to replace Next Auth)
+<strong>
+Authentication (
+<a href="https://lucia-auth.com/">Lucia Auth</a> principles)
+</strong>
 </summary>
 <ul>
 <li>
@@ -191,6 +215,8 @@ This project uses the [T3 Stack](https://create.t3.gg/) made by [@t3-oss](https:
 </li>
 </ul>
 
-- [UploadThing](https://uploadthing.com/) for handling user file uplaods
+- [trpc-to-openapi](https://www.npmjs.com/package/trpc-to-openapi/) adapter
+- [UploadThing](https://uploadthing.com/) for user uplaods
+- [Posthog](https://posthog.com/) Analytics
 
 ## 🙌 Acknowledgements
