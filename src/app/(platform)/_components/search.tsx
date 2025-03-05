@@ -60,7 +60,7 @@ import {
 import { Separator } from "~/components/ui/separator";
 import { toast } from "~/components/hooks/use-toast";
 
-import { DestinationCard, DestinationForm } from "./destination";
+import { DestinationCard, DestinationForm, ListComboBox } from "./destination";
 import { ListCard, ListForm } from "./list";
 
 const listSearchSchema = originalListSearchSchema.extend({
@@ -114,6 +114,11 @@ export function SearchForm({ searchType }: { searchType: "maps" | "pins" }) {
             type:
               (searchParams.get("type") as "location" | "note" | "any") ??
               "any",
+            lists:
+              searchParams
+                .get("maps")
+                ?.split(",")
+                .map((v) => parseInt(v)) ?? [],
             tags: searchParams.get("tags")?.split(",") ?? [],
             sortBy:
               (searchParams.get("sortBy") as "name" | "createdAt") ??
@@ -152,6 +157,13 @@ export function SearchForm({ searchType }: { searchType: "maps" | "pins" }) {
   const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
 
   const [pageNumber, setPageNumber] = useState(1);
+  const { data: allLists = { count: 0, items: [] } } =
+    searchType == "pins"
+      ? api.list.getMany.useQuery({
+          limit: 100,
+          sortBy: "updatedAt",
+        })
+      : { data: { count: 0, items: [] } };
 
   function updateUrl(
     data:
@@ -176,12 +188,38 @@ export function SearchForm({ searchType }: { searchType: "maps" | "pins" }) {
     router.push(pathname + "?" + updateUrl(data));
     void refetch();
   }
+  function addLists(lists: List[] | null) {
+    if (lists) {
+      form.setValue(
+        "lists",
+        form.watch("lists")?.concat(lists.map((list) => list.id)),
+        {
+          shouldDirty: true,
+        },
+      );
+    }
+  }
+
+  function removeLists(lists: List[] | null) {
+    if (lists) {
+      form.setValue(
+        "lists",
+        form
+          .watch("lists")
+          ?.filter((id) => !lists.find((list) => list.id === id)),
+        {
+          shouldDirty: true,
+        },
+      );
+    }
+  }
+
   return (
     <>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <div className="flex flex-grow flex-col items-center space-y-4 lg:gap-3 lg:space-y-0">
-            <div className="flex w-full flex-grow flex-row items-center gap-4 sm:flex-wrap lg:flex-nowrap">
+            <div className="flex w-full flex-grow flex-row items-center gap-4 sm:flex-wrap sm:gap-2 lg:flex-nowrap">
               {searchType === "maps" ? null : (
                 <FormField
                   control={form.control}
@@ -250,37 +288,56 @@ export function SearchForm({ searchType }: { searchType: "maps" | "pins" }) {
                 )}
               />
             </div>
-            <FormField
-              control={form.control}
-              name="tags"
-              render={({ field }) => (
-                <FormControl>
-                  <TagInput
-                    {...field}
-                    placeholder="Search with tags..."
-                    tags={tags}
-                    className="sm:min-w-[450px]"
-                    setTags={(newTags) => {
-                      setTags(newTags);
-                      form.setValue(
-                        "tags",
-                        (newTags as [Tag, ...Tag[]]).map(
-                          (tag: Tag) => tag.text,
-                        ),
-                        { shouldDirty: true },
-                      );
-                    }}
-                    styleClasses={{
-                      input: "w-full sm:max-w-[350px]",
-                    }}
-                    activeTagIndex={activeTagIndex}
-                    setActiveTagIndex={setActiveTagIndex}
-                  />
-                </FormControl>
-              )}
-            />
+            <div className="flex w-full flex-grow flex-col items-end gap-4 sm:flex-wrap sm:gap-2 lg:flex-row lg:flex-nowrap lg:items-center lg:justify-end">
+              <FormField
+                control={form.control}
+                name="tags"
+                render={({ field }) => (
+                  <FormControl>
+                    <TagInput
+                      {...field}
+                      placeholder="Search with tags..."
+                      tags={tags}
+                      className="sm:min-w-[450px]"
+                      setTags={(newTags) => {
+                        setTags(newTags);
+                        form.setValue(
+                          "tags",
+                          (newTags as [Tag, ...Tag[]]).map(
+                            (tag: Tag) => tag.text,
+                          ),
+                          { shouldDirty: true },
+                        );
+                      }}
+                      styleClasses={{
+                        input: "w-full sm:max-w-[350px]",
+                      }}
+                      activeTagIndex={activeTagIndex}
+                      setActiveTagIndex={setActiveTagIndex}
+                    />
+                  </FormControl>
+                )}
+              />
+              {searchType == "pins" ? (
+                <FormField
+                  control={form.control}
+                  name="lists"
+                  render={({ field }) => (
+                    <FormControl>
+                      <ListComboBox
+                        text="Search with maps..."
+                        defaultList={allLists.items ?? []}
+                        recentLists={allLists.items ?? []}
+                        handleListAdds={addLists}
+                        handleListRemovals={removeLists}
+                      />
+                    </FormControl>
+                  )}
+                />
+              ) : null}
+            </div>
           </div>
-          <div className="flex flex-row flex-wrap justify-end gap-4">
+          <div className="flex flex-row flex-wrap justify-end gap-4 sm:gap-2">
             <FormField
               control={form.control}
               name="sortBy"

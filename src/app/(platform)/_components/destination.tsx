@@ -901,6 +901,7 @@ export function DestinationDialog(props: { id: string }) {
                           Edit Destination
                         </Button>
                         <ListComboBox
+                          text="+ Add to Map"
                           defaultList={data.lists ?? []}
                           recentLists={searchResults.items ?? []}
                           handleListAdds={addLists}
@@ -946,12 +947,14 @@ export function DestinationDialog(props: { id: string }) {
   );
 }
 
-function ListComboBox({
+export function ListComboBox({
+  text = "+ Add to Map",
   defaultList,
   recentLists,
   handleListAdds,
   handleListRemovals,
 }: {
+  text: String;
   defaultList: List[];
   recentLists: List[];
   handleListAdds: (status: List[] | null) => void;
@@ -974,7 +977,7 @@ function ListComboBox({
                   : null}{" "}
               </>
             ) : (
-              <> + Add to List</>
+              <>{text}</>
             )}
           </Button>
         </PopoverTrigger>
@@ -1010,7 +1013,7 @@ function ListComboBox({
                 : null}{" "}
             </>
           ) : (
-            <> + Add to List</>
+            <>{text}</>
           )}
         </Button>
       </DrawerTrigger>
@@ -1041,7 +1044,7 @@ function StatusList({
 }) {
   return (
     <Command>
-      <CommandInput placeholder="Filter status..." />
+      <CommandInput placeholder="Filter maps..." />
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
         <CommandGroup>
