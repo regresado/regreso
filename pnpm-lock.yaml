@@ -207,8 +207,8 @@ importers:
         specifier: ^3.4.4
         version: 3.4.5
       posthog-js:
-        specifier: ^1.227.0
-        version: 1.227.0(@rrweb/types@2.0.0-alpha.17)
+        specifier: ^1.229.0
+        version: 1.229.0(@rrweb/types@2.0.0-alpha.17)
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -4030,10 +4030,16 @@ packages:
     resolution: {integrity: sha512-cDWgoah1Gez9rN3H4165peY9qfpEo+SA61oQv65O3cRUE1pOEoJWwddwcqKE8XZYjbblOJlYDlLV4h67HrEVDg==}
     engines: {node: '>=12'}
 
-  posthog-js@1.227.0:
-    resolution: {integrity: sha512-xdXpBI+6SJDG3vUSxW3KH8o4B5CrHz0Y95anSaHjIzkEeRd9NbTTDku/Hy9lLt1+8tkiwvsh6fYi7jS1UBHL/g==}
+  posthog-js@1.229.0:
+    resolution: {integrity: sha512-ABiTuhGrX3eeIZEVmxqTSfsI5j1fcHfjL0V5dHAk0MhAvomCjcBZai/tQsMILvD+6sC2S9G4tkxo7uiX9oq9tg==}
     peerDependencies:
       '@rrweb/types': 2.0.0-alpha.17
+      rrweb-snapshot: 2.0.0-alpha.17
+    peerDependenciesMeta:
+      '@rrweb/types':
+        optional: true
+      rrweb-snapshot:
+        optional: true
 
   preact@10.26.4:
     resolution: {integrity: sha512-KJhO7LBFTjP71d83trW+Ilnjbo+ySsaAgCfXOXUlmGzJ4ygYPWmysm77yg4emwfmoz3b22yvH5IsVFHbhUaH5w==}
@@ -6311,6 +6317,7 @@ snapshots:
   '@rrweb/types@2.0.0-alpha.17':
     dependencies:
       rrweb-snapshot: 2.0.0-alpha.18
+    optional: true
 
   '@rtsao/scc@1.1.0': {}
 
@@ -8805,13 +8812,14 @@ snapshots:
 
   postgres@3.4.5: {}
 
-  posthog-js@1.227.0(@rrweb/types@2.0.0-alpha.17):
+  posthog-js@1.229.0(@rrweb/types@2.0.0-alpha.17):
     dependencies:
-      '@rrweb/types': 2.0.0-alpha.17
       core-js: 3.41.0
       fflate: 0.4.8
       preact: 10.26.4
       web-vitals: 4.2.4
+    optionalDependencies:
+      '@rrweb/types': 2.0.0-alpha.17
 
   preact@10.26.4: {}
 
@@ -9150,6 +9158,7 @@ snapshots:
   rrweb-snapshot@2.0.0-alpha.18:
     dependencies:
       postcss: 8.5.3
+    optional: true
 
   run-parallel@1.2.0:
     dependencies:
