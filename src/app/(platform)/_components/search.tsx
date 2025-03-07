@@ -6,9 +6,12 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "~/trpc/react";
+import { format } from "date-fns";
 import { TagInput, type Tag } from "emblor";
 import {
   ArrowRight,
+  CalendarIcon,
+  ChevronsUpDown,
   ListPlus,
   Loader2,
   MapPinPlus,
@@ -24,14 +27,27 @@ import {
   type List,
 } from "~/server/models";
 
+import { cn } from "~/lib/utils";
+
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
+import { Calendar } from "~/components/ui/calendar";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "~/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
 import { Form, FormControl, FormField, FormItem } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import {
@@ -103,7 +119,11 @@ export function SearchForm({ searchType }: { searchType: "maps" | "pins" }) {
     defaultValues:
       searchType === "maps"
         ? {
-            tags: searchParams.get("tags")?.split(",") ?? [],
+            tags:
+              searchParams
+                .get("tags")
+                ?.split(",")
+                ?.filter((t) => t && t != "") ?? [],
             sortBy:
               (searchParams.get("sortBy") as "name" | "createdAt") ??
               "createdAt",
@@ -126,6 +146,12 @@ export function SearchForm({ searchType }: { searchType: "maps" | "pins" }) {
             order: (searchParams.get("order") as "ASC" | "DESC") ?? "DESC",
             searchString: searchParams.get("searchString") ?? "",
             location: searchParams.get("location") ?? "",
+            startDate: searchParams.get("startDate")
+              ? new Date(searchParams.get("startDate")!)
+              : new Date("1900-01-01"),
+            endDate: searchParams.get("endDate")
+              ? new Date(searchParams.get("endDate")!)
+              : new Date(),
           },
   });
 
@@ -172,7 +198,7 @@ export function SearchForm({ searchType }: { searchType: "maps" | "pins" }) {
   ) {
     const newParams = Object.entries(data).map(([key, value]) =>
       value !== undefined && value !== null && value !== ""
-        ? `${key}=${Array.isArray(value) ? value.join(",") : value}`
+        ? `${key}=${Array.isArray(value) ? value.join(",") : key.includes("Date") ? format(value, "yyyy-MM-dd") : value}`
         : null,
     );
 
@@ -288,7 +314,7 @@ export function SearchForm({ searchType }: { searchType: "maps" | "pins" }) {
                 )}
               />
             </div>
-            <div className="flex w-full flex-grow flex-col items-end gap-4 sm:flex-wrap sm:gap-2 lg:flex-row lg:flex-nowrap lg:items-center lg:justify-end">
+            <div className="flex w-full flex-grow flex-col items-end gap-4 xs:flex-row xs:flex-wrap xs:flex-nowrap xs:items-center xs:justify-end xs:gap-2">
               <FormField
                 control={form.control}
                 name="tags"
@@ -325,7 +351,8 @@ export function SearchForm({ searchType }: { searchType: "maps" | "pins" }) {
                   render={({ field }) => (
                     <FormControl>
                       <ListComboBox
-                        text="Search with maps..."
+                        text="Search with maps"
+                        className="w-full xs:w-auto"
                         defaultList={allLists.items ?? []}
                         recentLists={allLists.items ?? []}
                         handleListAdds={addLists}
@@ -337,34 +364,118 @@ export function SearchForm({ searchType }: { searchType: "maps" | "pins" }) {
               ) : null}
             </div>
           </div>
-          <div className="flex flex-row flex-wrap justify-end gap-4 sm:gap-2">
+          <div className="flex flex-row flex-wrap justify-end gap-4 xs:gap-1 sm:gap-2 lg:justify-center lg:gap-2">
+            <FormField
+              control={form.control}
+              name="startDate"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "w-[120px] p-2 text-left font-normal sm:w-full lg:w-[140px] lg:p-4",
+                            !field.value && "text-muted-foreground",
+                          )}
+                        >
+                          {field.value ? (
+                            format(field.value, "PP")
+                          ) : (
+                            <span>Start date</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value ?? undefined}
+                        onSelect={field.onChange}
+                        disabled={(date) =>
+                          date > new Date() || date < new Date("1900-01-01")
+                        }
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="endDate"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "w-[120px] p-2 text-left font-normal sm:w-full lg:w-[140px] lg:p-4",
+                            !field.value && "text-muted-foreground",
+                          )}
+                        >
+                          {field.value ? (
+                            format(field.value, "PP")
+                          ) : (
+                            <span>End Date</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value ?? undefined}
+                        onSelect={field.onChange}
+                        disabled={(date) =>
+                          date > new Date() || date < new Date("1900-01-01")
+                        }
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </FormItem>
+              )}
+            />
+
             <FormField
               control={form.control}
               name="sortBy"
               render={({ field }) => (
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger className="w-[120px]">
-                      <SelectValue placeholder="Sort By" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Sort by</SelectLabel>
+                <div className="flex flex-row items-center">
+                  <p className="mr-2 text-right text-xs font-medium leading-none xs:hidden lg:block">
+                    Sort:
+                  </p>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="w-[120px]">
+                        <SelectValue placeholder="Sort By" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Sort by</SelectLabel>
 
-                      <SelectItem value="createdAt">Created At</SelectItem>
-                      {searchType === "maps" && (
+                        <SelectItem value="createdAt">Created At</SelectItem>
+                        <SelectItem value="updatedAt">Updated At</SelectItem>
+
                         <SelectItem value="name">Name</SelectItem>
-                      )}
-                      {searchType === "maps" && (
-                        <SelectItem value="size">Size</SelectItem>
-                      )}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                        {searchType === "maps" && (
+                          <SelectItem value="size">Size</SelectItem>
+                        )}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
               )}
             />
             <FormField
@@ -391,14 +502,46 @@ export function SearchForm({ searchType }: { searchType: "maps" | "pins" }) {
                 </Select>
               )}
             />
-            <Button
-              type="submit"
-              className="w-full lg:w-1/4"
-              disabled={isFetching || !form.formState.isDirty}
-            >
-              {isFetching ? <Loader2 className="animate-spin" /> : <Search />}
-              Search
-            </Button>
+            <div className="flex flex-row items-center lg:w-1/4">
+              <Button
+                type="submit"
+                className="mt-1 w-full rounded-r-none sm:mt-2 md:mt-0"
+                disabled={isFetching || !form.formState.isDirty}
+              >
+                {isFetching ? <Loader2 className="animate-spin" /> : <Search />}
+                Search
+              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="default"
+                    size="icon"
+                    className="rounded-l-none"
+                  >
+                    <ChevronsUpDown size="16" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56">
+                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={() => {
+                      navigator.clipboard.writeText(
+                        window.location.hostname +
+                          (window.location.port
+                            ? ":" + window.location.port
+                            : "") +
+                          pathname +
+                          "/feed.xml?" +
+                          updateUrl(form.getValues()),
+                      );
+                    }}
+                  >
+                    Copy Feed URL
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
         </form>
       </Form>

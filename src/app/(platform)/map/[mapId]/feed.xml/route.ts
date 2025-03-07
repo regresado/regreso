@@ -13,6 +13,7 @@ export async function GET(
   context: { params: Promise<{ mapId: string }> },
 ) {
   const { mapId } = await context.params;
+
   const searchParams = request.nextUrl.searchParams;
   const session =
     searchParams.get("session") ?? request.headers.get("authorization");
@@ -27,7 +28,7 @@ export async function GET(
     : null;
   try {
     const data: List | undefined = await (trpcServerClient ?? api).list.get({
-      id: parseInt(mapId ?? "0", 10),
+      id: parseInt(mapId.split(",")[0] ?? "0", 10),
     });
     if (data === undefined) {
       return new Response("Not found", { status: 404 });
@@ -36,9 +37,27 @@ export async function GET(
     const searchResults: { count: number; items: Destination[] } = await (
       trpcServerClient ?? api
     ).destination.getMany({
-      lists: [parseInt(mapId)],
-      offset: 0,
-      limit: 6,
+      lists: mapId.split(",").map((id) => parseInt(id)),
+      offset: parseInt(searchParams.get("offset") ?? "0"),
+      limit: parseInt(searchParams.get("limit") ?? "6"),
+      type: (searchParams.get("type") as "location" | "note" | "any") ?? "any",
+      tags:
+        searchParams
+          .get("tags")
+          ?.split(",")
+          .filter((t) => t && t != "") ?? [],
+      searchString: searchParams.get("search") ?? "",
+      location: searchParams.get("location") ?? "",
+      startDate: searchParams.get("startDate")
+        ? new Date(searchParams.get("startDate")!)
+        : undefined,
+      endDate: searchParams.get("endDate")
+        ? new Date(searchParams.get("endDate")!)
+        : undefined,
+      sortBy:
+        (searchParams.get("sortBy") as "createdAt" | "updatedAt" | "name") ??
+        undefined,
+      order: (searchParams.get("order") as "ASC" | "DESC") ?? undefined,
     });
 
     const feed = new RSS({

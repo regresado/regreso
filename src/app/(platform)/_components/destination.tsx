@@ -30,6 +30,7 @@ import {
   type updateDestinationSchema,
 } from "~/server/models";
 
+import { cn } from "~/lib/utils";
 import { useMediaQuery } from "~/hooks/use-media-query";
 
 import { Badge } from "~/components/ui/badge";
@@ -951,10 +952,12 @@ export function ListComboBox({
   text = "+ Add to Map",
   defaultList,
   recentLists,
+  className,
   handleListAdds,
   handleListRemovals,
 }: {
   text: String;
+  className?: String;
   defaultList: List[];
   recentLists: List[];
   handleListAdds: (status: List[] | null) => void;
@@ -968,7 +971,7 @@ export function ListComboBox({
     return (
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button variant="outline" className="justify-start">
+          <Button variant="outline" className={cn("justify-start", className)}>
             {selectedList.length > 0 && selectedList[0] ? (
               <>
                 {selectedList[0].name}{" "}
@@ -1004,7 +1007,7 @@ export function ListComboBox({
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant="outline" className="justify-start">
+        <Button variant="outline" className={cn("justify-start", className)}>
           {selectedList.length > 0 && selectedList[0] ? (
             <>
               {selectedList[0].name}{" "}
