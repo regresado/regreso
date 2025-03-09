@@ -12,6 +12,7 @@ import {
   ArrowRight,
   CalendarIcon,
   ChevronsUpDown,
+  Copy,
   ListPlus,
   Loader2,
   MapPinPlus,
@@ -502,7 +503,7 @@ export function SearchForm({ searchType }: { searchType: "maps" | "pins" }) {
                 </Select>
               )}
             />
-            <div className="flex flex-row items-center lg:w-1/4">
+            <div className="flex flex-row items-center lg:w-1/5">
               <Button
                 type="submit"
                 className="mt-1 w-full rounded-r-none sm:mt-2 md:mt-0"
@@ -535,8 +536,14 @@ export function SearchForm({ searchType }: { searchType: "maps" | "pins" }) {
                           "/feed.xml?" +
                           updateUrl(form.getValues()),
                       );
+                      toast({
+                        title: "Copied Feed URL",
+                        description:
+                          "The feed URL has been copied to your clipboard.",
+                      });
                     }}
                   >
+                    <Copy />
                     Copy Feed URL
                   </DropdownMenuItem>
                 </DropdownMenuContent>
