@@ -956,8 +956,8 @@ export function ListComboBox({
   handleListAdds,
   handleListRemovals,
 }: {
-  text: String;
-  className?: String;
+  text: string;
+  className?: string;
   defaultList: List[];
   recentLists: List[];
   handleListAdds: (status: List[] | null) => void;

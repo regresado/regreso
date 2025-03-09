@@ -1,8 +1,8 @@
-import { NextRequest } from "next/server";
+import { type NextRequest } from "next/server";
 
 import { api } from "~/trpc/server";
 import RSS from "rss";
-import { Destination, List } from "~/server/models";
+import { type Destination, type List } from "~/server/models";
 
 import { appRouter } from "~/server/api/root";
 import { createTRPCContext } from "~/server/api/trpc";
