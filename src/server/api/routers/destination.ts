@@ -172,16 +172,16 @@ export const destinationRouter = createTRPCRouter({
                       @@ websearch_to_tsquery('english', ${input.searchString})`
                   : undefined,
               ),
-              // and(
-              //   ...[
-              //     input.startDate
-              //       ? gte(destinations.createdAt, input.startDate)
-              //       : undefined,
-              //     input.endDate
-              //       ? lte(destinations.createdAt, input.endDate)
-              //       : undefined,
-              //   ].filter(Boolean),
-              // ),
+              and(
+                ...[
+                  input.startDate
+                    ? gte(destinations.createdAt, input.startDate)
+                    : undefined,
+                  input.endDate
+                    ? lte(destinations.createdAt, input.endDate)
+                    : undefined,
+                ].filter(Boolean),
+              ),
               input.location
                 ? sql`regexp_replace(${destinations.location}, '^https?://', '') SIMILAR TO ${input.location}`
                 : undefined,
