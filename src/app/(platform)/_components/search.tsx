@@ -43,7 +43,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
@@ -526,7 +525,7 @@ export function SearchForm({ searchType }: { searchType: "maps" | "pins" }) {
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     onClick={() => {
-                      navigator.clipboard.writeText(
+                      void navigator.clipboard.writeText(
                         window.location.hostname +
                           (window.location.port
                             ? ":" + window.location.port

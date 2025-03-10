@@ -77,7 +77,7 @@ export async function GET(
         url: `${getBaseOrigin()}/pin/${result.id}`,
         date: result.createdAt,
         description: result.body ?? "",
-        categories: result.tags?.map((tag) => tag.text) || [],
+        categories: result.tags?.map((tag) => tag.text) ?? [],
       });
     });
 

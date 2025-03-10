@@ -11,7 +11,6 @@ import {
   or,
   sql,
 } from "drizzle-orm";
-import { PgColumn } from "drizzle-orm/pg-core";
 import { z } from "zod";
 import {
   destinationFormSchema,
