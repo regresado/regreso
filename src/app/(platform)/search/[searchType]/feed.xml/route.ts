@@ -121,7 +121,7 @@ export async function GET(
         date: result.createdAt,
         description:
           ("body" in result ? result.body : result.description) ?? "",
-        categories: result.tags?.map((tag) => tag.text) || [],
+        categories: result.tags?.map((tag) => tag.text) ?? [],
       });
     });
 
