@@ -79,10 +79,32 @@ export async function GET(
           });
 
     const feed = new RSS({
-      title:
-        searchType == "pins" ? "Destination" : "Map" + " search results feed",
+      title: "Search results > Regreso",
       description:
-        "A wonderfully dynamic updating RSS/atom feed customized for your search results!",
+        (searchType == "pins" ? "Destinations" : "Maps") +
+        (searchParams.get("type") != "any"
+          ? ` of type "${searchParams.get("type")}"`
+          : "") +
+        (searchParams.get("search")
+          ? ` matching "${searchParams.get("search")}"${searchParams.get("location") ? " and location: '" + searchParams.get("location") + "'" : ""}`
+          : searchParams.get("location")
+            ? " matching location '" + searchParams.get("location") + "'"
+            : "") +
+        (searchParams.get("lists") &&
+        (searchParams.get("lists") ?? "").split(",").length > 0
+          ? ` in lists ${searchParams.get("lists") ?? ""}`
+          : "") +
+        (searchParams.get("tags") &&
+        (searchParams.get("tags") ?? "").split(",").length > 0
+          ? ` with tags ${searchParams.get("tags") ?? ""}`
+          : "") +
+        (searchParams.get("startDate")
+          ? ` after ${searchParams.get("startDate")}`
+          : "") +
+        (searchParams.get("endDate")
+          ? `${searchParams.get("startDate") ? " and" : ""} before ${searchParams.get("endDate")}`
+          : ""),
+      image_url: `${getBaseOrigin()}/logo.png`,
       site_url: getBaseOrigin(),
       feed_url: `${getBaseOrigin()}/search/${searchType}/feed.xml`,
       copyright: `${new Date().getFullYear()} Regreso`,

@@ -61,7 +61,7 @@ export async function GET(
     });
 
     const feed = new RSS({
-      title: "Map: " + data?.emoji + " " + data?.name,
+      title: data?.emoji + " " + data?.name + " > Regreso",
       description: data.description ?? undefined,
       site_url: getBaseOrigin(),
       feed_url: `${getBaseOrigin()}/map/${mapId}/feed.xml`,
