@@ -124,7 +124,7 @@ export const MacbookScroll = ({
   );
 };
 
-export const Lid = memo(
+const Lid = memo(
   ({
     scaleX,
     scaleY,
@@ -195,8 +195,9 @@ export const Trackpad = () => {
     ></div>
   );
 };
+Lid.displayName = "Lid";
 
-export const Keypad = memo(() => {
+const Keypad = memo(() => {
   const memoizedRewind = useMemo(
     () => <Rewind className="h-[6px] w-[6px]" />,
     [],
@@ -517,7 +518,7 @@ export const Keypad = memo(() => {
             <span className="block">fn</span>
           </div>
           <div className="flex w-full justify-start pl-1">
-            {memoizedCommand}
+            <Globe className="h-[6px] w-[6px]" />
           </div>
         </KBtn>
         <KBtn className="" childrenClassName="h-full justify-between py-[4px]">
@@ -583,7 +584,9 @@ export const Keypad = memo(() => {
     </div>
   );
 });
-export const KBtn = memo(
+Keypad.displayName = "Keypad";
+
+const KBtn = memo(
   ({
     className,
     children,
@@ -626,16 +629,18 @@ export const KBtn = memo(
     );
   },
 );
+KBtn.displayName = "KBtn";
 
-export const Row = memo(({ children }: { children: React.ReactNode }) => {
+const Row = memo(({ children }: { children: React.ReactNode }) => {
   return (
     <div className="mb-[2px] flex w-full flex-shrink-0 gap-[2px]">
       {children}
     </div>
   );
 });
+Row.displayName = "Row";
 
-export const SpeakerGrid = memo(() => {
+const SpeakerGrid = memo(() => {
   return (
     <div
       className="mt-2 flex h-40 gap-[2px] px-[0.5px]"
@@ -647,8 +652,9 @@ export const SpeakerGrid = memo(() => {
     ></div>
   );
 });
+SpeakerGrid.displayName = "SpeakerGrid";
 
-export const OptionKey = memo(({ className }: { className: string }) => {
+const OptionKey = memo(({ className }: { className: string }) => {
   return (
     <svg
       fill="none"
@@ -681,3 +687,5 @@ export const OptionKey = memo(({ className }: { className: string }) => {
     </svg>
   );
 });
+OptionKey.displayName = "OptionKey";
+export { Row, KBtn, OptionKey, SpeakerGrid, Keypad, Lid };

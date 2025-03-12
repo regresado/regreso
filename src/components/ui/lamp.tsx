@@ -4,7 +4,7 @@ import React, { memo, useMemo } from "react";
 
 import { motion } from "motion/react";
 
-export const LampContainer = memo(
+const LampContainer = memo(
   ({
     children,
     className = "",
@@ -85,3 +85,5 @@ export const LampContainer = memo(
     );
   },
 );
+LampContainer.displayName = "LampContainer";
+export { LampContainer };

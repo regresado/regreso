@@ -65,7 +65,7 @@ const FeatureCard = ({ feature }: { feature: Feature }) => {
   );
 };
 
-export const FeatureCards = memo(() => {
+const FeatureCards = memo(() => {
   return (
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {features.map((feature, index) => (
@@ -74,3 +74,6 @@ export const FeatureCards = memo(() => {
     </div>
   );
 });
+FeatureCards.displayName = "FeatureCards";
+
+export { FeatureCards };
