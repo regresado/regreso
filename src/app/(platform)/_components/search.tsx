@@ -44,7 +44,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
@@ -348,7 +347,7 @@ export function SearchForm({ searchType }: { searchType: "maps" | "pins" }) {
                 <FormField
                   control={form.control}
                   name="lists"
-                  render={({ field }) => (
+                  render={() => (
                     <FormControl>
                       <ListComboBox
                         text="Search with maps"

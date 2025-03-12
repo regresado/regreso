@@ -623,7 +623,7 @@ export function ListPage(props: { id: string }) {
           variant="link"
           className="ml-2 p-0"
           onClick={() => {
-            navigator.clipboard.writeText(
+            void navigator.clipboard.writeText(
               window.location.hostname +
                 (window.location.port ? ":" + window.location.port : "") +
                 "/map/" +
