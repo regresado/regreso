@@ -12,10 +12,11 @@ import {
   ArrowRight,
   CalendarIcon,
   ChevronsUpDown,
-  Copy,
   ListPlus,
   Loader2,
   MapPinPlus,
+  Newspaper,
+  Rss,
   Search,
   X,
 } from "lucide-react";
@@ -523,6 +524,10 @@ export function SearchForm({ searchType }: { searchType: "maps" | "pins" }) {
                 <DropdownMenuContent className="w-56">
                   <DropdownMenuLabel>Actions</DropdownMenuLabel>
                   <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={setCreateFeed(true)}>
+                    <Newspaper />
+                    Create Search Feed
+                  </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => {
                       void navigator.clipboard.writeText(
@@ -541,7 +546,7 @@ export function SearchForm({ searchType }: { searchType: "maps" | "pins" }) {
                       });
                     }}
                   >
-                    <Copy />
+                    <Rss />
                     Copy Feed URL
                   </DropdownMenuItem>
                 </DropdownMenuContent>

@@ -14,7 +14,6 @@ import { api } from "~/trpc/react";
 import { TagInput, type Tag } from "emblor";
 import {
   ArrowRight,
-  Copy,
   GalleryVerticalEnd,
   ListPlus,
   Loader2,
@@ -22,6 +21,7 @@ import {
   Pencil,
   Plus,
   RefreshCw,
+  Rss,
   Star,
   StarOff,
 } from "lucide-react";
@@ -636,7 +636,7 @@ export function ListPage(props: { id: string }) {
             });
           }}
         >
-          <Copy />
+          <Rss />
           Copy Feed URL
         </Button>
       </div>
