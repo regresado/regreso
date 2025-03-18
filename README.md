@@ -1,5 +1,8 @@
 ## 🗺️ Regreso - Find your way back
 
+> [!Important]
+> Visit the Regreso wiki to view [a summary](https://github.com/joshpinto6/regreso/wiki/Feature-Comparison-Table) of current Regreso features/development as well as a UI [showcase](https://github.com/joshpinto6/regreso/wiki/UI-Showcase).
+
 [![Netlify Status](https://api.netlify.com/api/v1/badges/9186e8eb-17c0-4d34-bdd9-e2add4200741/deploy-status)](https://app.netlify.com/sites/regreso/deploys)
 [![wakatime](https://wakatime.com/badge/user/7482ea9d-3085-4e9b-95ad-1ca78a14d948/project/2972fea6-6fe2-4f55-afb8-a47ff01540ad.svg)](https://wakatime.com/badge/user/7482ea9d-3085-4e9b-95ad-1ca78a14d948/project/2972fea6-6fe2-4f55-afb8-a47ff01540ad)
 ![MIT License](https://img.shields.io/github/license/joshpinto6/regreso)
