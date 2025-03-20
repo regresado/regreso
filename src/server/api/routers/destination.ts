@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import {
   aliasedTable,
   and,
@@ -10,6 +11,7 @@ import {
 } from "drizzle-orm";
 import { z } from "zod";
 import {
+  destinationFormSchema,
   destinationSchema,
   destinationSearchSchema,
   updateDestinationSchema,
@@ -32,7 +34,15 @@ import {
 
 export const destinationRouter = createTRPCRouter({
   create: protectedMutationProcedure
-    .input(destinationSchema)
+    .meta({
+      openapi: {
+        method: "POST",
+        path: "/v1/destinations",
+        protect: true,
+      },
+    })
+    .input(destinationFormSchema)
+    .output(z.object({ success: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
       const destinationRows = await ctx.db
         .insert(destinations)
@@ -93,7 +103,20 @@ export const destinationRouter = createTRPCRouter({
       };
     }),
   getMany: protectedQueryProcedure
+    .meta({
+      openapi: {
+        method: "GET",
+        path: "/v1/destinations",
+        protect: true,
+      },
+    })
     .input(destinationSearchSchema)
+    .output(
+      z.object({
+        items: z.array(destinationSchema),
+        count: z.number(),
+      }),
+    )
     .query(
       async ({
         ctx,
@@ -199,7 +222,11 @@ export const destinationRouter = createTRPCRouter({
           );
 
         const returnDestinations = dests.map((dest) => {
-          return {
+          const destination = {
+            id: dest.destination.id,
+            userId: dest.destination.userId,
+            createdAt: dest.destination.createdAt,
+            updatedAt: dest.destination.updatedAt,
             tags: destTags
               .filter(
                 (tag) =>
@@ -211,17 +238,35 @@ export const destinationRouter = createTRPCRouter({
                   text: tag.tag.name,
                 };
               }),
-            ...dest.destination,
+            type: dest.destination.type as "location" | "file" | "note",
+            name: dest.destination.name,
+            location: dest.destination.location,
+            body: dest.destination.body,
+            attachments: [],
           };
+          return destination;
         });
         return {
           items: returnDestinations,
-          count: dests[0]?.count ?? 0,
+          count:
+            typeof dests[0]?.count == "number"
+              ? dests[0]?.count
+              : typeof dests[0]?.count == "string"
+                ? parseInt(dests[0]?.count)
+                : 0,
         };
       },
     ),
   update: protectedMutationProcedure
+    .meta({
+      openapi: {
+        method: "PATCH",
+        path: "/v1/destination/{id}",
+        protect: true,
+      },
+    })
     .input(updateDestinationSchema)
+    .output(z.object({ success: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
       const destinationRows = await ctx.db
         .update(destinations)
@@ -240,7 +285,7 @@ export const destinationRouter = createTRPCRouter({
         .returning({
           id: destinations.id,
         });
-      if (input.tags.length > 0) {
+      if (input.tags && input.tags.length > 0) {
         const existingTagRows = await ctx.db.query.tags.findMany({
           where: or(
             inArray(
@@ -290,7 +335,15 @@ export const destinationRouter = createTRPCRouter({
       };
     }),
   delete: protectedMutationProcedure
+    .meta({
+      openapi: {
+        method: "DELETE",
+        path: "/v1/destination/{id}",
+        protect: true,
+      },
+    })
     .input(z.object({ id: z.number() }))
+    .output(z.object({ success: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
       await ctx.db
         .delete(destinations)
@@ -306,7 +359,15 @@ export const destinationRouter = createTRPCRouter({
     }),
 
   get: protectedQueryProcedure
+    .meta({
+      openapi: {
+        method: "GET",
+        path: "/v1/destination/{id}",
+        protect: true,
+      },
+    })
     .input(z.object({ id: z.number() }))
+    .output(destinationSchema)
     .query(async ({ ctx, input }) => {
       const dest: Destination | undefined =
         await ctx.db.query.destinations.findFirst({
@@ -315,6 +376,12 @@ export const destinationRouter = createTRPCRouter({
             eq(destinations.userId, ctx.user.id),
           ),
         });
+      if (!dest) {
+        throw new TRPCError({
+          message: "Destination not found or access denied.",
+          code: "FORBIDDEN",
+        });
+      }
 
       return {
         ...dest,
@@ -354,17 +421,28 @@ export const destinationRouter = createTRPCRouter({
       };
     }),
   addToLists: protectedMutationProcedure
-    .input(z.object({ destinationId: z.number(), lists: z.array(z.number()) }))
+    .meta({
+      openapi: {
+        method: "POST",
+        path: "/v1/destination/{id}/add-lists",
+        protect: true,
+      },
+    })
+    .input(z.object({ id: z.number(), lists: z.array(z.number()) }))
+    .output(z.object({ success: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
       const destination = await ctx.db.query.destinations.findFirst({
         where: and(
-          eq(destinations.id, input.destinationId),
+          eq(destinations.id, input.id),
           eq(destinations.userId, ctx.user.id),
         ),
       });
 
       if (!destination) {
-        throw new Error("Destination not found or does not belong to the user");
+        throw new TRPCError({
+          message: "Destination not found",
+          code: "UNAUTHORIZED",
+        });
       }
 
       const validLists = await ctx.db.query.lists.findMany({
@@ -377,7 +455,7 @@ export const destinationRouter = createTRPCRouter({
       await ctx.db.insert(destinationLists).values(
         validLists.map((list) => {
           return {
-            destinationId: input.destinationId,
+            destinationId: input.id,
             listId: list.id,
           };
         }),
@@ -387,11 +465,19 @@ export const destinationRouter = createTRPCRouter({
       };
     }),
   removeFromLists: protectedMutationProcedure
-    .input(z.object({ destinationId: z.number(), lists: z.array(z.number()) }))
+    .meta({
+      openapi: {
+        method: "POST",
+        path: "/v1/destination/{id}/remove-lists",
+        protect: true,
+      },
+    })
+    .input(z.object({ id: z.number(), lists: z.array(z.number()) }))
+    .output(z.object({ success: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
       const destination = await ctx.db.query.destinations.findFirst({
         where: and(
-          eq(destinations.id, input.destinationId),
+          eq(destinations.id, input.id),
           eq(destinations.userId, ctx.user.id),
         ),
       });
@@ -409,7 +495,7 @@ export const destinationRouter = createTRPCRouter({
 
       await ctx.db.delete(destinationLists).where(
         and(
-          eq(destinationLists.destinationId, input.destinationId),
+          eq(destinationLists.destinationId, input.id),
           inArray(
             destinationLists.listId,
             validLists.map((list) => list.id),

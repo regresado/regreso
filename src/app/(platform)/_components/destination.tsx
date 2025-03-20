@@ -24,7 +24,7 @@ import {
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
-  destinationSchema,
+  destinationFormSchema,
   type Destination,
   type List,
   type updateDestinationSchema,
@@ -114,22 +114,22 @@ type DestinationFormProps =
       >;
       update: true;
       updateId: number;
-      defaultValues?: z.infer<typeof destinationSchema>;
+      defaultValues?: z.infer<typeof destinationFormSchema>;
     }
   | {
       destinationMutation: (callback?: () => void) => UseTRPCMutationResult<
         { success: boolean },
         TRPCClientErrorLike<{
-          input: z.infer<typeof destinationSchema>;
+          input: z.infer<typeof destinationFormSchema>;
           output: { success: boolean };
           transformer: true;
           errorShape: { message: string };
         }>,
-        z.infer<typeof destinationSchema>,
+        z.infer<typeof destinationFormSchema>,
         unknown
       >;
       update: false;
-      defaultValues?: z.infer<typeof destinationSchema>;
+      defaultValues?: z.infer<typeof destinationFormSchema>;
     };
 
 export function DestinationForm(props: DestinationFormProps) {
@@ -156,8 +156,8 @@ export function DestinationForm(props: DestinationFormProps) {
     },
   });
 
-  const form = useForm<z.infer<typeof destinationSchema>>({
-    resolver: zodResolver(destinationSchema),
+  const form = useForm<z.infer<typeof destinationFormSchema>>({
+    resolver: zodResolver(destinationFormSchema),
     defaultValues: {
       type: "location",
       location: props.defaultValues?.location ?? null,
@@ -199,11 +199,14 @@ export function DestinationForm(props: DestinationFormProps) {
   }, [location, loadingUpdate, form, props.defaultValues?.body]);
 
   useEffect(() => {
-    if (!detailsState.error) {
+    if (detailsState.title && detailsState.title.length > 0) {
       const names = detailsState.title.filter(String);
       const descriptions = detailsState.description.filter(String);
       form.setValue("name", names[0] ?? "");
-      form.setValue("body", `<p class="text-node">${descriptions[0]}</p>`);
+      form.setValue(
+        "body",
+        `<p class="text-node">${descriptions[0] ?? ""}</p>`,
+      );
     }
     if (detailsState.url) {
       form.setValue(
@@ -220,9 +223,9 @@ export function DestinationForm(props: DestinationFormProps) {
 
   const type = destinationTypeForm.watch("type");
   useEffect(() => {
-    if (destinationTypeForm.watch("type") === "note") {
+    if (props.update) {
       form.reset({
-        type: "note",
+        type: props.defaultValues?.type ?? "location",
         location: null,
         name: props.defaultValues?.name ?? "",
         body: props.defaultValues?.body ?? "",
@@ -238,13 +241,15 @@ export function DestinationForm(props: DestinationFormProps) {
     destinationTypeForm,
     form,
     props.defaultValues?.body,
+    props.defaultValues?.type,
+    props.update,
     props.defaultValues?.name,
     props.defaultValues?.tags,
   ]);
 
   const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
 
-  function onSubmit(data: z.infer<typeof destinationSchema>) {
+  function onSubmit(data: z.infer<typeof destinationFormSchema>) {
     if (props.update) {
       if (!props.updateId) {
         return;
@@ -363,15 +368,15 @@ export function DestinationForm(props: DestinationFormProps) {
           </div>
         </form>
       </Form>
+
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="w-full space-y-4"
         >
-          {((!loading && destinationTypeForm.watch("type") === "note") ||
-            (form.watch("type") === "location" && form.watch("location")) ||
-            props.update) &&
-          !loadingUpdate ? (
+          {(!loading && destinationTypeForm.watch("type") === "note") ||
+          (form.watch("type") === "location" && form.watch("location")) ||
+          props.update ? (
             <>
               <FormField
                 control={form.control}
@@ -383,11 +388,7 @@ export function DestinationForm(props: DestinationFormProps) {
                       <Input
                         placeholder="Coolest Pelicans in the World"
                         {...field}
-                        value={
-                          field.value && field.value.length > 0
-                            ? field.value
-                            : props.defaultValues?.name
-                        }
+                        value={field.value}
                       />
                     </FormControl>
                     <FormMessage />
@@ -402,13 +403,12 @@ export function DestinationForm(props: DestinationFormProps) {
                     <FormLabel>Body</FormLabel>
                     <FormControl>
                       <MinimalTiptapEditor
-                        value={props.defaultValues?.body}
+                        value={field.value}
                         onChange={field.onChange}
                         className="w-full"
                         editorContentClassName="p-5"
                         output="html"
                         placeholder="Type your note here..."
-                        editable={true}
                         editorClassName="focus:outline-none"
                       />
                     </FormControl>
@@ -645,7 +645,7 @@ export function DestinationCard(
             ? dragEnd.over.id
             : parseInt(String(dragEnd.over.id)),
         ],
-        destinationId: id,
+        id,
       });
       setDragEnd(null);
     }
@@ -664,7 +664,9 @@ export function DestinationCard(
       <CardHeader className="px-3 pb-2 pt-4 text-sm">
         <CardTitle className="truncate">
           <Link href={`/pin/${props.id}`}>
-            {props.name ?? "Unnamed Destination"}
+            {props.name && props.name.length > 0
+              ? props.name
+              : "Unnamed Destination"}
           </Link>
         </CardTitle>
       </CardHeader>
@@ -672,7 +674,12 @@ export function DestinationCard(
         {props.type == "location" ? (
           <p className="truncate text-xs">
             <Button variant="link" asChild className="truncate p-0">
-              <Link href={props.location ?? "#"} className="truncate">
+              <Link
+                href={props.location ?? "#"}
+                className="truncate"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 {props.location}
               </Link>
             </Button>
@@ -745,7 +752,10 @@ export function DestinationDialog(props: { id: string }) {
     },
   });
 
-  const { data }: { data: Destination | undefined } =
+  const {
+    data,
+    isPending,
+  }: { data: Destination | undefined; isPending: boolean } =
     api.destination.get.useQuery(
       { id: parseInt(destinationId ?? "0", 10) },
       { enabled: !!destinationId },
@@ -799,7 +809,7 @@ export function DestinationDialog(props: { id: string }) {
     if (lists) {
       addToLists.mutate({
         lists: lists.map((l) => l.id),
-        destinationId: parseInt(props.id),
+        id: parseInt(props.id),
       });
     }
   }
@@ -808,7 +818,7 @@ export function DestinationDialog(props: { id: string }) {
     if (lists) {
       removeFromLists.mutate({
         lists: lists.map((l) => l.id),
-        destinationId: parseInt(props.id),
+        id: parseInt(props.id),
       });
     }
   }
@@ -826,9 +836,7 @@ export function DestinationDialog(props: { id: string }) {
                   : "Couldn't find Destination"}
             </DialogTitle>
           </DialogHeader>
-          {editing &&
-          data != undefined &&
-          (data.name != undefined || data.location != undefined) ? (
+          {editing && data != undefined && !isPending ? (
             <DestinationForm
               update={true}
               defaultValues={{
@@ -853,7 +861,9 @@ export function DestinationDialog(props: { id: string }) {
                   <div className="text-sm">
                     Location:{" "}
                     <Button asChild variant="link" className="text-wrap p-0">
-                      <Link href={data?.location ?? "#"}>{data?.location}</Link>
+                      <Link href={data?.location ?? "#"} target="_blank">
+                        {data?.location}
+                      </Link>
                     </Button>
                   </div>
                 ) : null}

@@ -18,7 +18,7 @@ export async function skip2FASetupAction(
   cookieStore.set("disable2FAReminder", "yes", {
     httpOnly: true,
   });
-  return redirect("/dashboard");
+  return redirect("/dashboard?loginState=signedIn");
 }
 
 interface ActionResult {

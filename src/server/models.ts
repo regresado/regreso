@@ -54,12 +54,12 @@ export interface List {
 
 const destinationTypes = ["location", "note", "file"] as const;
 
-export const destinationSchema = z.object({
+export const destinationFormSchema = z.object({
   type: z.enum(destinationTypes),
   location: z.string().nullable(),
   name: z
     .string({
-      required_error: "Please select an email to display.",
+      required_error: "Please enter a destination name.",
     })
     .max(100, {
       message: "The name must be less than 100 characters.",
@@ -75,7 +75,21 @@ export const destinationSchema = z.object({
   attachments: z.array(z.string()),
 });
 
-export const listSchema = z.object({
+export const destinationSchema = z.object({
+  id: z.number(),
+  userId: z.number(),
+  createdAt: z.date(),
+  updatedAt: z.date().nullable(),
+  tags: z.array(z.object({ id: z.number(), text: z.string() })).optional(),
+  type: z.string(),
+  name: z.string().nullable(),
+  location: z.string().nullable(),
+  body: z.string().nullable(),
+  attachments: z.array(z.any()).optional(),
+  workspaceId: z.number().nullable().optional(),
+});
+
+export const listFormSchema = z.object({
   name: z
     .string()
     .min(1, {
@@ -93,19 +107,29 @@ export const listSchema = z.object({
   tags: z.array(z.object({ id: z.string(), text: z.string() })).min(0),
 });
 
+export const listSchema = z.object({
+  id: z.number(),
+  userId: z.number(),
+  createdAt: z.date(),
+  updatedAt: z.date().nullable().optional(),
+  tags: z.array(z.object({ id: z.number(), text: z.string() })).optional(),
+  size: z.number().optional(),
+  name: z.string(),
+  emoji: z.string().nullable(),
+  workspaceId: z.number().nullable().optional(),
+  description: z.string().nullable(),
+});
+
 export const updateDestinationSchema = z.object({
   id: z.number(),
-  ...destinationSchema.shape,
+  ...destinationFormSchema.partial().shape,
 });
 
 export const updateListSchema = z.object({
   id: z.number(),
+  ...listFormSchema.partial().shape,
   newTags: z.array(z.string()).optional(),
   removedTags: z.array(z.string()).optional(),
-  name: listSchema.shape.name.optional(),
-  emoji: listSchema.shape.emoji.optional(),
-  description: listSchema.shape.description.optional(),
-  tags: listSchema.shape.tags.optional(),
 });
 
 const destinationSearchTypes = ["location", "note", "any"] as const;

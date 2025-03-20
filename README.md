@@ -1,13 +1,19 @@
 ## 🗺️ Regreso - Find your way back
 
+> [!Important]
+> Visit the Regreso wiki to view an [overview](https://github.com/joshpinto6/regreso/wiki/Feature-Comparison-Table) of Regreso functional capabilities as well as a UI [showcase](https://github.com/joshpinto6/regreso/wiki/UI-Showcase). If Regreso interests you, **consider giving it a star [on GitHub](https://regreso.netlify.app/repository)!**
+
 [![Netlify Status](https://api.netlify.com/api/v1/badges/9186e8eb-17c0-4d34-bdd9-e2add4200741/deploy-status)](https://app.netlify.com/sites/regreso/deploys)
 [![wakatime](https://wakatime.com/badge/user/7482ea9d-3085-4e9b-95ad-1ca78a14d948/project/2972fea6-6fe2-4f55-afb8-a47ff01540ad.svg)](https://wakatime.com/badge/user/7482ea9d-3085-4e9b-95ad-1ca78a14d948/project/2972fea6-6fe2-4f55-afb8-a47ff01540ad)
+![MIT License](https://img.shields.io/github/license/joshpinto6/regreso)
+![Closed Pull Request Count](https://img.shields.io/github/issues-pr-closed/joshpinto6/regreso)
+![GitHub Repo stars](https://img.shields.io/github/stars/joshpinto6/regreso)
 
 ## 👋 Introduction
 
 Regreso is an open source application that allows you to create, sync, manage, and find "destinations" (bookmarked links, files, and resources) you wish to "return" to later.
 
-Destinations may be added to "maps", which enable graphing and visualizing relationships using tags, "journies" (saved sessions), and references. "Trunks" allow one to separate maps by subject, topic, or project.
+Destinations may be added to "maps", which enable graphing and visualizing relationships using tags, and eventually "journies" (saved sessions), and "trunks" which will allow one to separate maps by subject, topic, or project.
 
 ## 📌 Quick Links
 
@@ -16,6 +22,10 @@ Destinations may be added to "maps", which enable graphing and visualizing relat
 - [Guide](https://regreso.netlify.app/guide)
 - [Wiki](https://regreso.netlify.app/wiki)
 - [Roadmap](https://regreso.netlify.app/roadmap)
+
+## 📺 Demo Video
+
+https://github.com/user-attachments/assets/96565cff-49d1-4a43-8629-4c17b4dc6669
 
 ## 🚀 Development
 
@@ -35,7 +45,7 @@ We accept contributions of new features and bug fixes through [Pull Requests](/p
 
 ## ⚙️ Tech Overview
 
-This project uses the [T3 Stack](https://create.t3.gg/) made by [@t3oss](https://github.com/t3oss):
+This project uses the [T3 Stack](https://create.t3.gg/) made by [@t3-oss](https://github.com/t3-oss):
 
 <ul>
 <li>
@@ -68,6 +78,9 @@ This project uses the [T3 Stack](https://create.t3.gg/) made by [@t3oss](https:/
 <li>
 <a href="https://www.postgresql.org/">PostgreSQL</a> database
 </li>
+<li>
+<a href="https://supabase.com">Supabase</a> postgres hosting
+</li>
 </ul>
 </details>
 </li>
@@ -77,7 +90,7 @@ This project uses the [T3 Stack](https://create.t3.gg/) made by [@t3oss](https:/
 <li>
 <details>
 <summary> 
-<a href="https://tailwindcss.com/">Tailwind CSS</a>
+<a href="https://tailwindcss.com/">Tailwind</a> CSS
 
 </summary>
 <ul>
@@ -105,6 +118,7 @@ This project uses the [T3 Stack](https://create.t3.gg/) made by [@t3oss](https:/
 <li>
 <a href="https://www.npmjs.com/package/server-only/">Server Only</a> for marking modules
 </li>
+
 </ul>
 </details>
 </li>
@@ -116,9 +130,14 @@ This project uses the [T3 Stack](https://create.t3.gg/) made by [@t3oss](https:/
 <li>
 <details>
 <summary> 
-<a href="https://ui.shadcn.com/">shadcn/ui</a> copy-pasted components
+<strong>
+User Interface
+</strong>
 </summary>
 <ul>
+<li>
+<a href="https://ui.shadcn.com/">shadcn/ui</a> copy-pasted components
+</li>
 <li>
 <a href="https://www.radix-ui.com/">Radix UI</a> primitives
 </li>
@@ -146,19 +165,34 @@ This project uses the [T3 Stack](https://create.t3.gg/) made by [@t3oss](https:/
 <li>
 <a href="https://tiptap.dev">TipTap</a> rich text editor
 </li>
+<li>
+<a href="https://dndkit.com/">Dnd-Kit</a> drag-and-drop toolkit
+</li>
+<li>
+<a href="https://learn.missiveapp.com/open/emoji-mart/">Emoji Mart</a> picker
+</li>
+<li>
+<a href="https://motion.dev/">Motion</a> page animations
+</li>
+<li>
+<a href="https://ludicde.dev/">Lucide</a> icons
+</li>
+<li>
+<a href="https://boringavatars.com/">Boring</a> avatars
+</li>
 </ul>
 </details>
 </li>
 </ul>
 
-- [Motion](https://motion.dev/) page animations
-- [Lucide](https://lucide.dev/) Icons and [Boring](https://boringavatars.com/) Avatars
-
 <ul>
 <li>
 <details>
 <summary> 
-<a href="https://lucia-auth.com/">Lucia Auth</a> implementation (to replace Next Auth)
+<strong>
+Authentication (
+<a href="https://lucia-auth.com/">Lucia Auth</a> principles)
+</strong>
 </summary>
 <ul>
 <li>
@@ -181,5 +215,8 @@ This project uses the [T3 Stack](https://create.t3.gg/) made by [@t3oss](https:/
 </li>
 </ul>
 
-- [UploadThing](https://uploadthing.com/) for handling user file uplaods
-- [Gray Matter](https://www.npmjs.com/package/gray-matter/) and [Remark (react-markdown)](https://remark.js.org/) for blog/site content rendering
+- [trpc-to-openapi](https://www.npmjs.com/package/trpc-to-openapi/) adapter
+- [UploadThing](https://uploadthing.com/) for user uplaods
+- [Posthog](https://posthog.com/) Analytics
+
+## 🙌 Acknowledgements

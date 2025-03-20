@@ -6,6 +6,9 @@ import { GeistSans } from "geist/font/sans";
 
 import { ThemeProvider } from "~/app/providers";
 
+import PostHogPageView from "./PostHogPageView";
+import { CSPostHogProvider } from "./providers";
+
 export const metadata: Metadata = {
   title: "Regreso | Dashboard",
   description: "Regreso is an app that helps you find your way back.",
@@ -20,16 +23,19 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
-      <body>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
-      </body>
+      <CSPostHogProvider>
+        <body>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <PostHogPageView />
+            {children}
+          </ThemeProvider>
+        </body>
+      </CSPostHogProvider>
     </html>
   );
 }

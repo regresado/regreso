@@ -8,14 +8,16 @@
  * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will
  * need to use are documented accordingly near the end.
  */
+import { type NextRequest } from "next/server";
+
 import { initTRPC, TRPCError } from "@trpc/server";
-// import { OpenApiMeta } from "trpc-to-openapi";
 import superjson from "superjson";
+import { type OpenApiMeta } from "trpc-to-openapi";
 import { ZodError } from "zod";
 
 import { db } from "~/server/db";
 import { globalGETRateLimit, globalPOSTRateLimit } from "~/server/request";
-import { getCurrentSession } from "~/server/session";
+import { getCurrentSession, getSession } from "~/server/session";
 
 /**
  * 1. CONTEXT
@@ -40,6 +42,20 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
   };
 };
 
+export const createRESTContext = async (req: NextRequest) => {
+  const authorization = req.headers?.get("authorization");
+  const { session, user } = authorization
+    ? await getSession(authorization)
+    : { session: null, user: null };
+
+  return {
+    db,
+    session,
+    user,
+    req,
+  };
+};
+
 /**
  * 2. INITIALIZATION
  *
@@ -47,20 +63,23 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
  * ZodErrors so that you get typesafety on the frontend if your procedure fails due to validation
  * errors on the backend.
  */
-// const t = initTRPC.meta<OpenApiMeta>().create({
-const t = initTRPC.context<typeof createTRPCContext>().create({
-  transformer: superjson,
-  errorFormatter({ shape, error }) {
-    return {
-      ...shape,
-      data: {
-        ...shape.data,
-        zodError:
-          error.cause instanceof ZodError ? error.cause.flatten() : null,
-      },
-    };
-  },
-});
+
+const t = initTRPC
+  .meta<OpenApiMeta>()
+  .context<typeof createTRPCContext>()
+  .create({
+    transformer: superjson,
+    errorFormatter({ shape, error }) {
+      return {
+        ...shape,
+        data: {
+          ...shape.data,
+          zodError:
+            error.cause instanceof ZodError ? error.cause.flatten() : null,
+        },
+      };
+    },
+  });
 
 /**
  * Create a server-side caller.
@@ -143,6 +162,12 @@ export const protectedQueryProcedure = t.procedure
     if (!ctx.session || !ctx.user) {
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }
+    if (!ctx.user.emailVerified) {
+      throw new TRPCError({ code: "UNAUTHORIZED" });
+    }
+    if (ctx.user.registered2FA && !ctx.session.twoFactorVerified) {
+      throw new TRPCError({ code: "UNAUTHORIZED" });
+    }
     return next({
       ctx: {
         // infers the `session` as non-nullable
@@ -155,6 +180,12 @@ export const protectedMutationProcedure = t.procedure
   .use(rateLimitMutationMiddleware)
   .use(({ ctx, next }) => {
     if (!ctx.session || !ctx.user) {
+      throw new TRPCError({ code: "UNAUTHORIZED" });
+    }
+    if (!ctx.user.emailVerified) {
+      throw new TRPCError({ code: "UNAUTHORIZED" });
+    }
+    if (ctx.user.registered2FA && !ctx.session.twoFactorVerified) {
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }
     return next({

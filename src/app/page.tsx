@@ -10,7 +10,7 @@ import { Button } from "~/components/ui/button";
 import { MacbookScroll } from "~/components/ui/macbook-scroll";
 import { FeatureCards } from "~/components/feature-cards";
 import Hero from "~/components/hero";
-import { LandingNavigation } from "~/components/landing-navigation";
+import { Footer, LandingNavigation } from "~/components/landing-navigation";
 
 function MacbookScrollDemo() {
   const { theme } = useTheme();
@@ -23,7 +23,7 @@ function MacbookScrollDemo() {
             Use Anywhere <br /> No kidding.
           </span>
         }
-        src={`/dashboard-screenshot-${theme ?? "dark"}.png`}
+        src={`/dashboard-screenshot-${theme == "system" ? "dark" : theme}.png`}
         showGradient={false}
       />
     </div>
@@ -94,87 +94,7 @@ export default function LandingPage() {
             </Button>
           </div>
         </section>
-        <footer className="bg-white py-10 dark:bg-slate-950">
-          <div className="container mx-auto px-4">
-            <div className="flex flex-wrap justify-between">
-              <div className="mb-6 w-full md:mb-0 md:w-1/3">
-                <h3 className="mb-4 text-xl font-bold">Regreso</h3>
-
-                <p className="text-gray-600 dark:text-slate-400">
-                  Your digital breadcrumbs, always at your fingertips.
-                </p>
-              </div>
-
-              <div className="mb-6 w-full md:mb-0 md:w-1/3">
-                <h4 className="mb-4 text-lg font-semibold">Quick Links</h4>
-
-                <ul className="space-y-2">
-                  <li>
-                    <Link
-                      href="/guide"
-                      className="text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
-                    >
-                      Guide
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/blog"
-                      className="text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
-                    >
-                      Blog
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/repository"
-                      className="text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
-                    >
-                      Source Code
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/credits"
-                      className="text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
-                    >
-                      Credits
-                    </Link>
-                  </li>
-
-                  <li>
-                    <Link
-                      href="/privacy"
-                      className="text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
-                    >
-                      Privacy Policy
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-
-              <div className="w-full md:w-1/3">
-                <h4 className="mb-4 text-lg font-semibold">Socials</h4>
-
-                <div className="flex space-x-4">
-                  <Link
-                    href="https://github.com/your-repo"
-                    aria-label="GitHub Repository for Regreso"
-                    className="text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
-                  >
-                    <Github className="h-6 w-6" />
-                  </Link>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-8 border-t border-gray-200 pt-8 text-center text-gray-600 dark:border-slate-800 dark:text-slate-400">
-              <p>
-                &copy; {new Date().getFullYear()} Regreso. All rights reserved.
-              </p>
-            </div>
-          </div>
-        </footer>
+        <Footer />
       </div>
     </>
   );
