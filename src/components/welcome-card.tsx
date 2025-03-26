@@ -1,7 +1,6 @@
 import Link from "next/link";
 
 import { Binoculars, Rocket } from "lucide-react";
-import { motion } from "motion/react";
 import { useOnborda } from "onborda";
 
 import { Button } from "~/components/ui/button";

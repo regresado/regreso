@@ -87,8 +87,8 @@ export default async function PlatformLayout({
                     title: "This is your first crew",
                     content: (
                       <>
-                        You're all alone for now. But one day you might invite
-                        friends.
+                        You&apos;re all alone for now. But one day you might
+                        invite friends.
                       </>
                     ),
                     selector: "#team-switcher",
