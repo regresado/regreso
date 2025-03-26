@@ -218,5 +218,6 @@ Authentication (
 - [trpc-to-openapi](https://www.npmjs.com/package/trpc-to-openapi/) adapter
 - [UploadThing](https://uploadthing.com/) for user uplaods
 - [Posthog](https://posthog.com/) Analytics
+- [Million](https://million.dev/) Lint
 
 ## 🙌 Acknowledgements
