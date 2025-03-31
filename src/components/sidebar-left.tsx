@@ -12,7 +12,7 @@ import {
   Search,
   Settings,
 } from "lucide-react";
-import { List } from "~/server/models";
+import type { List } from "~/server/models";
 
 import { Badge } from "~/components/ui/badge";
 import {
