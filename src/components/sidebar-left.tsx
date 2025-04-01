@@ -169,7 +169,8 @@ export function SidebarLeft({ ...props }: ComponentProps<typeof Sidebar>) {
               name: l.name,
               emoji: l.emoji ?? "❔",
               url: "/map/" + l.id,
-              favorite: !!l.tags?.find((t) => t.text == "favorite maps"),
+              favorite:
+                l.tags?.some((t) => t.text === "favorite maps") ?? false,
             };
           })}
         />
