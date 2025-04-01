@@ -153,8 +153,8 @@ importers:
         specifier: ^7.1.5
         version: 7.3.0(next@15.2.4(@babel/core@7.26.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(uploadthing@7.6.0(h3@1.15.1)(next@15.2.4(@babel/core@7.26.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(tailwindcss@3.4.17))
       arctic:
-        specifier: ^3.5.0
-        version: 3.5.0
+        specifier: ^3.6.0
+        version: 3.6.0
       boring-avatars:
         specifier: ^1.11.2
         version: 1.11.2
@@ -172,7 +172,7 @@ importers:
         version: 3.6.0
       drizzle-orm:
         specifier: ^0.41.0
-        version: 0.41.0(gel@2.0.0)(postgres@3.4.5)
+        version: 0.41.0(gel@2.0.1)(postgres@3.4.5)
       emblor:
         specifier: ^1.4.7
         version: 1.4.7(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(postcss@8.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.8.2)
@@ -195,8 +195,8 @@ importers:
         specifier: ^0.484.0
         version: 0.484.0(react@18.3.1)
       motion:
-        specifier: ^12.6.1
-        version: 12.6.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^12.6.2
+        version: 12.6.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       next:
         specifier: ^15.2.4
         version: 15.2.4(@babel/core@7.26.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -213,8 +213,8 @@ importers:
         specifier: ^3.4.4
         version: 3.4.5
       posthog-js:
-        specifier: ^1.232.7
-        version: 1.232.7(@rrweb/types@2.0.0-alpha.17)
+        specifier: ^1.233.1
+        version: 1.233.1(@rrweb/types@2.0.0-alpha.17)
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -289,8 +289,8 @@ importers:
         specifier: ^8.28.0
         version: 8.28.0(eslint@9.23.0(jiti@1.21.7))(typescript@5.8.2)
       drizzle-kit:
-        specifier: ^0.30.5
-        version: 0.30.5
+        specifier: ^0.30.6
+        version: 0.30.6
       eslint:
         specifier: ^9.23.0
         version: 9.23.0(jiti@1.21.7)
@@ -1539,8 +1539,8 @@ packages:
   '@oslojs/webauthn@1.0.0':
     resolution: {integrity: sha512-2ZRpbt3msNURwvjmavzq9vrNlxUnWFBGMYqbC1kO3fYBLskL7r4DiLJT1wbtLoI+hclFwjhl48YhRFBl6RWg1A==}
 
-  '@petamoriken/float16@3.9.1':
-    resolution: {integrity: sha512-j+ejhYwY6PeB+v1kn7lZFACUIG97u90WxMuGosILFsl9d4Ovi0sjk0GlPfoEcx+FzvXZDAfioD+NGnnPamXgMA==}
+  '@petamoriken/float16@3.9.2':
+    resolution: {integrity: sha512-VgffxawQde93xKxT3qap3OH+meZf7VaSB5Sqd4Rqc+FP5alWbpOyan/7tRbOAvynjpG3GpdtAuGU/NdhQpmrog==}
 
   '@pilcrowjs/object-parser@0.0.4':
     resolution: {integrity: sha512-mBy3FMv2lvl/sZX/q03wvl3Km8FWg7kbrqQ/qMxK49uZcBssD76Js5k+o7VuCDJI8SNvsrbIX8y6vclx7bWeSg==}
@@ -2817,8 +2817,8 @@ packages:
     resolution: {integrity: sha512-KMReFUr0B4t+D+OBkjR3KYqvocp2XaSzO55UcB6mgQMd3KbcE+mWTyvVV7D/zsdEbNnV6acZUutkiHQXvTr1Rw==}
     engines: {node: '>= 8'}
 
-  arctic@3.5.0:
-    resolution: {integrity: sha512-SR2BnMinzA5X4qsMR5wFMqELeKfMKNAThpRJyuPFJpCZIqvAMW0VbVSacycgIBV56XQLCLtUMwdohKEMaR2y1g==}
+  arctic@3.6.0:
+    resolution: {integrity: sha512-egHDsCqEacb6oSHz5QSSxNhp07J+QJwJdPvs0katL+mNM5LaGQVqxmcdq1KwfaSNSAlVumBBs0MRExS88TxbMg==}
 
   arg@5.0.2:
     resolution: {integrity: sha512-PYjyFOLKQ9y57JvQ6QLo8dAgNqswh8M1RMJYdQduT6xbWSgK36P/Z/v+p888pM69jMMfS8Xd8F6I1kQ/I9HUGg==}
@@ -3268,8 +3268,8 @@ packages:
     resolution: {integrity: sha512-QM8q3zDe58hqUqjraQOmzZ1LIH9SWQJTlEKCH4kJ2oQvLZk7RbQXvtDM2XEq3fwkV9CCvvH4LA0AV+ogFsBM2Q==}
     engines: {node: '>=8'}
 
-  drizzle-kit@0.30.5:
-    resolution: {integrity: sha512-l6dMSE100u7sDaTbLczibrQZjA35jLsHNqIV+jmhNVO3O8jzM6kywMOmV9uOz9ZVSCMPQhAZEFjL/qDPVrqpUA==}
+  drizzle-kit@0.30.6:
+    resolution: {integrity: sha512-U4wWit0fyZuGuP7iNmRleQyK2V8wCuv57vf5l3MnG4z4fzNTjY/U13M8owyQ5RavqvqxBifWORaR3wIUzlN64g==}
     hasBin: true
 
   drizzle-orm@0.41.0:
@@ -3705,8 +3705,8 @@ packages:
     resolution: {integrity: sha512-gIXjKqtFuWEgzFRJA9WCQeSJLZDjgJUOMCMzxtvFq/37KojM1BFGufqsCy0r4qSQmYLsZYMeyRqzIWOMup03sw==}
     engines: {node: '>=14'}
 
-  framer-motion@12.6.1:
-    resolution: {integrity: sha512-8Atpj4x1foL6JnvUg+IxA/PZk2LjIEETIsFIGD1It6WUY3rZ7jUDzeumASJptz35io+eMnLvHgzgSvtqd7O6Cw==}
+  framer-motion@12.6.2:
+    resolution: {integrity: sha512-7LgPRlPs5aG8UxeZiMCMZz8firC53+2+9TnWV22tuSi38D3IFRxHRUqOREKckAkt6ztX+Dn6weLcatQilJTMcg==}
     peerDependencies:
       '@emotion/is-prop-valid': '*'
       react: ^18.0.0 || ^19.0.0
@@ -3744,8 +3744,8 @@ packages:
     peerDependencies:
       next: '>=13.2.0'
 
-  gel@2.0.0:
-    resolution: {integrity: sha512-Oq3Fjay71s00xzDc0BF/mpcLmnA+uRqMEJK8p5K4PaZjUEsxaeo+kR9OHBVAf289/qPd+0OcLOLUN0UhqiUCog==}
+  gel@2.0.1:
+    resolution: {integrity: sha512-gfem3IGvqKqXwEq7XseBogyaRwGsQGuE7Cw/yQsjLGdgiyqX92G1xENPCE0ltunPGcsJIa6XBOTx/PK169mOqw==}
     engines: {node: '>= 18.0.0'}
     hasBin: true
 
@@ -4452,8 +4452,8 @@ packages:
   motion-utils@12.5.0:
     resolution: {integrity: sha512-+hFFzvimn0sBMP9iPxBa9OtRX35ZQ3py0UHnb8U29VD+d8lQ8zH3dTygJWqK7av2v6yhg7scj9iZuvTS0f4+SA==}
 
-  motion@12.6.1:
-    resolution: {integrity: sha512-pT9OZ+aflhflyY2FcwfNcCMmRFCDCzuc4lFg9Gf5zvx/UMf4rlleuq8P1gQbmcp02gGbgwVI1ZponMfAldR/Vg==}
+  motion@12.6.2:
+    resolution: {integrity: sha512-8OBjjuC59WuWHKmPzVWT5M0t5kDxtkfMfHF1M7Iey6F/nvd0AI15YlPnpGlcagW/eOfkdWDO90U/K5LF/k55Yw==}
     peerDependencies:
       '@emotion/is-prop-valid': '*'
       react: ^18.0.0 || ^19.0.0
@@ -4762,8 +4762,8 @@ packages:
     resolution: {integrity: sha512-cDWgoah1Gez9rN3H4165peY9qfpEo+SA61oQv65O3cRUE1pOEoJWwddwcqKE8XZYjbblOJlYDlLV4h67HrEVDg==}
     engines: {node: '>=12'}
 
-  posthog-js@1.232.7:
-    resolution: {integrity: sha512-9Hqdam80bf41mj30O3ZLgdfDtZqR9TXNpTh7EkJo6C/emerFQEnW7X+E3yyE81KIPON4amSqTj5BL0gg+qZ28w==}
+  posthog-js@1.233.1:
+    resolution: {integrity: sha512-/OgWdJ7xLqKU8LIEsB8ss900DrxY47TDrOEC5zxuK5ngs/mz+6XVFLfI0jz9AqFmZQpa/iuY0rNr2hm6lWStaQ==}
     peerDependencies:
       '@rrweb/types': 2.0.0-alpha.17
       rrweb-snapshot: 2.0.0-alpha.17
@@ -6739,7 +6739,7 @@ snapshots:
       '@oslojs/crypto': 1.0.0
       '@oslojs/encoding': 1.0.0
 
-  '@petamoriken/float16@3.9.1': {}
+  '@petamoriken/float16@3.9.2': {}
 
   '@pilcrowjs/object-parser@0.0.4': {}
 
@@ -8046,7 +8046,7 @@ snapshots:
       normalize-path: 3.0.0
       picomatch: 2.3.1
 
-  arctic@3.5.0:
+  arctic@3.6.0:
     dependencies:
       '@oslojs/crypto': 1.0.1
       '@oslojs/encoding': 1.1.0
@@ -8516,19 +8516,19 @@ snapshots:
     dependencies:
       is-obj: 2.0.0
 
-  drizzle-kit@0.30.5:
+  drizzle-kit@0.30.6:
     dependencies:
       '@drizzle-team/brocli': 0.10.2
       '@esbuild-kit/esm-loader': 2.6.5
       esbuild: 0.19.12
       esbuild-register: 3.6.0(esbuild@0.19.12)
-      gel: 2.0.0
+      gel: 2.0.1
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.41.0(gel@2.0.0)(postgres@3.4.5):
+  drizzle-orm@0.41.0(gel@2.0.1)(postgres@3.4.5):
     optionalDependencies:
-      gel: 2.0.0
+      gel: 2.0.1
       postgres: 3.4.5
 
   dunder-proto@1.0.1:
@@ -9129,7 +9129,7 @@ snapshots:
       cross-spawn: 7.0.6
       signal-exit: 4.1.0
 
-  framer-motion@12.6.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  framer-motion@12.6.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       motion-dom: 12.6.1
       motion-utils: 12.5.0
@@ -9161,9 +9161,9 @@ snapshots:
     dependencies:
       next: 15.2.4(@babel/core@7.26.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
 
-  gel@2.0.0:
+  gel@2.0.1:
     dependencies:
-      '@petamoriken/float16': 3.9.1
+      '@petamoriken/float16': 3.9.2
       debug: 4.4.0
       env-paths: 3.0.0
       semver: 7.7.1
@@ -10071,9 +10071,9 @@ snapshots:
 
   motion-utils@12.5.0: {}
 
-  motion@12.6.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  motion@12.6.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
-      framer-motion: 12.6.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      framer-motion: 12.6.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       tslib: 2.8.1
     optionalDependencies:
       react: 18.3.1
@@ -10346,7 +10346,7 @@ snapshots:
 
   postgres@3.4.5: {}
 
-  posthog-js@1.232.7(@rrweb/types@2.0.0-alpha.17):
+  posthog-js@1.233.1(@rrweb/types@2.0.0-alpha.17):
     dependencies:
       core-js: 3.41.0
       fflate: 0.4.8
