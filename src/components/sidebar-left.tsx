@@ -12,6 +12,7 @@ import {
   Search,
   Settings,
 } from "lucide-react";
+import type { List } from "~/server/models";
 
 import { Badge } from "~/components/ui/badge";
 import {
@@ -162,13 +163,14 @@ export function SidebarLeft({ ...props }: ComponentProps<typeof Sidebar>) {
           mode={mode}
           refetch={refetch}
           setMode={setMode}
-          lists={recentLists.items.map((l) => {
+          lists={recentLists.items.map((l: List) => {
             return {
               id: l.id,
               name: l.name,
               emoji: l.emoji ?? "❔",
               url: "/map/" + l.id,
-              favorite: !!l.tags?.find((t) => t.text == "favorite maps"),
+              favorite:
+                l.tags?.some((t) => t.text === "favorite maps") ?? false,
             };
           })}
         />

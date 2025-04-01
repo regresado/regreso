@@ -70,9 +70,7 @@ export class Throttler<_Key> {
       return true;
     }
     let timeoutSec = this.timeoutSeconds[counter.timeout];
-    if (!timeoutSec) {
-      timeoutSec = 0;
-    }
+    timeoutSec ??= 0;
     const allowed = now - counter.updatedAt >= timeoutSec * 1000;
     if (!allowed) {
       return false;
