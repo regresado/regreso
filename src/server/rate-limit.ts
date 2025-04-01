@@ -69,8 +69,7 @@ export class Throttler<_Key> {
       this.storage.set(key, counter);
       return true;
     }
-    let timeoutSec = this.timeoutSeconds[counter.timeout];
-    timeoutSec ??= 0;
+    const timeoutSec = (this.timeoutSeconds[counter.timeout] ??= 0);
     const allowed = now - counter.updatedAt >= timeoutSec * 1000;
     if (!allowed) {
       return false;
