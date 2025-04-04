@@ -65,8 +65,9 @@ export async function createUser(
     .insert(workspaces)
     .values({
       userId: userRow[0]!.id,
-      name: "My Workspace",
-      description: "This is your first workspace!",
+      name: "Default Workspace",
+      description:
+        "This is your first workspace. Do something awesome with it!",
     })
     .returning({ id: users.id });
   if (!workspaceRow || workspaceRow.length === 0) {
