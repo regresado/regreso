@@ -125,6 +125,7 @@ CREATE TABLE "regreso_workspace" (
 	"name" varchar(256) NOT NULL,
 	"description" varchar(256),
 	"emoji" varchar(256),
+	"created_at" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	"user_id" integer NOT NULL,
 	CONSTRAINT "regreso_workspace_user_id_name_unique" UNIQUE("user_id","name")
 );

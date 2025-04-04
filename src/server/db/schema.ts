@@ -285,6 +285,9 @@ export const workspaces = createTable(
     name: varchar("name", { length: 256 }).notNull(),
     description: varchar("description", { length: 256 }),
     emoji: varchar("emoji", { length: 256 }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
     userId: integer("user_id")
       .notNull()
       .references(() => users.id, {
