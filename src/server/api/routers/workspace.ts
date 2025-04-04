@@ -3,7 +3,7 @@ import { and, asc, desc, eq, or, sql } from "drizzle-orm";
 import { z } from "zod";
 import {
   updateWorkspaceSchema,
-  Workspace,
+  type Workspace,
   workspaceFormSchema,
   workspaceSchema,
   workspaceSearchSchema,
