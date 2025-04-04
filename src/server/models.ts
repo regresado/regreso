@@ -55,6 +55,17 @@ export interface List {
   workspaceId: number;
 }
 
+export interface Workspace {
+  id: number;
+  name: string;
+  description: string | null;
+  emoji: string | null;
+  userId: number;
+  createdAt: Date;
+  destinationCount?: number;
+  listCount?: number;
+}
+
 const destinationTypes = ["location", "note", "file"] as const;
 
 export const destinationFormSchema = z.object({
@@ -78,20 +89,6 @@ export const destinationFormSchema = z.object({
   attachments: z.array(z.string()),
 });
 
-export const destinationSchema = z.object({
-  id: z.number(),
-  userId: z.number(),
-  createdAt: z.date(),
-  updatedAt: z.date().nullable(),
-  tags: z.array(z.object({ id: z.number(), text: z.string() })).optional(),
-  type: z.string(),
-  name: z.string().nullable(),
-  location: z.string().nullable(),
-  body: z.string().nullable(),
-  attachments: z.array(z.any()).optional(),
-  workspaceId: z.number().nullable().optional(),
-});
-
 export const listFormSchema = z.object({
   name: z
     .string()
@@ -110,6 +107,40 @@ export const listFormSchema = z.object({
   tags: z.array(z.object({ id: z.string(), text: z.string() })).min(0),
 });
 
+export const workspaceFormSchema = z.object({
+  name: z
+    .string({
+      required_error: "Please enter a workspace name.",
+    })
+    .min(1, {
+      message: "The name must be at least 1 characters.",
+    })
+    .max(100, {
+      message: "The name must be less than 100 characters.",
+    }),
+  description: z.string().min(0).max(200, {
+    message: "The description must be less than 200 characters.",
+  }),
+  emoji: z.string().min(1).max(5, {
+    message: "The emoji must be 1 character.",
+  }),
+  newDefault: z.boolean().optional(),
+});
+
+export const destinationSchema = z.object({
+  id: z.number(),
+  userId: z.number(),
+  createdAt: z.date(),
+  updatedAt: z.date().nullable(),
+  tags: z.array(z.object({ id: z.number(), text: z.string() })).optional(),
+  type: z.string(),
+  name: z.string().nullable(),
+  location: z.string().nullable(),
+  body: z.string().nullable(),
+  attachments: z.array(z.any()).optional(),
+  workspaceId: z.number().nullable().optional(),
+});
+
 export const listSchema = z.object({
   id: z.number(),
   userId: z.number(),
@@ -121,6 +152,15 @@ export const listSchema = z.object({
   emoji: z.string().nullable(),
   workspaceId: z.number().nullable().optional(),
   description: z.string().nullable(),
+});
+
+export const workspaceSchema = z.object({
+  id: z.number(),
+  userId: z.number(),
+  createdAt: z.date(),
+  name: z.string(),
+  description: z.string().nullable(),
+  emoji: z.string().nullable(),
 });
 
 export const updateDestinationSchema = z.object({
@@ -156,5 +196,15 @@ export const listSearchSchema = z.object({
   searchString: z.string().nullable().optional(),
   onlyFavorites: z.boolean().optional(),
   limit: z.number().optional().default(5),
+  offset: z.number().optional().default(0),
+});
+
+export const workspaceSearchSchema = z.object({
+  searchString: z.string().nullable().optional(),
+  sortBy: z
+    .enum(["createdAt", "updatedAt", "destinationCount", "listCount"])
+    .optional(),
+  order: z.enum(["ASC", "DESC"]).optional(),
+  limit: z.number().max(30).optional().default(5),
   offset: z.number().optional().default(0),
 });
