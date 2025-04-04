@@ -79,6 +79,7 @@ export const destinationRouter = createTRPCRouter({
             input.tags.map((tag) => {
               return {
                 userId: ctx.user.id,
+                workspaceId: ctx.user.workspaceId ?? 0,
                 name: tag.text,
                 shortcut: tag.text.toLowerCase().replace(/\s/g, "-"),
               };
@@ -309,6 +310,7 @@ export const destinationRouter = createTRPCRouter({
             input.tags.map((tag) => {
               return {
                 userId: ctx.user.id,
+                workspaceId: ctx.user.workspaceId ?? 0,
                 name: tag.text,
                 shortcut: tag.text.toLowerCase().replace(/\s/g, "-"),
               };
