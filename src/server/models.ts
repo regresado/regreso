@@ -140,7 +140,7 @@ export const destinationSchema = z.object({
   location: z.string().nullable(),
   body: z.string().nullable(),
   attachments: z.array(z.any()).optional(),
-  workspaceId: z.number().nullable().optional(),
+  workspaceId: z.number(),
 });
 
 export const listSchema = z.object({
@@ -152,7 +152,7 @@ export const listSchema = z.object({
   size: z.number().optional(),
   name: z.string(),
   emoji: z.string().nullable(),
-  workspaceId: z.number().nullable().optional(),
+  workspaceId: z.number(),
   description: z.string().nullable(),
 });
 
