@@ -87,6 +87,7 @@ export const destinationFormSchema = z.object({
     .nullable(),
   tags: z.array(z.object({ id: z.string(), text: z.string() })).min(0),
   attachments: z.array(z.string()),
+  workspaceId: z.number().optional(),
 });
 
 export const listFormSchema = z.object({
@@ -105,6 +106,7 @@ export const listFormSchema = z.object({
     message: "The description must be less than 200 characters.",
   }),
   tags: z.array(z.object({ id: z.string(), text: z.string() })).min(0),
+  workspaceId: z.number().optional(),
 });
 
 export const workspaceFormSchema = z.object({
@@ -173,6 +175,12 @@ export const updateListSchema = z.object({
   ...listFormSchema.partial().shape,
   newTags: z.array(z.string()).optional(),
   removedTags: z.array(z.string()).optional(),
+});
+
+export const updateWorkspaceSchema = z.object({
+  id: z.number(),
+  ...workspaceFormSchema.partial().shape,
+  newDefault: z.boolean().optional(),
 });
 
 const destinationSearchTypes = ["location", "note", "any"] as const;
