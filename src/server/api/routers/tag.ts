@@ -17,12 +17,12 @@ import { destinations, lists, users, workspaces } from "~/server/db/schema";
 
 import { createTRPCRouter } from "../trpc";
 
-export const workspaceRouter = createTRPCRouter({
+export const tagRouter = createTRPCRouter({
   create: protectedMutationProcedure
     .meta({
       openapi: {
         method: "POST",
-        path: "/v1/workspaces",
+        path: "/v1/tags",
         protect: true,
       },
     })
@@ -77,15 +77,15 @@ export const workspaceRouter = createTRPCRouter({
             workspace: workspaces,
             count: sql<number>`count(*) over()`,
             destinationCount: sql<number>`(
-              SELECT COUNT(*)
-              FROM ${destinations}
-              WHERE ${destinations.workspaceId} = ${workspaces.id}
-            )`,
+            SELECT COUNT(*)
+            FROM ${destinations}
+            WHERE ${destinations.workspaceId} = ${workspaces.id}
+          )`,
             listCount: sql<number>`(
-              SELECT COUNT(*)
-              FROM ${lists}
-              WHERE ${lists.workspaceId} = ${workspaces.id}
-            )`,
+            SELECT COUNT(*)
+            FROM ${lists}
+            WHERE ${lists.workspaceId} = ${workspaces.id}
+          )`,
           })
           .from(workspaces)
           .where(
@@ -93,8 +93,8 @@ export const workspaceRouter = createTRPCRouter({
               and(
                 input.searchString && input.searchString.length > 0
                   ? sql`(setweight(to_tsvector('english', ${workspaces.name}), 'A') ||
-          setweight(to_tsvector('english', ${workspaces.description}), 'B'))
-          @@ websearch_to_tsquery  ('english', ${input.searchString})`
+        setweight(to_tsvector('english', ${workspaces.description}), 'B'))
+        @@ websearch_to_tsquery  ('english', ${input.searchString})`
                   : undefined,
               ),
 
@@ -197,7 +197,7 @@ export const workspaceRouter = createTRPCRouter({
     .meta({
       openapi: {
         method: "DELETE",
-        path: "/v1/workspace/{id}",
+        path: "/v1/list/{id}",
         protect: true,
       },
     })
@@ -205,10 +205,8 @@ export const workspaceRouter = createTRPCRouter({
     .output(z.object({ success: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
       await ctx.db
-        .delete(workspaces)
-        .where(
-          and(eq(workspaces.id, input.id), eq(workspaces.userId, ctx.user.id)),
-        );
+        .delete(lists)
+        .where(and(eq(lists.id, input.id), eq(lists.userId, ctx.user.id)));
       return {
         success: true,
       };
@@ -217,7 +215,7 @@ export const workspaceRouter = createTRPCRouter({
     .meta({
       openapi: {
         method: "GET",
-        path: "/v1/workspace/{id}",
+        path: "/v1/list/{id}",
         protect: true,
       },
     })
@@ -226,28 +224,28 @@ export const workspaceRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const wkspcData = await ctx.db
         .select({
-          id: workspaces.id,
-          name: workspaces.name,
-          description: workspaces.description,
-          emoji: workspaces.emoji,
-          createdAt: workspaces.createdAt,
-          userId: workspaces.userId,
+          id: lists.id,
+          name: lists.name,
+          description: lists.description,
+          emoji: lists.emoji,
+          createdAt: lists.createdAt,
+          userId: lists.userId,
+          workspaceId: lists.workspaceId,
           count: sql<number>`count(*) over()`,
           destinationCount: sql<number>`(
-            SELECT COUNT(*)
-            FROM ${destinations}
-            WHERE ${destinations.workspaceId} = ${workspaces.id}
-          )`,
+          SELECT COUNT(*)
+          FROM ${destinations}
+          WHERE ${destinations.workspaceId} = ${workspaces.id}
+        )`,
           listCount: sql<number>`(
-            SELECT COUNT(*)
-            FROM ${lists}
-            WHERE ${lists.workspaceId} = ${workspaces.id}
-          )`,
+          SELECT COUNT(*)
+          FROM ${lists}
+          WHERE ${lists.workspaceId} = ${workspaces.id}
+        )`,
         })
         .from(workspaces)
-        .where(
-          and(eq(workspaces.id, input.id), eq(workspaces.userId, ctx.user.id)),
-        )
+        .where(and(eq(lists.id, input.id), eq(lists.userId, ctx.user.id)))
+        .groupBy(lists.id)
         .limit(1);
 
       if (!wkspcData || wkspcData.length === 0 || !wkspcData[0]) {
