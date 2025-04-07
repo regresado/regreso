@@ -90,6 +90,10 @@ CREATE TABLE "regreso_tag" (
 	"name" varchar(256) NOT NULL,
 	"user_id" integer NOT NULL,
 	"workspace_id" integer NOT NULL,
+	"created_at" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	"description" varchar(256),
+	"color" varchar(256),
 	CONSTRAINT "regreso_tag_user_id_name_unique" UNIQUE("user_id","name"),
 	CONSTRAINT "regreso_tag_user_id_shortcut_unique" UNIQUE("user_id","shortcut")
 );

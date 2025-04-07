@@ -176,6 +176,15 @@ export const tags = createTable(
         onDelete: "cascade",
       })
       .notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull()
+      .$onUpdate(() => new Date()),
+    description: varchar("description", { length: 256 }),
+    color: varchar("color", { length: 256 }),
   },
   (tag) => ({
     searchIndex: index("tag_search_index").using(
