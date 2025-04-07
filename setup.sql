@@ -159,3 +159,5 @@ CREATE INDEX "tag_search_index" ON "regreso_tag" USING gin (setweight(to_tsvecto
 CREATE INDEX "email_index" ON "regreso_user" USING btree ("email");
 CREATE INDEX "google_id_index" ON "regreso_user" USING btree ("google_id");
 CREATE INDEX "github_id_index" ON "regreso_user" USING btree ("github_id");
+CREATE INDEX "workspace_searc_index" ON "regreso_workspace" USING gin (setweight(to_tsvector('english', "name"), 'A') ||
+            setweight(to_tsvector('english', "description"), 'B'));

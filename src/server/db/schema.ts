@@ -296,6 +296,11 @@ export const workspaces = createTable(
   },
   (workspace) => ({
     uniqueWorkspaceName: unique().on(workspace.userId, workspace.name),
+    searchIndex: index("workspace_searc_index").using(
+      "gin",
+      sql`setweight(to_tsvector('english', ${workspace.name}), 'A') ||
+            setweight(to_tsvector('english', ${workspace.description}), 'B')`,
+    ),
   }),
 );
 
