@@ -2,7 +2,7 @@ import { and, eq } from "drizzle-orm";
 import type { User } from "~/server/models";
 
 import { db } from "~/server/db";
-import { users, workspaces } from "~/server/db/schema";
+import { destinations, users, workspaces } from "~/server/db/schema";
 import { decryptToString, encryptString } from "~/server/encryption";
 import { hashPassword } from "~/server/password";
 import { generateRandomRecoveryCode } from "~/server/utils";
@@ -74,6 +74,16 @@ export async function createUser(
     throw new Error("Unexpected error (user created but workspace not)");
   }
   const workspaceId = workspaceRow[0]!.id;
+  await db.insert(destinations).values({
+    userId: userRow[0]!.id,
+    workspaceId,
+    body: "",
+    name: "Regreso | find your way back",
+    type: "location",
+    location: "https://regreso.netlify.app",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  });
   await db
     .update(users)
     .set({ workspaceId })
