@@ -1,4 +1,4 @@
-import { relations, sql, type InferSelectModel } from "drizzle-orm";
+import { InferSelectModel, relations, sql, type InferModel } from "drizzle-orm";
 import {
   boolean,
   index,
@@ -30,9 +30,12 @@ export const users = createTable(
     recoveryCode: varchar("recovery_code").notNull(),
     avatarUrl: text("avatar_url"),
     bio: text("bio").default("Pelicans are epic"),
-    workspaceId: integer("workspace_id").references((): any => workspaces.id, {
-      onDelete: "cascade",
-    }),
+    workspaceId: integer("workspace_id")
+      .references((): any => workspaces.id, {
+        onDelete: "set default",
+        onUpdate: "cascade",
+      })
+      .default(0),
   },
   (user) => ({
     emailIndex: index("email_index").on(user.email),

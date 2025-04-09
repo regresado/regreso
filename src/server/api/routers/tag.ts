@@ -2,18 +2,18 @@ import { TRPCError } from "@trpc/server";
 import { and, asc, desc, eq, sql } from "drizzle-orm";
 import { z } from "zod";
 import {
-  updateWorkspaceSchema,
-  workspaceFormSchema,
-  workspaceSchema,
-  workspaceSearchSchema,
-  type Workspace,
+  tagFormSchema,
+  tagSchema,
+  tagSearchSchema,
+  updateTagSchema,
+  type Tag,
 } from "~/server/models";
 
 import {
   protectedMutationProcedure,
   protectedQueryProcedure,
 } from "~/server/api/trpc";
-import { destinations, lists, users, workspaces } from "~/server/db/schema";
+import { destinationTags, lists, listTags, tags } from "~/server/db/schema";
 
 import { createTRPCRouter } from "../trpc";
 
@@ -26,27 +26,24 @@ export const tagRouter = createTRPCRouter({
         protect: true,
       },
     })
-    .input(workspaceFormSchema)
+    .input(tagFormSchema)
     .output(z.object({ success: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
-      const workspaceRows = await ctx.db
-        .insert(workspaces)
+      const tagRows = await ctx.db
+        .insert(tags)
         .values({
           userId: ctx.user.id,
           name: input.name,
           description: input.description,
+          color: input.color,
+          shortcut: input.shortcut,
+          workspaceId: input.workspaceId,
         })
         .returning({
-          id: workspaces.id,
+          id: tags.id,
         });
-      if (!workspaceRows || workspaceRows.length == 0 || !workspaceRows[0]) {
-        throw new Error("Unexpected error");
-      }
-      if (input.newDefault) {
-        await ctx.db
-          .update(users)
-          .set({ workspaceId: workspaceRows[0].id })
-          .where(eq(users.id, ctx.user.id));
+      if (!tagRows || tagRows.length == 0 || !tagRows[0]) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Unexpected error" });
       }
       return {
         success: true,
@@ -56,138 +53,118 @@ export const tagRouter = createTRPCRouter({
     .meta({
       openapi: {
         method: "GET",
-        path: "/v1/workspaces",
+        path: "/v1/tags",
         protect: true,
       },
     })
-    .input(workspaceSearchSchema)
+    .input(tagSearchSchema)
     .output(
       z.object({
-        items: z.array(workspaceSchema),
+        items: z.array(tagSchema),
         count: z.number(),
       }),
     )
-    .query(
-      async ({
-        ctx,
-        input,
-      }): Promise<{ items: Workspace[]; count: number }> => {
-        const wkspcs = await ctx.db
-          .select({
-            workspace: workspaces,
-            count: sql<number>`count(*) over()`,
-            destinationCount: sql<number>`(
+    .query(async ({ ctx, input }): Promise<{ items: Tag[]; count: number }> => {
+      const tgs = await ctx.db
+        .select({
+          tag: tags,
+          count: sql<number>`count(*) over()`,
+          destinationCount: sql<number>`(
             SELECT COUNT(*)
-            FROM ${destinations}
-            WHERE ${destinations.workspaceId} = ${workspaces.id}
+            FROM ${destinationTags}
+            WHERE ${destinationTags.tagId} = ${tags.id}
           )`,
-            listCount: sql<number>`(
+          listCount: sql<number>`(
             SELECT COUNT(*)
-            FROM ${lists}
-            WHERE ${lists.workspaceId} = ${workspaces.id}
+            FROM ${listTags}
+            WHERE ${listTags.tagId} = ${tags.id}
           )`,
-          })
-          .from(workspaces)
-          .where(
+        })
+        .from(tags)
+        .where(
+          and(
             and(
-              and(
-                input.searchString && input.searchString.length > 0
-                  ? sql`(setweight(to_tsvector('english', ${workspaces.name}), 'A') ||
-        setweight(to_tsvector('english', ${workspaces.description}), 'B'))
+              input.searchString && input.searchString.length > 0
+                ? sql`(setweight(to_tsvector('english', ${tags.name}), 'A') ||
+        setweight(to_tsvector('english', ${tags.description}), 'B'))
         @@ websearch_to_tsquery  ('english', ${input.searchString})`
-                  : undefined,
-              ),
-
-              eq(workspaces.userId, ctx.user.id),
+                : undefined,
             ),
-          )
-          .orderBy(
-            input.order === "ASC"
-              ? asc(
-                  input.sortBy === "destinationCount"
-                    ? sql`destinationCount`
-                    : input.sortBy === "listCount"
-                      ? sql`listCount`
-                      : workspaces.createdAt,
-                )
-              : desc(
-                  input.sortBy === "destinationCount"
-                    ? sql`destinationCount`
-                    : input.sortBy === "listCount"
-                      ? sql`listCount`
-                      : workspaces.createdAt,
-                ),
-          )
-          .limit(input.limit)
-          .offset(input.offset);
 
-        const returnLists: Workspace[] = wkspcs.map((workspace) => {
-          return {
-            destinationCount:
-              (typeof workspace.destinationCount == "string"
-                ? parseInt(workspace.destinationCount)
-                : workspace.destinationCount) ?? 0,
-            listCount:
-              (typeof workspace.listCount == "string"
-                ? parseInt(workspace.listCount)
-                : workspace.listCount) ?? 0,
-            ...workspace.workspace,
-            emoji: workspace.workspace?.emoji
-              ? workspace.workspace?.emoji.match(
-                  /(\p{Emoji_Presentation}|\p{Extended_Pictographic})/gu,
-                )
-                ? (workspace.workspace?.emoji.match(
-                    /(\p{Emoji_Presentation}|\p{Extended_Pictographic})/gu,
-                  )?.[0] ?? null)
-                : null
-              : null,
-          };
-        });
-        if (!wkspcs || wkspcs.length === 0) {
-          throw new TRPCError({
-            code: "NOT_FOUND",
-            message: "No lists found",
-          });
-        }
+            eq(tags.userId, ctx.user.id),
+          ),
+        )
+        .orderBy(
+          input.order === "ASC"
+            ? asc(
+                input.sortBy === "destinationCount"
+                  ? sql`destinationCount`
+                  : input.sortBy === "listCount"
+                    ? sql`listCount`
+                    : tags.createdAt,
+              )
+            : desc(
+                input.sortBy === "destinationCount"
+                  ? sql`destinationCount`
+                  : input.sortBy === "listCount"
+                    ? sql`listCount`
+                    : tags.createdAt,
+              ),
+        )
+        .limit(input.limit)
+        .offset(input.offset);
+
+      const returnTags: Tag[] = tgs.map((tag) => {
         return {
-          items: returnLists,
-          count:
-            (typeof wkspcs[0]?.count == "string"
-              ? parseInt(wkspcs[0]?.count)
-              : wkspcs[0]?.count) ?? 0,
+          destinationCount:
+            (typeof tag.destinationCount == "string"
+              ? parseInt(tag.destinationCount)
+              : tag.destinationCount) ?? 0,
+          listCount:
+            (typeof tag.listCount == "string"
+              ? parseInt(tag.listCount)
+              : tag.listCount) ?? 0,
+          text: tag.tag.name, // Assuming 'name' should be used as 'text'
+          ...tag.tag,
         };
-      },
-    ),
+      });
+      if (!tgs || tgs.length === 0) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "No tags found",
+        });
+      }
+      return {
+        items: returnTags,
+        count:
+          (typeof tgs[0]?.count == "string"
+            ? parseInt(tgs[0]?.count)
+            : tgs[0]?.count) ?? 0,
+      };
+    }),
   update: protectedMutationProcedure
     .meta({
       openapi: {
         method: "PATCH",
-        path: "/v1/workspace/{id}",
+        path: "/v1/tag/{id}",
         protect: true,
       },
     })
-    .input(updateWorkspaceSchema)
+    .input(updateTagSchema)
     .output(z.object({ success: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
-      let workspaceRows = null;
-      if (input.name || input.emoji || input.description) {
-        workspaceRows = await ctx.db
-          .update(lists)
-          .set({
-            name: input.name,
-            description: input.description,
-            emoji: input.emoji,
-          })
-          .where(and(eq(lists.id, input.id), eq(lists.userId, ctx.user.id)))
-          .returning({
-            id: lists.id,
-          });
-      } else {
-        workspaceRows = await ctx.db.query.lists.findMany({
-          columns: { id: true },
-          where: and(eq(lists.id, input.id), eq(lists.userId, ctx.user.id)),
+      await ctx.db
+        .update(tags)
+        .set({
+          name: input.name,
+          description: input.description,
+          color: input.color,
+          shortcut: input.shortcut,
+        })
+        .where(and(eq(tags.id, input.id), eq(tags.userId, ctx.user.id)))
+        .returning({
+          id: tags.id,
         });
-      }
 
       return {
         success: true,
@@ -197,7 +174,7 @@ export const tagRouter = createTRPCRouter({
     .meta({
       openapi: {
         method: "DELETE",
-        path: "/v1/list/{id}",
+        path: "/v1/tag/{id}",
         protect: true,
       },
     })
@@ -205,8 +182,8 @@ export const tagRouter = createTRPCRouter({
     .output(z.object({ success: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
       await ctx.db
-        .delete(lists)
-        .where(and(eq(lists.id, input.id), eq(lists.userId, ctx.user.id)));
+        .delete(tags)
+        .where(and(eq(tags.id, input.id), eq(tags.userId, ctx.user.id)));
       return {
         success: true,
       };
@@ -215,80 +192,69 @@ export const tagRouter = createTRPCRouter({
     .meta({
       openapi: {
         method: "GET",
-        path: "/v1/list/{id}",
+        path: "/v1/tag/{id}",
         protect: true,
       },
     })
     .input(z.object({ id: z.number() }))
-    .output(workspaceSchema)
+    .output(tagSchema)
     .query(async ({ ctx, input }) => {
-      const wkspcData = await ctx.db
+      const tgData = await ctx.db
         .select({
-          id: lists.id,
-          name: lists.name,
-          description: lists.description,
-          emoji: lists.emoji,
-          createdAt: lists.createdAt,
-          userId: lists.userId,
-          workspaceId: lists.workspaceId,
+          id: tags.id,
+          name: tags.name,
+          description: tags.description,
+          color: tags.color,
+          shortcut: tags.shortcut,
+          createdAt: tags.createdAt,
+          updatedAt: tags.updatedAt,
+          userId: tags.userId,
+          workspaceId: tags.workspaceId,
           count: sql<number>`count(*) over()`,
           destinationCount: sql<number>`(
           SELECT COUNT(*)
-          FROM ${destinations}
-          WHERE ${destinations.workspaceId} = ${workspaces.id}
+          FROM ${destinationTags}
+          WHERE ${destinationTags.tagId} = ${tags.id}
         )`,
           listCount: sql<number>`(
           SELECT COUNT(*)
           FROM ${lists}
-          WHERE ${lists.workspaceId} = ${workspaces.id}
+          WHERE ${listTags.tagId} = ${tags.id}
         )`,
         })
-        .from(workspaces)
-        .where(and(eq(lists.id, input.id), eq(lists.userId, ctx.user.id)))
-        .groupBy(lists.id)
+        .from(tags)
+        .where(and(eq(tags.id, input.id), eq(tags.userId, ctx.user.id)))
         .limit(1);
 
-      if (!wkspcData || wkspcData.length === 0 || !wkspcData[0]) {
+      if (!tgData || tgData.length === 0 || !tgData[0]) {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "List not found or access denied",
+          message: "Tag not found or access denied",
         });
       }
 
-      const wkspc: Workspace | undefined =
-        wkspcData.length > 0
+      const tg: Tag | undefined =
+        tgData.length > 0
           ? {
-              ...wkspcData[0],
+              ...tgData[0],
               destinationCount:
-                (typeof wkspcData[0]?.destinationCount == "string"
-                  ? parseInt(wkspcData[0]?.destinationCount)
-                  : wkspcData[0]?.destinationCount) ?? 0,
+                (typeof tgData[0]?.destinationCount == "string"
+                  ? parseInt(tgData[0]?.destinationCount)
+                  : tgData[0]?.destinationCount) ?? 0,
               listCount:
-                (typeof wkspcData[0]?.listCount == "string"
-                  ? parseInt(wkspcData[0]?.listCount)
-                  : wkspcData[0]?.listCount) ?? 0,
+                (typeof tgData[0]?.listCount == "string"
+                  ? parseInt(tgData[0]?.listCount)
+                  : tgData[0]?.listCount) ?? 0,
             }
           : undefined;
 
-      if (!wkspc) {
+      if (!tg) {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "List not found or access denied",
+          message: "Tag not found or access denied",
         });
       }
 
-      return {
-        ...wkspc,
-        emoji:
-          (wkspc?.emoji
-            ? wkspc?.emoji.match(
-                /(\p{Emoji_Presentation}|\p{Extended_Pictographic})/gu,
-              )
-              ? (wkspc?.emoji.match(
-                  /(\p{Emoji_Presentation}|\p{Extended_Pictographic})/gu,
-                )?.[0] ?? null)
-              : null
-            : null) ?? "❔",
-      };
+      return tg;
     }),
 });

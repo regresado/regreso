@@ -487,7 +487,10 @@ export const destinationRouter = createTRPCRouter({
       });
 
       if (!destination) {
-        throw new Error("Destination not found or does not belong to the user");
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Destination not found or does not belong to the user",
+        });
       }
 
       const validLists = await ctx.db.query.lists.findMany({

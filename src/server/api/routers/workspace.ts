@@ -40,7 +40,7 @@ export const workspaceRouter = createTRPCRouter({
           id: workspaces.id,
         });
       if (!workspaceRows || workspaceRows.length == 0 || !workspaceRows[0]) {
-        throw new Error("Unexpected error");
+        throw new TRPCError({ message: "Unexpected error", code: "NOT_FOUND" });
       }
       if (input.newDefault) {
         await ctx.db
@@ -121,7 +121,7 @@ export const workspaceRouter = createTRPCRouter({
           .limit(input.limit)
           .offset(input.offset);
 
-        const returnLists: Workspace[] = wkspcs.map((workspace) => {
+        const returnWorkspaces: Workspace[] = wkspcs.map((workspace) => {
           return {
             destinationCount:
               (typeof workspace.destinationCount == "string"
@@ -146,11 +146,11 @@ export const workspaceRouter = createTRPCRouter({
         if (!wkspcs || wkspcs.length === 0) {
           throw new TRPCError({
             code: "NOT_FOUND",
-            message: "No lists found",
+            message: "No workspaces found",
           });
         }
         return {
-          items: returnLists,
+          items: returnWorkspaces,
           count:
             (typeof wkspcs[0]?.count == "string"
               ? parseInt(wkspcs[0]?.count)
@@ -169,25 +169,19 @@ export const workspaceRouter = createTRPCRouter({
     .input(updateWorkspaceSchema)
     .output(z.object({ success: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
-      let workspaceRows = null;
-      if (input.name || input.emoji || input.description) {
-        workspaceRows = await ctx.db
-          .update(lists)
-          .set({
-            name: input.name,
-            description: input.description,
-            emoji: input.emoji,
-          })
-          .where(and(eq(lists.id, input.id), eq(lists.userId, ctx.user.id)))
-          .returning({
-            id: lists.id,
-          });
-      } else {
-        workspaceRows = await ctx.db.query.lists.findMany({
-          columns: { id: true },
-          where: and(eq(lists.id, input.id), eq(lists.userId, ctx.user.id)),
+      await ctx.db
+        .update(workspaces)
+        .set({
+          name: input.name,
+          description: input.description,
+          emoji: input.emoji,
+        })
+        .where(
+          and(eq(workspaces.id, input.id), eq(workspaces.userId, ctx.user.id)),
+        )
+        .returning({
+          id: workspaces.id,
         });
-      }
 
       return {
         success: true,
@@ -253,7 +247,7 @@ export const workspaceRouter = createTRPCRouter({
       if (!wkspcData || wkspcData.length === 0 || !wkspcData[0]) {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "List not found or access denied",
+          message: "Workspace not found or access denied",
         });
       }
 
@@ -275,7 +269,7 @@ export const workspaceRouter = createTRPCRouter({
       if (!wkspc) {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "List not found or access denied",
+          message: "Workspace not found or access denied",
         });
       }
 
