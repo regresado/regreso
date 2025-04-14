@@ -216,8 +216,8 @@ importers:
         specifier: ^3.4.4
         version: 3.4.5
       posthog-js:
-        specifier: ^1.235.5
-        version: 1.235.5(@rrweb/types@2.0.0-alpha.17)
+        specifier: ^1.235.6
+        version: 1.235.6(@rrweb/types@2.0.0-alpha.17)
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -4622,8 +4622,8 @@ packages:
     resolution: {integrity: sha512-cDWgoah1Gez9rN3H4165peY9qfpEo+SA61oQv65O3cRUE1pOEoJWwddwcqKE8XZYjbblOJlYDlLV4h67HrEVDg==}
     engines: {node: '>=12'}
 
-  posthog-js@1.235.5:
-    resolution: {integrity: sha512-uTvYm8dJ/xAqq385IKGVcPALf0F4G/cQ3eMQO8JQzwZUUoYggBKzp4NuzXZHDSfvxgDZDchi7yfZupbVVdVn9A==}
+  posthog-js@1.235.6:
+    resolution: {integrity: sha512-zQE5WCjOas6FY9lUfGn61Tj4n87kNsN9M9/XfEO3lPHffoFFIBO8OVEpe6EMUaSVfBG4GpaB5EoyvX1Hi0tIPA==}
     peerDependencies:
       '@rrweb/types': 2.0.0-alpha.17
       rrweb-snapshot: 2.0.0-alpha.17
@@ -10082,7 +10082,7 @@ snapshots:
 
   postgres@3.4.5: {}
 
-  posthog-js@1.235.5(@rrweb/types@2.0.0-alpha.17):
+  posthog-js@1.235.6(@rrweb/types@2.0.0-alpha.17):
     dependencies:
       core-js: 3.41.0
       fflate: 0.4.8
