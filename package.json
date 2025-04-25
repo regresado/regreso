@@ -34,7 +34,7 @@
     "@oslojs/otp": "^1.1.0",
     "@oslojs/webauthn": "^1.0.0",
     "@pilcrowjs/object-parser": "^0.0.4",
-    "@radix-ui/react-avatar": "^1.1.4",
+    "@radix-ui/react-avatar": "^1.1.7",
     "@radix-ui/react-checkbox": "^1.2.3",
     "@radix-ui/react-collapsible": "^1.1.8",
     "@radix-ui/react-dialog": "^1.1.11",
