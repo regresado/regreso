@@ -4,14 +4,19 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
+import {
+  TagsInputClear,
+  TagsInputInput,
+  TagsInputItem,
+} from "@diceui/tags-input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "~/trpc/react";
-import { TagInput, type Tag } from "emblor";
 import {
   ArrowRight,
   ListPlus,
   Loader2,
   MapPinPlus,
+  RefreshCcw,
   Search,
   X,
 } from "lucide-react";
@@ -58,6 +63,7 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { Separator } from "~/components/ui/separator";
+import { TagsInput, TagsInputList } from "~/components/ui/tags-input";
 import { toast } from "~/components/hooks/use-toast";
 
 import { DestinationCard, DestinationForm } from "./destination";
@@ -79,27 +85,9 @@ export function SearchForm({ searchType }: { searchType: "maps" | "pins" }) {
 
   const [submitType, setSubmitType] = useState(searchType);
 
-  const [tags, setTags] = useState<Tag[]>(
-    searchParams.get("tags") && searchParams.get("tags")!.split(",").length > 0
-      ? searchParams
-          .get("tags")!
-          .split(",")
-          .map(
-            (tag) =>
-              ({
-                text: tag,
-                id: Math.floor(Math.random() * 1000000000).toString(),
-              }) as Tag,
-          )
-      : [],
-  );
-
   const form = useForm<
     z.infer<typeof listSearchSchema> | z.infer<typeof destinationSearchSchema>
   >({
-    resolver: zodResolver(
-      searchType === "maps" ? listSearchSchema : destinationSearchSchema,
-    ),
     defaultValues:
       searchType === "maps"
         ? {
@@ -255,27 +243,33 @@ export function SearchForm({ searchType }: { searchType: "maps" | "pins" }) {
               name="tags"
               render={({ field }) => (
                 <FormControl>
-                  <TagInput
-                    {...field}
-                    placeholder="Search with tags..."
-                    tags={tags}
-                    className="sm:min-w-[450px]"
-                    setTags={(newTags) => {
-                      setTags(newTags);
+                  <TagsInput
+                    className="flex w-full flex-row items-center"
+                    value={form.watch("tags") ?? []}
+                    onValueChange={(newTags) => {
                       form.setValue(
                         "tags",
-                        (newTags as [Tag, ...Tag[]]).map(
-                          (tag: Tag) => tag.text,
-                        ),
-                        { shouldDirty: true },
+                        newTags.map((tag) => tag.replace(" ", "-")),
                       );
                     }}
-                    styleClasses={{
-                      input: "w-full sm:max-w-[350px]",
-                    }}
-                    activeTagIndex={activeTagIndex}
-                    setActiveTagIndex={setActiveTagIndex}
-                  />
+                    editable
+                    addOnPaste
+                  >
+                    <TagsInputList>
+                      {(form.watch("tags") ?? []).map((tag) => (
+                        <TagsInputItem key={tag} value={tag}>
+                          {tag}
+                        </TagsInputItem>
+                      ))}
+                      <TagsInputInput placeholder="Add some tags..." />
+                    </TagsInputList>
+                    <TagsInputClear asChild>
+                      <Button variant="outline">
+                        <RefreshCcw className="h-4 w-4" />
+                        Clear
+                      </Button>
+                    </TagsInputClear>
+                  </TagsInput>
                 </FormControl>
               )}
             />
@@ -381,7 +375,6 @@ export function SearchForm({ searchType }: { searchType: "maps" | "pins" }) {
           disabled={!form.formState.isDirty}
           onClick={() => {
             form.reset();
-            setTags([]);
             if (form.getValues() != submitValues) {
               void form.handleSubmit(onSubmit)();
             }

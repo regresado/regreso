@@ -10,7 +10,6 @@ import { EditorContent, useEditor } from "@tiptap/react";
 import { type TRPCClientErrorLike } from "@trpc/client";
 import { type UseTRPCMutationResult } from "@trpc/react-query/shared";
 import { api } from "~/trpc/react";
-import { TagInput, type Tag } from "emblor";
 import {
   ArrowRight,
   GalleryVerticalEnd,
@@ -18,6 +17,7 @@ import {
   MapPinPlus,
   Pencil,
   Plus,
+  RefreshCcw,
   RefreshCw,
   Telescope,
 } from "lucide-react";
@@ -78,6 +78,13 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { Separator } from "~/components/ui/separator";
+import {
+  TagsInput,
+  TagsInputClear,
+  TagsInputInput,
+  TagsInputItem,
+  TagsInputList,
+} from "~/components/ui/tags-input";
 import { toast } from "~/components/hooks/use-toast";
 import { MinimalTiptapEditor } from "~/components/minimal-tiptap";
 import { createExtensions } from "~/components/minimal-tiptap/hooks/use-minimal-tiptap";
@@ -138,8 +145,6 @@ export function DestinationForm(props: DestinationFormProps) {
     props.update ? true : false,
   );
 
-  const [tags, setTags] = useState<Tag[]>([]);
-
   const [detailsState, action] = useActionState(getWebDetailsAction, {
     error: "",
     url: undefined,
@@ -183,7 +188,6 @@ export function DestinationForm(props: DestinationFormProps) {
         tags: props.defaultValues?.tags ?? [],
         attachments: [],
       });
-      setTags(props.defaultValues?.tags ?? []);
     }
   }, [props.defaultValues, form, loadingUpdate, props.update]);
   const location = form.watch("location");
@@ -232,7 +236,6 @@ export function DestinationForm(props: DestinationFormProps) {
         tags: props.defaultValues?.tags ?? [],
         attachments: [],
       });
-      setTags(props.defaultValues?.tags ?? []);
       setLoading(false);
       setLoadingUpdate(false);
     }
@@ -247,8 +250,6 @@ export function DestinationForm(props: DestinationFormProps) {
     props.defaultValues?.tags,
   ]);
 
-  const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
-
   function onSubmit(data: z.infer<typeof destinationFormSchema>) {
     if (props.update) {
       if (!props.updateId) {
@@ -262,7 +263,6 @@ export function DestinationForm(props: DestinationFormProps) {
 
   const submitMutation = props.destinationMutation(() => {
     form.reset();
-    setTags([]);
     destinationTypeForm.reset();
   });
 
@@ -284,7 +284,6 @@ export function DestinationForm(props: DestinationFormProps) {
             }
             setLoading(true);
             form.reset();
-            setTags([]);
 
             e.currentTarget?.requestSubmit();
           }}
@@ -423,21 +422,36 @@ export function DestinationForm(props: DestinationFormProps) {
                   <FormItem className="flex flex-col items-start">
                     <FormLabel className="text-left">Tags</FormLabel>
                     <FormControl>
-                      <TagInput
-                        {...field}
-                        placeholder="Enter some tags..."
-                        tags={tags}
-                        className="sm:min-w-[450px]"
-                        setTags={(newTags) => {
-                          setTags(newTags);
-                          form.setValue("tags", newTags as [Tag, ...Tag[]]);
+                      <TagsInput
+                        className="flex w-full flex-row items-center"
+                        value={form.watch("tags").map((tag) => tag.text)}
+                        onValueChange={(newTags) => {
+                          form.setValue(
+                            "tags",
+                            newTags.map((tag) => ({
+                              text: tag,
+                              id: tag.replace(" ", "-"),
+                            })),
+                          );
                         }}
-                        styleClasses={{
-                          input: "w-full sm:max-w-[350px]",
-                        }}
-                        activeTagIndex={activeTagIndex}
-                        setActiveTagIndex={setActiveTagIndex}
-                      />
+                        editable
+                        addOnPaste
+                      >
+                        <TagsInputList>
+                          {form.watch("tags").map((tag) => (
+                            <TagsInputItem key={tag.id} value={tag.text}>
+                              {tag.text}
+                            </TagsInputItem>
+                          ))}
+                          <TagsInputInput placeholder="Add some tags..." />
+                        </TagsInputList>
+                        <TagsInputClear asChild>
+                          <Button variant="outline">
+                            <RefreshCcw className="h-4 w-4" />
+                            Clear
+                          </Button>
+                        </TagsInputClear>
+                      </TagsInput>
                     </FormControl>
                     <FormDescription>
                       These are tags which can be used to categorize and search

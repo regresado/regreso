@@ -11,7 +11,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { type TRPCClientErrorLike } from "@trpc/client";
 import { type UseTRPCMutationResult } from "@trpc/react-query/shared";
 import { api } from "~/trpc/react";
-import { TagInput, type Tag } from "emblor";
 import {
   ArrowRight,
   GalleryVerticalEnd,
@@ -20,6 +19,7 @@ import {
   Map,
   Pencil,
   Plus,
+  RefreshCcw,
   RefreshCw,
   Star,
   StarOff,
@@ -34,6 +34,7 @@ import {
   type updateListSchema,
 } from "~/server/models";
 
+import { tags } from "~/server/db/schema";
 import { timeSince } from "~/lib/utils";
 
 import { Badge } from "~/components/ui/badge";
@@ -74,6 +75,14 @@ import {
   PopoverTrigger,
 } from "~/components/ui/popover";
 import { Separator } from "~/components/ui/separator";
+import {
+  TagsInput,
+  TagsInputClear,
+  TagsInputInput,
+  TagsInputItem,
+  TagsInputLabel,
+  TagsInputList,
+} from "~/components/ui/tags-input";
 import { Textarea } from "~/components/ui/textarea";
 import { toast } from "~/components/hooks/use-toast";
 import { TiltCard } from "~/components/tilt-card";
@@ -190,8 +199,6 @@ type ListFormProps =
     };
 
 export function ListForm(props: ListFormProps) {
-  const [tags, setTags] = useState<Tag[]>([]);
-  const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
   const form = useForm<z.infer<typeof listFormSchema>>({
     resolver: zodResolver(listFormSchema),
     defaultValues: {
@@ -202,13 +209,8 @@ export function ListForm(props: ListFormProps) {
     } as z.infer<typeof listFormSchema>,
   });
 
-  useEffect(() => {
-    setTags(props.defaultValues?.tags ?? []);
-  }, [props.defaultValues?.tags]);
-
   const submitMutation = props.listMutation(() => {
     form.reset();
-    setTags([]);
   });
 
   function onSubmit(data: z.infer<typeof listFormSchema>) {
@@ -296,24 +298,40 @@ export function ListForm(props: ListFormProps) {
             <FormItem className="flex flex-col items-start">
               <FormLabel className="text-left">Tags</FormLabel>
               <FormControl>
-                <TagInput
-                  {...field}
-                  placeholder="Enter some tags..."
-                  tags={tags}
-                  className="sm:min-w-[450px]"
-                  setTags={(newTags) => {
-                    setTags(newTags);
-                    form.setValue("tags", newTags as [Tag, ...Tag[]]);
+                <TagsInput
+                  className="flex w-full flex-row items-center"
+                  value={form.watch("tags").map((tag) => tag.text)}
+                  onValueChange={(newTags) => {
+                    form.setValue(
+                      "tags",
+                      newTags.map((tag) => ({
+                        text: tag,
+                        id: tag.replace(" ", "-"),
+                      })),
+                    );
                   }}
-                  styleClasses={{
-                    input: "w-full sm:max-w-[350px]",
-                  }}
-                  activeTagIndex={activeTagIndex}
-                  setActiveTagIndex={setActiveTagIndex}
-                />
+                  editable
+                  addOnPaste
+                >
+                  <TagsInputList>
+                    {form.watch("tags").map((tag) => (
+                      <TagsInputItem key={tag.id} value={tag.text}>
+                        {tag.text}
+                      </TagsInputItem>
+                    ))}
+                    <TagsInputInput placeholder="Add some tags..." />
+                  </TagsInputList>
+                  <TagsInputClear asChild>
+                    <Button variant="outline">
+                      <RefreshCcw className="h-4 w-4" />
+                      Clear
+                    </Button>
+                  </TagsInputClear>
+                </TagsInput>
               </FormControl>
               <FormDescription>
-                All maps added to this map will be searchable using these tags.
+                All destinations added to this map will be searchable using
+                these tags.
               </FormDescription>
               <FormMessage />
             </FormItem>

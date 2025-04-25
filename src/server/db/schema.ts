@@ -129,7 +129,9 @@ export const destinations = createTable(
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull()
       .$onUpdate(() => new Date()),
-    workspaceId: integer("workspace_id").references(() => users.id),
+    workspaceId: integer("workspace_id")
+      .references(() => users.id)
+      .default(0),
   },
   (destination) => ({
     searchIndex: index("destination_search_index").using(
@@ -196,7 +198,9 @@ export const lists = createTable(
     createdAt: timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    workspaceId: integer("workspace_id").references(() => users.id),
+    workspaceId: integer("workspace_id")
+      .references(() => users.id)
+      .default(0),
   },
   (list) => ({
     uniqueListName: unique().on(list.userId, list.name),
