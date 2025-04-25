@@ -1,10 +1,12 @@
 "use client";
 
+import Link from "next/link";
+
 import { api } from "~/trpc/react";
 import {
   ArrowUpRight,
   Clock,
-  Link,
+  Link as LinkIcon,
   MoreHorizontal,
   Star,
   StarOff,
@@ -129,7 +131,7 @@ function SidebarList({
                 );
               }}
             >
-              <Link className="text-muted-foreground" />
+              <LinkIcon className="text-muted-foreground" />
               <span>Copy Link</span>
             </DropdownMenuItem>
             <DropdownMenuItem
@@ -202,7 +204,9 @@ export function NavLists({
         <SidebarMenuItem>
           <SidebarMenuButton className="text-sidebar-foreground/70">
             <MoreHorizontal />
-            <span>More</span>
+            <Link href="/search/maps">
+              <span>More</span>
+            </Link>
           </SidebarMenuButton>
         </SidebarMenuItem>
       </SidebarMenu>

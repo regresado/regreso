@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { ChevronRight, MoreHorizontal, Plus } from "lucide-react";
 
 import {
@@ -32,7 +34,7 @@ export function NavWorkspaces({
 }) {
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>My Trunks</SidebarGroupLabel>
+      <SidebarGroupLabel>My Boxes</SidebarGroupLabel>
       <SidebarGroupContent>
         <SidebarMenu>
           {workspaces.length > 0 ? (
@@ -75,13 +77,15 @@ export function NavWorkspaces({
             ))
           ) : (
             <p className="my-3 px-4 text-sm text-muted-foreground">
-              🧰 No trunks found. Try creating one and come back!
+              🧰 No boxes found. Try creating one and come back!
             </p>
           )}
           <SidebarMenuItem>
             <SidebarMenuButton className="text-sidebar-foreground/70">
               <MoreHorizontal />
-              <span>More</span>
+              <Link href="/search/boxes">
+                <span>More</span>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
