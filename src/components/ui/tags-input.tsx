@@ -93,7 +93,12 @@ const TagsInputClear = React.forwardRef<
   React.ComponentRef<typeof TagsInputPrimitive.Clear>,
   React.ComponentPropsWithoutRef<typeof TagsInputPrimitive.Clear>
 >(({ className, ...props }, ref) => (
-  <TagsInputPrimitive.Clear data-slot="tags-input-clear" ref={ref} {...props} />
+  <TagsInputPrimitive.Clear
+    data-slot="tags-input-clear"
+    ref={ref}
+    {...props}
+    className={className}
+  />
 ));
 TagsInputClear.displayName = TagsInputPrimitive.Clear.displayName;
 

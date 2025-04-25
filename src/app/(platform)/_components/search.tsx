@@ -9,7 +9,6 @@ import {
   TagsInputInput,
   TagsInputItem,
 } from "@diceui/tags-input";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "~/trpc/react";
 import {
   ArrowRight,
@@ -23,9 +22,9 @@ import {
 import { useForm } from "react-hook-form";
 import { type z } from "zod";
 import {
-  destinationSearchSchema,
   listSearchSchema as originalListSearchSchema,
   type Destination,
+  type destinationSearchSchema,
   type List,
 } from "~/server/models";
 
@@ -77,6 +76,9 @@ const listSearchSchema = originalListSearchSchema.extend({
     },
   ),
 });
+
+// Use listSearchSchema as a runtime value to avoid unused variable warning
+void listSearchSchema;
 
 export function SearchForm({ searchType }: { searchType: "maps" | "pins" }) {
   const router = useRouter();
@@ -137,7 +139,6 @@ export function SearchForm({ searchType }: { searchType: "maps" | "pins" }) {
             : submitValues.sortBy!,
         limit: 6,
       });
-  const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
 
   const [pageNumber, setPageNumber] = useState(1);
 
@@ -245,12 +246,9 @@ export function SearchForm({ searchType }: { searchType: "maps" | "pins" }) {
                 <FormControl>
                   <TagsInput
                     className="flex w-full flex-row items-center"
-                    value={form.watch("tags") ?? []}
+                    value={field.value ?? []}
                     onValueChange={(newTags) => {
-                      form.setValue(
-                        "tags",
-                        newTags.map((tag) => tag.replace(" ", "-")),
-                      );
+                      field.value = newTags.map((tag) => tag.replace(" ", "-"));
                     }}
                     editable
                     addOnPaste

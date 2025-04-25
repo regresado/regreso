@@ -424,15 +424,12 @@ export function DestinationForm(props: DestinationFormProps) {
                     <FormControl>
                       <TagsInput
                         className="flex w-full flex-row items-center"
-                        value={form.watch("tags").map((tag) => tag.text)}
+                        value={field.value.map((tag) => tag.text)}
                         onValueChange={(newTags) => {
-                          form.setValue(
-                            "tags",
-                            newTags.map((tag) => ({
-                              text: tag,
-                              id: tag.replace(" ", "-"),
-                            })),
-                          );
+                          field.value = newTags.map((tag) => ({
+                            text: tag,
+                            id: tag.replace(" ", "-"),
+                          }));
                         }}
                         editable
                         addOnPaste
