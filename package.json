@@ -12,6 +12,7 @@
     "db:studio": "drizzle-kit studio",
     "db:export": "npx drizzle-kit export > setup.sql",
     "dev": "export MILLION_ENABLED=0  && next dev --turbo",
+    "dev:win": "set MILLION_ENABLED=0 && next dev --turbo",
     "million-dev": "export MILLION_ENABLED=1 && next dev",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,mdx}\" --cache",
     "format:write": "prettier --write \"**/*.{ts,tsx,js,jsx,mdx}\" --cache",
