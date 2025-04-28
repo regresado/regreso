@@ -149,6 +149,10 @@ export function ListCard(props: List) {
                   </div>
                 ))
               : null}
+              <Badge variant="outline" className="ml-2">
+            {props.workspace.emoji + " " + props.workspace.name}
+          </Badge>
+
           </div>
         </CardContent>
       </Card>
@@ -603,6 +607,9 @@ export function ListPage(props: { id: string }) {
           ))}
         </div>
       ) : null}
+
+       
+    
       <div className="font-muted flex flex-row space-x-2 text-sm italic">
         {data?.size && (
           <div className="flex flex-row space-x-2 pr-2">
@@ -611,7 +618,7 @@ export function ListPage(props: { id: string }) {
             </p>
             <p>•</p>
           </div>
-        )}
+       )}
 
         {(data?.updatedAt &&
           "Updated " +

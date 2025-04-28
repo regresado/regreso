@@ -30,6 +30,7 @@ import {
   lists,
   listTags,
   tags,
+  workspaces,
 } from "~/server/db/schema";
 
 export const destinationRouter = createTRPCRouter({
@@ -129,9 +130,11 @@ export const destinationRouter = createTRPCRouter({
         const dests = await ctx.db
           .select({
             destination: destinations,
+            workspace: workspaces,
             count: sql<number>`count(*) over()`,
           })
           .from(destinations)
+          .leftJoin(workspaces, eq(destinations.workspaceId, workspaces.id))
           .leftJoin(
             destinationLists,
             listIds.length > 0 || tagNames.length > 0
@@ -191,7 +194,7 @@ export const destinationRouter = createTRPCRouter({
               eq(destinations.userId, ctx.user.id),
             ),
           )
-          .groupBy(destinations.id)
+          .groupBy(destinations.id, workspaces.id)
           .having(
             and(
               tagNames.length > 0
@@ -212,6 +215,7 @@ export const destinationRouter = createTRPCRouter({
           )
           .limit(input.limit)
           .offset(input.offset);
+
         const destTags = await ctx.db
           .select()
           .from(destinationTags)
@@ -226,7 +230,7 @@ export const destinationRouter = createTRPCRouter({
         const returnDestinations = dests.map((dest) => {
           const destination = {
             id: dest.destination.id,
-            workspaceId: dest.destination.workspaceId,
+            workspace: dest.workspace,
             userId: dest.destination.userId,
             createdAt: dest.destination.createdAt,
             updatedAt: dest.destination.updatedAt,
@@ -249,6 +253,7 @@ export const destinationRouter = createTRPCRouter({
           };
           return destination;
         });
+
         return {
           items: returnDestinations,
           count:
@@ -379,6 +384,9 @@ export const destinationRouter = createTRPCRouter({
             eq(destinations.id, input.id),
             eq(destinations.userId, ctx.user.id),
           ),
+          with: {
+            workspace: true,
+          },
         });
       if (!dest) {
         throw new TRPCError({

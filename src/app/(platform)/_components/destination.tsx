@@ -691,6 +691,7 @@ export function DestinationCard(
             {String(props.type).charAt(0).toUpperCase() +
               String(props.type).slice(1)}
           </Badge>
+        
           {props.tags && props.tags?.length > 0
             ? props.tags.map((tag) => (
                 <Link key={tag.id} href={`/search/pins?tags=${tag.text}`}>
@@ -698,6 +699,9 @@ export function DestinationCard(
                 </Link>
               ))
             : null}
+          <Badge variant="outline" className="ml-2">
+            {props.workspace.emoji + " " + props.workspace.name}
+          </Badge>
         </div>
       </CardContent>
     </Card>

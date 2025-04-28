@@ -39,7 +39,7 @@ export interface Destination {
   tags?: { id: number; text: string }[];
   updatedAt: Date | null;
   lists?: List[];
-  workspaceId: number;
+  workspace: Workspace;
 }
 
 export interface List {
@@ -52,7 +52,7 @@ export interface List {
   size?: number;
   updatedAt?: Date | null;
   tags?: { id: number; text: string }[];
-  workspaceId: number;
+  workspace: Workspace;
 }
 
 export interface Workspace {
@@ -64,6 +64,7 @@ export interface Workspace {
   createdAt: Date;
   destinationCount?: number;
   listCount?: number;
+  lists?: List[];
 }
 
 export interface Tag {
@@ -75,7 +76,7 @@ export interface Tag {
   userId: number;
   destinationCount?: number;
   listCount?: number;
-  workspaceId: number | null;
+  workspace: Workspace | null;
   createdAt: Date;
   updatedAt: Date | null;
 }
@@ -175,6 +176,16 @@ export const tagFormSchema = z.object({
   workspaceId: z.number(),
 });
 
+export const workspaceSchema = z.object({
+  id: z.number(),
+  userId: z.number(),
+  createdAt: z.date(),
+  name: z.string(),
+  description: z.string().nullable(),
+  emoji: z.string().nullable(),
+  lists: z.array(z.any()).optional(),
+});
+
 export const destinationSchema = z.object({
   id: z.number(),
   userId: z.number(),
@@ -186,7 +197,7 @@ export const destinationSchema = z.object({
   location: z.string().nullable(),
   body: z.string().nullable(),
   attachments: z.array(z.any()).optional(),
-  workspaceId: z.number(),
+  workspace: workspaceSchema,
 });
 
 export const listSchema = z.object({
@@ -198,17 +209,8 @@ export const listSchema = z.object({
   size: z.number().optional(),
   name: z.string(),
   emoji: z.string().nullable(),
-  workspaceId: z.number(),
+  workspace: workspaceSchema,
   description: z.string().nullable(),
-});
-
-export const workspaceSchema = z.object({
-  id: z.number(),
-  userId: z.number(),
-  createdAt: z.date(),
-  name: z.string(),
-  description: z.string().nullable(),
-  emoji: z.string().nullable(),
 });
 
 export const tagSchema = z.object({
@@ -280,6 +282,7 @@ export const workspaceSearchSchema = z.object({
   order: z.enum(["ASC", "DESC"]).optional(),
   limit: z.number().max(30).optional().default(5),
   offset: z.number().optional().default(0),
+  includeLists: z.boolean().optional().default(false),
 });
 
 export const tagSearchSchema = z.object({

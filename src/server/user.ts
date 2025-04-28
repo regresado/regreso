@@ -66,6 +66,7 @@ export async function createUser(
     .values({
       userId: userRow[0]!.id,
       name: "Default Workspace",
+      emoji: "🧰",
       description:
         "This is your first workspace. Do something awesome with it!",
     })

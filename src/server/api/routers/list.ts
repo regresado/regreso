@@ -20,6 +20,7 @@ import {
   lists,
   listTags,
   tags,
+  workspaces,
 } from "~/server/db/schema";
 
 export const listRouter = createTRPCRouter({
@@ -122,6 +123,7 @@ export const listRouter = createTRPCRouter({
                 ),
             })
             .from(lists)
+
             .leftJoin(destinationLists, eq(lists.id, destinationLists.listId))
             .leftJoin(
               destinations,
@@ -139,6 +141,7 @@ export const listRouter = createTRPCRouter({
             latestCreatedAt: sql<Date | null>`${stats.latestCreatedAt}`.as(
               "updated_at",
             ),
+            workspace: workspaces,
           })
           .from(lists)
           .leftJoin(stats, eq(lists.id, stats.listId))
@@ -150,6 +153,7 @@ export const listRouter = createTRPCRouter({
             tags,
             tagNames.length > 0 ? eq(listTags.tagId, tags.id) : sql`1 = 0`,
           )
+          .rightJoin(workspaces, eq(lists.workspaceId, workspaces.id))
           .where(
             and(
               and(
@@ -168,6 +172,7 @@ export const listRouter = createTRPCRouter({
               eq(lists.userId, ctx.user.id),
             ),
           )
+
           .groupBy(
             lists.id,
             lists.name,
@@ -176,6 +181,7 @@ export const listRouter = createTRPCRouter({
             lists.createdAt,
             stats.size,
             stats.latestCreatedAt,
+            workspaces.id,
           )
           .orderBy(
             input.order === "ASC"
@@ -209,6 +215,7 @@ export const listRouter = createTRPCRouter({
           );
 
         const returnLists: List[] = lsts.map((list) => {
+          delete list.list.workspaceId;
           return {
             tags: lstTags
               .filter((tag) => tag.list_tag.listId == list.list.id)
@@ -236,6 +243,7 @@ export const listRouter = createTRPCRouter({
                   )?.[0] ?? null)
                 : null
               : null,
+            workspace: list.workspace,
           };
         });
         if (!lsts || lsts.length === 0) {
@@ -244,6 +252,7 @@ export const listRouter = createTRPCRouter({
             message: "No lists found",
           });
         }
+
         return {
           items: returnLists,
           count:
@@ -435,7 +444,6 @@ export const listRouter = createTRPCRouter({
           emoji: lists.emoji,
           createdAt: lists.createdAt,
           userId: lists.userId,
-          workspaceId: lists.workspaceId,
           count: sql<number>`count(*) over()`,
           size: sql<number>`COUNT(${destinationLists}.id)`,
           updatedAt: sql<Date | null>`(
@@ -447,8 +455,9 @@ export const listRouter = createTRPCRouter({
         })
         .from(lists)
         .leftJoin(destinationLists, eq(lists.id, destinationLists.listId))
+        .leftJoin(workspaces, eq(lists.workspaceId, workspaces.id))
         .where(and(eq(lists.id, input.id), eq(lists.userId, ctx.user.id)))
-        .groupBy(lists.id)
+        .groupBy(lists.id, workspaces.id)
         .limit(1);
 
       if (!lstData || lstData.length === 0 || !lstData[0]) {
