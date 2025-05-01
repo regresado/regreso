@@ -117,8 +117,8 @@ importers:
         specifier: ^2.11.9
         version: 2.11.9(@tiptap/core@2.11.7(@tiptap/pm@2.11.7))(@tiptap/pm@2.11.7)
       '@tiptap/extension-placeholder':
-        specifier: ^2.11.7
-        version: 2.11.7(@tiptap/core@2.11.7(@tiptap/pm@2.11.7))(@tiptap/pm@2.11.7)
+        specifier: ^2.11.9
+        version: 2.11.9(@tiptap/core@2.11.7(@tiptap/pm@2.11.7))(@tiptap/pm@2.11.7)
       '@tiptap/extension-text-style':
         specifier: ^2.11.9
         version: 2.11.9(@tiptap/core@2.11.7(@tiptap/pm@2.11.7))
@@ -2493,8 +2493,8 @@ packages:
     peerDependencies:
       '@tiptap/core': ^2.7.0
 
-  '@tiptap/extension-placeholder@2.11.7':
-    resolution: {integrity: sha512-/06zXV4HIjYoiaUq1fVJo/RcU8pHbzx21evOpeG/foCfNpMI4xLU/vnxdUi6/SQqpZMY0eFutDqod1InkSOqsg==}
+  '@tiptap/extension-placeholder@2.11.9':
+    resolution: {integrity: sha512-bUlvLKjLK4TUf3XKWZpReuIxMPvXfhKrtzxLnE2RJerHpLjiACliqVwMN0XJ3JyEW0DwBax6tSH0jlBSo4c4Vg==}
     peerDependencies:
       '@tiptap/core': ^2.7.0
       '@tiptap/pm': ^2.7.0
@@ -7675,7 +7675,7 @@ snapshots:
     dependencies:
       '@tiptap/core': 2.11.7(@tiptap/pm@2.11.7)
 
-  '@tiptap/extension-placeholder@2.11.7(@tiptap/core@2.11.7(@tiptap/pm@2.11.7))(@tiptap/pm@2.11.7)':
+  '@tiptap/extension-placeholder@2.11.9(@tiptap/core@2.11.7(@tiptap/pm@2.11.7))(@tiptap/pm@2.11.7)':
     dependencies:
       '@tiptap/core': 2.11.7(@tiptap/pm@2.11.7)
       '@tiptap/pm': 2.11.7
