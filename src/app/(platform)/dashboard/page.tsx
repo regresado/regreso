@@ -21,6 +21,7 @@ import {
   RecentDestinations,
 } from "../_components/destination";
 import { RecentLists } from "../_components/list";
+import { RecentTags } from "../_components/tag";
 
 const DashboardHome: React.FC = (props: { user?: User }) => {
   const [dragEnd, setDragEnd] = React.useState<{
@@ -103,6 +104,20 @@ const DashboardHome: React.FC = (props: { user?: User }) => {
                 }}
               >
                 <RecentLists />
+              </motion.div>
+            </div>
+          </div> <div className="col-span-1 xl:col-span-3">
+            <div className="rounded-xl bg-muted/50">
+              <motion.div
+                initial={{ opacity: 0.5, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{
+                  delay: 0,
+                  duration: 0.2,
+                  ease: "easeOut",
+                }}
+              >
+                <RecentTags />
               </motion.div>
             </div>
           </div>

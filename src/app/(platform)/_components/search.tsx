@@ -97,9 +97,6 @@ export function SearchForm({ searchType }: { searchType: "maps" | "pins" }) {
   const form = useForm<
     z.infer<typeof listSearchSchema> | z.infer<typeof destinationSearchSchema>
   >({
-    resolver: zodResolver(
-      searchType === "maps" ? listSearchSchema : destinationSearchSchema,
-    ),
     defaultValues:
       searchType === "maps"
         ? {

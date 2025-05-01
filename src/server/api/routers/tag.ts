@@ -13,7 +13,13 @@ import {
   protectedMutationProcedure,
   protectedQueryProcedure,
 } from "~/server/api/trpc";
-import { destinationTags, lists, listTags, tags } from "~/server/db/schema";
+import {
+  destinationTags,
+  lists,
+  listTags,
+  tags,
+  workspaces,
+} from "~/server/db/schema";
 
 import { createTRPCRouter } from "../trpc";
 
@@ -64,7 +70,7 @@ export const tagRouter = createTRPCRouter({
         count: z.number(),
       }),
     )
-    .query(async ({ ctx, input }): Promise<{ items: Tag[]; count: number }> => {
+    .query(async ({ ctx, input }) => {
       const tgs = await ctx.db
         .select({
           tag: tags,
@@ -79,6 +85,7 @@ export const tagRouter = createTRPCRouter({
             FROM ${listTags}
             WHERE ${listTags.tagId} = ${tags.id}
           )`,
+          workspace: workspaces,
         })
         .from(tags)
         .where(
@@ -111,10 +118,13 @@ export const tagRouter = createTRPCRouter({
                     : tags.createdAt,
               ),
         )
+        .leftJoin(workspaces, eq(tags.workspaceId, workspaces.id))
+
         .limit(input.limit)
         .offset(input.offset);
 
-      const returnTags: Tag[] = tgs.map((tag) => {
+      const returnTags = tgs.map((tag) => {
+        const { workspaceId, ...tagWithoutWorkspaceId } = tag.tag;
         return {
           destinationCount:
             (typeof tag.destinationCount == "string"
@@ -124,8 +134,9 @@ export const tagRouter = createTRPCRouter({
             (typeof tag.listCount == "string"
               ? parseInt(tag.listCount)
               : tag.listCount) ?? 0,
-          text: tag.tag.name, // Assuming 'name' should be used as 'text'
-          ...tag.tag,
+          text: tag.tag.name,
+          workspace: tag.workspace,
+          ...tagWithoutWorkspaceId,
         };
       });
       if (!tgs || tgs.length === 0) {
@@ -209,7 +220,6 @@ export const tagRouter = createTRPCRouter({
           createdAt: tags.createdAt,
           updatedAt: tags.updatedAt,
           userId: tags.userId,
-          workspaceId: tags.workspaceId,
           count: sql<number>`count(*) over()`,
           destinationCount: sql<number>`(
           SELECT COUNT(*)
@@ -221,8 +231,11 @@ export const tagRouter = createTRPCRouter({
           FROM ${lists}
           WHERE ${listTags.tagId} = ${tags.id}
         )`,
+          workspace: workspaces,
         })
         .from(tags)
+
+        .leftJoin(workspaces, eq(tags.workspaceId, workspaces.id))
         .where(and(eq(tags.id, input.id), eq(tags.userId, ctx.user.id)))
         .limit(1);
 
@@ -233,28 +246,32 @@ export const tagRouter = createTRPCRouter({
         });
       }
 
-      const tg: Tag | undefined =
-        tgData.length > 0
-          ? {
-              ...tgData[0],
-              destinationCount:
-                (typeof tgData[0]?.destinationCount == "string"
-                  ? parseInt(tgData[0]?.destinationCount)
-                  : tgData[0]?.destinationCount) ?? 0,
-              listCount:
-                (typeof tgData[0]?.listCount == "string"
-                  ? parseInt(tgData[0]?.listCount)
-                  : tgData[0]?.listCount) ?? 0,
-            }
-          : undefined;
-
-      if (!tg) {
+      const tgDataRow = tgData[0];
+      if (!tgDataRow) {
         throw new TRPCError({
           code: "FORBIDDEN",
           message: "Tag not found or access denied",
         });
       }
 
-      return tg;
+      return {
+        id: tgDataRow.id,
+        name: tgDataRow.name,
+        description: tgDataRow.description,
+        color: tgDataRow.color,
+        shortcut: tgDataRow.shortcut,
+        createdAt: tgDataRow.createdAt,
+        updatedAt: tgDataRow.updatedAt,
+        userId: tgDataRow.userId,
+        workspace: tgDataRow.workspace,
+        destinationCount:
+          (typeof tgDataRow?.destinationCount == "string"
+            ? parseInt(tgDataRow?.destinationCount)
+            : tgDataRow?.destinationCount) ?? 0,
+        listCount:
+          (typeof tgDataRow?.listCount == "string"
+            ? parseInt(tgDataRow?.listCount)
+            : tgDataRow?.listCount) ?? 0,
+      };
     }),
 });

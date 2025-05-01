@@ -387,6 +387,10 @@ export const tagsRelations = relations(tags, ({ one, many }) => ({
     fields: [tags.userId],
     references: [users.id],
   }),
+  workspace: one(workspaces, {
+    fields: [tags.workspaceId],
+    references: [workspaces.id],
+  }),
   destinationTags: many(destinationTags),
   listTags: many(listTags),
 }));
@@ -398,6 +402,10 @@ export const destinationsRelations = relations(
       fields: [destinations.userId],
       references: [users.id],
     }),
+    workspace: one(workspaces, {
+      fields: [destinations.workspaceId],
+      references: [workspaces.id],
+    }),
     destinationTags: many(destinationTags),
   }),
 );
@@ -408,6 +416,10 @@ export const listsRelations = relations(lists, ({ one, many }) => ({
   user: one(users, {
     fields: [lists.userId],
     references: [users.id],
+  }),
+  workspace: one(workspaces, {
+    fields: [lists.workspaceId],
+    references: [workspaces.id],
   }),
 }));
 

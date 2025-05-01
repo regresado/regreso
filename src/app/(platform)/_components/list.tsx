@@ -4,7 +4,12 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { useDroppable } from "@dnd-kit/core";
+import {
+  useDraggable,
+  useDroppable,
+  type Active,
+  type Over,
+} from "@dnd-kit/core";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -98,12 +103,70 @@ const variants = {
   },
 };
 
-export function ListCard(props: List) {
+export function ListCard(
+  props: List & {
+    setDragEnd?: React.Dispatch<
+      React.SetStateAction<{ over: Over; active: Active } | null>
+    >;
+    dragEnd?: { over: Over | null; active: Active | null };
+  },
+) {
   const controls = useAnimation();
 
-  const { isOver, setNodeRef } = useDroppable({
+  const utils = api.useUtils();
+
+  const addToWorkspace = api.list.update.useMutation({
+    onSuccess: async () => {
+      await utils.destination.invalidate();
+      toast({
+        title: "List added to workspace",
+        description: "Destination has been added to the selected workspace.",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Failed to add list to workspace",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
+  const { isOver, setNodeRef: setNodeDropRef } = useDroppable({
     id: props.id,
   });
+  const { dragEnd, setDragEnd, id } = props;
+  useEffect(() => {
+    if (
+      dragEnd &&
+      setDragEnd &&
+      dragEnd.over &&
+      dragEnd.active &&
+      dragEnd.active.id == id
+    ) {
+      addToWorkspace.mutate({
+        id,
+        workspaceId:
+          typeof dragEnd.over.id === "number"
+            ? dragEnd.over.id
+            : parseInt(String(dragEnd.over.id)),
+      });
+      setDragEnd(null);
+    }
+  }, [dragEnd, setDragEnd, addToWorkspace, id]);
+  const {
+    attributes,
+    listeners,
+    transform,
+    setNodeRef: setNodeDragRef,
+  } = useDraggable({
+    id: props.id,
+  });
+  const style = transform
+    ? {
+        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+      }
+    : undefined;
   useEffect(() => {
     if (isOver) {
       void controls.start("start");
@@ -115,46 +178,50 @@ export function ListCard(props: List) {
 
   return (
     <motion.div custom={1} variants={variants} animate={controls}>
-      <Card ref={setNodeRef}>
-        <CardHeader className="px-3 pb-2 pt-4 text-sm">
-          <CardTitle className="truncate">
-            <Link href={`/map/${props.id}`}>
-              <span className="mr-2">{props?.emoji ?? "❔"}</span>
-              {props.name ?? "Unnamed Map"}
-            </Link>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2 px-3 pb-3 pt-0 text-sm">
-          <p className="text-muted-foreground">
-            {props.description ?? "No description provided."}
-          </p>
+      <Card ref={setNodeDragRef} style={style} {...listeners} {...attributes}>
+        <div ref={setNodeDropRef}>
+          <CardHeader className="px-3 pb-2 pt-4 text-sm">
+            <CardTitle className="truncate">
+              <Link href={`/map/${props.id}`}>
+                <span className="mr-2">{props?.emoji ?? "❔"}</span>
+                {props.name ?? "Unnamed Map"}
 
-          <div className="mt-2 flex flex-wrap gap-2">
-            {props.size != null && props.size != undefined && (
-              <p className="font-muted text-sm">{props.size} destinations</p>
-            )}
+              </Link>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2 px-3 pb-3 pt-0 text-sm">
+            <p className="text-muted-foreground">
+              {props.description ?? "No description provided."}
+            </p>
             <p>•</p>
-            {(props.updatedAt &&
-              "Updated " + timeSince(props.updatedAt) + " ago") ??
-              "Updated " + timeSince(props.createdAt) + " ago"}
 
-            {props.tags && props.tags?.length > 0
-              ? props.tags.map((tag) => (
-                  <div key={tag.id} className="flex items-center gap-2">
-                    <p>•</p>
+            {props.size != null && props.size != undefined && (
+                <p className="font-muted text-sm">{props.size} destinations</p>
+              )}
 
-                    <Link href={`/search/pins?tags=${tag.text}`}>
-                      <Badge variant="secondary">{tag.text}</Badge>
-                    </Link>
-                  </div>
-                ))
-              : null}
+            <div className="mt-2 flex flex-wrap gap-2">
+              
+              {(props.updatedAt &&
+                "Updated " + timeSince(props.updatedAt) + " ago") ??
+                "Updated " + timeSince(props.createdAt) + " ago"}
+
+              {props.tags && props.tags?.length > 0
+                ? props.tags.map((tag) => (
+                    <div key={tag.id} className="flex items-center gap-2">
+                      <p>•</p>
+
+                      <Link href={`/search/pins?tags=${tag.text}`}>
+                        <Badge variant="secondary">{tag.text}</Badge>
+                      </Link>
+                    </div>
+                  ))
+                : null}
               <Badge variant="outline" className="ml-2">
-            {props.workspace.emoji + " " + props.workspace.name}
-          </Badge>
-
-          </div>
-        </CardContent>
+                {props.workspace.emoji + " " + props.workspace.name}
+              </Badge>
+            </div>
+          </CardContent>
+        </div>
       </Card>
     </motion.div>
   );
@@ -365,6 +432,7 @@ export function RecentLists() {
   } = api.list.getMany.useQuery({
     limit: 3,
     order: "DESC",
+    sortBy: "updatedAt",
   });
   const [open, setOpen] = useState(false);
 
@@ -608,8 +676,6 @@ export function ListPage(props: { id: string }) {
         </div>
       ) : null}
 
-       
-    
       <div className="font-muted flex flex-row space-x-2 text-sm italic">
         {data?.size && (
           <div className="flex flex-row space-x-2 pr-2">
@@ -618,7 +684,7 @@ export function ListPage(props: { id: string }) {
             </p>
             <p>•</p>
           </div>
-       )}
+        )}
 
         {(data?.updatedAt &&
           "Updated " +

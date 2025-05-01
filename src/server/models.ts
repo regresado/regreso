@@ -64,7 +64,6 @@ export interface Workspace {
   createdAt: Date;
   destinationCount?: number;
   listCount?: number;
-  lists?: List[];
 }
 
 export interface Tag {
@@ -183,7 +182,6 @@ export const workspaceSchema = z.object({
   name: z.string(),
   description: z.string().nullable(),
   emoji: z.string().nullable(),
-  lists: z.array(z.any()).optional(),
 });
 
 export const destinationSchema = z.object({
@@ -222,7 +220,7 @@ export const tagSchema = z.object({
   shortcut: z.string().nullable(),
   description: z.string().nullable(),
   color: z.string().nullable(),
-  workspaceId: z.number().nullable(),
+  workspace: workspaceSchema.nullable(),
   destinationCount: z.number().optional(),
   listCount: z.number().optional(),
 });
@@ -287,7 +285,9 @@ export const workspaceSearchSchema = z.object({
 
 export const tagSearchSchema = z.object({
   searchString: z.string().nullable().optional(),
-  sortBy: z.enum(["createdAt", "updatedAt", "destinationCount", "listCount"]),
+  sortBy: z
+    .enum(["createdAt", "updatedAt", "destinationCount", "listCount"])
+    .optional(),
   order: z.enum(["ASC", "DESC"]).optional(),
   limit: z.number().max(30).optional().default(5),
   offset: z.number().optional().default(0),

@@ -139,7 +139,7 @@ export function SidebarLeft({ ...props }: ComponentProps<typeof Sidebar>) {
   const [mode, setMode] = useState<"fav" | "rec">("rec");
   const [oldMode, setOldMode] = useState<"fav" | "rec">("rec");
 
-  const { data: recentLists = { items: [], count: 0 }, refetchLists } =
+  const { data: recentLists = { items: [], count: 0 }, refetch: refetchLists } =
     api.list.getMany.useQuery({
       limit: 3,
       order: "DESC",
@@ -191,26 +191,10 @@ export function SidebarLeft({ ...props }: ComponentProps<typeof Sidebar>) {
               id: w.id,
               name: w.name,
               emoji: w.emoji,
-                      <NavWorkspaces
-                        workspaces={recentWorkspaces.items.map((w) => {
-                          return {
-                            id: w.id,
-                            name: w.name,
-                            emoji: w.emoji,
-                            pages: w.lists.map((list) => ({
-                              name: list.name,
-                              url: "/map/" + list.id,
-                              emoji: list.emoji ?? "❔",
-                            })),
-                          };
-                        })}
-                      />
-                
-              ],
+              pages: [],
             };
           })}
         />
-
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarFooter>
       <SidebarRail />

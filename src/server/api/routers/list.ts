@@ -153,7 +153,7 @@ export const listRouter = createTRPCRouter({
             tags,
             tagNames.length > 0 ? eq(listTags.tagId, tags.id) : sql`1 = 0`,
           )
-          .rightJoin(workspaces, eq(lists.workspaceId, workspaces.id))
+          .leftJoin(workspaces, eq(lists.workspaceId, workspaces.id))
           .where(
             and(
               and(
@@ -215,7 +215,12 @@ export const listRouter = createTRPCRouter({
           );
 
         const returnLists: List[] = lsts.map((list) => {
-          delete list.list.workspaceId;
+          if (!list.workspace) {
+            throw new TRPCError({
+              code: "INTERNAL_SERVER_ERROR",
+              message: "Workspace not found for list.",
+            });
+          }
           return {
             tags: lstTags
               .filter((tag) => tag.list_tag.listId == list.list.id)
@@ -452,6 +457,7 @@ export const listRouter = createTRPCRouter({
                 JOIN ${destinationLists} ON ${destinations.id} = ${destinationLists.destinationId}
                 WHERE ${destinationLists.listId} = ${lists.id}
               )`,
+          workspace: workspaces,
         })
         .from(lists)
         .leftJoin(destinationLists, eq(lists.id, destinationLists.listId))
@@ -467,6 +473,12 @@ export const listRouter = createTRPCRouter({
         });
       }
 
+      if (!lstData[0].workspace) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Workspace not found for list",
+        });
+      }
       const lst: List | undefined =
         lstData.length > 0
           ? {
@@ -479,6 +491,7 @@ export const listRouter = createTRPCRouter({
                 typeof lstData[0].updatedAt == "string"
                   ? new Date(lstData[0].updatedAt)
                   : lstData[0].updatedAt,
+              workspace: lstData[0].workspace,
             }
           : undefined;
 

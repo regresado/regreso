@@ -228,6 +228,12 @@ export const destinationRouter = createTRPCRouter({
           );
 
         const returnDestinations = dests.map((dest) => {
+          if (!dest.workspace) {
+            throw new TRPCError({
+              code: "INTERNAL_SERVER_ERROR",
+              message: "Workspace not found for destination.",
+            });
+          }
           const destination = {
             id: dest.destination.id,
             workspace: dest.workspace,
