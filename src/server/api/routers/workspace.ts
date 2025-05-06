@@ -13,7 +13,13 @@ import {
   protectedMutationProcedure,
   protectedQueryProcedure,
 } from "~/server/api/trpc";
-import { destinations, lists, users, workspaces } from "~/server/db/schema";
+import {
+  destinations,
+  lists,
+  tags,
+  users,
+  workspaces,
+} from "~/server/db/schema";
 
 import { createTRPCRouter } from "../trpc";
 
@@ -86,6 +92,11 @@ export const workspaceRouter = createTRPCRouter({
               FROM ${lists}
               WHERE ${lists.workspaceId} = ${workspaces.id}
             )`,
+            tagCount: sql<number>`(
+              SELECT COUNT(*)
+              FROM ${tags}
+              WHERE ${tags.workspaceId} = ${workspaces.id}
+            )`,
           })
           .from(workspaces)
           .where(
@@ -102,21 +113,15 @@ export const workspaceRouter = createTRPCRouter({
             ),
           )
           .orderBy(
-            input.order === "ASC"
-              ? asc(
-                  input.sortBy === "destinationCount"
-                    ? sql`destinationCount`
-                    : input.sortBy === "listCount"
-                      ? sql`listCount`
-                      : workspaces.createdAt,
-                )
-              : desc(
-                  input.sortBy === "destinationCount"
-                    ? sql`destinationCount`
-                    : input.sortBy === "listCount"
-                      ? sql`listCount`
-                      : workspaces.createdAt,
-                ),
+            (input.order === "ASC" ? asc : desc)(
+              input.sortBy === "destinationCount"
+                ? sql`destinationCount`
+                : input.sortBy === "listCount"
+                  ? sql`listCount`
+                  : input.sortBy === "tagCount"
+                    ? sql`tagCount`
+                    : workspaces[input.sortBy ?? "createdAt"],
+            ),
           )
           .limit(input.limit)
           .offset(input.offset);
@@ -131,6 +136,10 @@ export const workspaceRouter = createTRPCRouter({
               (typeof workspace.listCount == "string"
                 ? parseInt(workspace.listCount)
                 : workspace.listCount) ?? 0,
+            tagCount:
+              (typeof workspace.tagCount == "string"
+                ? parseInt(workspace.tagCount)
+                : workspace.tagCount) ?? 0,
             ...workspace.workspace,
             emoji: workspace.workspace?.emoji
               ? workspace.workspace?.emoji.match(

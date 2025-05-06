@@ -209,9 +209,9 @@ export const destinationRouter = createTRPCRouter({
             ),
           )
           .orderBy(
-            input.order == "ASC"
-              ? asc(destinations[input.sortBy ?? "createdAt"])
-              : desc(destinations[input.sortBy ?? "createdAt"]),
+            (input.order == "ASC" ? asc : desc)(
+              destinations[input.sortBy ?? "createdAt"],
+            ),
           )
           .limit(input.limit)
           .offset(input.offset);

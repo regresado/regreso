@@ -64,6 +64,7 @@ export interface Workspace {
   createdAt: Date;
   destinationCount?: number;
   listCount?: number;
+  tagCount?: number;
 }
 
 export interface Tag {
@@ -168,7 +169,7 @@ export const tagFormSchema = z.object({
   color: z
     .string()
     .min(3, {
-      message: "Invalid color"
+      message: "Invalid color",
     })
     .max(300, {
       message: "The color must be between 3-300 characters.",
@@ -262,35 +263,48 @@ export const destinationSearchSchema = z.object({
   location: z.string().nullable().optional(),
   limit: z.number().max(30).optional().default(5),
   offset: z.number().optional().default(0),
+  workspaceId: z.number().optional(),
 });
 
 export const listSearchSchema = z.object({
   tags: z.array(z.string()).optional(),
-  sortBy: z.enum(["createdAt", "updatedAt", "size", "name"]).optional(),
+  sortBy: z
+    .enum(["createdAt", "updatedAt", "size", "name", "emoji"])
+    .optional(),
   order: z.enum(["ASC", "DESC"]).optional(),
   searchString: z.string().nullable().optional(),
   onlyFavorites: z.boolean().optional(),
   limit: z.number().optional().default(5),
   offset: z.number().optional().default(0),
+  workspaceId: z.number().optional(),
 });
 
 export const workspaceSearchSchema = z.object({
   searchString: z.string().nullable().optional(),
   sortBy: z
-    .enum(["createdAt", "updatedAt", "destinationCount", "listCount"])
+    .enum(["createdAt", "destinationCount", "listCount", "tagCount", "emoji"])
     .optional(),
   order: z.enum(["ASC", "DESC"]).optional(),
   limit: z.number().max(30).optional().default(5),
   offset: z.number().optional().default(0),
   includeLists: z.boolean().optional().default(false),
+  workspaceId: z.number().optional(),
 });
 
 export const tagSearchSchema = z.object({
   searchString: z.string().nullable().optional(),
   sortBy: z
-    .enum(["createdAt", "updatedAt", "destinationCount", "listCount", "name"])
+    .enum([
+      "createdAt",
+      "updatedAt",
+      "destinationCount",
+      "listCount",
+      "name",
+      "color",
+    ])
     .optional(),
   order: z.enum(["ASC", "DESC"]).optional(),
   limit: z.number().max(30).optional().default(5),
   offset: z.number().optional().default(0),
+  workspaceId: z.number().optional(),
 });

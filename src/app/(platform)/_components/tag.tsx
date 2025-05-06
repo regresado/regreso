@@ -342,8 +342,12 @@ export function TagCard(
     <motion.div custom={1} variants={variants} animate={controls}>
       <Card ref={setNodeDragRef} style={style} {...listeners} {...attributes}>
         <div ref={setNodeDropRef}>
-          <CardHeader className="px-3 pb-2 pt-4 text-sm">
-            <CardTitle className="truncate">
+          <CardHeader className="flex flex-row items-center px-3 pb-2 pt-4 text-sm">
+            <div
+              className="circle mr-1.5 h-4 w-4 overflow-hidden rounded-full"
+              style={{ background: props.color ?? "hsl(var(--secondary))" }}
+            ></div>
+            <CardTitle className="truncate pt-0">
               <Link href={`/tag/${props.id}`}>
                 {props.name ?? "Unnamed Tag"}
               </Link>
@@ -353,8 +357,6 @@ export function TagCard(
             <p className="text-muted-foreground">
               {props.description ?? "No description provided."}
             </p>
-
-            <p>•</p>
 
             <div className="mt-2 flex flex-wrap gap-1.5">
               {(props.updatedAt &&
@@ -378,11 +380,9 @@ export function TagCard(
                 </p>
               )}
 
-              {JSON.stringify(props)}
-
-              {/* <Badge variant="outline">
+              <Badge variant="outline">
                 {props.workspace.emoji + " " + props.workspace.name}
-              </Badge> */}
+              </Badge>
             </div>
           </CardContent>
         </div>

@@ -110,24 +110,15 @@ export const tagRouter = createTRPCRouter({
           ),
         )
         .orderBy(
-          input.order === "ASC"
-            ? asc(
-                input.sortBy === "destinationCount"
-                  ? sql`destinationCount`
-                  : input.sortBy === "listCount"
-                    ? sql`listCount`
-                    : tags.createdAt,
-              )
-            : desc(
-                input.sortBy === "destinationCount"
-                  ? sql`destinationCount`
-                  : input.sortBy === "listCount"
-                    ? sql`listCount`
-                    : tags.createdAt,
-              ),
+          (input.order === "ASC" ? asc : desc)(
+            input.sortBy === "destinationCount"
+              ? sql`destinationCount`
+              : input.sortBy === "listCount"
+                ? sql`listCount`
+                : tags[input.sortBy ?? "createdAt"],
+          ),
         )
-        .leftJoin(workspaces, eq(tags.workspaceId, workspaces.id))
-
+        .crossJoin(workspaces)
         .limit(input.limit)
         .offset(input.offset);
 
@@ -262,7 +253,6 @@ export const tagRouter = createTRPCRouter({
         });
       }
 
-      console.log(tgDataRow.workspace)
       return {
         id: tgDataRow.id,
         name: tgDataRow.name,

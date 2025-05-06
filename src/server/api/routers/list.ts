@@ -184,21 +184,13 @@ export const listRouter = createTRPCRouter({
             workspaces.id,
           )
           .orderBy(
-            input.order === "ASC"
-              ? asc(
-                  input.sortBy === "size"
-                    ? stats.size
-                    : input.sortBy === "updatedAt"
-                      ? stats.latestCreatedAt
-                      : lists.createdAt,
-                )
-              : desc(
-                  input.sortBy === "size"
-                    ? stats.size
-                    : input.sortBy === "updatedAt"
-                      ? stats.latestCreatedAt
-                      : lists.createdAt,
-                ),
+            (input.order === "ASC" ? asc : desc)(
+              input.sortBy === "size"
+                ? stats.size
+                : input.sortBy === "updatedAt"
+                  ? stats.latestCreatedAt
+                  : lists[input.sortBy ?? "createdAt"],
+            ),
           )
           .limit(input.limit)
           .offset(input.offset);

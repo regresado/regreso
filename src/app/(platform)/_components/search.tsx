@@ -150,21 +150,18 @@ export function SearchForm({
     : searchType === "tags"
       ? api.tag.getMany.useQuery({
           ...submitValues,
-
+          sortBy: submitValues.sortBy as
+            | "name"
+            | "color"
+            | "createdAt"
+            | "destinationCount"
+            | "listCount"
+            | "updatedAt",
           limit: 6,
         })
       : api.destination.getMany.useQuery({
           ...submitValues,
-          sortBy:
-            submitValues.sortBy === "updatedAt" ||
-            (submitType === "maps" &&
-              (submitValues.sortBy as
-                | "size"
-                | "createdAt"
-                | "updatedAt"
-                | "name") === "size")
-              ? "createdAt"
-              : submitValues.sortBy!,
+          sortBy: submitValues.sortBy as "name" | "createdAt" | "updatedAt",
           limit: 6,
         });
   const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
@@ -389,7 +386,6 @@ export function SearchForm({
             })
           ) : submitType == "tags" && searchType == "tags" ? (
             (searchResults.items as Tag[]).map((tg: Tag) => {
-              console.log(tg);
               return <TagCard key={tg.id} {...tg} />;
             })
           ) : null
