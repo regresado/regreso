@@ -45,8 +45,10 @@ interface ClientLayoutProps {
 
 export function ClientLayout({ children, user }: ClientLayoutProps) {
   const pathname = usePathname();
-  const platformRoute = pathname.split("/")[1]?.split("/") ?? ["unknown"];
-  const [searchType, setSearchType] = useState(platformRoute[1]);
+  const platformRoute = pathname.split("/") ?? ["unknown"];
+  const [searchType, setSearchType] = useState(platformRoute[2]);
+  console.log("searchType", searchType);
+  console.log("platformRoute", pathname.split("/"));
   const router = useRouter();
   const searchParams = useSearchParams();
   if (searchParams.get("loginState") == "signedIn" && user) {
@@ -82,23 +84,30 @@ export function ClientLayout({ children, user }: ClientLayoutProps) {
       render: (
         <BreadcrumbItem>
           <Search size="16" />
-          {platformRoute[0] == "search" ? (
+          {platformRoute[1] == "search" ? (
             <DropdownMenu>
               <DropdownMenuTrigger className="ml-2 flex items-center gap-1">
-                {searchType == "maps" ? "Map" : "Destination"}
+                {searchType == "maps"
+                  ? "Map"
+                  : searchType == "tags"
+                    ? "Tag"
+                    : "Destination"}
                 <ChevronsUpDown size="16" />
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuLabel>Search Type</DropdownMenuLabel>
                 <DropdownMenuRadioGroup
-                  value={platformRoute[1]}
+                  value={platformRoute[2]}
                   onValueChange={selectSearchType}
                 >
-                  <DropdownMenuRadioItem value="pins" className="pl-3">
+                  <DropdownMenuRadioItem value="pins" className="pl-5">
                     Destination
                   </DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="maps" className="pl-3">
+                  <DropdownMenuRadioItem value="maps" className="pl-5">
                     Map
+                  </DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="tags" className="pl-5">
+                    Tag
                   </DropdownMenuRadioItem>
                 </DropdownMenuRadioGroup>
               </DropdownMenuContent>
@@ -133,7 +142,7 @@ export function ClientLayout({ children, user }: ClientLayoutProps) {
                     <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator className="hidden lg:block" />
-                  {platformPages.find((item) => item.route == platformRoute[0]!)
+                  {platformPages.find((item) => item.route == platformRoute[1]!)
                     ?.render ?? (
                     <BreadcrumbItem>
                       <BreadcrumbLink

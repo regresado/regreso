@@ -378,9 +378,11 @@ export function TagCard(
                 </p>
               )}
 
-              <Badge variant="outline">
+              {JSON.stringify(props)}
+
+              {/* <Badge variant="outline">
                 {props.workspace.emoji + " " + props.workspace.name}
-              </Badge>
+              </Badge> */}
             </div>
           </CardContent>
         </div>

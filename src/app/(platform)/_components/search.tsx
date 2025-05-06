@@ -200,7 +200,7 @@ export function SearchForm({
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <div className="flex flex-grow flex-col items-center space-y-4 lg:gap-3 lg:space-y-0">
             <div className="flex w-full flex-grow flex-row items-center gap-4 sm:flex-wrap lg:flex-nowrap">
-              {searchType === "maps" ? null : (
+              {searchType !== "pins" ? null : (
                 <FormField
                   control={form.control}
                   name="type"
@@ -268,35 +268,37 @@ export function SearchForm({
                 )}
               />
             </div>
-            <FormField
-              control={form.control}
-              name="tags"
-              render={({ field }) => (
-                <FormControl>
-                  <TagInput
-                    {...field}
-                    placeholder="Search with tags..."
-                    tags={tags}
-                    className="sm:min-w-[450px]"
-                    setTags={(newTags) => {
-                      setTags(newTags);
-                      form.setValue(
-                        "tags",
-                        (newTags as [EmblorTag, ...EmblorTag[]]).map(
-                          (tag: EmblorTag) => tag.text,
-                        ),
-                        { shouldDirty: true },
-                      );
-                    }}
-                    styleClasses={{
-                      input: "w-full sm:max-w-[350px]",
-                    }}
-                    activeTagIndex={activeTagIndex}
-                    setActiveTagIndex={setActiveTagIndex}
-                  />
-                </FormControl>
-              )}
-            />
+            {searchType == "maps" || searchType == "pins" ? (
+              <FormField
+                control={form.control}
+                name="tags"
+                render={({ field }) => (
+                  <FormControl>
+                    <TagInput
+                      {...field}
+                      placeholder="Search with tags..."
+                      tags={tags}
+                      className="sm:min-w-[450px]"
+                      setTags={(newTags) => {
+                        setTags(newTags);
+                        form.setValue(
+                          "tags",
+                          (newTags as [EmblorTag, ...EmblorTag[]]).map(
+                            (tag: EmblorTag) => tag.text,
+                          ),
+                          { shouldDirty: true },
+                        );
+                      }}
+                      styleClasses={{
+                        input: "w-full sm:max-w-[350px]",
+                      }}
+                      activeTagIndex={activeTagIndex}
+                      setActiveTagIndex={setActiveTagIndex}
+                    />
+                  </FormControl>
+                )}
+              />
+            ) : null}
           </div>
           <div className="flex flex-row flex-wrap justify-end gap-4">
             <FormField
@@ -317,8 +319,16 @@ export function SearchForm({
                       <SelectLabel>Sort by</SelectLabel>
 
                       <SelectItem value="createdAt">Created At</SelectItem>
-                      {searchType === "maps" && (
-                        <SelectItem value="name">Name</SelectItem>
+
+                      <SelectItem value="updatedAt">Updated At</SelectItem>
+                      <SelectItem value="name">Name</SelectItem>
+                      {searchType === "tags" && (
+                        <SelectItem value="destinationCount">
+                          Destinations
+                        </SelectItem>
+                      )}
+                      {searchType === "tags" && (
+                        <SelectItem value="listCount">Maps</SelectItem>
                       )}
                       {searchType === "maps" && (
                         <SelectItem value="size">Size</SelectItem>
@@ -379,7 +389,7 @@ export function SearchForm({
             })
           ) : submitType == "tags" && searchType == "tags" ? (
             (searchResults.items as Tag[]).map((tg: Tag) => {
-              console.log(tg)
+              console.log(tg);
               return <TagCard key={tg.id} {...tg} />;
             })
           ) : null
@@ -391,7 +401,9 @@ export function SearchForm({
           <p className="text-sm text-muted-foreground">
             {searchType === "maps"
               ? "🗺️ No maps found."
-              : "🌌 No destinations found."}{" "}
+              : searchType === "tags"
+                ? "🏷 No tags found."
+                : "🌌 No destinations found."}{" "}
             Try <Link href="/dashboard">creating one</Link> and come back!
           </p>
         )}
@@ -608,7 +620,13 @@ export function SearchPage({
     <>
       <div className="flex flex-row flex-wrap justify-between gap-2">
         <h1 className="md:2xl text-lg">
-          My {searchType === "maps" ? "Map" : "Destination"}s
+          My{" "}
+          {searchType === "maps"
+            ? "Map"
+            : searchType === "tags"
+              ? "Tag"
+              : "Destination"}
+          s
         </h1>
         <Button
           size="sm"
@@ -617,11 +635,21 @@ export function SearchPage({
             setCreating(searchType);
           }}
         >
-          {searchType === "maps" ? <ListPlus /> : <MapPinPlus />}
+          {searchType === "maps" ? (
+            <ListPlus />
+          ) : searchType === "tags" ? (
+            <TagIcon />
+          ) : (
+            <MapPinPlus />
+          )}
           <div className="flex gap-1">
             Create
             <div className="mx-0 hidden px-0 lg:flex">
-              {searchType === "maps" ? "Map" : "Destination"}
+              {searchType === "maps"
+                ? "Map"
+                : searchType === "tags"
+                  ? "Tag"
+                  : "Destination"}
             </div>
           </div>
         </Button>
