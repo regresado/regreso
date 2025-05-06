@@ -156,7 +156,7 @@ export const tagFormSchema = z.object({
     .max(100, {
       message: "The name must be less than 100 characters.",
     }),
-  shortcut: z.string().min(1).max(10, {
+  shortcut: z.string().min(0).max(10, {
     message: "The shortcut must be less than 10 characters.",
   }),
   description: z

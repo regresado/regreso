@@ -88,6 +88,38 @@ import { ListCard } from "./list";
 const getRandomDelay = () => -(Math.random() * 0.7 + 0.05);
 const randomDuration = () => Math.random() * 0.07 + 0.23;
 
+function getContrastTextColor(color: string) {
+  const gradientMatch = color.match(/(#[0-9a-fA-F]{3,6}|rgba?\([^)]+\))/);
+  const baseColor = (gradientMatch ? gradientMatch[1] : color) ?? "#ffffff";
+
+  const hex = baseColor.replace("#", "").trim();
+
+  let r = 255,
+    g = 255,
+    b = 255;
+
+  if (baseColor.startsWith("rgb")) {
+    const rgbMatch = baseColor.match(/rgba?\(([^)]+)\)/);
+    if (rgbMatch && rgbMatch[1]) {
+      const [rr, gg, bb] = rgbMatch[1].split(",").map(Number);
+      r = rr ?? 255;
+      g = gg ?? 255;
+      b = bb ?? 255;
+    }
+  } else if (hex && hex.length === 3) {
+    r = hex[0] ? parseInt(hex[0] + hex[0], 16) : 255;
+    g = hex[1] ? parseInt(hex[1] + hex[1], 16) : 255;
+    b = hex[2] ? parseInt(hex[2] + hex[2], 16) : 255;
+  } else if (hex && hex.length === 6) {
+    r = parseInt(hex.slice(0, 2), 16);
+    g = parseInt(hex.slice(2, 4), 16);
+    b = parseInt(hex.slice(4, 6), 16);
+  }
+
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luminance > 0.6 ? "#000000" : "#ffffff";
+}
+
 const variants = {
   start: (i: number) => ({
     rotate: i % 2 === 0 ? [-1, 1.3, 0] : [1, -1.4, 0],
@@ -342,12 +374,21 @@ export function TagCard(
     <motion.div custom={1} variants={variants} animate={controls}>
       <Card ref={setNodeDragRef} style={style} {...listeners} {...attributes}>
         <div ref={setNodeDropRef}>
-          <CardHeader className="flex flex-row items-center px-3 pb-2 pt-4 text-sm">
+          <CardHeader className="flex flex-row items-end px-3 pb-2 pt-4 text-sm leading-tight">
             <div
-              className="circle mr-1.5 h-4 w-4 overflow-hidden rounded-full"
+              className="circle mr-1.5 flex h-4 w-4 overflow-hidden rounded-full"
               style={{ background: props.color ?? "hsl(var(--secondary))" }}
-            ></div>
-            <CardTitle className="truncate pt-0">
+            >
+              <div
+                className="circle m-auto h-1.5 w-1.5 overflow-hidden rounded-full"
+                style={{
+                  background:
+                    getContrastTextColor(props?.color ?? "#ffffff") ??
+                    "hsl(var(--secondary))",
+                }}
+              ></div>
+            </div>
+            <CardTitle className="truncate">
               <Link href={`/tag/${props.id}`}>
                 {props.name ?? "Unnamed Tag"}
               </Link>
@@ -445,40 +486,6 @@ export function RecentTags() {
             <div className="flex flex-row flex-wrap gap-3 pb-6">
               {recentTags.items.length > 0 ? (
                 recentTags.items.map((tg) => {
-                  function getContrastTextColor(color: string) {
-                    const gradientMatch = color.match(
-                      /(#[0-9a-fA-F]{3,6}|rgba?\([^)]+\))/,
-                    );
-                    const baseColor =
-                      (gradientMatch ? gradientMatch[1] : color) ?? "#ffffff";
-
-                    const hex = baseColor.replace("#", "").trim();
-
-                    let r = 255,
-                      g = 255,
-                      b = 255;
-
-                    if (baseColor.startsWith("rgb")) {
-                      const rgbMatch = baseColor.match(/rgba?\(([^)]+)\)/);
-                      if (rgbMatch && rgbMatch[1]) {
-                        const [rr, gg, bb] = rgbMatch[1].split(",").map(Number);
-                        r = rr ?? 255;
-                        g = gg ?? 255;
-                        b = bb ?? 255;
-                      }
-                    } else if (hex && hex.length === 3) {
-                      r = hex[0] ? parseInt(hex[0] + hex[0], 16) : 255;
-                      g = hex[1] ? parseInt(hex[1] + hex[1], 16) : 255;
-                      b = hex[2] ? parseInt(hex[2] + hex[2], 16) : 255;
-                    } else if (hex && hex.length === 6) {
-                      r = parseInt(hex.slice(0, 2), 16);
-                      g = parseInt(hex.slice(2, 4), 16);
-                      b = parseInt(hex.slice(4, 6), 16);
-                    }
-
-                    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-                    return luminance > 0.6 ? "#000000" : "#ffffff";
-                  }
                   return (
                     <Link href={`/tag/${tg.id}`} key={tg.id} className="w-fit">
                       <Badge
@@ -644,9 +651,18 @@ export function TagPage(props: { id: string }) {
         <div className="space-y-1">
           <div className="flex items-center">
             <div
-              className="circle mr-1.5 h-6 w-6 overflow-hidden rounded-full"
+              className="circle mr-2 flex h-6 w-6 items-center justify-center overflow-hidden rounded-full"
               style={{ background: data?.color ?? "hsl(var(--secondary))" }}
-            ></div>
+            >
+              <div
+                className="circle m-auto h-2.5 w-2.5 overflow-hidden rounded-full"
+                style={{
+                  background:
+                    getContrastTextColor(data?.color ?? "#ffffff") ??
+                    "hsl(var(--secondary))",
+                }}
+              ></div>
+            </div>
             <h1>{data?.name ?? "Unnamed Tag"}</h1>
           </div>
           <p className="text-sm text-muted-foreground">
@@ -669,7 +685,7 @@ export function TagPage(props: { id: string }) {
         {data?.listCount ? (
           <div className="flex flex-row space-x-2 pr-2">
             <p className="font-muted text-sm not-italic">
-              {data?.listCount} map{data?.listCount > 0 ? "s" : null}{" "}
+              {data?.listCount} map{data?.listCount > 0 ? "s" : null}
             </p>
             <p>•</p>
           </div>
@@ -678,7 +694,7 @@ export function TagPage(props: { id: string }) {
           <div className="flex flex-row space-x-2 pr-2">
             <p className="font-muted text-sm not-italic">
               {data?.destinationCount} destination
-              {data?.destinationCount > 0 ? "s" : null}{" "}
+              {data?.destinationCount > 0 ? "s" : null}
             </p>
             <p>•</p>
           </div>

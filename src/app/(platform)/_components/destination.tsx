@@ -661,8 +661,8 @@ export function DestinationCard(
 
   return (
     <Card ref={setNodeRef} style={style} {...listeners} {...attributes}>
-      <CardHeader className="px-3 pb-2 pt-4 text-sm">
-        <CardTitle className="truncate">
+      <CardHeader className="px-3 pb-0 pt-4 text-sm">
+        <CardTitle className="truncate leading-snug">
           <Link href={`/pin/${props.id}`}>
             {props.name && props.name.length > 0
               ? props.name

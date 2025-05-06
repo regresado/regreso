@@ -180,10 +180,12 @@ export function ListCard(
     <motion.div custom={1} variants={variants} animate={controls}>
       <Card ref={setNodeDragRef} style={style} {...listeners} {...attributes}>
         <div ref={setNodeDropRef}>
-          <CardHeader className="px-3 pb-2 pt-4 text-sm">
+          <CardHeader className="px-3 pb-2 pt-4 text-sm leading-tight">
             <CardTitle className="truncate">
               <Link href={`/map/${props.id}`}>
-                <span className="mr-2">{props?.emoji ?? "❔"}</span>
+                <span className="mr-2 leading-tight">
+                  {props?.emoji ?? "❔"}
+                </span>
                 {props.name ?? "Unnamed Map"}
               </Link>
             </CardTitle>
@@ -201,7 +203,7 @@ export function ListCard(
               <p>•</p>
 
               {props.size != null && props.size != undefined && (
-                <p className="font-muted mr-2 text-sm">
+                <p className="font-muted mr-0.5 text-sm">
                   {props.size} destination{props.size == 1 ? null : "s"}
                 </p>
               )}

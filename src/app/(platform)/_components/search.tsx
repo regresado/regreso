@@ -319,6 +319,13 @@ export function SearchForm({
 
                       <SelectItem value="updatedAt">Updated At</SelectItem>
                       <SelectItem value="name">Name</SelectItem>
+                      {searchType === "maps" && (
+                        <SelectItem value="emoji">Emoji</SelectItem>
+                      )}
+                      {searchType === "tags" && (
+                        <SelectItem value="color">Color</SelectItem>
+                      )}
+
                       {searchType === "tags" && (
                         <SelectItem value="destinationCount">
                           Destinations

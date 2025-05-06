@@ -47,8 +47,6 @@ export function ClientLayout({ children, user }: ClientLayoutProps) {
   const pathname = usePathname();
   const platformRoute = pathname.split("/") ?? ["unknown"];
   const [searchType, setSearchType] = useState(platformRoute[2]);
-  console.log("searchType", searchType);
-  console.log("platformRoute", pathname.split("/"));
   const router = useRouter();
   const searchParams = useSearchParams();
   if (searchParams.get("loginState") == "signedIn" && user) {
@@ -100,13 +98,13 @@ export function ClientLayout({ children, user }: ClientLayoutProps) {
                   value={platformRoute[2]}
                   onValueChange={selectSearchType}
                 >
-                  <DropdownMenuRadioItem value="pins" className="pl-5">
+                  <DropdownMenuRadioItem value="pins">
                     Destination
                   </DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="maps" className="pl-5">
+                  <DropdownMenuRadioItem value="maps">
                     Map
                   </DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="tags" className="pl-5">
+                  <DropdownMenuRadioItem value="tags">
                     Tag
                   </DropdownMenuRadioItem>
                 </DropdownMenuRadioGroup>
