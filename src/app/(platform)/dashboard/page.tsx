@@ -106,7 +106,8 @@ const DashboardHome: React.FC = (props: { user?: User }) => {
                 <RecentLists />
               </motion.div>
             </div>
-          </div> <div className="col-span-1 xl:col-span-3">
+          </div>
+          <div className="col-span-1 xl:col-span-2">
             <div className="rounded-xl bg-muted/50">
               <motion.div
                 initial={{ opacity: 0.5, y: 30 }}

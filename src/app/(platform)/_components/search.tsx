@@ -6,13 +6,14 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "~/trpc/react";
-import { TagInput, type Tag } from "emblor";
+import { TagInput, type Tag as EmblorTag } from "emblor";
 import {
   ArrowRight,
   ListPlus,
   Loader2,
   MapPinPlus,
   Search,
+  Tag as TagIcon,
   X,
 } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -22,6 +23,7 @@ import {
   listSearchSchema as originalListSearchSchema,
   type Destination,
   type List,
+  type Tag,
 } from "~/server/models";
 
 import { Badge } from "~/components/ui/badge";
@@ -62,6 +64,7 @@ import { toast } from "~/components/hooks/use-toast";
 
 import { DestinationCard, DestinationForm } from "./destination";
 import { ListCard, ListForm } from "./list";
+import { TagCard, TagForm } from "./tag";
 
 const listSearchSchema = originalListSearchSchema.extend({
   sortBy: originalListSearchSchema.shape.sortBy.refine(
@@ -72,14 +75,18 @@ const listSearchSchema = originalListSearchSchema.extend({
   ),
 });
 
-export function SearchForm({ searchType }: { searchType: "maps" | "pins" }) {
+export function SearchForm({
+  searchType,
+}: {
+  searchType: "maps" | "pins" | "tags";
+}) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   const [submitType, setSubmitType] = useState(searchType);
 
-  const [tags, setTags] = useState<Tag[]>(
+  const [tags, setTags] = useState<EmblorTag[]>(
     searchParams.get("tags") && searchParams.get("tags")!.split(",").length > 0
       ? searchParams
           .get("tags")!
@@ -89,7 +96,7 @@ export function SearchForm({ searchType }: { searchType: "maps" | "pins" }) {
               ({
                 text: tag,
                 id: Math.floor(Math.random() * 1000000000).toString(),
-              }) as Tag,
+              }) as EmblorTag,
           )
       : [],
   );
@@ -107,18 +114,26 @@ export function SearchForm({ searchType }: { searchType: "maps" | "pins" }) {
             order: (searchParams.get("order") as "ASC" | "DESC") ?? "ASC",
             searchString: searchParams.get("searchString") ?? "",
           }
-        : {
-            type:
-              (searchParams.get("type") as "location" | "note" | "any") ??
-              "any",
-            tags: searchParams.get("tags")?.split(",") ?? [],
-            sortBy:
-              (searchParams.get("sortBy") as "name" | "createdAt") ??
-              "createdAt",
-            order: (searchParams.get("order") as "ASC" | "DESC") ?? "DESC",
-            searchString: searchParams.get("searchString") ?? "",
-            location: searchParams.get("location") ?? "",
-          },
+        : searchType === "tags"
+          ? {
+              sortBy:
+                (searchParams.get("sortBy") as "name" | "createdAt") ??
+                "createdAt",
+              order: (searchParams.get("order") as "ASC" | "DESC") ?? "ASC",
+              searchString: searchParams.get("searchString") ?? "",
+            }
+          : {
+              type:
+                (searchParams.get("type") as "location" | "note" | "any") ??
+                "any",
+              tags: searchParams.get("tags")?.split(",") ?? [],
+              sortBy:
+                (searchParams.get("sortBy") as "name" | "createdAt") ??
+                "createdAt",
+              order: (searchParams.get("order") as "ASC" | "DESC") ?? "DESC",
+              searchString: searchParams.get("searchString") ?? "",
+              location: searchParams.get("location") ?? "",
+            },
   });
 
   const [submitValues, setSubmitValues] = useState(form.getValues());
@@ -132,20 +147,26 @@ export function SearchForm({ searchType }: { searchType: "maps" | "pins" }) {
         ...submitValues,
         limit: 6,
       })
-    : api.destination.getMany.useQuery({
-        ...submitValues,
-        sortBy:
-          submitValues.sortBy === "updatedAt" ||
-          (submitType === "maps" &&
-            (submitValues.sortBy as
-              | "size"
-              | "createdAt"
-              | "updatedAt"
-              | "name") === "size")
-            ? "createdAt"
-            : submitValues.sortBy!,
-        limit: 6,
-      });
+    : searchType === "tags"
+      ? api.tag.getMany.useQuery({
+          ...submitValues,
+
+          limit: 6,
+        })
+      : api.destination.getMany.useQuery({
+          ...submitValues,
+          sortBy:
+            submitValues.sortBy === "updatedAt" ||
+            (submitType === "maps" &&
+              (submitValues.sortBy as
+                | "size"
+                | "createdAt"
+                | "updatedAt"
+                | "name") === "size")
+              ? "createdAt"
+              : submitValues.sortBy!,
+          limit: 6,
+        });
   const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
 
   const [pageNumber, setPageNumber] = useState(1);
@@ -261,8 +282,8 @@ export function SearchForm({ searchType }: { searchType: "maps" | "pins" }) {
                       setTags(newTags);
                       form.setValue(
                         "tags",
-                        (newTags as [Tag, ...Tag[]]).map(
-                          (tag: Tag) => tag.text,
+                        (newTags as [EmblorTag, ...EmblorTag[]]).map(
+                          (tag: EmblorTag) => tag.text,
                         ),
                         { shouldDirty: true },
                       );
@@ -355,6 +376,11 @@ export function SearchForm({ searchType }: { searchType: "maps" | "pins" }) {
           ) : submitType == "pins" && searchType == "pins" ? (
             (searchResults.items as Destination[]).map((dest: Destination) => {
               return <DestinationCard key={dest.id} {...dest} />;
+            })
+          ) : submitType == "tags" && searchType == "tags" ? (
+            (searchResults.items as Tag[]).map((tg: Tag) => {
+              console.log(tg)
+              return <TagCard key={tg.id} {...tg} />;
             })
           ) : null
         ) : isFetching ? (
@@ -515,8 +541,14 @@ export function SearchForm({ searchType }: { searchType: "maps" | "pins" }) {
   );
 }
 
-export function SearchPage({ searchType }: { searchType: "maps" | "pins" }) {
-  const [creating, setCreating] = useState<"maps" | "pins" | null>(null);
+export function SearchPage({
+  searchType,
+}: {
+  searchType: "maps" | "pins" | "tags";
+}) {
+  const [creating, setCreating] = useState<"maps" | "pins" | "tags" | null>(
+    null,
+  );
 
   const utils = api.useUtils();
 
@@ -554,6 +586,24 @@ export function SearchPage({ searchType }: { searchType: "maps" | "pins" }) {
         });
       },
     });
+  const createTag = (callback?: () => void) =>
+    api.tag.create.useMutation({
+      onSuccess: async () => {
+        await utils.tag.invalidate();
+        if (typeof callback === "function") {
+          callback();
+        }
+        setCreating(null);
+      },
+      onError: (error) => {
+        toast({
+          title: "Failed to update tag",
+          description: error.message,
+          variant: "destructive",
+        });
+      },
+    });
+
   return (
     <>
       <div className="flex flex-row flex-wrap justify-between gap-2">
@@ -601,6 +651,18 @@ export function SearchPage({ searchType }: { searchType: "maps" | "pins" }) {
               update={false}
               destinationMutation={createDestination}
             />
+          </main>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={creating == "tags"} onOpenChange={() => setCreating(null)}>
+        <DialogContent className="max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <TagIcon /> Create Tag
+            </DialogTitle>
+          </DialogHeader>
+          <main className="flex flex-1 flex-col space-y-6 pt-0">
+            <TagForm update={false} tagMutation={createTag} />
           </main>
         </DialogContent>
       </Dialog>

@@ -251,7 +251,7 @@ export const listRouter = createTRPCRouter({
             workspace: list.workspace,
           };
         });
-        if (!lsts || lsts.length === 0) {
+        if (!lsts) {
           throw new TRPCError({
             code: "NOT_FOUND",
             message: "No lists found",

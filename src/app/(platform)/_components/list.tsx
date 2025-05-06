@@ -185,7 +185,6 @@ export function ListCard(
               <Link href={`/map/${props.id}`}>
                 <span className="mr-2">{props?.emoji ?? "❔"}</span>
                 {props.name ?? "Unnamed Map"}
-
               </Link>
             </CardTitle>
           </CardHeader>
@@ -193,30 +192,30 @@ export function ListCard(
             <p className="text-muted-foreground">
               {props.description ?? "No description provided."}
             </p>
-            <p>•</p>
 
-            {props.size != null && props.size != undefined && (
-                <p className="font-muted text-sm">{props.size} destinations</p>
-              )}
-
-            <div className="mt-2 flex flex-wrap gap-2">
-              
+            <div className="mt-2 flex flex-wrap gap-1.5">
               {(props.updatedAt &&
                 "Updated " + timeSince(props.updatedAt) + " ago") ??
                 "Updated " + timeSince(props.createdAt) + " ago"}
 
-              {props.tags && props.tags?.length > 0
-                ? props.tags.map((tag) => (
-                    <div key={tag.id} className="flex items-center gap-2">
-                      <p>•</p>
+              <p>•</p>
 
-                      <Link href={`/search/pins?tags=${tag.text}`}>
+              {props.size != null && props.size != undefined && (
+                <p className="font-muted mr-2 text-sm">
+                  {props.size} destination{props.size == 1 ? null : "s"}
+                </p>
+              )}
+
+              {props.tags && props.tags.length > 0
+                ? [...props.tags]
+                    .sort((a, b) => a.text.length - b.text.length)
+                    .map((tag) => (
+                      <Link href={`/tag/${tag.id}`} key={tag.id}>
                         <Badge variant="secondary">{tag.text}</Badge>
                       </Link>
-                    </div>
-                  ))
+                    ))
                 : null}
-              <Badge variant="outline" className="ml-2">
+              <Badge variant="outline">
                 {props.workspace.emoji + " " + props.workspace.name}
               </Badge>
             </div>
@@ -489,7 +488,7 @@ export function RecentLists() {
                 disabled={isFetching}
                 asChild
               >
-                <Link href="/search/pins">
+                <Link href="/search/maps">
                   <GalleryVerticalEnd />
                   See All
                 </Link>
@@ -602,7 +601,7 @@ export function ListPage(props: { id: string }) {
           <DeleteList id={parseInt(props.id)} routePath="/search/maps">
             <DialogTrigger asChild>
               <Button size="sm" variant="destructive">
-                Delete Map
+                Burn Map
               </Button>
             </DialogTrigger>
           </DeleteList>
@@ -842,7 +841,7 @@ export function DeleteList({
     },
     onError: (error) => {
       toast({
-        title: "Failed to update map",
+        title: "Failed to delete map",
         description: error.message,
         variant: "destructive",
       });

@@ -685,21 +685,25 @@ export function DestinationCard(
             </Button>
           </p>
         ) : null}
-        <DestinationDialogRender data={props} />
-        <div className="mt-2 flex flex-wrap gap-1">
-          <Badge className="mr-2">
+        {props.body &&
+        props.body.length > 0 &&
+        props.body != '<p class="text-node"></p>' ? (
+          <DestinationDialogRender data={props} />
+        ) : null}
+        <div className="mt-2 flex flex-row flex-wrap gap-1.5">
+          <Badge>
             {String(props.type).charAt(0).toUpperCase() +
               String(props.type).slice(1)}
           </Badge>
-        
+
           {props.tags && props.tags?.length > 0
             ? props.tags.map((tag) => (
-                <Link key={tag.id} href={`/search/pins?tags=${tag.text}`}>
+                <Link key={tag.id} href={`/tag/${tag.id}`}>
                   <Badge variant="secondary">{tag.text}</Badge>
                 </Link>
               ))
             : null}
-          <Badge variant="outline" className="ml-2">
+          <Badge variant="outline">
             {props.workspace.emoji + " " + props.workspace.name}
           </Badge>
         </div>
@@ -912,7 +916,7 @@ export function DestinationDialog(props: { id: string }) {
                         />
                         <DialogTrigger asChild>
                           <Button size="sm" variant="destructive">
-                            Delete Destination
+                            Destroy Destination
                           </Button>
                         </DialogTrigger>
                       </div>

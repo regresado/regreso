@@ -75,7 +75,7 @@ export interface Tag {
   userId: number;
   destinationCount?: number;
   listCount?: number;
-  workspace: Workspace | null;
+  workspace: Workspace;
   createdAt: Date;
   updatedAt: Date | null;
 }
@@ -167,12 +167,14 @@ export const tagFormSchema = z.object({
     .optional(),
   color: z
     .string()
-    .min(0)
-    .max(7, {
-      message: "The color must be less than 7 characters.",
+    .min(3, {
+      message: "Invalid color"
+    })
+    .max(300, {
+      message: "The color must be between 3-300 characters.",
     })
     .optional(),
-  workspaceId: z.number(),
+  workspaceId: z.number().optional(),
 });
 
 export const workspaceSchema = z.object({
@@ -286,7 +288,7 @@ export const workspaceSearchSchema = z.object({
 export const tagSearchSchema = z.object({
   searchString: z.string().nullable().optional(),
   sortBy: z
-    .enum(["createdAt", "updatedAt", "destinationCount", "listCount"])
+    .enum(["createdAt", "updatedAt", "destinationCount", "listCount", "name"])
     .optional(),
   order: z.enum(["ASC", "DESC"]).optional(),
   limit: z.number().max(30).optional().default(5),

@@ -35,6 +35,14 @@ export const tagRouter = createTRPCRouter({
     .input(tagFormSchema)
     .output(z.object({ success: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
+      if (input.color?.includes("url(")) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message:
+            "Invalid color value. Only hex colors or gradients are allowed.",
+        });
+      }
+
       const tagRows = await ctx.db
         .insert(tags)
         .values({
@@ -43,7 +51,7 @@ export const tagRouter = createTRPCRouter({
           description: input.description,
           color: input.color,
           shortcut: input.shortcut,
-          workspaceId: input.workspaceId,
+          workspaceId: input.workspaceId ?? ctx.user.workspaceId ?? 0,
         })
         .returning({
           id: tags.id,
@@ -228,7 +236,7 @@ export const tagRouter = createTRPCRouter({
         )`,
           listCount: sql<number>`(
           SELECT COUNT(*)
-          FROM ${lists}
+          FROM ${listTags}
           WHERE ${listTags.tagId} = ${tags.id}
         )`,
           workspace: workspaces,
@@ -254,6 +262,7 @@ export const tagRouter = createTRPCRouter({
         });
       }
 
+      console.log(tgDataRow.workspace)
       return {
         id: tgDataRow.id,
         name: tgDataRow.name,
