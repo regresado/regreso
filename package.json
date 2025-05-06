@@ -54,7 +54,7 @@
     "@t3-oss/env-nextjs": "^0.13.4",
     "@tanstack/react-query": "^5.75.2",
     "@tiptap/extension-code-block-lowlight": "^2.11.9",
-    "@tiptap/extension-color": "^2.11.9",
+    "@tiptap/extension-color": "^2.12.0",
     "@tiptap/extension-heading": "^2.11.9",
     "@tiptap/extension-horizontal-rule": "^2.11.9",
     "@tiptap/extension-image": "^2.12.0",
