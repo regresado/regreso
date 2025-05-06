@@ -65,7 +65,7 @@
     "@tiptap/extension-underline": "^2.11.9",
     "@tiptap/pm": "^2.11.9",
     "@tiptap/react": "^2.11.9",
-    "@tiptap/starter-kit": "^2.11.9",
+    "@tiptap/starter-kit": "^2.12.0",
     "@trpc/client": "^11.0.2",
     "@trpc/next": "^11.0.4",
     "@trpc/react-query": "^11.0.4",
