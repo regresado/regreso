@@ -105,8 +105,8 @@ importers:
         specifier: ^2.12.0
         version: 2.12.0(@tiptap/core@2.12.0(@tiptap/pm@2.11.9))(@tiptap/extension-text-style@2.12.0(@tiptap/core@2.12.0(@tiptap/pm@2.11.9)))
       '@tiptap/extension-heading':
-        specifier: ^2.11.9
-        version: 2.11.9(@tiptap/core@2.12.0(@tiptap/pm@2.11.9))
+        specifier: ^2.12.0
+        version: 2.12.0(@tiptap/core@2.12.0(@tiptap/pm@2.11.9))
       '@tiptap/extension-horizontal-rule':
         specifier: ^2.11.9
         version: 2.11.9(@tiptap/core@2.12.0(@tiptap/pm@2.11.9))(@tiptap/pm@2.11.9)
@@ -1585,19 +1585,6 @@ packages:
       '@types/react-dom':
         optional: true
 
-  '@radix-ui/react-collection@1.1.4':
-    resolution: {integrity: sha512-cv4vSf7HttqXilDnAnvINd53OTl1/bjUYVZrkFnA7nwmY9Ob2POUy0WY0sfqBAe1s5FyKsyceQlqiEGPYNTadg==}
-    peerDependencies:
-      '@types/react': '*'
-      '@types/react-dom': '*'
-      react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
-      react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
   '@radix-ui/react-collection@1.1.6':
     resolution: {integrity: sha512-PbhRFK4lIEw9ADonj48tiYWzkllz81TM7KVYyyMMw2cwHO7D5h4XKEblL8NlaRisTK3QTe6tBEhDccFUryxHBQ==}
     peerDependencies:
@@ -2559,11 +2546,6 @@ packages:
 
   '@tiptap/extension-hard-break@2.12.0':
     resolution: {integrity: sha512-08MNS2PK5DzdnAfqXn4krmJ/xebKmWpRpYqqN5EM8AvetYKlAJyTVSpo0ZUeGbZ3EZiPm9djgSnrLqpFUDjRCg==}
-    peerDependencies:
-      '@tiptap/core': ^2.7.0
-
-  '@tiptap/extension-heading@2.11.9':
-    resolution: {integrity: sha512-Z84Vbw26bnMyIyZ7hc8/xXDD5uAcr4GA1zs0HPs4Er9wROOqkZnlgE54LaObXn2YbMKuDZ24cmCU8LFy0etN+w==}
     peerDependencies:
       '@tiptap/core': ^2.7.0
 
@@ -7078,18 +7060,6 @@ snapshots:
       '@types/react': 18.3.18
       '@types/react-dom': 18.3.5(@types/react@18.3.18)
 
-  '@radix-ui/react-collection@1.1.4(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
-    dependencies:
-      '@radix-ui/react-compose-refs': 1.1.2(@types/react@18.3.18)(react@18.3.1)
-      '@radix-ui/react-context': 1.1.2(@types/react@18.3.18)(react@18.3.1)
-      '@radix-ui/react-primitive': 2.1.0(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@radix-ui/react-slot': 1.2.0(@types/react@18.3.18)(react@18.3.1)
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-    optionalDependencies:
-      '@types/react': 18.3.18
-      '@types/react-dom': 18.3.5(@types/react@18.3.18)
-
   '@radix-ui/react-collection@1.1.6(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@radix-ui/react-compose-refs': 1.1.2(@types/react@18.3.18)(react@18.3.1)
@@ -8045,11 +8015,7 @@ snapshots:
     dependencies:
       '@tiptap/core': 2.12.0(@tiptap/pm@2.12.0)
 
-  '@tiptap/extension-heading@2.11.9(@tiptap/core@2.12.0(@tiptap/pm@2.11.9))':
-    dependencies:
-      '@tiptap/core': 2.12.0(@tiptap/pm@2.12.0)
-
-  '@tiptap/extension-heading@2.12.0(@tiptap/core@2.12.0(@tiptap/pm@2.12.0))':
+  '@tiptap/extension-heading@2.12.0(@tiptap/core@2.12.0(@tiptap/pm@2.11.9))':
     dependencies:
       '@tiptap/core': 2.12.0(@tiptap/pm@2.12.0)
 
@@ -8185,7 +8151,7 @@ snapshots:
       '@tiptap/extension-dropcursor': 2.12.0(@tiptap/core@2.12.0(@tiptap/pm@2.12.0))(@tiptap/pm@2.12.0)
       '@tiptap/extension-gapcursor': 2.12.0(@tiptap/core@2.12.0(@tiptap/pm@2.12.0))(@tiptap/pm@2.12.0)
       '@tiptap/extension-hard-break': 2.12.0(@tiptap/core@2.12.0(@tiptap/pm@2.12.0))
-      '@tiptap/extension-heading': 2.12.0(@tiptap/core@2.12.0(@tiptap/pm@2.12.0))
+      '@tiptap/extension-heading': 2.12.0(@tiptap/core@2.12.0(@tiptap/pm@2.11.9))
       '@tiptap/extension-history': 2.12.0(@tiptap/core@2.12.0(@tiptap/pm@2.12.0))(@tiptap/pm@2.12.0)
       '@tiptap/extension-horizontal-rule': 2.12.0(@tiptap/core@2.12.0(@tiptap/pm@2.12.0))(@tiptap/pm@2.12.0)
       '@tiptap/extension-italic': 2.12.0(@tiptap/core@2.12.0(@tiptap/pm@2.12.0))
