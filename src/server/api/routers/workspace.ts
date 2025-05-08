@@ -153,10 +153,10 @@ export const workspaceRouter = createTRPCRouter({
           };
         });
         if (!wkspcs || wkspcs.length === 0) {
-          throw new TRPCError({
-            code: "NOT_FOUND",
-            message: "No workspaces found",
-          });
+          return {
+            items: [],
+            count: 0,
+          };
         }
         return {
           items: returnWorkspaces,

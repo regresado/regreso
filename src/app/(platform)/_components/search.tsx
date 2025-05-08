@@ -18,10 +18,13 @@ import {
 import { useForm } from "react-hook-form";
 import { type z } from "zod";
 import {
-  type listSearchSchema,
+  tagSearchSchema,
+  Workspace,
+  workspaceSearchSchema,
   type Destination,
   type destinationSearchSchema,
   type List,
+  type listSearchSchema,
   type Tag,
 } from "~/server/models";
 
@@ -64,11 +67,12 @@ import { toast } from "~/components/hooks/use-toast";
 import { DestinationCard, DestinationForm } from "./destination";
 import { ListCard, ListForm } from "./list";
 import { TagCard, TagForm } from "./tag";
+import { WorkspaceCard } from "./workspace";
 
 export function SearchForm({
   searchType,
 }: {
-  searchType: "maps" | "pins" | "tags";
+  searchType: "maps" | "pins" | "tags" | "boxes";
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -92,7 +96,10 @@ export function SearchForm({
   );
 
   const form = useForm<
-    z.infer<typeof listSearchSchema> | z.infer<typeof destinationSearchSchema>
+    | z.infer<typeof listSearchSchema>
+    | z.infer<typeof destinationSearchSchema>
+    | z.infer<typeof tagSearchSchema>
+    | z.infer<typeof workspaceSearchSchema>
   >({
     defaultValues:
       searchType === "maps"
@@ -112,18 +119,26 @@ export function SearchForm({
               order: (searchParams.get("order") as "ASC" | "DESC") ?? "ASC",
               searchString: searchParams.get("searchString") ?? "",
             }
-          : {
-              type:
-                (searchParams.get("type") as "location" | "note" | "any") ??
-                "any",
-              tags: searchParams.get("tags")?.split(",") ?? [],
-              sortBy:
-                (searchParams.get("sortBy") as "name" | "createdAt") ??
-                "createdAt",
-              order: (searchParams.get("order") as "ASC" | "DESC") ?? "DESC",
-              searchString: searchParams.get("searchString") ?? "",
-              location: searchParams.get("location") ?? "",
-            },
+          : searchType === "boxes"
+            ? {
+                sortBy:
+                  (searchParams.get("sortBy") as "name" | "createdAt") ??
+                  "createdAt",
+                order: (searchParams.get("order") as "ASC" | "DESC") ?? "ASC",
+                searchString: searchParams.get("searchString") ?? "",
+              }
+            : {
+                type:
+                  (searchParams.get("type") as "location" | "note" | "any") ??
+                  "any",
+                tags: searchParams.get("tags")?.split(",") ?? [],
+                sortBy:
+                  (searchParams.get("sortBy") as "name" | "createdAt") ??
+                  "createdAt",
+                order: (searchParams.get("order") as "ASC" | "DESC") ?? "DESC",
+                searchString: searchParams.get("searchString") ?? "",
+                location: searchParams.get("location") ?? "",
+              },
   });
 
   const [submitValues, setSubmitValues] = useState(form.getValues());
@@ -132,28 +147,45 @@ export function SearchForm({
     data: searchResults = { count: 0, items: [] },
     refetch,
     isFetching,
-  } = searchType === "maps"
-    ? api.list.getMany.useQuery({
+  } = searchType === "boxes"
+    ? api.workspace.getMany.useQuery({
         ...submitValues,
+        sortBy: submitValues.sortBy as
+          | "name"
+          | "createdAt"
+          | "destinationCount"
+          | "listCount"
+          | "tagCount",
         limit: 6,
       })
-    : searchType === "tags"
-      ? api.tag.getMany.useQuery({
+    : searchType === "maps"
+      ? api.list.getMany.useQuery({
           ...submitValues,
+          limit: 6,
           sortBy: submitValues.sortBy as
             | "name"
-            | "color"
             | "createdAt"
-            | "destinationCount"
-            | "listCount"
-            | "updatedAt",
-          limit: 6,
+            | "updatedAt"
+            | "emoji"
+            | "size",
         })
-      : api.destination.getMany.useQuery({
-          ...submitValues,
-          sortBy: submitValues.sortBy as "name" | "createdAt" | "updatedAt",
-          limit: 6,
-        });
+      : searchType === "tags"
+        ? api.tag.getMany.useQuery({
+            ...submitValues,
+            sortBy: submitValues.sortBy as
+              | "name"
+              | "color"
+              | "createdAt"
+              | "destinationCount"
+              | "listCount"
+              | "updatedAt",
+            limit: 6,
+          })
+        : api.destination.getMany.useQuery({
+            ...submitValues,
+            sortBy: submitValues.sortBy as "name" | "createdAt" | "updatedAt",
+            limit: 6,
+          });
   const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
 
   const [pageNumber, setPageNumber] = useState(1);
@@ -161,7 +193,9 @@ export function SearchForm({
   function updateUrl(
     data:
       | z.infer<typeof destinationSearchSchema>
-      | z.infer<typeof listSearchSchema>,
+      | z.infer<typeof listSearchSchema>
+      | z.infer<typeof tagSearchSchema>
+      | z.infer<typeof workspaceSearchSchema>,
   ) {
     const newParams = Object.entries(data).map(([key, value]) =>
       value !== undefined && value !== null && value !== ""
@@ -174,7 +208,9 @@ export function SearchForm({
   function onSubmit(
     data:
       | z.infer<typeof destinationSearchSchema>
-      | z.infer<typeof listSearchSchema>,
+      | z.infer<typeof listSearchSchema>
+      | z.infer<typeof tagSearchSchema>
+      | z.infer<typeof workspaceSearchSchema>,
   ) {
     setSubmitValues(data);
     setSubmitType(searchType);
@@ -307,22 +343,28 @@ export function SearchForm({
 
                       <SelectItem value="createdAt">Created At</SelectItem>
 
-                      <SelectItem value="updatedAt">Updated At</SelectItem>
-                      <SelectItem value="name">Name</SelectItem>
-                      {searchType === "maps" && (
-                        <SelectItem value="emoji">Emoji</SelectItem>
+                      {searchType !== "boxes" && (
+                        <SelectItem value="updatedAt">Updated At</SelectItem>
                       )}
+                      <SelectItem value="name">Name</SelectItem>
+                      {searchType === "maps" ||
+                        (searchType == "boxes" && (
+                          <SelectItem value="emoji">Emoji</SelectItem>
+                        ))}
                       {searchType === "tags" && (
                         <SelectItem value="color">Color</SelectItem>
                       )}
 
-                      {searchType === "tags" && (
+                      {(searchType === "tags" || searchType === "boxes") && (
                         <SelectItem value="destinationCount">
                           Destinations
                         </SelectItem>
                       )}
-                      {searchType === "tags" && (
+                      {(searchType === "tags" || searchType === "boxes") && (
                         <SelectItem value="listCount">Maps</SelectItem>
+                      )}
+                      {searchType === "boxes" && (
+                        <SelectItem value="tagCount">Tags</SelectItem>
                       )}
                       {searchType === "maps" && (
                         <SelectItem value="size">Size</SelectItem>
@@ -384,6 +426,10 @@ export function SearchForm({
           ) : submitType == "tags" && searchType == "tags" ? (
             (searchResults.items as Tag[]).map((tg: Tag) => {
               return <TagCard key={tg.id} {...tg} />;
+            })
+          ) : submitType == "boxes" && searchType == "boxes" ? (
+            (searchResults.items as Workspace[]).map((wkspc: Workspace) => {
+              return <WorkspaceCard key={wkspc.id} {...wkspc} />;
             })
           ) : null
         ) : isFetching ? (
@@ -549,11 +595,11 @@ export function SearchForm({
 export function SearchPage({
   searchType,
 }: {
-  searchType: "maps" | "pins" | "tags";
+  searchType: "maps" | "pins" | "tags" | "boxes";
 }) {
-  const [creating, setCreating] = useState<"maps" | "pins" | "tags" | null>(
-    null,
-  );
+  const [creating, setCreating] = useState<
+    "maps" | "pins" | "tags" | "boxes" | null
+  >(null);
 
   const utils = api.useUtils();
 
@@ -618,7 +664,9 @@ export function SearchPage({
             ? "Map"
             : searchType === "tags"
               ? "Tag"
-              : "Destination"}
+              : searchType === "boxes"
+                ? "Trunk"
+                : "Destination"}
           s
         </h1>
         <Button

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import data from "@emoji-mart/data";
@@ -19,7 +20,10 @@ import {
   type workspaceSchema,
 } from "~/server/models";
 
+import { timeSince } from "~/lib/utils";
+
 import { Button } from "~/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -82,6 +86,64 @@ type WorkspaceFormProps =
       update: false;
       defaultValues?: z.infer<typeof workspaceFormSchema>;
     };
+
+export function WorkspaceCard(props: Workspace) {
+  return (
+    <Card>
+      <div>
+        <CardHeader className="px-3 pb-2 pt-4 text-sm leading-tight">
+          <CardTitle className="truncate">
+            <Link href={`/box/${props.id}`}>
+              <span className="mr-2 leading-tight">{props?.emoji ?? "❔"}</span>
+              {props.name ?? "Unnamed Trunk"}
+            </Link>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-2 px-3 pb-3 pt-0 text-sm">
+          <p className="text-muted-foreground">
+            {props.description ?? "No description provided."}
+          </p>
+
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            <p className="font-muted mr-0.5 text-sm">
+              Created {timeSince(props.createdAt)} ago
+            </p>
+
+            {props.destinationCount != null &&
+              props.destinationCount != undefined && (
+                <>
+                  <p>•</p>
+
+                  <p className="font-muted mr-0.5 text-sm">
+                    {props.destinationCount} destination
+                    {props.destinationCount == 1 ? null : "s"}
+                  </p>
+                </>
+              )}
+            {props.listCount != null && props.listCount != undefined && (
+              <>
+                <p>•</p>
+
+                <p className="font-muted mr-0.5 text-sm">
+                  {props.listCount} map{props.listCount == 1 ? null : "s"}
+                </p>
+              </>
+            )}
+            {props.tagCount != null && props.tagCount != undefined && (
+              <>
+                <p>•</p>
+
+                <p className="font-muted mr-0.5 text-sm">
+                  {props.tagCount} tag{props.tagCount == 1 ? null : "s"}
+                </p>
+              </>
+            )}
+          </div>
+        </CardContent>
+      </div>
+    </Card>
+  );
+}
 
 export function WorkspaceForm(props: WorkspaceFormProps) {
   const form = useForm<z.infer<typeof workspaceFormSchema>>({

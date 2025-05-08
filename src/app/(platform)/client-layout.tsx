@@ -117,7 +117,9 @@ export function ClientLayout({ children, user }: ClientLayoutProps) {
                   ? "Map"
                   : searchType == "tags"
                     ? "Tag"
-                    : "Destination"}
+                    : searchType == "boxes"
+                      ? "Trunk"
+                      : "Destination"}
                 <ChevronsUpDown size="16" />
               </DropdownMenuTrigger>
               <DropdownMenuContent>
@@ -134,6 +136,9 @@ export function ClientLayout({ children, user }: ClientLayoutProps) {
                   </DropdownMenuRadioItem>
                   <DropdownMenuRadioItem value="tags">
                     Tag
+                  </DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="boxes">
+                    Trunk
                   </DropdownMenuRadioItem>
                 </DropdownMenuRadioGroup>
               </DropdownMenuContent>

@@ -285,7 +285,14 @@ export const listSearchSchema = z.object({
 export const workspaceSearchSchema = z.object({
   searchString: z.string().nullable().optional(),
   sortBy: z
-    .enum(["createdAt", "destinationCount", "listCount", "tagCount", "emoji"])
+    .enum([
+      "name",
+      "createdAt",
+      "destinationCount",
+      "listCount",
+      "tagCount",
+      "emoji",
+    ])
     .optional(),
   order: z.enum(["ASC", "DESC"]).optional(),
   limit: z.number().max(30).optional().default(5),

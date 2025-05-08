@@ -244,10 +244,10 @@ export const listRouter = createTRPCRouter({
           };
         });
         if (!lsts) {
-          throw new TRPCError({
-            code: "NOT_FOUND",
-            message: "No lists found",
-          });
+          return {
+            items: [],
+            count: 0,
+          };
         }
 
         return {

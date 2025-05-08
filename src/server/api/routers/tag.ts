@@ -138,10 +138,10 @@ export const tagRouter = createTRPCRouter({
         };
       });
       if (!tgs || tgs.length === 0) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "No tags found",
-        });
+        return {
+          items: [],
+          count: 0,
+        };
       }
       return {
         items: returnTags,
