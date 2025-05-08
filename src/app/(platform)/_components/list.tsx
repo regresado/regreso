@@ -688,9 +688,7 @@ export function ListPage(props: { id: string }) {
         )}
 
         {(data?.updatedAt &&
-          "Updated " +
-            timeSince(data?.updatedAt ?? new Date()) +
-            " ago") ??
+          "Updated " + timeSince(data?.updatedAt ?? new Date()) + " ago") ??
           "Created " + timeSince(data?.createdAt ?? new Date()) + " ago"}
       </div>
 

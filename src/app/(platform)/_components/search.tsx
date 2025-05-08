@@ -18,14 +18,14 @@ import {
 import { useForm } from "react-hook-form";
 import { type z } from "zod";
 import {
-  tagSearchSchema,
-  Workspace,
-  workspaceSearchSchema,
   type Destination,
   type destinationSearchSchema,
   type List,
   type listSearchSchema,
   type Tag,
+  type tagSearchSchema,
+  type Workspace,
+  type workspaceSearchSchema,
 } from "~/server/models";
 
 import { Badge } from "~/components/ui/badge";
