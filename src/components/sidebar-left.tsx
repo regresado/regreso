@@ -146,14 +146,12 @@ export function SidebarLeft({ ...props }: ComponentProps<typeof Sidebar>) {
       tags: mode === "fav" ? ["favorite maps"] : undefined,
     });
 
-  const {
-    data: recentWorkspaces = { items: [], count: 0 },
-    refetch: refetchWorkspaces,
-  } = api.workspace.getMany.useQuery({
-    limit: 3,
-    order: "DESC",
-    includeLists: true,
-  });
+  const { data: recentWorkspaces = { items: [], count: 0 } } =
+    api.workspace.getMany.useQuery({
+      limit: 3,
+      order: "DESC",
+      includeLists: true,
+    });
 
   useEffect(() => {
     if (mode !== oldMode) {

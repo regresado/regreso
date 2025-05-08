@@ -448,7 +448,7 @@ export function RecentLists() {
       },
       onError: (error) => {
         toast({
-          title: "Failed to update map",
+          title: "Failed to create map",
           description: error.message,
           variant: "destructive",
         });

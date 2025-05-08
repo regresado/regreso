@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "~/trpc/react";
 import { TagInput, type Tag as EmblorTag } from "emblor";
 import {
@@ -19,9 +18,9 @@ import {
 import { useForm } from "react-hook-form";
 import { type z } from "zod";
 import {
-  destinationSearchSchema,
-  listSearchSchema as originalListSearchSchema,
+  type listSearchSchema,
   type Destination,
+  type destinationSearchSchema,
   type List,
   type Tag,
 } from "~/server/models";
@@ -65,15 +64,6 @@ import { toast } from "~/components/hooks/use-toast";
 import { DestinationCard, DestinationForm } from "./destination";
 import { ListCard, ListForm } from "./list";
 import { TagCard, TagForm } from "./tag";
-
-const listSearchSchema = originalListSearchSchema.extend({
-  sortBy: originalListSearchSchema.shape.sortBy.refine(
-    (val) => val !== "size",
-    {
-      message: "Invalid sortBy value",
-    },
-  ),
-});
 
 export function SearchForm({
   searchType,

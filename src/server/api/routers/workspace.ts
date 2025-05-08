@@ -246,6 +246,11 @@ export const workspaceRouter = createTRPCRouter({
             FROM ${lists}
             WHERE ${lists.workspaceId} = ${workspaces.id}
           )`,
+          tagCount: sql<number>`(
+            SELECT COUNT(*)
+            FROM ${tags}
+            WHERE ${tags.workspaceId} = ${workspaces.id}
+          )`,
         })
         .from(workspaces)
         .where(
@@ -272,6 +277,10 @@ export const workspaceRouter = createTRPCRouter({
                 (typeof wkspcData[0]?.listCount == "string"
                   ? parseInt(wkspcData[0]?.listCount)
                   : wkspcData[0]?.listCount) ?? 0,
+              tagCount:
+                (typeof wkspcData[0]?.tagCount == "string"
+                  ? parseInt(wkspcData[0]?.tagCount)
+                  : wkspcData[0]?.tagCount) ?? 0,
             }
           : undefined;
 

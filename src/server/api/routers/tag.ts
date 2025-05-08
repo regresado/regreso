@@ -6,7 +6,6 @@ import {
   tagSchema,
   tagSearchSchema,
   updateTagSchema,
-  type Tag,
 } from "~/server/models";
 
 import {
@@ -15,7 +14,6 @@ import {
 } from "~/server/api/trpc";
 import {
   destinationTags,
-  lists,
   listTags,
   tags,
   workspaces,
@@ -124,6 +122,7 @@ export const tagRouter = createTRPCRouter({
 
       const returnTags = tgs.map((tag) => {
         const { workspaceId, ...tagWithoutWorkspaceId } = tag.tag;
+        void workspaceId;
         return {
           destinationCount:
             (typeof tag.destinationCount == "string"

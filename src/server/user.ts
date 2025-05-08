@@ -30,6 +30,29 @@ export function verifyUsernameInput(username: string): boolean {
   );
 }
 
+export function verifyDisplayNameInput(displayName: string): boolean {
+  const reservedDisplayNames = [
+    "admin",
+    "administrator",
+    "mod",
+    "moderator",
+    "staff",
+    "owner",
+    "developer",
+    "dev",
+    "support",
+    "help",
+    "contact",
+    "anonymous",
+  ];
+  return (
+    displayName.length > 3 &&
+    displayName.length < 32 &&
+    displayName.trim() === displayName &&
+    !reservedDisplayNames.includes(displayName)
+  );
+}
+
 export async function createUser(
   email: string,
   displayName: string,
@@ -42,6 +65,13 @@ export async function createUser(
   const recoveryCode = generateRandomRecoveryCode();
   const encryptedRecoveryCode = encryptString(recoveryCode);
 
+  if (!verifyUsernameInput(name)) {
+    throw new Error("Invalid username");
+  }
+
+  if (!verifyDisplayNameInput(displayName)) {
+    throw new Error("Invalid display name");
+  }
   const userRow = await db
     .insert(users)
     .values({

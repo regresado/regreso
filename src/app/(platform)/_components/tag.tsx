@@ -11,13 +11,12 @@ import {
   type Over,
 } from "@dnd-kit/core";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { TRPCClientErrorLike } from "@trpc/client";
-import { UseTRPCMutationResult } from "@trpc/react-query/shared";
+import { type TRPCClientErrorLike } from "@trpc/client";
+import { type UseTRPCMutationResult } from "@trpc/react-query/shared";
 import { api } from "~/trpc/react";
 import {
   ArrowRight,
   GalleryVerticalEnd,
-  ListPlus,
   Loader2,
   Pencil,
   Plus,
@@ -27,13 +26,12 @@ import {
 } from "lucide-react";
 import { motion, useAnimation } from "motion/react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { type z } from "zod";
 import {
-  Destination,
-  List,
-  Tag,
   tagFormSchema,
-  updateTagSchema,
+  type Destination,
+  type Tag,
+  type updateTagSchema,
 } from "~/server/models";
 
 import { timeSince } from "~/lib/utils";
@@ -89,7 +87,7 @@ const getRandomDelay = () => -(Math.random() * 0.7 + 0.05);
 const randomDuration = () => Math.random() * 0.07 + 0.23;
 
 function getContrastTextColor(color: string) {
-  const gradientMatch = color.match(/(#[0-9a-fA-F]{3,6}|rgba?\([^)]+\))/);
+  const gradientMatch = /(#[0-9a-fA-F]{3,6}|rgba?\([^)]+\))/.exec(color);
   const baseColor = (gradientMatch ? gradientMatch[1] : color) ?? "#ffffff";
 
   const hex = baseColor.replace("#", "").trim();
@@ -99,8 +97,8 @@ function getContrastTextColor(color: string) {
     b = 255;
 
   if (baseColor.startsWith("rgb")) {
-    const rgbMatch = baseColor.match(/rgba?\(([^)]+)\)/);
-    if (rgbMatch && rgbMatch[1]) {
+    const rgbMatch = /rgba?\(([^)]+)\)/.exec(baseColor);
+    if (rgbMatch?.[1]) {
       const [rr, gg, bb] = rgbMatch[1].split(",").map(Number);
       r = rr ?? 255;
       g = gg ?? 255;
@@ -623,9 +621,11 @@ export function TagPage(props: { id: string }) {
             }
             updateId={parseInt(props.id)}
             tagMutation={(callback) =>
-              updateTag(async () => {
-                await utils.tag.get.invalidate({ id: parseInt(props.id) });
-                if (callback) callback();
+              updateTag(() => {
+                void utils.tag.get.invalidate({ id: parseInt(props.id) });
+                if (callback) {
+                  callback();
+                }
               })
             }
           />

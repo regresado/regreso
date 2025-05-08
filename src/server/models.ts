@@ -185,6 +185,9 @@ export const workspaceSchema = z.object({
   name: z.string(),
   description: z.string().nullable(),
   emoji: z.string().nullable(),
+  destinationCount: z.number().optional(),
+  listCount: z.number().optional(),
+  tagCount: z.number().optional(),
 });
 
 export const destinationSchema = z.object({

@@ -1,6 +1,6 @@
 "use client";
 
-import { cloneElement, isValidElement, useState } from "react";
+import { isValidElement, useState } from "react";
 import {
   redirect,
   usePathname,
@@ -8,7 +8,15 @@ import {
   useSearchParams,
 } from "next/navigation";
 
-import { ChevronsUpDown, FileQuestion, Home, Map, Search } from "lucide-react";
+import {
+  ChevronsUpDown,
+  FileQuestion,
+  Home,
+  Map,
+  Package2,
+  Search,
+  Tag as TagIcon,
+} from "lucide-react";
 import posthog from "posthog-js";
 import type { User } from "~/server/models";
 
@@ -77,6 +85,26 @@ export function ClientLayout({ children, user }: ClientLayoutProps) {
       ),
       name: "Map",
       route: "map",
+    },
+    {
+      render: (
+        <BreadcrumbItem>
+          <TagIcon size="16" />
+          <BreadcrumbLink href="/search/tags">Tags</BreadcrumbLink>
+        </BreadcrumbItem>
+      ),
+      name: "Tag",
+      route: "tag",
+    },
+    {
+      render: (
+        <BreadcrumbItem>
+          <Package2 size="16" />
+          <BreadcrumbLink href="/search/boxes">Trunks</BreadcrumbLink>
+        </BreadcrumbItem>
+      ),
+      name: "Workspace",
+      route: "box",
     },
     {
       render: (
@@ -160,11 +188,7 @@ export function ClientLayout({ children, user }: ClientLayoutProps) {
 
           <div className="h-[calc(100vh-3.5rem)] overflow-auto">
             {children && isValidElement(children) ? (
-              cloneElement(children, { params: { user } } as {
-                params: {
-                  user: User;
-                };
-              })
+              children
             ) : (
               <p>
                 🌌 Nothing to display on the dashboard right now. Try selecting
