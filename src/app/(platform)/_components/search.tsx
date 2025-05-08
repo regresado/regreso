@@ -11,6 +11,7 @@ import {
   ListPlus,
   Loader2,
   MapPinPlus,
+  PackagePlus,
   Search,
   Tag as TagIcon,
   X,
@@ -67,7 +68,7 @@ import { toast } from "~/components/hooks/use-toast";
 import { DestinationCard, DestinationForm } from "./destination";
 import { ListCard, ListForm } from "./list";
 import { TagCard, TagForm } from "./tag";
-import { WorkspaceCard } from "./workspace";
+import { WorkspaceCard, WorkspaceForm } from "./workspace";
 
 export function SearchForm({
   searchType,
@@ -442,7 +443,9 @@ export function SearchForm({
               ? "🗺️ No maps found."
               : searchType === "tags"
                 ? "🏷 No tags found."
-                : "🌌 No destinations found."}{" "}
+                : searchType === "boxes"
+                  ? "🧰 No trunks found."
+                  : "🌌 No destinations found."}{" "}
             Try <Link href="/dashboard">creating one</Link> and come back!
           </p>
         )}
@@ -631,7 +634,7 @@ export function SearchPage({
       },
       onError: (error) => {
         toast({
-          title: "Failed to update map",
+          title: "Failed to create map",
           description: error.message,
           variant: "destructive",
         });
@@ -648,7 +651,25 @@ export function SearchPage({
       },
       onError: (error) => {
         toast({
-          title: "Failed to update tag",
+          title: "Failed to create tag",
+          description: error.message,
+          variant: "destructive",
+        });
+      },
+    });
+
+  const createWorkspace = (callback?: () => void) =>
+    api.workspace.create.useMutation({
+      onSuccess: async () => {
+        await utils.workspace.invalidate();
+        if (typeof callback === "function") {
+          callback();
+        }
+        setCreating(null);
+      },
+      onError: (error) => {
+        toast({
+          title: "Failed to create trunk",
           description: error.message,
           variant: "destructive",
         });
@@ -680,6 +701,8 @@ export function SearchPage({
             <ListPlus />
           ) : searchType === "tags" ? (
             <TagIcon />
+          ) : searchType === "boxes" ? (
+            <PackagePlus />
           ) : (
             <MapPinPlus />
           )}
@@ -690,7 +713,9 @@ export function SearchPage({
                 ? "Map"
                 : searchType === "tags"
                   ? "Tag"
-                  : "Destination"}
+                  : searchType === "boxes"
+                    ? "Trunk"
+                    : "Destination"}
             </div>
           </div>
         </Button>
@@ -732,6 +757,18 @@ export function SearchPage({
           </DialogHeader>
           <main className="flex flex-1 flex-col space-y-6 pt-0">
             <TagForm update={false} tagMutation={createTag} />
+          </main>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={creating == "boxes"} onOpenChange={() => setCreating(null)}>
+        <DialogContent className="max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <PackagePlus /> Create Trunk
+            </DialogTitle>
+          </DialogHeader>
+          <main className="flex flex-1 flex-col space-y-6 pt-0">
+            <WorkspaceForm update={false} workspaceMutation={createWorkspace} />
           </main>
         </DialogContent>
       </Dialog>
