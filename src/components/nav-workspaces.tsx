@@ -15,6 +15,7 @@ export function NavWorkspaces({
   workspaces: {
     name: string;
     emoji: React.ReactNode;
+    id: number;
     pages: {
       name: string;
       emoji: React.ReactNode;

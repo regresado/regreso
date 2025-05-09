@@ -803,7 +803,7 @@ export function SearchPage({
             <ListForm
               update={false}
               workspaces={recentWorkspaces.items}
-              user={user}
+              user={user?.user}
               listMutation={createList}
             />
           </main>
@@ -821,7 +821,7 @@ export function SearchPage({
               update={false}
               destinationMutation={createDestination}
               workspaces={recentWorkspaces.items}
-              user={user}
+              user={user?.user}
             />
           </main>
         </DialogContent>
@@ -838,7 +838,7 @@ export function SearchPage({
               update={false}
               tagMutation={createTag}
               workspaces={recentWorkspaces.items}
-              user={user}
+              user={user?.user}
             />
           </main>
         </DialogContent>
