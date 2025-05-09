@@ -656,6 +656,8 @@ export function SearchPage({
 
   const utils = api.useUtils();
 
+  const { data: user } = api.session.get.useQuery({});
+
   const {
     data: recentWorkspaces = { items: [], count: 0 },
     isFetching: isFetchingWorkspaces,
@@ -798,7 +800,12 @@ export function SearchPage({
             </DialogTitle>
           </DialogHeader>
           <main className="flex flex-1 flex-col space-y-6 pt-0">
-            <ListForm update={false} listMutation={createList} />
+            <ListForm
+              update={false}
+              workspaces={recentWorkspaces.items}
+              user={user}
+              listMutation={createList}
+            />
           </main>
         </DialogContent>
       </Dialog>
@@ -813,6 +820,8 @@ export function SearchPage({
             <DestinationForm
               update={false}
               destinationMutation={createDestination}
+              workspaces={recentWorkspaces.items}
+              user={user}
             />
           </main>
         </DialogContent>
@@ -825,7 +834,12 @@ export function SearchPage({
             </DialogTitle>
           </DialogHeader>
           <main className="flex flex-1 flex-col space-y-6 pt-0">
-            <TagForm update={false} tagMutation={createTag} />
+            <TagForm
+              update={false}
+              tagMutation={createTag}
+              workspaces={recentWorkspaces.items}
+              user={user}
+            />
           </main>
         </DialogContent>
       </Dialog>

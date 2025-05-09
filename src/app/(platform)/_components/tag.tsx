@@ -297,7 +297,12 @@ export function TagForm(
               <FormItem>
                 <FormLabel>Trunk</FormLabel>
 
-                <Select value={field.value?.toString() ?? "any"}>
+                <Select
+                  value={field.value?.toString()}
+                  onValueChange={(value) => {
+                    field.onChange(parseInt(value));
+                  }}
+                >
                   <FormControl>
                     <SelectTrigger className="space-between min-w-[120px]">
                       <SelectValue placeholder="Trunk" />
@@ -493,7 +498,7 @@ export function TagCard(
               )}
               <Link href={`/box/${props.workspace.id}`}>
                 <Badge variant="outline">
-                  {props.workspace.emoji + " " + props.workspace.name}
+                  {(props.workspace.emoji ?? "❔") + " " + props.workspace.name}
                 </Badge>
               </Link>
             </div>

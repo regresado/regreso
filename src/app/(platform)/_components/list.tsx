@@ -245,7 +245,7 @@ export function ListCard(
                 : null}
               <Link href={`/box/${props.workspace.id}`}>
                 <Badge variant="outline">
-                  {props.workspace.emoji + " " + props.workspace.name}
+                  {(props.workspace.emoji ?? "❔") + " " + props.workspace.name}
                 </Badge>
               </Link>
             </div>
@@ -438,7 +438,12 @@ export function ListForm(
               <FormItem>
                 <FormLabel>Trunk</FormLabel>
 
-                <Select value={field.value?.toString()}>
+                <Select
+                  value={field.value?.toString()}
+                  onValueChange={(value) => {
+                    field.onChange(parseInt(value));
+                  }}
+                >
                   <FormControl>
                     <SelectTrigger className="space-between min-w-[120px]">
                       <SelectValue placeholder="Trunk" />

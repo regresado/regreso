@@ -488,24 +488,19 @@ export function DestinationForm(
                   </FormItem>
                 )}
               />
-              <div className="flex flex-row items-center justify-end gap-4">
+              <div className="flex flex-row items-end justify-end gap-4">
                 <FormField
                   control={form.control}
                   name="workspaceId"
                   render={({ field }) => (
-                    <FormItem className="flex flex-row space-x-2 space-y-0">
-                      <FormLabel className="text-left">Trunk</FormLabel>
+                    <FormItem>
+                      <FormLabel>Trunk</FormLabel>
 
                       <Select
                         onValueChange={(value) => {
-                          if (value === "any") {
-                            field.onChange(undefined);
-                          } else {
-                            field.onChange(parseInt(value));
-                          }
+                          field.onChange(parseInt(value));
                         }}
-                        value={field.value?.toString() ?? "any"}
-                        defaultValue={"any"}
+                        value={field.value?.toString()}
                       >
                         <FormControl>
                           <SelectTrigger className="space-between min-w-[120px]">
@@ -516,7 +511,6 @@ export function DestinationForm(
                           <SelectGroup>
                             <SelectLabel>Trunk</SelectLabel>
 
-                            <SelectItem value="any">Any Trunk</SelectItem>
                             {props.workspaces?.map((workspace) => {
                               return (
                                 <SelectItem
@@ -808,7 +802,7 @@ export function DestinationCard(
             : null}
           <Link href={`/box/${props.workspace.id}`}>
             <Badge variant="outline">
-              {props.workspace.emoji + " " + props.workspace.name}
+              {(props.workspace.emoji ?? "❔") + " " + props.workspace.name}
             </Badge>
           </Link>
         </div>
