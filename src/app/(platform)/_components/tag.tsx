@@ -29,10 +29,10 @@ import { useForm } from "react-hook-form";
 import { type z } from "zod";
 import {
   tagFormSchema,
-  type Workspace,
   type Destination,
   type Tag,
   type updateTagSchema,
+  type Workspace,
 } from "~/server/models";
 
 import { timeSince } from "~/lib/utils";
@@ -532,7 +532,9 @@ export function RecentTags({ workspace }: { workspace?: Workspace }) {
                 disabled={isFetching}
                 asChild
               >
-                <Link href="/search/tags">
+                <Link
+                  href={`/search/tags${workspace ? "?workspace=" + workspace.id : ""}`}
+                >
                   <GalleryVerticalEnd />
                   See All
                 </Link>

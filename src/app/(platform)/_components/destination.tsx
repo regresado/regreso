@@ -25,10 +25,10 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
   destinationFormSchema,
-  type Workspace,
   type Destination,
   type List,
   type updateDestinationSchema,
+  type Workspace,
 } from "~/server/models";
 
 import { timeSince } from "~/lib/utils";
@@ -594,7 +594,9 @@ export function RecentDestinations({
           )}
           <div className="flex space-x-2">
             <Button size="sm" variant="secondary" disabled={isFetching} asChild>
-              <Link href="/search/pins">
+              <Link
+                href={`/search/pins${workspace ? "?workspace=" + workspace.id : ""}`}
+              >
                 <GalleryVerticalEnd />
                 See All
               </Link>

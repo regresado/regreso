@@ -34,10 +34,10 @@ import { useForm } from "react-hook-form";
 import { type z } from "zod";
 import {
   listFormSchema,
-  type Workspace,
   type Destination,
   type List,
   type updateListSchema,
+  type Workspace,
 } from "~/server/models";
 
 import { timeSince } from "~/lib/utils";
@@ -508,7 +508,9 @@ export function RecentLists({ workspace }: { workspace?: Workspace }) {
                 disabled={isFetching}
                 asChild
               >
-                <Link href="/search/maps">
+                <Link
+                  href={`/search/maps${workspace ? "?workspace=" + workspace.id : ""}`}
+                >
                   <GalleryVerticalEnd />
                   See All
                 </Link>
