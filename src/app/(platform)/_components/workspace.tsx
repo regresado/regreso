@@ -321,6 +321,10 @@ export function RecentWorkspacesDropdown({
         <Select
           disabled={isFetchingWorkspaces}
           onValueChange={(value) => {
+            if (value === "0") {
+              router.push("/dashboard");
+              return;
+            }
             router.push("/box/" + value);
           }}
           defaultValue={(workspace?.id ?? 0).toString()}
