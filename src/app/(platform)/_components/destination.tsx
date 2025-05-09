@@ -25,11 +25,13 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
   destinationFormSchema,
+  Workspace,
   type Destination,
   type List,
   type updateDestinationSchema,
 } from "~/server/models";
 
+import { timeSince } from "~/lib/utils";
 import { useMediaQuery } from "~/hooks/use-media-query";
 
 import { Badge } from "~/components/ui/badge";
@@ -78,6 +80,11 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { Separator } from "~/components/ui/separator";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
 import { toast } from "~/components/hooks/use-toast";
 import { MinimalTiptapEditor } from "~/components/minimal-tiptap";
 import { createExtensions } from "~/components/minimal-tiptap/hooks/use-minimal-tiptap";
@@ -132,7 +139,9 @@ type DestinationFormProps =
       defaultValues?: z.infer<typeof destinationFormSchema>;
     };
 
-export function DestinationForm(props: DestinationFormProps) {
+export function DestinationForm(
+  props: DestinationFormProps & { workspace?: Workspace },
+) {
   const [loading, setLoading] = useState(false);
   const [loadingUpdate, setLoadingUpdate] = useState(
     props.update ? true : false,
@@ -493,7 +502,7 @@ export function DestinationForm(props: DestinationFormProps) {
   );
 }
 
-export function CreateDestination() {
+export function CreateDestination({ workspace }: { workspace?: Workspace }) {
   const utils = api.useUtils();
   const createDestination = (callback?: () => void) =>
     api.destination.create.useMutation({
@@ -524,6 +533,7 @@ export function CreateDestination() {
           <DestinationForm
             update={false}
             destinationMutation={createDestination}
+            workspace={workspace}
           />
         </CardContent>
       </Card>
@@ -534,6 +544,7 @@ export function CreateDestination() {
 export function RecentDestinations({
   dragEnd,
   setDragEnd,
+  workspace,
 }: {
   dragEnd: { over: Over; active: Active } | null;
   setDragEnd: React.Dispatch<
@@ -542,6 +553,7 @@ export function RecentDestinations({
       active: Active;
     } | null>
   >;
+  workspace?: Workspace;
 }) {
   const {
     data: recentDestinations = { items: [], count: 0 },
@@ -703,9 +715,11 @@ export function DestinationCard(
                 </Link>
               ))
             : null}
-          <Badge variant="outline">
-            {props.workspace.emoji + " " + props.workspace.name}
-          </Badge>
+          <Link href={`/box/${props.workspace.id}`}>
+            <Badge variant="outline">
+              {props.workspace.emoji + " " + props.workspace.name}
+            </Badge>
+          </Link>
         </div>
       </CardContent>
     </Card>
@@ -864,7 +878,7 @@ export function DestinationDialog(props: { id: string }) {
             />
           ) : (
             <Dialog>
-              <main className="space-y-6 pt-0">
+              <main className="space-y-4 pt-0">
                 {data?.type === "location" ? (
                   <div className="text-sm">
                     Location:{" "}
@@ -875,7 +889,7 @@ export function DestinationDialog(props: { id: string }) {
                     </Button>
                   </div>
                 ) : null}
-                {data?.body ? (
+                {data?.body && data?.body != '<p class="text-node"></p>' ? (
                   <div className="w-full">
                     <DestinationDialogRender
                       data={data?.id !== undefined ? data : undefined}
@@ -892,6 +906,39 @@ export function DestinationDialog(props: { id: string }) {
                     ))}
                   </div>
                 ) : null}
+                <div className="flex flex-row flex-wrap items-center gap-2">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="text-sm">
+                        Created {timeSince(data?.createdAt ?? new Date())} ago
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>
+                        {data?.updatedAt?.toISOString() ??
+                          data?.createdAt.toISOString()}
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+
+                  <span className="text-muted-foreground">•</span>
+                  {data?.updatedAt ? (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className="text-sm">
+                          Updated {timeSince(data?.updatedAt)} ago
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>
+                          {data?.updatedAt?.toISOString() ??
+                            data?.createdAt.toISOString()}
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  ) : null}
+                </div>
+
                 <DialogFooter>
                   {data != undefined ? (
                     <div className="w-full">

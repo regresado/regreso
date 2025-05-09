@@ -29,6 +29,7 @@ import { useForm } from "react-hook-form";
 import { type z } from "zod";
 import {
   tagFormSchema,
+  Workspace,
   type Destination,
   type Tag,
   type updateTagSchema,
@@ -77,6 +78,11 @@ import {
 import { Separator } from "~/components/ui/separator";
 import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { Textarea } from "~/components/ui/textarea";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
 import { toast } from "~/components/hooks/use-toast";
 import { TiltCard } from "~/components/tilt-card";
 
@@ -398,9 +404,21 @@ export function TagCard(
             </p>
 
             <div className="mt-2 flex flex-wrap gap-1.5">
-              {(props.updatedAt &&
-                "Updated " + timeSince(props.updatedAt) + " ago") ??
-                "Updated " + timeSince(props.createdAt) + " ago"}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <>
+                    {(props.updatedAt &&
+                      "Updated " + timeSince(props.updatedAt) + " ago") ??
+                      "Created " + timeSince(props.createdAt) + " ago"}
+                  </>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>
+                    {props.updatedAt?.toISOString() ??
+                      props.createdAt.toISOString()}
+                  </p>
+                </TooltipContent>
+              </Tooltip>
 
               <p>•</p>
 
@@ -418,10 +436,11 @@ export function TagCard(
                   {props.listCount} map{props.listCount == 1 ? null : "s"}
                 </p>
               )}
-
-              <Badge variant="outline">
-                {props.workspace.emoji + " " + props.workspace.name}
-              </Badge>
+              <Link href={`/box/${props.workspace.id}`}>
+                <Badge variant="outline">
+                  {props.workspace.emoji + " " + props.workspace.name}
+                </Badge>
+              </Link>
             </div>
           </CardContent>
         </div>
@@ -430,7 +449,7 @@ export function TagCard(
   );
 }
 
-export function RecentTags() {
+export function RecentTags({ workspace }: { workspace?: Workspace }) {
   const utils = api.useUtils();
 
   const {
@@ -481,7 +500,7 @@ export function RecentTags() {
             </CardTitle>
           </CardHeader>
           <CardContent className="px-6">
-            <div className="flex flex-row flex-wrap gap-3 pb-6">
+            <div className="flex flex-row flex-wrap gap-1.5 pb-6">
               {recentTags.items.length > 0 ? (
                 recentTags.items.map((tg) => {
                   return (
@@ -700,11 +719,20 @@ export function TagPage(props: { id: string }) {
           </div>
         ) : null}
 
-        {(data?.updatedAt &&
-          "Updated " +
-            timeSince(data?.updatedAt ?? data?.createdAt ?? new Date()) +
-            " ago") ??
-          "Updated " + timeSince(data?.createdAt ?? new Date()) + " ago"}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <>
+              {(data?.updatedAt &&
+                "Updated " + timeSince(data?.updatedAt) + " ago") ??
+                "Created " + timeSince(data?.createdAt ?? new Date()) + " ago"}
+            </>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>
+              {data?.updatedAt?.toISOString() ?? data?.createdAt.toISOString()}
+            </p>
+          </TooltipContent>
+        </Tooltip>
       </div>
       <Separator />
 

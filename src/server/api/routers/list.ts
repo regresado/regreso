@@ -336,7 +336,6 @@ export const listRouter = createTRPCRouter({
                 return {
                   userId: ctx.user.id,
                   workspaceId: input.workspaceId ?? ctx.user.workspaceId ?? 0,
-
                   name: tag,
                   shortcut: tag.toLowerCase().replace(/\s/g, "-"),
                 };

@@ -34,6 +34,7 @@ import { useForm } from "react-hook-form";
 import { type z } from "zod";
 import {
   listFormSchema,
+  Workspace,
   type Destination,
   type List,
   type updateListSchema,
@@ -80,6 +81,11 @@ import {
 } from "~/components/ui/popover";
 import { Separator } from "~/components/ui/separator";
 import { Textarea } from "~/components/ui/textarea";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
 import { toast } from "~/components/hooks/use-toast";
 import { TiltCard } from "~/components/tilt-card";
 
@@ -196,9 +202,19 @@ export function ListCard(
             </p>
 
             <div className="mt-2 flex flex-wrap gap-1.5">
-              {(props.updatedAt &&
-                "Updated " + timeSince(props.updatedAt) + " ago") ??
-                "Updated " + timeSince(props.createdAt) + " ago"}
+              <Tooltip>
+                <TooltipTrigger>
+                  {(props.updatedAt &&
+                    "Updated " + timeSince(props.updatedAt) + " ago") ??
+                    "Created " + timeSince(props.createdAt) + " ago"}
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>
+                    {props.updatedAt?.toISOString() ??
+                      props.createdAt.toISOString()}
+                  </p>
+                </TooltipContent>
+              </Tooltip>
 
               <p>•</p>
 
@@ -217,9 +233,11 @@ export function ListCard(
                       </Link>
                     ))
                 : null}
-              <Badge variant="outline">
-                {props.workspace.emoji + " " + props.workspace.name}
-              </Badge>
+              <Link href={`/box/${props.workspace.id}`}>
+                <Badge variant="outline">
+                  {props.workspace.emoji + " " + props.workspace.name}
+                </Badge>
+              </Link>
             </div>
           </CardContent>
         </div>
@@ -423,7 +441,7 @@ export function ListForm(props: ListFormProps) {
   );
 }
 
-export function RecentLists() {
+export function RecentLists({ workspace }: { workspace?: Workspace }) {
   const utils = api.useUtils();
 
   const {
@@ -687,9 +705,22 @@ export function ListPage(props: { id: string }) {
           </div>
         )}
 
-        {(data?.updatedAt &&
-          "Updated " + timeSince(data?.updatedAt ?? new Date()) + " ago") ??
-          "Created " + timeSince(data?.createdAt ?? new Date()) + " ago"}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <>
+              {(data?.updatedAt &&
+                "Updated " +
+                  timeSince(data?.updatedAt ?? new Date()) +
+                  " ago") ??
+                "Created " + timeSince(data?.createdAt ?? new Date()) + " ago"}
+            </>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>
+              {data?.updatedAt?.toISOString() ?? data?.createdAt.toISOString()}
+            </p>
+          </TooltipContent>
+        </Tooltip>
       </div>
 
       {data != undefined ? (

@@ -26,6 +26,11 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { Separator } from "~/components/ui/separator";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
 import { TiltCard } from "~/components/tilt-card";
 
 import { CreateDestination, RecentDestinations } from "./destination";
@@ -56,9 +61,16 @@ export function WelcomeCard({ workspace }: { workspace?: Workspace }) {
         <CardContent className="space-y-3 pt-0 sm:px-6 xl:px-6">
           {workspace ? (
             <div className="flex flex-wrap items-center gap-1.5">
-              <p className="text-sm">
-                Created {timeSince(workspace.createdAt)} ago
-              </p>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <p className="text-sm">
+                    Created {timeSince(workspace.createdAt)} ago
+                  </p>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{workspace.createdAt.toISOString()}</p>
+                </TooltipContent>
+              </Tooltip>
               {workspace.destinationCount != null &&
                 workspace.destinationCount != undefined && (
                   <>
@@ -145,15 +157,40 @@ export function Dashboard(props: { workspace?: Workspace }) {
                   ease: "easeOut",
                 }}
               >
-                <WelcomeCard
-                  workspace={props.workspace}
-                  // teams={[
-                  //   {
-                  //     name: "My Crew",
-                  //     logo: Sailboat,
-                  //     plan: "Free",
-                  //   },
-                  // ]}
+                <WelcomeCard workspace={props.workspace} />
+              </motion.div>
+            </div>
+          </div>
+          <div className="col-span-1 xl:col-span-3">
+            <div className="rounded-xl bg-muted/50">
+              <motion.div
+                initial={{ opacity: 0.5, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{
+                  delay: 0,
+                  duration: 0.2,
+                  ease: "easeOut",
+                }}
+              >
+                <CreateDestination workspace={props?.workspace} />
+              </motion.div>
+            </div>
+          </div>
+          <div className="z-50 col-span-1 xl:col-span-2">
+            <div className="rounded-xl bg-muted/50">
+              <motion.div
+                initial={{ opacity: 0.5, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{
+                  delay: 0,
+                  duration: 0.2,
+                  ease: "easeOut",
+                }}
+              >
+                <RecentDestinations
+                  workspace={props?.workspace}
+                  dragEnd={dragEnd}
+                  setDragEnd={setDragEnd}
                 />
               </motion.div>
             </div>
@@ -169,37 +206,7 @@ export function Dashboard(props: { workspace?: Workspace }) {
                   ease: "easeOut",
                 }}
               >
-                <CreateDestination />
-              </motion.div>
-            </div>
-          </div>
-          <div className="z-50 col-span-1 xl:col-span-2">
-            <div className="rounded-xl bg-muted/50">
-              <motion.div
-                initial={{ opacity: 0.5, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{
-                  delay: 0,
-                  duration: 0.2,
-                  ease: "easeOut",
-                }}
-              >
-                <RecentDestinations dragEnd={dragEnd} setDragEnd={setDragEnd} />
-              </motion.div>
-            </div>
-          </div>
-          <div className="col-span-1 xl:col-span-3">
-            <div className="rounded-xl bg-muted/50">
-              <motion.div
-                initial={{ opacity: 0.5, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{
-                  delay: 0,
-                  duration: 0.2,
-                  ease: "easeOut",
-                }}
-              >
-                <RecentLists />
+                <RecentLists workspace={props?.workspace} />
               </motion.div>
             </div>
           </div>
@@ -214,7 +221,7 @@ export function Dashboard(props: { workspace?: Workspace }) {
                   ease: "easeOut",
                 }}
               >
-                <RecentTags />
+                <RecentTags workspace={props?.workspace} />
               </motion.div>
             </div>
           </div>

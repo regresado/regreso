@@ -52,6 +52,11 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { Textarea } from "~/components/ui/textarea";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
 import { toast } from "~/components/hooks/use-toast";
 
 type WorkspaceFormProps =
@@ -105,9 +110,16 @@ export function WorkspaceCard(props: Workspace) {
           </p>
 
           <div className="mt-2 flex flex-wrap gap-1.5">
-            <p className="font-muted mr-0.5 text-sm">
-              Created {timeSince(props.createdAt)} ago
-            </p>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <p className="font-muted mr-0.5 text-sm">
+                  Created {timeSince(props.createdAt)} ago
+                </p>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{props.createdAt.toISOString()}</p>
+              </TooltipContent>
+            </Tooltip>
 
             {props.destinationCount != null &&
               props.destinationCount != undefined && (

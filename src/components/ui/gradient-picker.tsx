@@ -99,18 +99,16 @@ export function GradientPicker({
             ) : (
               <Paintbrush className="h-4 w-4" />
             )}
-            <TooltipProvider>
-              <Tooltip delayDuration={0}>
-                <TooltipTrigger asChild>
-                  <div className="max-w-[70px] flex-1 truncate">
-                    {background ? background : "Pick a color"}
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent side="bottom">
-                  <p>{background}</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            <Tooltip delayDuration={0}>
+              <TooltipTrigger asChild>
+                <div className="max-w-[70px] flex-1 truncate">
+                  {background ? background : "Pick a color"}
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">
+                <p>{background}</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
         </Button>
       </PopoverTrigger>
