@@ -29,10 +29,10 @@ import { useForm } from "react-hook-form";
 import { type z } from "zod";
 import {
   tagFormSchema,
-  User,
   type Destination,
   type Tag,
   type updateTagSchema,
+  type User,
   type Workspace,
 } from "~/server/models";
 
@@ -289,8 +289,7 @@ export function TagForm(
             </FormItem>
           )}
         />
-        <div className="flex flex-row  justify-end items-end gap-4">
-
+        <div className="flex flex-row items-end justify-end gap-4">
           <FormField
             control={form.control}
             name="workspaceId"
@@ -298,11 +297,7 @@ export function TagForm(
               <FormItem>
                 <FormLabel>Trunk</FormLabel>
 
-                <Select
-                  
-                  value={field.value?.toString() ?? "any"}
-                  
-                >
+                <Select value={field.value?.toString() ?? "any"}>
                   <FormControl>
                     <SelectTrigger className="space-between min-w-[120px]">
                       <SelectValue placeholder="Trunk" />
@@ -312,7 +307,7 @@ export function TagForm(
                     <SelectGroup>
                       <SelectLabel>Trunk</SelectLabel>
 
-                                           {props.workspaces?.map((workspace) => {
+                      {props.workspaces?.map((workspace) => {
                         return (
                           <SelectItem
                             value={workspace.id.toString()}

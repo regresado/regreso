@@ -34,10 +34,10 @@ import { useForm } from "react-hook-form";
 import { type z } from "zod";
 import {
   listFormSchema,
-  User,
   type Destination,
   type List,
   type updateListSchema,
+  type User,
   type Workspace,
 } from "~/server/models";
 
@@ -430,7 +430,7 @@ export function ListForm(
             </FormItem>
           )}
         />
-        <div className="flex flex-row  justify-end items-end gap-4">
+        <div className="flex flex-row items-end justify-end gap-4">
           <FormField
             control={form.control}
             name="workspaceId"
@@ -438,11 +438,7 @@ export function ListForm(
               <FormItem>
                 <FormLabel>Trunk</FormLabel>
 
-                <Select
-                  
-                  value={field.value?.toString()}
-                  
-                >
+                <Select value={field.value?.toString()}>
                   <FormControl>
                     <SelectTrigger className="space-between min-w-[120px]">
                       <SelectValue placeholder="Trunk" />
@@ -452,7 +448,6 @@ export function ListForm(
                     <SelectGroup>
                       <SelectLabel>Trunk</SelectLabel>
 
-                      
                       {props.workspaces?.map((workspace) => {
                         return (
                           <SelectItem

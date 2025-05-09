@@ -25,10 +25,10 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
   destinationFormSchema,
-  User,
   type Destination,
   type List,
   type updateDestinationSchema,
+  type User,
   type Workspace,
 } from "~/server/models";
 
@@ -211,7 +211,14 @@ export function DestinationForm(
       });
       setTags(props.defaultValues?.tags ?? []);
     }
-  }, [props.defaultValues, form, loadingUpdate, props.update, props.workspace]);
+  }, [
+    props.defaultValues,
+    form,
+    loadingUpdate,
+    props.update,
+    props.workspace,
+    props.user,
+  ]);
   const location = form.watch("location");
   useEffect(() => {
     if (
@@ -273,6 +280,7 @@ export function DestinationForm(
     form,
     props.defaultValues?.body,
     props.defaultValues?.type,
+    props.defaultValues?.workspaceId,
     props.update,
     props.defaultValues?.name,
     props.defaultValues?.tags,

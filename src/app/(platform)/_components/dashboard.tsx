@@ -9,7 +9,6 @@ import {
   type DragEndEvent,
   type Over,
 } from "@dnd-kit/core";
-import { api } from "~/trpc/react";
 import { Binoculars, Rocket } from "lucide-react";
 import { motion } from "motion/react";
 import { useOnborda } from "onborda";
@@ -42,7 +41,7 @@ export function WelcomeCard({
   workspace,
   user,
   workspaces,
-  isFetchingWorkspaces
+  isFetchingWorkspaces,
 }: {
   workspace?: Workspace;
   user?: User;
@@ -174,7 +173,11 @@ export function Dashboard(props: {
                   ease: "easeOut",
                 }}
               >
-                <WelcomeCard workspace={props.workspace} user={props.user} workspaces={props.workspaces}/>
+                <WelcomeCard
+                  workspace={props.workspace}
+                  user={props.user}
+                  workspaces={props.workspaces}
+                />
               </motion.div>
             </div>
           </div>
@@ -190,7 +193,7 @@ export function Dashboard(props: {
                 }}
               >
                 <CreateDestination
-                workspaces={props?.workspaces}
+                  workspaces={props?.workspaces}
                   workspace={props?.workspace}
                   user={props?.user}
                 />
@@ -227,7 +230,11 @@ export function Dashboard(props: {
                   ease: "easeOut",
                 }}
               >
-                <RecentLists workspace={props?.workspace} user={props?.user} workspaces={props?.workspaces} />
+                <RecentLists
+                  workspace={props?.workspace}
+                  user={props?.user}
+                  workspaces={props?.workspaces}
+                />
               </motion.div>
             </div>
           </div>
@@ -242,7 +249,11 @@ export function Dashboard(props: {
                   ease: "easeOut",
                 }}
               >
-                <RecentTags workspace={props?.workspace} user={props?.user} workspaces={props?.workspaces} />
+                <RecentTags
+                  workspace={props?.workspace}
+                  user={props?.user}
+                  workspaces={props?.workspaces}
+                />
               </motion.div>
             </div>
           </div>
