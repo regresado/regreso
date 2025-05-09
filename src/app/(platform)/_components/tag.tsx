@@ -29,7 +29,7 @@ import { useForm } from "react-hook-form";
 import { type z } from "zod";
 import {
   tagFormSchema,
-  Workspace,
+  type Workspace,
   type Destination,
   type Tag,
   type updateTagSchema,

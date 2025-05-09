@@ -25,7 +25,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
   destinationFormSchema,
-  Workspace,
+  type Workspace,
   type Destination,
   type List,
   type updateDestinationSchema,
