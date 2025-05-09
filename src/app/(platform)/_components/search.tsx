@@ -72,8 +72,12 @@ import { WorkspaceCard, WorkspaceForm } from "./workspace";
 
 export function SearchForm({
   searchType,
+  recentWorkspaces,
+  isFetchingWorkspaces,
 }: {
   searchType: "maps" | "pins" | "tags" | "boxes";
+  recentWorkspaces: Workspace[];
+  isFetchingWorkspaces: boolean;
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -187,20 +191,7 @@ export function SearchForm({
             sortBy: submitValues.sortBy as "name" | "createdAt" | "updatedAt",
             limit: 6,
           });
-  const {
-    data: recentWorkspaces = { items: [], count: 0 },
-    isFetching: isFetchingWorkspaces,
-  } = api.workspace.getMany.useQuery(
-    {
-      limit: 30,
-      order: "DESC",
-    },
-    {
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      refetchOnMount: false,
-    },
-  );
+
   const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
 
   const [pageNumber, setPageNumber] = useState(1);
@@ -266,7 +257,7 @@ export function SearchForm({
                             <SelectLabel>Trunk</SelectLabel>
 
                             <SelectItem value="any">Any Trunk</SelectItem>
-                            {recentWorkspaces.items.map((workspace) => {
+                            {recentWorkspaces.map((workspace) => {
                               return (
                                 <SelectItem
                                   value={workspace.id.toString()}
@@ -665,6 +656,21 @@ export function SearchPage({
 
   const utils = api.useUtils();
 
+  const {
+    data: recentWorkspaces = { items: [], count: 0 },
+    isFetching: isFetchingWorkspaces,
+  } = api.workspace.getMany.useQuery(
+    {
+      limit: 30,
+      order: "DESC",
+    },
+    {
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      refetchOnMount: false,
+    },
+  );
+
   const createDestination = (callback?: () => void) =>
     api.destination.create.useMutation({
       onSuccess: async () => {
@@ -779,7 +785,11 @@ export function SearchPage({
           </div>
         </Button>
       </div>
-      <SearchForm searchType={searchType} />
+      <SearchForm
+        searchType={searchType}
+        recentWorkspaces={recentWorkspaces.items}
+        isFetchingWorkspaces={isFetchingWorkspaces}
+      />
       <Dialog open={creating == "maps"} onOpenChange={() => setCreating(null)}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>

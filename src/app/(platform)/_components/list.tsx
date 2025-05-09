@@ -34,6 +34,7 @@ import { useForm } from "react-hook-form";
 import { type z } from "zod";
 import {
   listFormSchema,
+  User,
   type Destination,
   type List,
   type updateListSchema,
@@ -79,6 +80,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "~/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
 import { Separator } from "~/components/ui/separator";
 import { Textarea } from "~/components/ui/textarea";
 import {
@@ -279,7 +289,13 @@ type ListFormProps =
       defaultValues?: z.infer<typeof listFormSchema>;
     };
 
-export function ListForm(props: ListFormProps) {
+export function ListForm(
+  props: ListFormProps & {
+    workspace?: Workspace;
+    user?: User;
+    workspaces?: Workspace[];
+  },
+) {
   const [tags, setTags] = useState<Tag[]>([]);
   const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
   const form = useForm<z.infer<typeof listFormSchema>>({
@@ -289,6 +305,11 @@ export function ListForm(props: ListFormProps) {
       description: props.defaultValues?.description ?? "",
       tags: props.defaultValues?.tags ?? [],
       emoji: props.defaultValues?.emoji ?? "🗺️",
+      workspaceId:
+        props.defaultValues?.workspaceId ??
+        props.workspace?.id ??
+        props.user?.workspaceId ??
+        undefined,
     } as z.infer<typeof listFormSchema>,
   });
 
@@ -409,39 +430,93 @@ export function ListForm(props: ListFormProps) {
             </FormItem>
           )}
         />
-        <Button
-          type="submit"
-          disabled={submitMutation.isPending || !form.formState.isValid}
-          size="sm"
-        >
-          {props.update ? (
-            <>
-              {submitMutation.isPending ? (
-                <Loader2 className="animate-spin" />
-              ) : (
-                <Pencil />
-              )}
+        <div className="flex flex-row items-center justify-end gap-2">
+          <FormField
+            control={form.control}
+            name="workspaceId"
+            render={({ field }) => (
+              <FormItem className="flex flex-row space-x-2 space-y-0">
+                <FormLabel className="text-left">Trunk</FormLabel>
 
-              {submitMutation.isPending ? "Updating Map..." : "Update Map"}
-            </>
-          ) : (
-            <>
-              {submitMutation.isPending ? (
-                <Loader2 className="animate-spin" />
-              ) : (
-                <Plus />
-              )}
+                <Select
+                  onValueChange={(value) => {
+                    if (value === "any") {
+                      field.onChange(undefined);
+                    } else {
+                      field.onChange(parseInt(value));
+                    }
+                  }}
+                  value={field.value?.toString() ?? "any"}
+                  defaultValue={"any"}
+                >
+                  <FormControl>
+                    <SelectTrigger className="space-between min-w-[120px]">
+                      <SelectValue placeholder="Trunk" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Trunk</SelectLabel>
 
-              {submitMutation.isPending ? "Creating Map..." : "Create Map"}
-            </>
-          )}
-        </Button>
+                      <SelectItem value="any">Any Trunk</SelectItem>
+                      {props.workspaces?.map((workspace) => {
+                        return (
+                          <SelectItem
+                            value={workspace.id.toString()}
+                            key={workspace.id.toString()}
+                          >
+                            {workspace.name}
+                          </SelectItem>
+                        );
+                      })}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </FormItem>
+            )}
+          />
+          <Button
+            type="submit"
+            disabled={submitMutation.isPending || !form.formState.isValid}
+            size="sm"
+          >
+            {props.update ? (
+              <>
+                {submitMutation.isPending ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  <Pencil />
+                )}
+
+                {submitMutation.isPending ? "Updating Map..." : "Update Map"}
+              </>
+            ) : (
+              <>
+                {submitMutation.isPending ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  <Plus />
+                )}
+
+                {submitMutation.isPending ? "Creating Map..." : "Create Map"}
+              </>
+            )}
+          </Button>
+        </div>
       </form>
     </Form>
   );
 }
 
-export function RecentLists({ workspace }: { workspace?: Workspace }) {
+export function RecentLists({
+  workspace,
+  user,
+  workspaces,
+}: {
+  workspace?: Workspace;
+  user?: User;
+  workspaces?: Workspace[];
+}) {
   const utils = api.useUtils();
 
   const {
@@ -452,6 +527,7 @@ export function RecentLists({ workspace }: { workspace?: Workspace }) {
     limit: 3,
     order: "DESC",
     sortBy: "updatedAt",
+    workspaceId: workspace?.id ?? undefined,
   });
   const [open, setOpen] = useState(false);
 
@@ -538,7 +614,13 @@ export function RecentLists({ workspace }: { workspace?: Workspace }) {
           </DialogTitle>
         </DialogHeader>
         <main className="flex flex-1 flex-col space-y-6 pt-0">
-          <ListForm update={false} listMutation={createList} />
+          <ListForm
+            workspace={workspace}
+            user={user}
+            workspaces={workspaces}
+            update={false}
+            listMutation={createList}
+          />
         </main>
       </DialogContent>
     </Dialog>
@@ -613,6 +695,7 @@ export function ListPage(props: { id: string }) {
                     id: tag.id.toString(),
                     text: tag.text,
                   })) ?? [],
+                workspaceId: data.workspace.id ?? undefined,
               } as z.infer<typeof listFormSchema>
             }
             updateId={parseInt(props.id)}

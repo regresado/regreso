@@ -58,6 +58,7 @@ import {
   TooltipTrigger,
 } from "~/components/ui/tooltip";
 import { toast } from "~/components/hooks/use-toast";
+import { useIsFetching } from "@tanstack/react-query";
 
 type WorkspaceFormProps =
   | {
@@ -284,17 +285,15 @@ export function WorkspaceForm(props: WorkspaceFormProps) {
 
 export function RecentWorkspacesDropdown({
   workspace,
+  recentWorkspaces,
+  isFetchingWorkspaces,
 }: {
   workspace?: Workspace;
+  recentWorkspaces: Workspace[];
+  isFetchingWorkspaces?: boolean;
 }) {
   const utils = api.useUtils();
   const router = useRouter();
-
-  const { data: recentWorkspaces = { items: [], count: 0 }, isFetching } =
-    api.workspace.getMany.useQuery({
-      limit: 30,
-      order: "DESC",
-    });
 
   const [open, setOpen] = useState(false);
 
@@ -321,7 +320,7 @@ export function RecentWorkspacesDropdown({
 
       <div className="flex flex-row space-x-2">
         <Select
-          disabled={isFetching}
+          disabled={isFetchingWorkspaces}
           onValueChange={(value) => {
             router.push("/box/" + value);
           }}
@@ -332,7 +331,7 @@ export function RecentWorkspacesDropdown({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="0">All Workspaces</SelectItem>
-            {recentWorkspaces.items.map((workspace) => (
+            {recentWorkspaces.map((workspace) => (
               <SelectItem key={workspace.id} value={workspace.id.toString()}>
                 {workspace.name}
               </SelectItem>

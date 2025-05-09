@@ -13,7 +13,7 @@ import { api } from "~/trpc/react";
 import { Binoculars, Rocket } from "lucide-react";
 import { motion } from "motion/react";
 import { useOnborda } from "onborda";
-import type { Workspace } from "~/server/models";
+import type { User, Workspace } from "~/server/models";
 
 import { timeSince } from "~/lib/utils";
 
@@ -38,10 +38,18 @@ import { RecentLists } from "./list";
 import { RecentTags } from "./tag";
 import { RecentWorkspacesDropdown } from "./workspace";
 
-export function WelcomeCard({ workspace }: { workspace?: Workspace }) {
+export function WelcomeCard({
+  workspace,
+  user,
+  workspaces,
+  isFetchingWorkspaces
+}: {
+  workspace?: Workspace;
+  user?: User;
+  workspaces?: Workspace[];
+  isFetchingWorkspaces?: boolean;
+}) {
   const { startOnborda } = useOnborda();
-
-  const { user } = api.session.get.useQuery({}).data ?? { user: null };
 
   return (
     <TiltCard>
@@ -124,14 +132,22 @@ export function WelcomeCard({ workspace }: { workspace?: Workspace }) {
             </div>
           )}
           <Separator className={workspace ? "mt-0" : undefined} />
-          <RecentWorkspacesDropdown workspace={workspace} />
+          <RecentWorkspacesDropdown
+            workspace={workspace}
+            recentWorkspaces={workspaces ?? []}
+            isFetchingWorkspaces={isFetchingWorkspaces}
+          />
         </CardContent>
       </Card>
     </TiltCard>
   );
 }
 
-export function Dashboard(props: { workspace?: Workspace }) {
+export function Dashboard(props: {
+  workspace?: Workspace;
+  user?: User;
+  workspaces?: Workspace[];
+}) {
   const [dragEnd, setDragEnd] = useState<{
     over: Over;
     active: Active;
@@ -142,6 +158,7 @@ export function Dashboard(props: { workspace?: Workspace }) {
       setDragEnd({ over: over, active: active });
     }
   }
+
   return (
     <>
       <DndContext onDragEnd={handleDragEnd}>
@@ -157,7 +174,7 @@ export function Dashboard(props: { workspace?: Workspace }) {
                   ease: "easeOut",
                 }}
               >
-                <WelcomeCard workspace={props.workspace} />
+                <WelcomeCard workspace={props.workspace} user={props.user} workspaces={props.workspaces}/>
               </motion.div>
             </div>
           </div>
@@ -172,7 +189,11 @@ export function Dashboard(props: { workspace?: Workspace }) {
                   ease: "easeOut",
                 }}
               >
-                <CreateDestination workspace={props?.workspace} />
+                <CreateDestination
+                workspaces={props?.workspaces}
+                  workspace={props?.workspace}
+                  user={props?.user}
+                />
               </motion.div>
             </div>
           </div>
@@ -206,7 +227,7 @@ export function Dashboard(props: { workspace?: Workspace }) {
                   ease: "easeOut",
                 }}
               >
-                <RecentLists workspace={props?.workspace} />
+                <RecentLists workspace={props?.workspace} user={props?.user} workspaces={props?.workspaces} />
               </motion.div>
             </div>
           </div>
@@ -221,7 +242,7 @@ export function Dashboard(props: { workspace?: Workspace }) {
                   ease: "easeOut",
                 }}
               >
-                <RecentTags workspace={props?.workspace} />
+                <RecentTags workspace={props?.workspace} user={props?.user} workspaces={props?.workspaces} />
               </motion.div>
             </div>
           </div>

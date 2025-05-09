@@ -25,6 +25,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
   destinationFormSchema,
+  User,
   type Destination,
   type List,
   type updateDestinationSchema,
@@ -75,7 +76,9 @@ import {
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
@@ -140,7 +143,11 @@ type DestinationFormProps =
     };
 
 export function DestinationForm(
-  props: DestinationFormProps & { workspace?: Workspace },
+  props: DestinationFormProps & {
+    workspace?: Workspace;
+    user?: User;
+    workspaces?: Workspace[];
+  },
 ) {
   const [loading, setLoading] = useState(false);
   const [loadingUpdate, setLoadingUpdate] = useState(
@@ -169,6 +176,11 @@ export function DestinationForm(
     resolver: zodResolver(destinationFormSchema),
     defaultValues: {
       type: "location",
+      workspaceId:
+        props.defaultValues?.workspaceId ??
+        props.workspace?.id ??
+        props.user?.workspaceId ??
+        undefined,
       location: props.defaultValues?.location ?? null,
       name: props.defaultValues?.name ?? "",
       body: props.defaultValues?.body ?? '<p class="text-node"></p>',
@@ -191,10 +203,15 @@ export function DestinationForm(
         body: props.defaultValues?.body ?? '<p class="text-node"></p>',
         tags: props.defaultValues?.tags ?? [],
         attachments: [],
+        workspaceId:
+          props.defaultValues?.workspaceId ??
+          props.workspace?.id ??
+          props.user?.workspaceId ??
+          undefined,
       });
       setTags(props.defaultValues?.tags ?? []);
     }
-  }, [props.defaultValues, form, loadingUpdate, props.update]);
+  }, [props.defaultValues, form, loadingUpdate, props.update, props.workspace]);
   const location = form.watch("location");
   useEffect(() => {
     if (
@@ -240,6 +257,11 @@ export function DestinationForm(
         body: props.defaultValues?.body ?? "",
         tags: props.defaultValues?.tags ?? [],
         attachments: [],
+        workspaceId:
+          props.defaultValues?.workspaceId ??
+          props.workspace?.id ??
+          props.user?.workspaceId ??
+          undefined,
       });
       setTags(props.defaultValues?.tags ?? []);
       setLoading(false);
@@ -254,6 +276,8 @@ export function DestinationForm(
     props.update,
     props.defaultValues?.name,
     props.defaultValues?.tags,
+    props.workspace?.id,
+    props.user?.workspaceId,
   ]);
 
   const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
@@ -337,7 +361,7 @@ export function DestinationForm(
               />
             </div>
             {destinationTypeForm.watch("type") == "location" ? (
-              <>
+              <div className="flex flex-row items-end gap-2">
                 <div className="min-w-[200px] sm:w-1/2">
                   <FormField
                     control={destinationTypeForm.control}
@@ -372,7 +396,7 @@ export function DestinationForm(
                     <ArrowRight />
                   )}
                 </Button>
-              </>
+              </div>
             ) : null}
           </div>
         </form>
@@ -456,44 +480,90 @@ export function DestinationForm(
                   </FormItem>
                 )}
               />
-              <Button
-                type="submit"
-                disabled={
-                  submitMutation.isPending ||
-                  (!form.watch("name") && form.watch("type") === "note") ||
-                  (form.watch("type") === "location" &&
-                    (!form.watch("location") ||
-                      destinationTypeForm.watch("location") !=
-                        form.watch("location")))
-                }
-                size="sm"
-              >
-                {props.update ? (
-                  <>
-                    {submitMutation.isPending ? (
-                      <Loader2 className="animate-spin" />
-                    ) : (
-                      <Pencil />
-                    )}
+              <div className="flex flex-row items-center justify-end gap-4">
+                <FormField
+                  control={form.control}
+                  name="workspaceId"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row space-x-2 space-y-0">
+                      <FormLabel className="text-left">Trunk</FormLabel>
 
-                    {submitMutation.isPending
-                      ? "Updating Destination..."
-                      : "Update Destination"}
-                  </>
-                ) : (
-                  <>
-                    {submitMutation.isPending ? (
-                      <Loader2 className="animate-spin" />
-                    ) : (
-                      <Plus />
-                    )}
+                      <Select
+                        onValueChange={(value) => {
+                          if (value === "any") {
+                            field.onChange(undefined);
+                          } else {
+                            field.onChange(parseInt(value));
+                          }
+                        }}
+                        value={field.value?.toString() ?? "any"}
+                        defaultValue={"any"}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="space-between min-w-[120px]">
+                            <SelectValue placeholder="Trunk" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel>Trunk</SelectLabel>
 
-                    {submitMutation.isPending
-                      ? "Creating Destination..."
-                      : "Create Destination"}
-                  </>
-                )}
-              </Button>
+                            <SelectItem value="any">Any Trunk</SelectItem>
+                            {props.workspaces?.map((workspace) => {
+                              return (
+                                <SelectItem
+                                  value={workspace.id.toString()}
+                                  key={workspace.id.toString()}
+                                >
+                                  {workspace.name}
+                                </SelectItem>
+                              );
+                            })}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    </FormItem>
+                  )}
+                />
+                <Button
+                  type="submit"
+                  disabled={
+                    submitMutation.isPending ||
+                    (!form.watch("name") && form.watch("type") === "note") ||
+                    (form.watch("type") === "location" &&
+                      (!form.watch("location") ||
+                        destinationTypeForm.watch("location") !=
+                          form.watch("location")))
+                  }
+                  size="sm"
+                >
+                  {props.update ? (
+                    <>
+                      {submitMutation.isPending ? (
+                        <Loader2 className="animate-spin" />
+                      ) : (
+                        <Pencil />
+                      )}
+
+                      {submitMutation.isPending
+                        ? "Updating Destination..."
+                        : "Update Destination"}
+                    </>
+                  ) : (
+                    <>
+                      {submitMutation.isPending ? (
+                        <Loader2 className="animate-spin" />
+                      ) : (
+                        <Plus />
+                      )}
+
+                      {submitMutation.isPending
+                        ? "Creating Destination..."
+                        : "Create Destination"}
+                    </>
+                  )}
+                </Button>
+              </div>
             </>
           ) : null}
         </form>
@@ -502,7 +572,15 @@ export function DestinationForm(
   );
 }
 
-export function CreateDestination({ workspace }: { workspace?: Workspace }) {
+export function CreateDestination({
+  workspace,
+  user,
+  workspaces,
+}: {
+  workspace?: Workspace;
+  user?: User;
+  workspaces?: Workspace[];
+}) {
   const utils = api.useUtils();
   const createDestination = (callback?: () => void) =>
     api.destination.create.useMutation({
@@ -534,6 +612,8 @@ export function CreateDestination({ workspace }: { workspace?: Workspace }) {
             update={false}
             destinationMutation={createDestination}
             workspace={workspace}
+            user={user}
+            workspaces={workspaces}
           />
         </CardContent>
       </Card>
@@ -562,6 +642,7 @@ export function RecentDestinations({
   } = api.destination.getMany.useQuery({
     limit: 3,
     order: "DESC",
+    workspaceId: workspace?.id ?? undefined,
   });
 
   return (
@@ -874,6 +955,7 @@ export function DestinationDialog(props: { id: string }) {
                     id: tag.id.toString(),
                     text: tag.text,
                   })) ?? [],
+                workspaceId: data.workspace.id ?? undefined,
               }}
               updateId={parseInt(props.id)}
               destinationMutation={updateDestination}

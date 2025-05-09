@@ -29,6 +29,7 @@ import { useForm } from "react-hook-form";
 import { type z } from "zod";
 import {
   tagFormSchema,
+  User,
   type Destination,
   type Tag,
   type updateTagSchema,
@@ -75,6 +76,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "~/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
 import { Separator } from "~/components/ui/separator";
 import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { Textarea } from "~/components/ui/textarea";
@@ -171,15 +181,25 @@ type TagFormProps =
       defaultValues?: z.infer<typeof tagFormSchema>;
     };
 
-export function TagForm(props: TagFormProps) {
+export function TagForm(
+  props: TagFormProps & {
+    workspace?: Workspace;
+    user?: User;
+    workspaces?: Workspace[];
+  },
+) {
   const form = useForm<z.infer<typeof tagFormSchema>>({
     resolver: zodResolver(tagFormSchema),
-    // reValidateMode: "onChange",
     defaultValues: {
       name: props.defaultValues?.name ?? "",
       shortcut: props.defaultValues?.shortcut ?? "",
       color: props.defaultValues?.color ?? undefined,
       description: props.defaultValues?.description ?? "",
+      workspaceId:
+        props.defaultValues?.workspaceId ??
+        props.workspace?.id ??
+        props.user?.workspaceId ??
+        undefined,
     } as z.infer<typeof tagFormSchema>,
   });
 
@@ -269,33 +289,79 @@ export function TagForm(props: TagFormProps) {
             </FormItem>
           )}
         />
-        <Button
-          type="submit"
-          disabled={submitMutation.isPending || !form.formState.isValid}
-          size="sm"
-        >
-          {props.update ? (
-            <>
-              {submitMutation.isPending ? (
-                <Loader2 className="animate-spin" />
-              ) : (
-                <Pencil />
-              )}
+        <div className="flex flex-row items-center justify-end gap-2">
+          <FormField
+            control={form.control}
+            name="workspaceId"
+            render={({ field }) => (
+              <FormItem className="flex flex-row space-x-2 space-y-0">
+                <FormLabel className="text-left">Trunk</FormLabel>
 
-              {submitMutation.isPending ? "Updating Tag..." : "Update Tag"}
-            </>
-          ) : (
-            <>
-              {submitMutation.isPending ? (
-                <Loader2 className="animate-spin" />
-              ) : (
-                <Plus />
-              )}
+                <Select
+                  onValueChange={(value) => {
+                    if (value === "any") {
+                      field.onChange(undefined);
+                    } else {
+                      field.onChange(parseInt(value));
+                    }
+                  }}
+                  value={field.value?.toString() ?? "any"}
+                  defaultValue={"any"}
+                >
+                  <FormControl>
+                    <SelectTrigger className="space-between min-w-[120px]">
+                      <SelectValue placeholder="Trunk" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Trunk</SelectLabel>
 
-              {submitMutation.isPending ? "Creating Tag..." : "Create Tag"}
-            </>
-          )}
-        </Button>
+                      <SelectItem value="any">Any Trunk</SelectItem>
+                      {props.workspaces?.map((workspace) => {
+                        return (
+                          <SelectItem
+                            value={workspace.id.toString()}
+                            key={workspace.id.toString()}
+                          >
+                            {workspace.name}
+                          </SelectItem>
+                        );
+                      })}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </FormItem>
+            )}
+          />
+          <Button
+            type="submit"
+            disabled={submitMutation.isPending || !form.formState.isValid}
+            size="sm"
+          >
+            {props.update ? (
+              <>
+                {submitMutation.isPending ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  <Pencil />
+                )}
+
+                {submitMutation.isPending ? "Updating Tag..." : "Update Tag"}
+              </>
+            ) : (
+              <>
+                {submitMutation.isPending ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  <Plus />
+                )}
+
+                {submitMutation.isPending ? "Creating Tag..." : "Create Tag"}
+              </>
+            )}
+          </Button>
+        </div>
       </form>
     </Form>
   );
@@ -449,7 +515,15 @@ export function TagCard(
   );
 }
 
-export function RecentTags({ workspace }: { workspace?: Workspace }) {
+export function RecentTags({
+  workspace,
+  user,
+  workspaces,
+}: {
+  workspace?: Workspace;
+  user?: User;
+  workspaces?: Workspace[];
+}) {
   const utils = api.useUtils();
 
   const {
@@ -460,6 +534,7 @@ export function RecentTags({ workspace }: { workspace?: Workspace }) {
     limit: 24,
     order: "DESC",
     sortBy: "updatedAt",
+    workspaceId: workspace?.id ?? undefined,
   });
   const [open, setOpen] = useState(false);
 
@@ -562,7 +637,13 @@ export function RecentTags({ workspace }: { workspace?: Workspace }) {
           </DialogTitle>
         </DialogHeader>
         <main className="flex flex-1 flex-col space-y-6 pt-0">
-          <TagForm update={false} tagMutation={createTag} />
+          <TagForm
+            update={false}
+            tagMutation={createTag}
+            workspaces={workspaces}
+            user={user}
+            workspace={workspace}
+          />
         </main>
       </DialogContent>
     </Dialog>
@@ -638,6 +719,7 @@ export function TagPage(props: { id: string }) {
                 description: data.description ?? "",
                 color: data.color ?? undefined,
                 shortcut: data.shortcut ?? "",
+                workspaceId: data.workspace.id ?? undefined,
               } as z.infer<typeof tagFormSchema>
             }
             updateId={parseInt(props.id)}
