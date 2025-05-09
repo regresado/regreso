@@ -192,6 +192,9 @@ export const destinationRouter = createTRPCRouter({
                 ? inArray(destinationLists.listId, listIds)
                 : undefined,
               eq(destinations.userId, ctx.user.id),
+              input.workspaceId
+                ? eq(destinations.workspaceId, input.workspaceId)
+                : undefined,
             ),
           )
           .groupBy(destinations.id, workspaces.id)

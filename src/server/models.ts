@@ -297,8 +297,6 @@ export const workspaceSearchSchema = z.object({
   order: z.enum(["ASC", "DESC"]).optional(),
   limit: z.number().max(30).optional().default(5),
   offset: z.number().optional().default(0),
-  includeLists: z.boolean().optional().default(false),
-  workspaceId: z.number().optional(),
 });
 
 export const tagSearchSchema = z.object({

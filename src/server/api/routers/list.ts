@@ -122,7 +122,9 @@ export const listRouter = createTRPCRouter({
                   "latest_created",
                 ),
             })
+
             .from(lists)
+            .where(eq(lists.userId, ctx.user.id))
 
             .leftJoin(destinationLists, eq(lists.id, destinationLists.listId))
             .leftJoin(
@@ -170,6 +172,9 @@ export const listRouter = createTRPCRouter({
                   )
                 : undefined,
               eq(lists.userId, ctx.user.id),
+              input.workspaceId
+                ? eq(lists.workspaceId, input.workspaceId)
+                : undefined,
             ),
           )
 

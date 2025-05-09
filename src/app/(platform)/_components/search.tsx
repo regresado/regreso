@@ -187,6 +187,20 @@ export function SearchForm({
             sortBy: submitValues.sortBy as "name" | "createdAt" | "updatedAt",
             limit: 6,
           });
+  const {
+    data: recentWorkspaces = { items: [], count: 0 },
+    isFetching: isFetchingWorkspaces,
+  } = api.workspace.getMany.useQuery(
+    {
+      limit: 30,
+      order: "DESC",
+    },
+    {
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      refetchOnMount: false,
+    },
+  );
   const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
 
   const [pageNumber, setPageNumber] = useState(1);
@@ -224,6 +238,51 @@ export function SearchForm({
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <div className="flex flex-grow flex-col items-center space-y-4 lg:gap-3 lg:space-y-0">
             <div className="flex w-full flex-grow flex-row items-center gap-4 sm:flex-wrap lg:flex-nowrap">
+              {searchType !== "boxes" ? (
+                <FormField
+                  control={form.control}
+                  name="workspaceId"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row space-x-2 space-y-0">
+                      <Select
+                        onValueChange={(value) => {
+                          if (value === "any") {
+                            field.onChange(undefined);
+                          } else {
+                            field.onChange(parseInt(value));
+                          }
+                        }}
+                        value={field.value?.toString() ?? "any"}
+                        defaultValue={"any"}
+                        disabled={isFetchingWorkspaces}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="space-between min-w-[120px]">
+                            <SelectValue placeholder="Trunk" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel>Trunk</SelectLabel>
+
+                            <SelectItem value="any">Any Trunk</SelectItem>
+                            {recentWorkspaces.items.map((workspace) => {
+                              return (
+                                <SelectItem
+                                  value={workspace.id.toString()}
+                                  key={workspace.id.toString()}
+                                >
+                                  {workspace.name}
+                                </SelectItem>
+                              );
+                            })}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    </FormItem>
+                  )}
+                />
+              ) : null}
               {searchType !== "pins" ? null : (
                 <FormField
                   control={form.control}

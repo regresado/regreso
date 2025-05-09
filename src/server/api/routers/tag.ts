@@ -105,6 +105,9 @@ export const tagRouter = createTRPCRouter({
             ),
 
             eq(tags.userId, ctx.user.id),
+            input.workspaceId
+              ? eq(tags.workspaceId, input.workspaceId)
+              : undefined,
           ),
         )
         .orderBy(

@@ -150,7 +150,6 @@ export function SidebarLeft({ ...props }: ComponentProps<typeof Sidebar>) {
     api.workspace.getMany.useQuery({
       limit: 3,
       order: "DESC",
-      includeLists: true,
     });
 
   useEffect(() => {
