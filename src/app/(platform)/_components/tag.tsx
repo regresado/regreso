@@ -221,7 +221,7 @@ export function TagForm(
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-4">
-        <div className="flex w-full flex-row items-center gap-4">
+        <div className="flex w-full flex-row items-end gap-4">
           <FormField
             control={form.control}
             name="color"
@@ -289,24 +289,19 @@ export function TagForm(
             </FormItem>
           )}
         />
-        <div className="flex flex-row items-center justify-end gap-2">
+        <div className="flex flex-row  justify-end items-end gap-4">
+
           <FormField
             control={form.control}
             name="workspaceId"
             render={({ field }) => (
-              <FormItem className="flex flex-row space-x-2 space-y-0">
-                <FormLabel className="text-left">Trunk</FormLabel>
+              <FormItem>
+                <FormLabel>Trunk</FormLabel>
 
                 <Select
-                  onValueChange={(value) => {
-                    if (value === "any") {
-                      field.onChange(undefined);
-                    } else {
-                      field.onChange(parseInt(value));
-                    }
-                  }}
+                  
                   value={field.value?.toString() ?? "any"}
-                  defaultValue={"any"}
+                  
                 >
                   <FormControl>
                     <SelectTrigger className="space-between min-w-[120px]">
@@ -317,8 +312,7 @@ export function TagForm(
                     <SelectGroup>
                       <SelectLabel>Trunk</SelectLabel>
 
-                      <SelectItem value="any">Any Trunk</SelectItem>
-                      {props.workspaces?.map((workspace) => {
+                                           {props.workspaces?.map((workspace) => {
                         return (
                           <SelectItem
                             value={workspace.id.toString()}
