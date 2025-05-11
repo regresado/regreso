@@ -284,6 +284,7 @@ export function DestinationForm(
     props.defaultValues?.workspaceId,
     props.update,
     props.defaultValues?.name,
+    props.defaultValues?.location,
     props.defaultValues?.tags,
     props.workspace?.id,
     props.user?.workspaceId,
@@ -996,10 +997,21 @@ export function DestinationDialog(props: { id: string, workspaces?: Workspace[],
                     ))}
                   </div>
                 ) : null}
+                               
+                             
+                {data?.workspace ? (
+                  <div className="flex flex-wrap gap-2">
+                    Trunk:{" "}
+                                          <Badge variant="outline">
+                                          {data?.workspace.emoji ?? "❔"}{" "}{data?.workspace.name}
+                      </Badge>
+                   
+                  </div>
+                ) : null}
                 <div className="flex flex-row flex-wrap items-center gap-2">
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <div className="text-sm">
+                      <div >
                         Created {timeSince(data?.createdAt ?? new Date())} ago
                       </div>
                     </TooltipTrigger>
@@ -1015,7 +1027,7 @@ export function DestinationDialog(props: { id: string, workspaces?: Workspace[],
                   {data?.updatedAt ? (
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <div className="text-sm">
+                        <div>
                           Updated {timeSince(data?.updatedAt)} ago
                         </div>
                       </TooltipTrigger>

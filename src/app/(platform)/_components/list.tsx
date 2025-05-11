@@ -5,10 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import {
-  useDraggable,
   useDroppable,
-  type Active,
-  type Over,
+ 
 } from "@dnd-kit/core";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
@@ -120,38 +118,33 @@ const variants = {
 };
 
 export function ListCard(
-  props: List & {
-    setDragEnd?: React.Dispatch<
-      React.SetStateAction<{ over: Over; active: Active } | null>
-    >;
-    dragEnd?: { over: Over | null; active: Active | null };
-  },
+  props: List ,
 ) {
   const controls = useAnimation();
 
-  const utils = api.useUtils();
+  // const utils = api.useUtils();
 
-  const addToWorkspace = api.list.update.useMutation({
-    onSuccess: async () => {
-      await utils.destination.invalidate();
-      toast({
-        title: "List added to workspace",
-        description: "Destination has been added to the selected workspace.",
-      });
-    },
-    onError: (error) => {
-      toast({
-        title: "Failed to add list to workspace",
-        description: error.message,
-        variant: "destructive",
-      });
-    },
-  });
+  // const addToWorkspace = api.list.update.useMutation({
+  //   onSuccess: async () => {
+  //     await utils.destination.invalidate();
+  //     toast({
+  //       title: "List added to workspace",
+  //       description: "Destination has been added to the selected workspace.",
+  //     });
+  //   },
+  //   onError: (error) => {
+  //     toast({
+  //       title: "Failed to add list to workspace",
+  //       description: error.message,
+  //       variant: "destructive",
+  //     });
+  //   },
+  /* }); */
 
   const { isOver, setNodeRef: setNodeDropRef } = useDroppable({
     id: props.id,
   });
-  const { dragEnd, setDragEnd, id } = props;
+ 
   // useEffect(() => {
    // if (
     //  dragEnd &&
