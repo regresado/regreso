@@ -398,10 +398,10 @@ export function SearchForm({
                         <SelectItem value="updatedAt">Updated At</SelectItem>
                       )}
                       <SelectItem value="name">Name</SelectItem>
-                      {searchType === "maps" ||
-                        (searchType == "boxes" && (
+                      {(searchType === "maps" ||
+                        searchType == "boxes") && (
                           <SelectItem value="emoji">Emoji</SelectItem>
-                        ))}
+                        )}
                       {searchType === "tags" && (
                         <SelectItem value="color">Color</SelectItem>
                       )}

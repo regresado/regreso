@@ -292,6 +292,7 @@ export const destinationRouter = createTRPCRouter({
           body: input.body,
           type: input.type,
           location: input.location,
+          workspaceId: input.workspaceId ?? undefined,
         })
         .where(
           and(

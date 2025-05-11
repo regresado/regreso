@@ -242,6 +242,7 @@ export function DestinationForm(
       );
     }
     if (detailsState.url) {
+      alert(123)
       form.setValue(
         "location",
         detailsState.url ?? destinationTypeForm.watch("location"),
@@ -259,7 +260,7 @@ export function DestinationForm(
     if (props.update) {
       form.reset({
         type: props.defaultValues?.type ?? "location",
-        location: null,
+        location: props.defaultValues?.location ?? null,
         name: props.defaultValues?.name ?? "",
         body: props.defaultValues?.body ?? "",
         tags: props.defaultValues?.tags ?? [],
@@ -527,6 +528,7 @@ export function DestinationForm(
                     </FormItem>
                   )}
                 />
+                
                 <Button
                   type="submit"
                   disabled={
@@ -820,7 +822,7 @@ function DestinationDialogRender(props: { data?: Destination }) {
   return <EditorContent editor={editor} />;
 }
 
-export function DestinationDialog(props: { id: string }) {
+export function DestinationDialog(props: { id: string, workspaces?: Workspace[], user?: User }) {
   const utils = api.useUtils();
 
   const router = useRouter();
@@ -946,6 +948,8 @@ export function DestinationDialog(props: { id: string }) {
           {editing && data != undefined && !isPending ? (
             <DestinationForm
               update={true}
+              workspaces={props.workspaces}
+              user={props.user}
               defaultValues={{
                 ...data,
                 body: data.body ?? '<p class="text-node"></p>',

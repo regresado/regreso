@@ -644,7 +644,7 @@ export function RecentTags({
   );
 }
 
-export function TagPage(props: { id: string }) {
+export function TagPage(props: { id: string, workspaces?:Workspace[], user?:User }) {
   const utils = api.useUtils();
 
   const tagId = props.id;
@@ -707,6 +707,8 @@ export function TagPage(props: { id: string }) {
         {editing && data != undefined ? (
           <TagForm
             update={true}
+            workspaces={props.workspaces}
+            user={props.user}
             defaultValues={
               {
                 name: data.name ?? "",

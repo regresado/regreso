@@ -152,49 +152,49 @@ export function ListCard(
     id: props.id,
   });
   const { dragEnd, setDragEnd, id } = props;
-  useEffect(() => {
-    if (
-      dragEnd &&
-      setDragEnd &&
-      dragEnd.over &&
-      dragEnd.active &&
-      dragEnd.active.id == id
-    ) {
-      addToWorkspace.mutate({
-        id,
-        workspaceId:
-          typeof dragEnd.over.id === "number"
-            ? dragEnd.over.id
-            : parseInt(String(dragEnd.over.id)),
-      });
-      setDragEnd(null);
-    }
-  }, [dragEnd, setDragEnd, addToWorkspace, id]);
-  const {
-    attributes,
-    listeners,
-    transform,
-    setNodeRef: setNodeDragRef,
-  } = useDraggable({
-    id: props.id,
-  });
-  const style = transform
-    ? {
-        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-      }
-    : undefined;
-  useEffect(() => {
+  // useEffect(() => {
+   // if (
+    //  dragEnd &&
+    //  setDragEnd &&
+    //  dragEnd.over &&
+    //  dragEnd.active &&
+    //  dragEnd.active.id == id
+   // ) {
+     // addToWorkspace.mutate({
+     //   id,
+     //   workspaceId:
+     //     typeof dragEnd.over.id === "number"
+     //       ? dragEnd.over.id
+     //       : parseInt(String(dragEnd.over.id)),
+    //  });
+    //  setDragEnd(null);
+  //  }
+ // }, [dragEnd, setDragEnd, addToWorkspace, id]);
+ // const {
+  //  attributes,
+   // listeners,
+   // transform,
+   // setNodeRef: setNodeDragRef,
+  //} = useDraggable({
+  //  id: props.id,
+  //});
+ // const style = transform
+  //  ? {
+  //      transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+  //    }
+  //  : undefined;
+useEffect(() => {
     if (isOver) {
-      void controls.start("start");
+     void controls.start("start");
     } else {
       controls.stop();
-      controls.set("reset");
+     controls.set("reset");
     }
   }, [isOver, controls]);
 
   return (
     <motion.div custom={1} variants={variants} animate={controls}>
-      <Card ref={setNodeDragRef} style={style} {...listeners} {...attributes}>
+      <Card>
         <div ref={setNodeDropRef}>
           <CardHeader className="px-3 pb-2 pt-4 text-sm leading-tight">
             <CardTitle className="truncate">
@@ -621,7 +621,7 @@ export function RecentLists({
   );
 }
 
-export function ListPage(props: { id: string }) {
+export function ListPage(props: { id: string, workspaces?: Workspace[], user?: User }) {
   const utils = api.useUtils();
 
   const listId = props.id;
@@ -678,6 +678,9 @@ export function ListPage(props: { id: string }) {
         </DialogHeader>
         {editing && data != undefined ? (
           <ListForm
+            
+            workspaces={props.workspaces}
+            user={props.user}
             update={true}
             defaultValues={
               {
@@ -775,15 +778,15 @@ export function ListPage(props: { id: string }) {
       ) : null}
 
       <div className="font-muted flex flex-row space-x-2 text-sm italic">
-        {data?.size && (
+        {data?.size != undefined ? (
           <div className="flex flex-row space-x-2 pr-2">
             <p className="font-muted text-sm not-italic">
               {data?.size} destinations{" "}
             </p>
             <p>•</p>
           </div>
-        )}
-
+        ) : null}
+        
         <Tooltip>
           <TooltipTrigger asChild>
             <>

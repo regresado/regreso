@@ -85,12 +85,12 @@ export const tagRouter = createTRPCRouter({
             SELECT COUNT(*)
             FROM ${destinationTags}
             WHERE ${destinationTags.tagId} = ${tags.id}
-          )`,
+          )`.as("destinationCount"),
           listCount: sql<number>`(
             SELECT COUNT(*)
             FROM ${listTags}
             WHERE ${listTags.tagId} = ${tags.id}
-          )`,
+          )`.as("listCount"),
           workspace: workspaces,
         })
         .from(tags)
@@ -113,9 +113,17 @@ export const tagRouter = createTRPCRouter({
         .orderBy(
           (input.order === "ASC" ? asc : desc)(
             input.sortBy === "destinationCount"
-              ? sql`destinationCount`
+              ? sql<number>`(
+            SELECT COUNT(*)
+            FROM ${destinationTags}
+            WHERE ${destinationTags.tagId} = ${tags.id}
+          )`.as("destinationCount")
               : input.sortBy === "listCount"
-                ? sql`listCount`
+                ? sql<number>`(
+            SELECT COUNT(*)
+            FROM ${listTags}
+            WHERE ${listTags.tagId} = ${tags.id}
+          )`.as("listCount")
                 : tags[input.sortBy ?? "createdAt"],
           ),
         )
@@ -172,6 +180,7 @@ export const tagRouter = createTRPCRouter({
           description: input.description,
           color: input.color,
           shortcut: input.shortcut,
+          workspaceId: input.workspaceId ?? undefined,
         })
         .where(and(eq(tags.id, input.id), eq(tags.userId, ctx.user.id)))
         .returning({

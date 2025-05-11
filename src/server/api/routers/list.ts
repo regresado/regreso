@@ -283,6 +283,7 @@ export const listRouter = createTRPCRouter({
             name: input.name,
             description: input.description,
             emoji: input.emoji,
+            workspaceId: input.workspaceId ?? undefined,
           })
           .where(and(eq(lists.id, input.id), eq(lists.userId, ctx.user.id)))
           .returning({

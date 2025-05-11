@@ -115,11 +115,23 @@ export const workspaceRouter = createTRPCRouter({
           .orderBy(
             (input.order === "ASC" ? asc : desc)(
               input.sortBy === "destinationCount"
-                ? sql`destinationCount`
+                ? sql<number>`(
+              SELECT COUNT(*)
+              FROM ${destinations}
+              WHERE ${destinations.workspaceId} = ${workspaces.id}
+            )`
                 : input.sortBy === "listCount"
-                  ? sql`listCount`
+                  ? sql<number>`(
+              SELECT COUNT(*)
+              FROM ${lists}
+              WHERE ${lists.workspaceId} = ${workspaces.id}
+            )`
                   : input.sortBy === "tagCount"
-                    ? sql`tagCount`
+                    ? sql<number>`(
+              SELECT COUNT(*)
+              FROM ${tags}
+              WHERE ${tags.workspaceId} = ${workspaces.id}
+            )`
                     : workspaces[input.sortBy ?? "createdAt"],
             ),
           )
