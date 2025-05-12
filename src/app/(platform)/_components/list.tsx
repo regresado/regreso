@@ -20,6 +20,7 @@ import {
   GalleryVerticalEnd,
   ListPlus,
   Loader2,
+  Flame,
   Map,
   Pencil,
   Plus,
@@ -696,6 +697,7 @@ export function ListPage(props: { id: string, workspaces?: Workspace[], user?: U
           <DeleteList id={parseInt(props.id)} routePath="/search/maps">
             <DialogTrigger asChild>
               <Button size="sm" variant="destructive">
+              <Fire />
                 Burn Map
               </Button>
             </DialogTrigger>
@@ -769,6 +771,13 @@ export function ListPage(props: { id: string, workspaces?: Workspace[], user?: U
           ))}
         </div>
       ) : null}
+
+      <div className="mt-2 flex flex-wrap gap-2 text-sm">
+          Trunk:{" "}
+                      <Badge variant="outline">
+              {data?.workspace.emoji ?? "❔"}{" "}{data?.workspace.name}}
+            </Badge>
+                 </div>
 
       <div className="font-muted flex flex-row space-x-2 text-sm italic">
         {data?.size != undefined ? (
