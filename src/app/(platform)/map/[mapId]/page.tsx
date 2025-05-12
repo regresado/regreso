@@ -1,5 +1,7 @@
-import { ListPage } from "~/app/(platform)/_components/list";
 import { api } from "~/trpc/server";
+
+import { ListPage } from "~/app/(platform)/_components/list";
+
 export default async function MapPage({
   params,
 }: {

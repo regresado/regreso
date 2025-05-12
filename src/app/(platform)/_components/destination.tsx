@@ -242,7 +242,7 @@ export function DestinationForm(
       );
     }
     if (detailsState.url) {
-      alert(123)
+      alert(123);
       form.setValue(
         "location",
         detailsState.url ?? destinationTypeForm.watch("location"),
@@ -529,7 +529,7 @@ export function DestinationForm(
                     </FormItem>
                   )}
                 />
-                
+
                 <Button
                   type="submit"
                   disabled={
@@ -823,7 +823,11 @@ function DestinationDialogRender(props: { data?: Destination }) {
   return <EditorContent editor={editor} />;
 }
 
-export function DestinationDialog(props: { id: string, workspaces?: Workspace[], user?: User }) {
+export function DestinationDialog(props: {
+  id: string;
+  workspaces?: Workspace[];
+  user?: User;
+}) {
   const utils = api.useUtils();
 
   const router = useRouter();
@@ -997,21 +1001,19 @@ export function DestinationDialog(props: { id: string, workspaces?: Workspace[],
                     ))}
                   </div>
                 ) : null}
-                               
-                             
+
                 {data?.workspace ? (
                   <div className="flex flex-wrap gap-2">
                     Trunk:{" "}
-                                          <Badge variant="outline">
-                                          {data?.workspace.emoji ?? "❔"}{" "}{data?.workspace.name}
-                      </Badge>
-                   
+                    <Badge variant="outline">
+                      {data?.workspace.emoji ?? "❔"} {data?.workspace.name}
+                    </Badge>
                   </div>
                 ) : null}
                 <div className="flex flex-row flex-wrap items-center gap-2">
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <div >
+                      <div>
                         Created {timeSince(data?.createdAt ?? new Date())} ago
                       </div>
                     </TooltipTrigger>
@@ -1027,9 +1029,7 @@ export function DestinationDialog(props: { id: string, workspaces?: Workspace[],
                   {data?.updatedAt ? (
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <div>
-                          Updated {timeSince(data?.updatedAt)} ago
-                        </div>
+                        <div>Updated {timeSince(data?.updatedAt)} ago</div>
                       </TooltipTrigger>
                       <TooltipContent>
                         <p>

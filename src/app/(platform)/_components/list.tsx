@@ -4,10 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import {
-  useDroppable,
- 
-} from "@dnd-kit/core";
+import { useDroppable } from "@dnd-kit/core";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,10 +14,10 @@ import { api } from "~/trpc/react";
 import { TagInput, type Tag } from "emblor";
 import {
   ArrowRight,
+  Flame,
   GalleryVerticalEnd,
   ListPlus,
   Loader2,
-  Flame,
   Map,
   Pencil,
   Plus,
@@ -118,9 +115,7 @@ const variants = {
   },
 };
 
-export function ListCard(
-  props: List ,
-) {
+export function ListCard(props: List) {
   const controls = useAnimation();
 
   // const utils = api.useUtils();
@@ -145,44 +140,44 @@ export function ListCard(
   const { isOver, setNodeRef: setNodeDropRef } = useDroppable({
     id: props.id,
   });
- 
+
   // useEffect(() => {
-   // if (
-    //  dragEnd &&
-    //  setDragEnd &&
-    //  dragEnd.over &&
-    //  dragEnd.active &&
-    //  dragEnd.active.id == id
-   // ) {
-     // addToWorkspace.mutate({
-     //   id,
-     //   workspaceId:
-     //     typeof dragEnd.over.id === "number"
-     //       ? dragEnd.over.id
-     //       : parseInt(String(dragEnd.over.id)),
-    //  });
-    //  setDragEnd(null);
+  // if (
+  //  dragEnd &&
+  //  setDragEnd &&
+  //  dragEnd.over &&
+  //  dragEnd.active &&
+  //  dragEnd.active.id == id
+  // ) {
+  // addToWorkspace.mutate({
+  //   id,
+  //   workspaceId:
+  //     typeof dragEnd.over.id === "number"
+  //       ? dragEnd.over.id
+  //       : parseInt(String(dragEnd.over.id)),
+  //  });
+  //  setDragEnd(null);
   //  }
- // }, [dragEnd, setDragEnd, addToWorkspace, id]);
- // const {
+  // }, [dragEnd, setDragEnd, addToWorkspace, id]);
+  // const {
   //  attributes,
-   // listeners,
-   // transform,
-   // setNodeRef: setNodeDragRef,
+  // listeners,
+  // transform,
+  // setNodeRef: setNodeDragRef,
   //} = useDraggable({
   //  id: props.id,
   //});
- // const style = transform
+  // const style = transform
   //  ? {
   //      transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
   //    }
   //  : undefined;
-useEffect(() => {
+  useEffect(() => {
     if (isOver) {
-     void controls.start("start");
+      void controls.start("start");
     } else {
       controls.stop();
-     controls.set("reset");
+      controls.set("reset");
     }
   }, [isOver, controls]);
 
@@ -615,7 +610,11 @@ export function RecentLists({
   );
 }
 
-export function ListPage(props: { id: string, workspaces?: Workspace[], user?: User }) {
+export function ListPage(props: {
+  id: string;
+  workspaces?: Workspace[];
+  user?: User;
+}) {
   const utils = api.useUtils();
 
   const listId = props.id;
@@ -672,7 +671,6 @@ export function ListPage(props: { id: string, workspaces?: Workspace[], user?: U
         </DialogHeader>
         {editing && data != undefined ? (
           <ListForm
-            
             workspaces={props.workspaces}
             user={props.user}
             update={true}
@@ -697,7 +695,7 @@ export function ListPage(props: { id: string, workspaces?: Workspace[], user?: U
           <DeleteList id={parseInt(props.id)} routePath="/search/maps">
             <DialogTrigger asChild>
               <Button size="sm" variant="destructive">
-              <Fire />
+                <Flame />
                 Burn Map
               </Button>
             </DialogTrigger>
@@ -773,11 +771,11 @@ export function ListPage(props: { id: string, workspaces?: Workspace[], user?: U
       ) : null}
 
       <div className="mt-2 flex flex-wrap gap-2 text-sm">
-          Trunk:{" "}
-                      <Badge variant="outline">
-              {data?.workspace.emoji ?? "❔"}{" "}{data?.workspace.name}}
-            </Badge>
-                 </div>
+        Trunk:{" "}
+        <Badge variant="outline">
+          {data?.workspace.emoji ?? "❔"} {data?.workspace.name}
+        </Badge>
+      </div>
 
       <div className="font-muted flex flex-row space-x-2 text-sm italic">
         {data?.size != undefined ? (
@@ -788,7 +786,7 @@ export function ListPage(props: { id: string, workspaces?: Workspace[], user?: U
             <p>•</p>
           </div>
         ) : null}
-        
+
         <Tooltip>
           <TooltipTrigger asChild>
             <>
