@@ -691,16 +691,6 @@ export function ListPage(props: {
             listMutation={updateList}
           />
         ) : null}
-        <Dialog>
-          <DeleteList id={parseInt(props.id)} routePath="/search/maps">
-            <DialogTrigger asChild>
-              <Button size="sm" variant="destructive">
-                <Flame />
-                Burn Map
-              </Button>
-            </DialogTrigger>
-          </DeleteList>
-        </Dialog>
       </DialogContent>
     </Dialog>
   ) : (
@@ -757,6 +747,16 @@ export function ListPage(props: {
           >
             <Pencil /> Edit Map
           </Button>
+          <Dialog>
+            <DeleteList id={parseInt(props.id)} routePath="/search/maps">
+              <DialogTrigger asChild>
+                <Button size="sm" variant="destructive">
+                  <Flame />
+                  Burn Map
+                </Button>
+              </DialogTrigger>
+            </DeleteList>
+          </Dialog>
         </div>
       </div>
       {data?.tags && data?.tags?.length > 0 ? (

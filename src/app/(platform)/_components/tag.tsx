@@ -21,6 +21,7 @@ import {
   Pencil,
   Plus,
   RefreshCw,
+  Shredder,
   Tag as TagIcon,
   Tags,
 } from "lucide-react";
@@ -556,7 +557,9 @@ export function RecentTags({
         <Card>
           <CardHeader>
             <CardTitle className="flex flex-row items-center justify-between">
-              <Link href="/search/tags">
+              <Link
+                href={`/search/tags${workspace ? "?workspace=" + workspace.id : ""}`}
+              >
                 <div className="flex items-center">
                   <Tags className="mr-2 h-5 w-5" /> Recent Tags
                 </div>
@@ -733,19 +736,6 @@ export function TagPage(props: {
             }
           />
         ) : null}
-        <Dialog>
-          <DeleteTag id={parseInt(props.id)} routePath="/search/maps">
-            <DialogTrigger asChild>
-              <Button
-                size="sm"
-                variant="destructive"
-                className="flex flex-shrink"
-              >
-                Destroy Tag
-              </Button>
-            </DialogTrigger>
-          </DeleteTag>
-        </Dialog>
       </DialogContent>
     </Dialog>
   ) : (
@@ -772,7 +762,7 @@ export function TagPage(props: {
             {data?.description ?? "No description provided."}
           </p>
         </div>
-        <div className="flex flex-row gap-2">
+        <div className="flex flex-row flex-wrap gap-2">
           <Button
             size="sm"
             onClick={() => {
@@ -781,6 +771,20 @@ export function TagPage(props: {
           >
             <Pencil /> Edit Tag
           </Button>
+          <Dialog>
+            <DeleteTag id={parseInt(props.id)} routePath="/search/tags">
+              <DialogTrigger asChild>
+                <Button
+                  size="sm"
+                  variant="destructive"
+                  className="flex flex-shrink"
+                >
+                  <Shredder />
+                  Shred Tag
+                </Button>
+              </DialogTrigger>
+            </DeleteTag>
+          </Dialog>
         </div>
       </div>
       <div className="mt-2 flex flex-wrap gap-2 text-sm">
@@ -1009,7 +1013,7 @@ export function DeleteTag({
 
   const utils = api.useUtils();
 
-  const deleteList = api.tag.delete.useMutation({
+  const deleteTag = api.tag.delete.useMutation({
     onSuccess: async () => {
       await utils.tag.invalidate();
       router.push(routePath);
@@ -1030,7 +1034,7 @@ export function DeleteTag({
           <DialogTitle>Are you absolutely sure?</DialogTitle>
           <DialogDescription>
             This action cannot be undone. Are you sure you want to permanently
-            delete this map?
+            delete this tag?
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
@@ -1038,7 +1042,7 @@ export function DeleteTag({
             <Button
               type="button"
               onClick={() => {
-                deleteList.mutate({ id: parseInt(id.toString()) });
+                deleteTag.mutate({ id: parseInt(id.toString()) });
               }}
             >
               Confirm

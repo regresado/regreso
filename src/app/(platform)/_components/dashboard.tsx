@@ -9,13 +9,15 @@ import {
   type DragEndEvent,
   type Over,
 } from "@dnd-kit/core";
-import { Binoculars, Rocket } from "lucide-react";
+import { api } from "~/trpc/react";
+import { AlertCircle, Binoculars, Rocket } from "lucide-react";
 import { motion } from "motion/react";
 import { useOnborda } from "onborda";
 import type { User, Workspace } from "~/server/models";
 
 import { timeSince } from "~/lib/utils";
 
+import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -159,9 +161,20 @@ export function Dashboard(props: {
   }
 
   return (
-    <>
-      <DndContext onDragEnd={handleDragEnd}>
-        <div className="z-10 grid grid-cols-1 gap-4 p-4 xl:grid-cols-5">
+    <DndContext onDragEnd={handleDragEnd}>
+      <div className="flex h-full w-full flex-col gap-4 p-4">
+        {/* <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Burial Notice</AlertTitle>
+          <AlertDescription className="flex w-full items-center justify-between">
+            This trunk is buried, meaning you cannot add or update destinations,
+            lists, or tags.
+            <Button variant="outline" size="sm">
+              Excavate Trunk
+            </Button>
+          </AlertDescription>
+        </Alert> */}
+        <div className="z-10 grid grid-cols-1 gap-4 xl:grid-cols-5">
           <div className="col-span-1 xl:col-span-2">
             <div className="rounded-xl bg-muted/50">
               <motion.div
@@ -258,7 +271,7 @@ export function Dashboard(props: {
             </div>
           </div>
         </div>
-      </DndContext>
-    </>
+      </div>
+    </DndContext>
   );
 }

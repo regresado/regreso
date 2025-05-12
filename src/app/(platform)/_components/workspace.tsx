@@ -10,7 +10,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { type TRPCClientErrorLike } from "@trpc/client";
 import { type UseTRPCMutationResult } from "@trpc/react-query/shared";
 import { api } from "~/trpc/react";
-import { Loader2, PackagePlus, Pencil, Plus } from "lucide-react";
+import {
+  Bomb,
+  Flame,
+  Loader2,
+  PackagePlus,
+  Pencil,
+  Plus,
+  Shovel,
+} from "lucide-react";
 import { useForm } from "react-hook-form";
 import { type z } from "zod";
 import {
@@ -26,9 +34,13 @@ import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
+  DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "~/components/ui/dialog";
 import {
   Form,
@@ -295,6 +307,7 @@ export function RecentWorkspacesDropdown({
   const router = useRouter();
 
   const [open, setOpen] = useState(false);
+  const [editing, setEditing] = useState(false);
 
   const createWorkspace = (callback?: () => void) =>
     api.workspace.create.useMutation({
@@ -313,9 +326,31 @@ export function RecentWorkspacesDropdown({
         });
       },
     });
+
+  const updateWorkspace = (callback?: () => void) =>
+    api.workspace.update.useMutation({
+      onSuccess: async () => {
+        await utils.list.invalidate();
+        toast({
+          title: "Trunk updated",
+          description: "Successfully updated trunk properties.",
+        });
+        if (typeof callback === "function") {
+          callback();
+        }
+        setEditing(false);
+      },
+      onError: (error) => {
+        toast({
+          title: "Failed to update trunk",
+          description: error.message,
+          variant: "destructive",
+        });
+      },
+    });
   return (
     <Dialog open={open} onOpenChange={() => setOpen(false)}>
-      <p className="text-sm font-bold">Switch Workspace</p>
+      <p className="text-sm font-bold">Switch Trunk</p>
 
       <div className="flex flex-row space-x-2">
         <Select
@@ -354,6 +389,109 @@ export function RecentWorkspacesDropdown({
         <main className="flex flex-1 flex-col space-y-6 pt-0">
           <WorkspaceForm update={false} workspaceMutation={createWorkspace} />
         </main>
+      </DialogContent>
+      {workspace ? (
+        <>
+          <p className="text-sm font-bold">Trunk Actions</p>
+
+          <div className="flex flex-row flex-wrap gap-2">
+            <Button
+              size="sm"
+              onClick={() => {
+                setEditing(true);
+              }}
+            >
+              <Pencil /> Edit Trunk
+            </Button>
+            {/* <Button size="sm" variant="secondary" className="flex flex-shrink">
+              <Shovel />
+              Bury Trunk
+            </Button> */}
+            <Dialog>
+              <DeleteTrunk id={workspace.id} routePath="/search/boxes">
+                <DialogTrigger asChild>
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    className="flex flex-shrink"
+                  >
+                    <Flame />
+                    Burn Trunk
+                  </Button>
+                </DialogTrigger>
+              </DeleteTrunk>
+            </Dialog>
+          </div>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <PackagePlus /> Edit Trunk
+              </DialogTitle>
+            </DialogHeader>
+            <main className="flex flex-1 flex-col space-y-6 pt-0">
+              <WorkspaceForm
+                update={true}
+                workspaceMutation={updateWorkspace}
+                defaultValues={workspace}
+                updateId={workspace.id}
+              />
+            </main>
+          </DialogContent>
+        </>
+      ) : null}
+    </Dialog>
+  );
+}
+
+export function DeleteTrunk({
+  id,
+  children,
+  routePath,
+}: {
+  id: number;
+  children: React.ReactNode;
+  routePath: string;
+}) {
+  const router = useRouter();
+
+  const utils = api.useUtils();
+
+  const deleteWorkspace = api.workspace.delete.useMutation({
+    onSuccess: async () => {
+      await utils.workspace.invalidate();
+      router.push(routePath);
+    },
+    onError: (error) => {
+      toast({
+        title: "Failed to delete trunk",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+  return (
+    <Dialog>
+      {children}
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Are you absolutely sure?</DialogTitle>
+          <DialogDescription>
+            This action cannot be undone. Are you sure you want to permanently
+            delete this trunk?
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button
+              type="button"
+              onClick={() => {
+                deleteWorkspace.mutate({ id: parseInt(id.toString()) });
+              }}
+            >
+              Confirm
+            </Button>
+          </DialogClose>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
