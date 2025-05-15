@@ -665,11 +665,11 @@ export function SearchPage({
       limit: 30,
       order: "DESC",
     },
-    {
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      refetchOnMount: false,
-    },
+    // {
+    //   refetchOnWindowFocus: false,
+    //   refetchOnReconnect: false,
+    //   refetchOnMount: false,
+    // },
   );
 
   const createDestination = (callback?: () => void) =>

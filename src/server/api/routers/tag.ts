@@ -94,6 +94,8 @@ export const tagRouter = createTRPCRouter({
           workspace: workspaces,
         })
         .from(tags)
+        .leftJoin(workspaces, eq(tags.workspaceId, workspaces.id))
+
         .where(
           and(
             and(
@@ -110,6 +112,7 @@ export const tagRouter = createTRPCRouter({
               : undefined,
           ),
         )
+        .groupBy(tags.id, workspaces.id)
         .orderBy(
           (input.order === "ASC" ? asc : desc)(
             input.sortBy === "destinationCount"
@@ -127,11 +130,16 @@ export const tagRouter = createTRPCRouter({
                 : tags[input.sortBy ?? "createdAt"],
           ),
         )
-        .crossJoin(workspaces)
         .limit(input.limit)
         .offset(input.offset);
 
       const returnTags = tgs.map((tag) => {
+        if (!tag.tag) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Tag not found or access denied",
+          });
+        }
         const { workspaceId, ...tagWithoutWorkspaceId } = tag.tag;
         void workspaceId;
         return {

@@ -76,7 +76,7 @@ export interface Tag {
   userId: number;
   destinationCount?: number;
   listCount?: number;
-  workspace: Workspace;
+  workspace: Workspace | null;
   createdAt: Date;
   updatedAt: Date | null;
 }
