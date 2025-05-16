@@ -40,6 +40,7 @@ export interface Destination {
   updatedAt: Date | null;
   lists?: List[];
   workspace: Workspace;
+  archived: boolean;
 }
 
 export interface List {
@@ -53,6 +54,7 @@ export interface List {
   updatedAt?: Date | null;
   tags?: { id: number; text: string }[];
   workspace: Workspace;
+  archived: boolean;
 }
 
 export interface Workspace {
@@ -65,6 +67,7 @@ export interface Workspace {
   destinationCount?: number;
   listCount?: number;
   tagCount?: number;
+  archived: boolean;
 }
 
 export interface Tag {
@@ -79,6 +82,7 @@ export interface Tag {
   workspace: Workspace | null;
   createdAt: Date;
   updatedAt: Date | null;
+  archived: boolean;
 }
 
 const destinationTypes = ["location", "note", "file"] as const;
@@ -188,6 +192,7 @@ export const workspaceSchema = z.object({
   destinationCount: z.number().optional(),
   listCount: z.number().optional(),
   tagCount: z.number().optional(),
+  archived: z.boolean(),
 });
 
 export const destinationSchema = z.object({
@@ -202,6 +207,7 @@ export const destinationSchema = z.object({
   body: z.string().nullable(),
   attachments: z.array(z.any()).optional(),
   workspace: workspaceSchema,
+  archived: z.boolean(),
 });
 
 export const listSchema = z.object({
@@ -215,6 +221,7 @@ export const listSchema = z.object({
   emoji: z.string().nullable(),
   workspace: workspaceSchema,
   description: z.string().nullable(),
+  archived: z.boolean(),
 });
 
 export const tagSchema = z.object({
@@ -229,11 +236,13 @@ export const tagSchema = z.object({
   workspace: workspaceSchema.nullable(),
   destinationCount: z.number().optional(),
   listCount: z.number().optional(),
+  archived: z.boolean(),
 });
 
 export const updateDestinationSchema = z.object({
   id: z.number(),
   ...destinationFormSchema.partial().shape,
+  archived: z.boolean().optional(),
 });
 
 export const updateListSchema = z.object({
@@ -241,17 +250,22 @@ export const updateListSchema = z.object({
   ...listFormSchema.partial().shape,
   newTags: z.array(z.string()).optional(),
   removedTags: z.array(z.string()).optional(),
+    archived: z.boolean().optional(),
 });
 
 export const updateWorkspaceSchema = z.object({
   id: z.number(),
   ...workspaceFormSchema.partial().shape,
   newDefault: z.boolean().optional(),
+    archived: z.boolean().optional(),
+
 });
 
 export const updateTagSchema = z.object({
   id: z.number(),
   ...tagFormSchema.partial().shape,
+    archived: z.boolean().optional(),
+
 });
 
 const destinationSearchTypes = ["location", "note", "any"] as const;
@@ -267,6 +281,7 @@ export const destinationSearchSchema = z.object({
   limit: z.number().max(30).optional().default(5),
   offset: z.number().optional().default(0),
   workspaceId: z.number().optional(),
+  archived: z.boolean().optional(),
 });
 
 export const listSearchSchema = z.object({
@@ -280,6 +295,7 @@ export const listSearchSchema = z.object({
   limit: z.number().optional().default(5),
   offset: z.number().optional().default(0),
   workspaceId: z.number().optional(),
+  archived: z.boolean().optional(),
 });
 
 export const workspaceSearchSchema = z.object({
@@ -297,6 +313,7 @@ export const workspaceSearchSchema = z.object({
   order: z.enum(["ASC", "DESC"]).optional(),
   limit: z.number().max(30).optional().default(5),
   offset: z.number().optional().default(0),
+  archived: z.boolean().optional(),
 });
 
 export const tagSearchSchema = z.object({
@@ -315,4 +332,5 @@ export const tagSearchSchema = z.object({
   limit: z.number().max(30).optional().default(5),
   offset: z.number().optional().default(0),
   workspaceId: z.number().optional(),
+  archived: z.boolean().optional(),
 });

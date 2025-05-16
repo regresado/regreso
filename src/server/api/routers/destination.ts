@@ -240,6 +240,7 @@ export const destinationRouter = createTRPCRouter({
           const destination = {
             id: dest.destination.id,
             workspace: dest.workspace,
+            archived: dest.destination.archived,
             userId: dest.destination.userId,
             createdAt: dest.destination.createdAt,
             updatedAt: dest.destination.updatedAt,
@@ -293,11 +294,13 @@ export const destinationRouter = createTRPCRouter({
           type: input.type,
           location: input.location,
           workspaceId: input.workspaceId ?? undefined,
+          archived: input.archived ?? false,
         })
         .where(
           and(
             eq(destinations.id, input.id),
             eq(destinations.userId, ctx.user.id),
+            (eq(destinations.archived, false) || input.archived === false),
           ),
         )
         .returning({

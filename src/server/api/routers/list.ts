@@ -284,8 +284,10 @@ export const listRouter = createTRPCRouter({
             description: input.description,
             emoji: input.emoji,
             workspaceId: input.workspaceId ?? undefined,
+                      archived: input.archived ?? false,
+
           })
-          .where(and(eq(lists.id, input.id), eq(lists.userId, ctx.user.id)))
+          .where(and(eq(lists.id, input.id), eq(lists.userId, ctx.user.id), (eq(lists.archived, false) || input.archived === false)))
           .returning({
             id: lists.id,
           });
@@ -446,6 +448,7 @@ export const listRouter = createTRPCRouter({
           emoji: lists.emoji,
           createdAt: lists.createdAt,
           userId: lists.userId,
+          archived: lists.archived,
           count: sql<number>`count(*) over()`,
           size: sql<number>`COUNT(${destinationLists}.id)`,
           updatedAt: sql<Date | null>`(

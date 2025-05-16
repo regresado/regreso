@@ -11,7 +11,6 @@ import { type TRPCClientErrorLike } from "@trpc/client";
 import { type UseTRPCMutationResult } from "@trpc/react-query/shared";
 import { api } from "~/trpc/react";
 import {
-  Bomb,
   Flame,
   Loader2,
   PackagePlus,
@@ -349,8 +348,8 @@ export function RecentWorkspacesDropdown({
       },
     });
   return (
-    <Dialog open={open} onOpenChange={() => setOpen(false)}>
-      <p className="text-sm font-bold">Switch Trunk</p>
+
+<>    <p className="text-sm font-bold">Switch Trunk</p>
 
       <div className="flex flex-row space-x-2">
         <Select
@@ -380,6 +379,8 @@ export function RecentWorkspacesDropdown({
           <Plus /> New
         </Button>
       </div>
+          <Dialog open={open} onOpenChange={() => setOpen(false)}>
+
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
@@ -390,6 +391,7 @@ export function RecentWorkspacesDropdown({
           <WorkspaceForm update={false} workspaceMutation={createWorkspace} />
         </main>
       </DialogContent>
+      </Dialog>
       {workspace ? (
         <>
           <p className="text-sm font-bold">Trunk Actions</p>
@@ -422,6 +424,7 @@ export function RecentWorkspacesDropdown({
               </DeleteTrunk>
             </Dialog>
           </div>
+          <Dialog open={editing} onOpenChange={() => setEditing(false)}>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
@@ -437,9 +440,10 @@ export function RecentWorkspacesDropdown({
               />
             </main>
           </DialogContent>
+          </Dialog>
         </>
       ) : null}
-    </Dialog>
+    </>
   );
 }
 

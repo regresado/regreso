@@ -497,9 +497,9 @@ export function TagCard(
                   {props.listCount} map{props.listCount == 1 ? null : "s"}
                 </p>
               )}
-              <Link href={`/box/${props.workspace.id}`}>
+              <Link href={`/box/${props.workspace?.id}`}>
                 <Badge variant="outline">
-                  {(props.workspace.emoji ?? "❔") + " " + props.workspace.name}
+                  {(props.workspace?.emoji ?? "❔") + " " + props.workspace?.name}
                 </Badge>
               </Link>
             </div>
@@ -722,7 +722,7 @@ export function TagPage(props: {
                 description: data.description ?? "",
                 color: data.color ?? undefined,
                 shortcut: data.shortcut ?? "",
-                workspaceId: data.workspace.id ?? undefined,
+                workspaceId: data.workspace?.id ?? undefined,
               } as z.infer<typeof tagFormSchema>
             }
             updateId={parseInt(props.id)}
@@ -790,7 +790,7 @@ export function TagPage(props: {
       <div className="mt-2 flex flex-wrap gap-2 text-sm">
         Trunk:{" "}
         <Badge variant="outline">
-          {data?.workspace.emoji ?? "❔"} {data?.workspace.name}
+          {data?.workspace?.emoji ?? "❔"} {data?.workspace?.name}
         </Badge>
       </div>
       <div className="font-muted flex flex-row space-x-2 text-sm italic">

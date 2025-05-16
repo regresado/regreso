@@ -189,8 +189,9 @@ export const tagRouter = createTRPCRouter({
           color: input.color,
           shortcut: input.shortcut,
           workspaceId: input.workspaceId ?? undefined,
+          archived: input.archived ?? false,
         })
-        .where(and(eq(tags.id, input.id), eq(tags.userId, ctx.user.id)))
+        .where(and(eq(tags.id, input.id), eq(tags.userId, ctx.user.id), (eq(tags.archived, false) || input.archived === false)))
         .returning({
           id: tags.id,
         });
@@ -235,6 +236,7 @@ export const tagRouter = createTRPCRouter({
           description: tags.description,
           color: tags.color,
           shortcut: tags.shortcut,
+          archived: tags.archived,
           createdAt: tags.createdAt,
           updatedAt: tags.updatedAt,
           userId: tags.userId,
@@ -280,6 +282,7 @@ export const tagRouter = createTRPCRouter({
         shortcut: tgDataRow.shortcut,
         createdAt: tgDataRow.createdAt,
         updatedAt: tgDataRow.updatedAt,
+        archived: tgDataRow.archived,
         userId: tgDataRow.userId,
         workspace: tgDataRow.workspace,
         destinationCount:

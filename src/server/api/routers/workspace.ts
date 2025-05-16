@@ -196,9 +196,14 @@ export const workspaceRouter = createTRPCRouter({
           name: input.name,
           description: input.description,
           emoji: input.emoji,
+          archived: input.archived ?? false,
         })
         .where(
-          and(eq(workspaces.id, input.id), eq(workspaces.userId, ctx.user.id)),
+          and(
+            eq(workspaces.id, input.id),
+            eq(workspaces.userId, ctx.user.id),
+            eq(workspaces.archived, false) || input.archived === false,
+          ),
         )
         .returning({
           id: workspaces.id,
@@ -244,6 +249,7 @@ export const workspaceRouter = createTRPCRouter({
           id: workspaces.id,
           name: workspaces.name,
           description: workspaces.description,
+          archived: workspaces.archived,
           emoji: workspaces.emoji,
           createdAt: workspaces.createdAt,
           userId: workspaces.userId,

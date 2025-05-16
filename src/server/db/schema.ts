@@ -156,6 +156,7 @@ export const destinations = createTable(
         onDelete: "cascade",
       })
       .notNull(),
+    archived: boolean("archived").default(false).notNull(),
   },
   (destination) => ({
     searchIndex: index("destination_search_index").using(
@@ -192,6 +193,7 @@ export const tags = createTable(
       .$onUpdate(() => new Date()),
     description: varchar("description", { length: 256 }),
     color: varchar("color", { length: 256 }),
+    archived: boolean("archived").default(false).notNull(),
   },
   (tag) => ({
     searchIndex: index("tag_search_index").using(
@@ -244,6 +246,7 @@ export const lists = createTable(
         onDelete: "cascade",
       })
       .notNull(),
+    archived: boolean("archived").default(false).notNull(),
   },
   (list) => ({
     uniqueListName: unique().on(list.userId, list.name),
@@ -310,6 +313,7 @@ export const workspaces = createTable(
         onUpdate: "cascade",
       })
       .notNull(),
+    archived: boolean("archived").default(false).notNull(),
   },
   (workspace) => ({
     uniqueWorkspaceName: unique().on(workspace.userId, workspace.name),

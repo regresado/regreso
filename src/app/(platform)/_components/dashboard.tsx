@@ -9,7 +9,6 @@ import {
   type DragEndEvent,
   type Over,
 } from "@dnd-kit/core";
-import { api } from "~/trpc/react";
 import { AlertCircle, Binoculars, Rocket } from "lucide-react";
 import { motion } from "motion/react";
 import { useOnborda } from "onborda";
