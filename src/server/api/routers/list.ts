@@ -287,7 +287,8 @@ export const listRouter = createTRPCRouter({
                       archived: input.archived ?? false,
 
           })
-          .where(and(eq(lists.id, input.id), eq(lists.userId, ctx.user.id), (eq(lists.archived, false) || input.archived === false)))
+          .where(and(eq(lists.id, input.id), eq(lists.userId, ctx.user.id),             input.archived!==false ? eq(lists.archived, false) : undefined,
+          ))
           .returning({
             id: lists.id,
           });

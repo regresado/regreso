@@ -202,12 +202,11 @@ export const workspaceRouter = createTRPCRouter({
           and(
             eq(workspaces.id, input.id),
             eq(workspaces.userId, ctx.user.id),
-            eq(workspaces.archived, false) || input.archived === false,
+            input.archived !== false
+              ? eq(workspaces.archived, false)
+              : undefined,
           ),
-        )
-        .returning({
-          id: workspaces.id,
-        });
+        );
 
       return {
         success: true,

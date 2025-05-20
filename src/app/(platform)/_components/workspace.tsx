@@ -9,9 +9,12 @@ import Picker from "@emoji-mart/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type TRPCClientErrorLike } from "@trpc/client";
 import { type UseTRPCMutationResult } from "@trpc/react-query/shared";
+import { TRPCMutationProcedure } from "@trpc/server";
 import { api } from "~/trpc/react";
 import {
   Flame,
+  Forklift,
+  Heart,
   Loader2,
   PackagePlus,
   Pencil,
@@ -21,6 +24,7 @@ import {
 import { useForm } from "react-hook-form";
 import { type z } from "zod";
 import {
+  User,
   workspaceFormSchema,
   type updateWorkspaceSchema,
   type Workspace,
@@ -297,10 +301,12 @@ export function RecentWorkspacesDropdown({
   workspace,
   recentWorkspaces,
   isFetchingWorkspaces,
+  user,
 }: {
   workspace?: Workspace;
   recentWorkspaces: Workspace[];
   isFetchingWorkspaces?: boolean;
+  user?: User;
 }) {
   const utils = api.useUtils();
   const router = useRouter();
@@ -329,7 +335,7 @@ export function RecentWorkspacesDropdown({
   const updateWorkspace = (callback?: () => void) =>
     api.workspace.update.useMutation({
       onSuccess: async () => {
-        await utils.list.invalidate();
+        await utils.workspace.invalidate();
         toast({
           title: "Trunk updated",
           description: "Successfully updated trunk properties.",
@@ -347,11 +353,63 @@ export function RecentWorkspacesDropdown({
         });
       },
     });
+  const archiveMutation = updateWorkspace();
+  const updateUser = api.user.updateProfile.useMutation({
+    onSuccess: async () => {
+      await utils.user.invalidate();
+      toast({
+        title: "Preferences updated",
+        description: "Successfully updated user preferences.",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Failed to update user",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+  function handleArchivalToggle() {
+    if (workspace?.archived) {
+      archiveMutation.mutate({
+        id: workspace.id,
+        archived: false,
+      });
+      utils.workspace.invalidate();
+      router.refresh();
+    } else if (workspace) {
+      archiveMutation.mutate({
+        id: workspace.id,
+        archived: true,
+      });
+      utils.workspace.invalidate();
+    } else {
+      toast({
+        title: "Failed to update trunk",
+        description: "No trunk selected.",
+        variant: "destructive",
+      });
+    }
+  }
+  function handleMakingWorkspaceDefault() {
+    if (!workspace) {
+      toast({
+        title: "Failed to update user",
+        description: "No trunk selected.",
+        variant: "destructive",
+      });
+      return;
+    }
+    updateUser.mutate({
+      workspaceId: workspace.id,
+    });
+  }
+
   return (
-
-<>    <p className="text-sm font-bold">Switch Trunk</p>
-
-      <div className="flex flex-row space-x-2">
+    <>
+      <p className="text-sm font-bold">Switch Trunk</p>
+      <div className="flex w-full flex-row flex-wrap items-center gap-2 xs:flex-nowrap">
         <Select
           disabled={isFetchingWorkspaces}
           onValueChange={(value) => {
@@ -363,7 +421,7 @@ export function RecentWorkspacesDropdown({
           }}
           defaultValue={(workspace?.id ?? 0).toString()}
         >
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="max-w-[160px] flex-shrink">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -376,25 +434,25 @@ export function RecentWorkspacesDropdown({
           </SelectContent>
         </Select>
         <Button size="sm" onClick={() => setOpen(true)}>
-          <Plus /> New
+          <Plus />{" "}
+          <span className="mx-0 hidden xs:block sm:hidden md:block">New</span>
         </Button>
       </div>
-          <Dialog open={open} onOpenChange={() => setOpen(false)}>
-
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <PackagePlus /> Create Trunk
-          </DialogTitle>
-        </DialogHeader>
-        <main className="flex flex-1 flex-col space-y-6 pt-0">
-          <WorkspaceForm update={false} workspaceMutation={createWorkspace} />
-        </main>
-      </DialogContent>
+      <Dialog open={open} onOpenChange={() => setOpen(false)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <PackagePlus /> Create Trunk
+            </DialogTitle>
+          </DialogHeader>
+          <main className="flex flex-1 flex-col space-y-6 pt-0">
+            <WorkspaceForm update={false} workspaceMutation={createWorkspace} />
+          </main>
+        </DialogContent>
       </Dialog>
       {workspace ? (
         <>
-          <p className="text-sm font-bold">Trunk Actions</p>
+          <p className="mt-6 text-sm font-bold">Trunk Actions</p>
 
           <div className="flex flex-row flex-wrap gap-2">
             <Button
@@ -403,12 +461,59 @@ export function RecentWorkspacesDropdown({
                 setEditing(true);
               }}
             >
-              <Pencil /> Edit Trunk
+              <Pencil /> Edit
             </Button>
-            {/* <Button size="sm" variant="secondary" className="flex flex-shrink">
-              <Shovel />
-              Bury Trunk
-            </Button> */}
+            <Button
+              size="sm"
+              variant="outline"
+              className="flex flex-shrink"
+              onClick={handleMakingWorkspaceDefault}
+            >
+              <Heart />
+              Make Default
+            </Button>
+            {workspace.archived ? (
+              <Button
+                size="sm"
+                variant="secondary"
+                className="flex flex-shrink"
+                onClick={handleArchivalToggle}
+              >
+                <Forklift />
+                Excavate
+              </Button>
+            ) : (
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    className="flex flex-shrink"
+                  >
+                    <Shovel />
+                    Bury
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Are you absolutely sure?</DialogTitle>
+                    <DialogDescription>
+                      This action cannot be undone. Are you sure you want to
+                      bury this trunk? It will be hidden from the dashboard and
+                      other pages until you excavate it.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <DialogFooter>
+                    <DialogClose asChild>
+                      <Button type="button" onClick={handleArchivalToggle}>
+                        Confirm
+                      </Button>
+                    </DialogClose>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            )}
+
             <Dialog>
               <DeleteTrunk id={workspace.id} routePath="/search/boxes">
                 <DialogTrigger asChild>
@@ -418,28 +523,28 @@ export function RecentWorkspacesDropdown({
                     className="flex flex-shrink"
                   >
                     <Flame />
-                    Burn Trunk
+                    Burn
                   </Button>
                 </DialogTrigger>
               </DeleteTrunk>
             </Dialog>
           </div>
           <Dialog open={editing} onOpenChange={() => setEditing(false)}>
-          <DialogContent className="sm:max-w-md">
-            <DialogHeader>
-              <DialogTitle className="flex items-center gap-2">
-                <PackagePlus /> Edit Trunk
-              </DialogTitle>
-            </DialogHeader>
-            <main className="flex flex-1 flex-col space-y-6 pt-0">
-              <WorkspaceForm
-                update={true}
-                workspaceMutation={updateWorkspace}
-                defaultValues={workspace}
-                updateId={workspace.id}
-              />
-            </main>
-          </DialogContent>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2">
+                  <PackagePlus /> Edit Trunk
+                </DialogTitle>
+              </DialogHeader>
+              <main className="flex flex-1 flex-col space-y-6 pt-0">
+                <WorkspaceForm
+                  update={true}
+                  workspaceMutation={updateWorkspace}
+                  defaultValues={workspace}
+                  updateId={workspace.id}
+                />
+              </main>
+            </DialogContent>
           </Dialog>
         </>
       ) : null}
@@ -473,6 +578,10 @@ export function DeleteTrunk({
       });
     },
   });
+
+  function handleDeleteWorkspace() {
+    deleteWorkspace.mutate({ id: parseInt(id.toString()) });
+  }
   return (
     <Dialog>
       {children}
@@ -486,12 +595,7 @@ export function DeleteTrunk({
         </DialogHeader>
         <DialogFooter>
           <DialogClose asChild>
-            <Button
-              type="button"
-              onClick={() => {
-                deleteWorkspace.mutate({ id: parseInt(id.toString()) });
-              }}
-            >
+            <Button type="button" onClick={handleDeleteWorkspace}>
               Confirm
             </Button>
           </DialogClose>

@@ -2,7 +2,7 @@ import { destinationRouter } from "~/server/api/routers/destination";
 import { listRouter } from "~/server/api/routers/list";
 import { sessionRouter } from "~/server/api/routers/session";
 import { tagRouter } from "~/server/api/routers/tag";
-// import { userRouter } from "~/server/api/routers/user";
+import { userRouter } from "~/server/api/routers/user";
 import { workspaceRouter } from "~/server/api/routers/workspace";
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 
@@ -17,7 +17,7 @@ export const appRouter = createTRPCRouter({
   session: sessionRouter,
   workspace: workspaceRouter,
   tag: tagRouter,
-  // user: userRouter,
+  user: userRouter,
 });
 
 // export type definition of API

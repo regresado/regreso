@@ -149,6 +149,17 @@ export const workspaceFormSchema = z.object({
   workspaceId: z.number().optional(),
 });
 
+export const userFormSchema = z.object({
+  workspaceId: z.number(),
+  bio: z.string(),
+  username: z.string(),
+  displayName: z.string(),
+  googleId: z.string().optional(),
+  githubId: z.number().optional(),
+  password: z.string().optional(),
+  email: z.string().email(),
+});
+
 export const tagFormSchema = z.object({
   name: z
     .string({
@@ -180,6 +191,23 @@ export const tagFormSchema = z.object({
     })
     .optional(),
   workspaceId: z.number().optional(),
+});
+
+export const userSchema = z.object({
+  id: z.number(),
+  email: z.string(),
+  name: z.string(),
+  displayName: z.string(),
+  bio: z.string().nullable(),
+  workspaceId: z.number().nullable(),
+  googleId: z.string().nullable().optional(),
+  githubId: z.number().nullable().optional(),
+  avatarUrl: z.string().nullable(),
+  emailVerified: z.boolean(),
+  registered2FA: z.boolean(),
+  registeredPasskey: z.boolean(),
+  registeredTOTP: z.boolean(),
+  registeredSecurityKey: z.boolean(),
 });
 
 export const workspaceSchema = z.object({
@@ -250,22 +278,20 @@ export const updateListSchema = z.object({
   ...listFormSchema.partial().shape,
   newTags: z.array(z.string()).optional(),
   removedTags: z.array(z.string()).optional(),
-    archived: z.boolean().optional(),
+  archived: z.boolean().optional(),
 });
 
 export const updateWorkspaceSchema = z.object({
   id: z.number(),
   ...workspaceFormSchema.partial().shape,
   newDefault: z.boolean().optional(),
-    archived: z.boolean().optional(),
-
+  archived: z.boolean().optional(),
 });
 
 export const updateTagSchema = z.object({
   id: z.number(),
   ...tagFormSchema.partial().shape,
-    archived: z.boolean().optional(),
-
+  archived: z.boolean().optional(),
 });
 
 const destinationSearchTypes = ["location", "note", "any"] as const;

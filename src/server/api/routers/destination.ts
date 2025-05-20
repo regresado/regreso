@@ -300,7 +300,9 @@ export const destinationRouter = createTRPCRouter({
           and(
             eq(destinations.id, input.id),
             eq(destinations.userId, ctx.user.id),
-            (eq(destinations.archived, false) || input.archived === false),
+            input.archived !== false
+              ? eq(destinations.archived, false)
+              : undefined,
           ),
         )
         .returning({

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { api } from "~/trpc/react";
 
 import {
   DndContext,
@@ -9,7 +10,7 @@ import {
   type DragEndEvent,
   type Over,
 } from "@dnd-kit/core";
-import { AlertCircle, Binoculars, Rocket } from "lucide-react";
+import { AlertCircle, Binoculars, Rocket, Router } from "lucide-react";
 import { motion } from "motion/react";
 import { useOnborda } from "onborda";
 import type { User, Workspace } from "~/server/models";
@@ -37,6 +38,8 @@ import { CreateDestination, RecentDestinations } from "./destination";
 import { RecentLists } from "./list";
 import { RecentTags } from "./tag";
 import { RecentWorkspacesDropdown } from "./workspace";
+import { toast } from "~/components/hooks/use-toast";
+import { useRouter } from "next/navigation";
 
 export function WelcomeCard({
   workspace,
@@ -54,7 +57,7 @@ export function WelcomeCard({
   return (
     <TiltCard>
       <Card>
-        <CardHeader className="pb-4">
+        <CardHeader className="px-3 pb-4 xs:px-6 xs:pt-6 sm:px-3 sm:pt-4 lg:px-6 lg:pt-6">
           <CardTitle className="leading-relaxed">
             {workspace
               ? `${workspace.emoji} ${workspace.name}`
@@ -66,7 +69,7 @@ export function WelcomeCard({
               : "Learn the basics of how to use Regreso."}
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-3 pt-0 sm:px-6 xl:px-6">
+        <CardContent className="space-y-3 px-3 pt-0 xs:px-6 xs:pb-6 sm:px-3 sm:pb-4 lg:px-6 lg:pb-6">
           {workspace ? (
             <div className="flex flex-wrap items-center gap-1.5">
               <Tooltip>
@@ -113,11 +116,16 @@ export function WelcomeCard({
                 )}
             </div>
           ) : (
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-3">
               <Button size="sm" variant="outline" asChild>
                 <Link href="/guide">
                   <Rocket />
-                  Setup Guide
+                  <div className="flex flex-row">
+                    <span className="mx-0 mr-1 hidden xs:block sm:hidden md:block">
+                      Setup
+                    </span>
+                    Guide
+                  </div>
                 </Link>
               </Button>
               <Button
@@ -127,7 +135,13 @@ export function WelcomeCard({
                   startOnborda("welcome-tour");
                 }}
               >
-                <Binoculars /> Start Tour
+                <Binoculars />{" "}
+                <div className="flex flex-row">
+                  <span className="mx-0 mr-1 hidden xs:block sm:hidden md:block">
+                    Start
+                  </span>
+                  Tour
+                </div>
               </Button>
             </div>
           )}
@@ -136,6 +150,7 @@ export function WelcomeCard({
             workspace={workspace}
             recentWorkspaces={workspaces ?? []}
             isFetchingWorkspaces={isFetchingWorkspaces}
+            user={user}
           />
         </CardContent>
       </Card>
@@ -148,6 +163,9 @@ export function Dashboard(props: {
   user?: User;
   workspaces?: Workspace[];
 }) {
+    const utils = api.useUtils();
+      const router = useRouter();
+  
   const [dragEnd, setDragEnd] = useState<{
     over: Over;
     active: Active;
@@ -158,21 +176,51 @@ export function Dashboard(props: {
       setDragEnd({ over: over, active: active });
     }
   }
+    const unarchiveWorkspace = 
+      api.workspace.update.useMutation({
+        onSuccess: async () => {
+          await utils.list.invalidate();
+          toast({
+            title: "Trunk updated",
+            description: "Successfully updated trunk properties.",
+          });
+          await utils.workspace.invalidate();
+          router.refresh();
+        },
+        onError: (error) => {
+          toast({
+            title: "Failed to update trunk",
+            description: error.message,
+            variant: "destructive",
+          });
+       }
+    })
+
+    function handleUnarchiving() {
+      if (props.workspace?.archived) {
+        unarchiveWorkspace.mutate({
+          id: props.workspace.id,
+          archived: false,
+        });
+      }
+    }
+
 
   return (
     <DndContext onDragEnd={handleDragEnd}>
       <div className="flex h-full w-full flex-col gap-4 p-4">
-        {/* <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Burial Notice</AlertTitle>
-          <AlertDescription className="flex w-full items-center justify-between">
-            This trunk is buried, meaning you cannot add or update destinations,
-            lists, or tags.
-            <Button variant="outline" size="sm">
-              Excavate Trunk
-            </Button>
-          </AlertDescription>
-        </Alert> */}
+        {props.workspace?.archived ? (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Burial Notice</AlertTitle>
+            <AlertDescription className="flex w-full lg:items-center gap-1 lg:flex-row flex-col justify-between">
+              This trunk is buried, meaning it's preserved but uneditable.
+              <Button onClick={handleUnarchiving} variant="outline" size="sm">
+                Excavate Trunk
+              </Button>
+            </AlertDescription>
+          </Alert>
+        ) : null}
         <div className="z-10 grid grid-cols-1 gap-4 xl:grid-cols-5">
           <div className="col-span-1 xl:col-span-2">
             <div className="rounded-xl bg-muted/50">

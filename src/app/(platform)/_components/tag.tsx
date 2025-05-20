@@ -499,7 +499,9 @@ export function TagCard(
               )}
               <Link href={`/box/${props.workspace?.id}`}>
                 <Badge variant="outline">
-                  {(props.workspace?.emoji ?? "❔") + " " + props.workspace?.name}
+                  {(props.workspace?.emoji ?? "❔") +
+                    " " +
+                    props.workspace?.name}
                 </Badge>
               </Link>
             </div>
@@ -555,8 +557,8 @@ export function RecentTags({
     <Dialog open={open} onOpenChange={() => setOpen(false)}>
       <TiltCard>
         <Card>
-          <CardHeader>
-            <CardTitle className="flex flex-row items-center justify-between">
+          <CardHeader className="xs:px-6 xs:pb-6 sm:px-3 sm:pb-4 md:px-6 md:pb-6">
+            <CardTitle className="flex flex-row flex-wrap items-center justify-between gap-4">
               <Link
                 href={`/search/tags${workspace ? "?workspace=" + workspace.id : ""}`}
               >
@@ -571,7 +573,7 @@ export function RecentTags({
               </Button>
             </CardTitle>
           </CardHeader>
-          <CardContent className="px-6">
+          <CardContent className="xs:px-6 sm:px-3 md:px-6">
             <div className="flex flex-row flex-wrap gap-1.5 pb-6">
               {recentTags.items.length > 0 ? (
                 recentTags.items.map((tg) => {
@@ -597,7 +599,7 @@ export function RecentTags({
                 </p>
               )}
             </div>
-            <div className="flex space-x-2">
+            <div className="flex gap-2">
               <Button
                 size="sm"
                 variant="secondary"
@@ -662,7 +664,7 @@ export function TagPage(props: {
   const updateTag = (callback?: () => void) =>
     api.tag.update.useMutation({
       onSuccess: async () => {
-        await utils.list.invalidate();
+        await utils.tag.invalidate();
         toast({
           title: "Tag updated",
           description: "Successfully updated tag properties.",

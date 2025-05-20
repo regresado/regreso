@@ -372,7 +372,7 @@ export function DestinationForm(
             </div>
             {destinationTypeForm.watch("type") == "location" ? (
               <div className="flex flex-row items-end gap-2">
-                <div className="min-w-[200px] sm:w-1/2">
+                <div className="w-full max-w-[200px] flex-grow sm:w-1/2">
                   <FormField
                     control={destinationTypeForm.control}
                     name="location"

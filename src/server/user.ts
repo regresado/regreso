@@ -242,13 +242,19 @@ export async function getUserPasswordHash(userId: number): Promise<string> {
 export async function updateUserPassword(
   userId: number,
   password: string,
-): Promise<void> {
+): Promise<boolean> {
   const passwordHash = await hashPassword(password);
-  db.update(users)
-    .set({
-      passwordHash,
-    })
-    .where(eq(users.id, userId));
+  try {
+    await db
+      .update(users)
+      .set({
+        passwordHash,
+      })
+      .where(eq(users.id, userId));
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 export async function updateUserEmailAndSetEmailAsVerified(

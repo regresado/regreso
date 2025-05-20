@@ -191,7 +191,13 @@ export const tagRouter = createTRPCRouter({
           workspaceId: input.workspaceId ?? undefined,
           archived: input.archived ?? false,
         })
-        .where(and(eq(tags.id, input.id), eq(tags.userId, ctx.user.id), (eq(tags.archived, false) || input.archived === false)))
+        .where(
+          and(
+            eq(tags.id, input.id),
+            eq(tags.userId, ctx.user.id),
+            input.archived !== false ? eq(tags.archived, false) : undefined,
+          ),
+        )
         .returning({
           id: tags.id,
         });
