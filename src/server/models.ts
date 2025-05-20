@@ -293,6 +293,17 @@ export const updateTagSchema = z.object({
   ...tagFormSchema.partial().shape,
   archived: z.boolean().optional(),
 });
+export const updateUserProfileSchema = z.object({
+  workspaceId: z.number().optional(),
+  bio: z.string().optional(),
+  displayName: z.string().optional(),
+  username: z.string().optional(),
+});
+
+export const updateUserPasswordSchema = z.object({
+  password: z.string().min(8),
+  newPassword: z.string().min(8),
+});
 
 const destinationSearchTypes = ["location", "note", "any"] as const;
 

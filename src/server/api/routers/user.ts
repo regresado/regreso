@@ -3,7 +3,12 @@ import { headers } from "next/headers";
 import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
-import { userFormSchema, userSchema, type User } from "~/server/models";
+import {
+  updateUserPasswordSchema,
+  updateUserProfileSchema,
+  userFormSchema,
+  userSchema,
+} from "~/server/models";
 
 import {
   createTRPCRouter,
@@ -30,18 +35,9 @@ export const userRouter = createTRPCRouter({
       openapi: { method: "GET", path: "/v1/user", protect: true },
     })
     .input(z.object({}))
-    .output(
-      z.object({
-        id: z.string(),
-        expiresAt: z.date(),
-        user: z.custom<User>(),
-      }),
-    )
+    .output(userSchema)
     .query(({ ctx }) => {
-      return {
-        ...{ id: ctx.session.id, expiresAt: ctx.session.expiresAt },
-        user: ctx.user,
-      };
+      return ctx.user;
     }),
   create: publicProcedure
     .meta({
@@ -71,14 +67,7 @@ export const userRouter = createTRPCRouter({
     .meta({
       openapi: { method: "PATCH", path: "/v1/user", protect: true },
     })
-    .input(
-      z.object({
-        workspaceId: z.number().optional(),
-        bio: z.string().optional(),
-        displayName: z.string().optional(),
-        username: z.string().optional(),
-      }),
-    )
+    .input(updateUserProfileSchema)
     .output(z.object({ success: z.boolean() }))
 
     .mutation(async ({ ctx, input }) => {
@@ -125,12 +114,7 @@ export const userRouter = createTRPCRouter({
     .meta({
       openapi: { method: "PATCH", path: "/v1/user/password", protect: true },
     })
-    .input(
-      z.object({
-        password: z.string().min(8),
-        newPassword: z.string().min(8),
-      }),
-    )
+    .input(updateUserPasswordSchema)
     .output(z.object({ success: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
       const passwordHash = await getUserPasswordHash(ctx.user.id);
