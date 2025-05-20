@@ -3,12 +3,7 @@ import { headers } from "next/headers";
 import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
-import {
-  SessionFlags,
-  User,
-  userFormSchema,
-  userSchema,
-} from "~/server/models";
+import { userFormSchema, userSchema, type User } from "~/server/models";
 
 import {
   createTRPCRouter,
@@ -17,24 +12,15 @@ import {
   publicProcedure,
 } from "~/server/api/trpc";
 import { users } from "~/server/db/schema";
-import { verifyEmailInput } from "~/server/email";
-import { hashPassword, verifyPasswordHash } from "~/server/password";
-import { RefillingTokenBucket, Throttler } from "~/server/rate-limit";
-import {
-  createSession,
-  generateSessionToken,
-  invalidateSession,
-} from "~/server/session";
+import { verifyPasswordHash } from "~/server/password";
+import { RefillingTokenBucket } from "~/server/rate-limit";
 import {
   createUser,
-  getUserFromEmail,
   getUserPasswordHash,
   updateUserPassword,
   verifyDisplayNameInput,
   verifyUsernameInput,
 } from "~/server/user";
-
-const throttler = new Throttler<number>([1, 2, 4, 8, 16, 30, 60, 180, 300]);
 
 const ipBucket = new RefillingTokenBucket<string>(20, 1);
 
@@ -148,7 +134,7 @@ export const userRouter = createTRPCRouter({
     .output(z.object({ success: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
       const passwordHash = await getUserPasswordHash(ctx.user.id);
-      if (!verifyPasswordHash(input.password, passwordHash)) {
+      if (!(await verifyPasswordHash(input.password, passwordHash))) {
         throw new TRPCError({
           code: "UNAUTHORIZED",
           message: "Invalid password",

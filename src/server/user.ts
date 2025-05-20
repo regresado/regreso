@@ -252,7 +252,7 @@ export async function updateUserPassword(
       })
       .where(eq(users.id, userId));
     return true;
-  } catch (error) {
+  } catch {
     return false;
   }
 }

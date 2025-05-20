@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { api } from "~/trpc/react";
+import { useRouter } from "next/navigation";
 
 import {
   DndContext,
@@ -10,7 +10,8 @@ import {
   type DragEndEvent,
   type Over,
 } from "@dnd-kit/core";
-import { AlertCircle, Binoculars, Rocket, Router } from "lucide-react";
+import { api } from "~/trpc/react";
+import { AlertCircle, Binoculars, Rocket } from "lucide-react";
 import { motion } from "motion/react";
 import { useOnborda } from "onborda";
 import type { User, Workspace } from "~/server/models";
@@ -32,14 +33,13 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
+import { toast } from "~/components/hooks/use-toast";
 import { TiltCard } from "~/components/tilt-card";
 
 import { CreateDestination, RecentDestinations } from "./destination";
 import { RecentLists } from "./list";
 import { RecentTags } from "./tag";
 import { RecentWorkspacesDropdown } from "./workspace";
-import { toast } from "~/components/hooks/use-toast";
-import { useRouter } from "next/navigation";
 
 export function WelcomeCard({
   workspace,
@@ -163,9 +163,9 @@ export function Dashboard(props: {
   user?: User;
   workspaces?: Workspace[];
 }) {
-    const utils = api.useUtils();
-      const router = useRouter();
-  
+  const utils = api.useUtils();
+  const router = useRouter();
+
   const [dragEnd, setDragEnd] = useState<{
     over: Over;
     active: Active;
@@ -176,35 +176,33 @@ export function Dashboard(props: {
       setDragEnd({ over: over, active: active });
     }
   }
-    const unarchiveWorkspace = 
-      api.workspace.update.useMutation({
-        onSuccess: async () => {
-          await utils.list.invalidate();
-          toast({
-            title: "Trunk updated",
-            description: "Successfully updated trunk properties.",
-          });
-          await utils.workspace.invalidate();
-          router.refresh();
-        },
-        onError: (error) => {
-          toast({
-            title: "Failed to update trunk",
-            description: error.message,
-            variant: "destructive",
-          });
-       }
-    })
+  const unarchiveWorkspace = api.workspace.update.useMutation({
+    onSuccess: async () => {
+      await utils.list.invalidate();
+      toast({
+        title: "Trunk updated",
+        description: "Successfully updated trunk properties.",
+      });
+      await utils.workspace.invalidate();
+      router.refresh();
+    },
+    onError: (error) => {
+      toast({
+        title: "Failed to update trunk",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
 
-    function handleUnarchiving() {
-      if (props.workspace?.archived) {
-        unarchiveWorkspace.mutate({
-          id: props.workspace.id,
-          archived: false,
-        });
-      }
+  function handleUnarchiving() {
+    if (props.workspace?.archived) {
+      unarchiveWorkspace.mutate({
+        id: props.workspace.id,
+        archived: false,
+      });
     }
-
+  }
 
   return (
     <DndContext onDragEnd={handleDragEnd}>
@@ -213,8 +211,8 @@ export function Dashboard(props: {
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>Burial Notice</AlertTitle>
-            <AlertDescription className="flex w-full lg:items-center gap-1 lg:flex-row flex-col justify-between">
-              This trunk is buried, meaning it's preserved but uneditable.
+            <AlertDescription className="flex w-full flex-col justify-between gap-1 lg:flex-row lg:items-center">
+              This trunk is buried, meaning it&apos;s preserved but uneditable.
               <Button onClick={handleUnarchiving} variant="outline" size="sm">
                 Excavate Trunk
               </Button>
