@@ -56,7 +56,7 @@
     "@tiptap/extension-code-block-lowlight": "^2.12.0",
     "@tiptap/extension-color": "^2.12.0",
     "@tiptap/extension-heading": "^2.12.0",
-    "@tiptap/extension-horizontal-rule": "^2.12.0",
+    "@tiptap/extension-horizontal-rule": "^2.13.0",
     "@tiptap/extension-image": "^2.12.0",
     "@tiptap/extension-link": "^2.12.0",
     "@tiptap/extension-placeholder": "^2.12.0",
