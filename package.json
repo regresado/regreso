@@ -120,7 +120,7 @@
     "@typescript-eslint/eslint-plugin": "^8.33.1",
     "@typescript-eslint/parser": "^8.33.1",
     "drizzle-kit": "^0.31.1",
-    "eslint": "^9.27.0",
+    "eslint": "^9.28.0",
     "eslint-config-next": "^15.3.3",
     "eslint-plugin-drizzle": "^0.2.3",
     "postcss": "^8.5.4",
