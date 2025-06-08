@@ -105,7 +105,7 @@ export const tagRouter = createTRPCRouter({
         @@ websearch_to_tsquery  ('english', ${input.searchString})`
                 : undefined,
             ),
-
+            input.archived ? eq(tags.archived, input.archived) : undefined,
             eq(tags.userId, ctx.user.id),
             input.workspaceId
               ? eq(tags.workspaceId, input.workspaceId)

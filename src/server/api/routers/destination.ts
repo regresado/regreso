@@ -180,6 +180,9 @@ export const destinationRouter = createTRPCRouter({
               input.type && input.type != "any"
                 ? eq(destinations.type, input.type)
                 : undefined,
+              input.archived
+                ? eq(destinations.archived, input.archived)
+                : undefined,
               tagNames.length > 0
                 ? or(
                     inArray(tags.name, tagNames),

@@ -31,13 +31,20 @@ import {
 
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
+import { Checkbox } from "~/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "~/components/ui/dialog";
-import { Form, FormControl, FormField, FormItem } from "~/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import {
   Pagination,
@@ -327,6 +334,23 @@ export function SearchForm({
                   <Separator orientation="vertical" className="h-8" />
                 </>
               ) : null}
+              <FormField
+                control={form.control}
+                name="archived"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md px-1 py-2.5 shadow">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <div className="space-y-1 leading-none">
+                      <FormLabel>Buried</FormLabel>
+                    </div>
+                  </FormItem>
+                )}
+              />
 
               <FormField
                 control={form.control}

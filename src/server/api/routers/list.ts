@@ -165,6 +165,7 @@ export const listRouter = createTRPCRouter({
             @@ websearch_to_tsquery  ('english', ${input.searchString})`
                   : undefined,
               ),
+              input.archived ? eq(lists.archived, input.archived) : undefined,
               tagNames.length > 0
                 ? or(
                     inArray(tags.name, tagNames),

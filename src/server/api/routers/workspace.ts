@@ -108,7 +108,9 @@ export const workspaceRouter = createTRPCRouter({
           @@ websearch_to_tsquery  ('english', ${input.searchString})`
                   : undefined,
               ),
-
+              input.archived
+                ? eq(workspaces.archived, input.archived)
+                : undefined,
               eq(workspaces.userId, ctx.user.id),
             ),
           )
