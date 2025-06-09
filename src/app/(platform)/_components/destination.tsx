@@ -852,8 +852,7 @@ export function DestinationDialog(props: {
         await utils.destination.invalidate();
         if (typeof callback === "function") {
           callback();
-        }
-        router.push("/dashboard");
+        } 
       },
       onError: (error) => {
         toast({
@@ -957,14 +956,11 @@ export function DestinationDialog(props: {
         id: data?.id,
         archived: false,
       });
-
-      router.refresh();
     } else if (data) {
       void archiveMutation.mutate({
         id: data?.id,
         archived: true,
       });
-      router.refresh();
     } else {
       toast({
         title: "Failed to update map",
