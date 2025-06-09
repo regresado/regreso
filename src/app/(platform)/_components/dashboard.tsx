@@ -64,9 +64,7 @@ export function WelcomeCard({
               ? `${workspace.emoji} ${workspace.name}`
               : `👋 Welcome ${user?.name ?? " to Regreso"},`}
             {workspace && workspace.id == user?.workspaceId ? (
-              <Badge variant="secondary" className="ml-3">
-                Default
-              </Badge>
+              <Badge className="ml-3">Default</Badge>
             ) : null}
           </CardTitle>
           <CardDescription className={workspace ? "mt-8" : undefined}>

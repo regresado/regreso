@@ -23,9 +23,9 @@ import {
 import { useForm } from "react-hook-form";
 import { type z } from "zod";
 import {
-  type User,
   workspaceFormSchema,
   type updateWorkspaceSchema,
+  type User,
   type Workspace,
   type workspaceSchema,
 } from "~/server/models";
@@ -475,7 +475,7 @@ export function RecentWorkspacesDropdown({
       </Dialog>
       {workspace ? (
         <>
-          <p className="mt-6 text-sm font-bold">Trunk Actions</p>
+          <p className="mt-8 text-sm font-bold">Trunk Actions</p>
 
           <div className="flex flex-row flex-wrap gap-2">
             <Button
@@ -495,10 +495,10 @@ export function RecentWorkspacesDropdown({
                 onClick={handleMakingWorkspaceDefault}
               >
                 <Heart />
-                Make Default
+                {workspace?.archived ? "Archived" : "Make Default"}
               </Button>
             ) : null}
-            {workspace.archived ? (
+            {workspace.archived && false ? (
               <Button
                 size="sm"
                 variant="secondary"
@@ -508,7 +508,7 @@ export function RecentWorkspacesDropdown({
                 <Forklift />
                 Excavate
               </Button>
-            ) : (
+            ) : !workspace.archived ? (
               <Dialog>
                 <DialogTrigger asChild>
                   <Button
@@ -527,7 +527,7 @@ export function RecentWorkspacesDropdown({
                     <DialogDescription>
                       This action cannot be undone. Are you sure you want to
                       bury this trunk? It will be hidden from the dashboard and
-                      other pages until you excavate it.
+                      other pages (except search) until you excavate it.
                     </DialogDescription>
                   </DialogHeader>
                   <DialogFooter>
@@ -539,7 +539,7 @@ export function RecentWorkspacesDropdown({
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
-            )}
+            ) : null}
 
             <Dialog>
               <DeleteTrunk id={workspace.id} routePath="/search/boxes">

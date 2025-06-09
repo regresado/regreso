@@ -340,25 +340,27 @@ export function ListForm(
               <FormItem className="flex flex-col">
                 <FormLabel>Emoji</FormLabel>
                 <FormControl>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button variant="outline">
-                        {form.watch("emoji") != undefined &&
-                        form.watch("emoji").length > 0
-                          ? form.watch("emoji")
-                          : "❔"}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="p-0">
-                      <Picker
-                        data={data}
-                        value={form.watch("emoji")}
-                        onEmojiSelect={(emoji: { native: string }) => {
-                          form.setValue("emoji", emoji.native);
-                        }}
-                      />
-                    </PopoverContent>
-                  </Popover>
+                  <>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button variant="outline">
+                          {form.watch("emoji") != undefined &&
+                          form.watch("emoji").length > 0
+                            ? form.watch("emoji")
+                            : "❔"}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="p-0">
+                        <Picker
+                          data={data}
+                          value={form.watch("emoji")}
+                          onEmojiSelect={(emoji: { native: string }) => {
+                            form.setValue("emoji", emoji.native);
+                          }}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -403,21 +405,23 @@ export function ListForm(
             <FormItem className="flex flex-col items-start">
               <FormLabel className="text-left">Tags</FormLabel>
               <FormControl>
-                <TagInput
-                  {...field}
-                  placeholder="Enter some tags..."
-                  tags={tags}
-                  className="sm:min-w-[450px]"
-                  setTags={(newTags) => {
-                    setTags(newTags);
-                    form.setValue("tags", newTags as [Tag, ...Tag[]]);
-                  }}
-                  styleClasses={{
-                    input: "w-full sm:max-w-[350px]",
-                  }}
-                  activeTagIndex={activeTagIndex}
-                  setActiveTagIndex={setActiveTagIndex}
-                />
+                <>
+                  <TagInput
+                    {...field}
+                    placeholder="Enter some tags..."
+                    tags={tags}
+                    className="sm:min-w-[450px]"
+                    setTags={(newTags) => {
+                      setTags(newTags);
+                      form.setValue("tags", newTags as [Tag, ...Tag[]]);
+                    }}
+                    styleClasses={{
+                      input: "w-full sm:max-w-[350px]",
+                    }}
+                    activeTagIndex={activeTagIndex}
+                    setActiveTagIndex={setActiveTagIndex}
+                  />
+                </>
               </FormControl>
               <FormDescription>
                 All maps added to this map will be searchable using these tags.
@@ -519,7 +523,7 @@ export function RecentLists({
     limit: 3,
     order: "DESC",
     sortBy: "updatedAt",
-    archived: workspace?.id ? undefined : false,
+    archived: workspace?.archived ? undefined : false,
     workspaceId: workspace?.id ?? undefined,
   });
   const [open, setOpen] = useState(false);
@@ -769,11 +773,11 @@ export function ListPage(props: {
             >
               {!!data?.tags.find((t) => t.text == "favorite maps") ? (
                 <>
-                  <StarOff /> Unfavorite Map
+                  <StarOff /> Unfavorite
                 </>
               ) : (
                 <>
-                  <Star /> Favorite Map
+                  <Star /> Favorite
                 </>
               )}
             </Button>
@@ -794,7 +798,7 @@ export function ListPage(props: {
               onClick={handleArchivalToggle}
             >
               <Forklift />
-              Retrieve
+              Excavate
             </Button>
           ) : (
             <Dialog>
@@ -814,7 +818,7 @@ export function ListPage(props: {
                   <DialogDescription>
                     This action cannot be undone. Are you sure you want to bury
                     this map? It will be hidden from the dashboard and other
-                    pages until you excavate it.
+                    pages (except search) until you excavate it.
                   </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
@@ -852,8 +856,11 @@ export function ListPage(props: {
 
       <div className="mt-2 flex flex-wrap gap-2 text-sm">
         Trunk:{" "}
-        <Badge variant="outline">
-          {data?.workspace.emoji ?? "❔"} {data?.workspace.name}
+        <Badge variant={data?.workspace.archived ? "destructive" : "outline"}>
+          {data?.workspace.emoji ?? "❔"} {data?.workspace.name}{" "}
+          <span className="ml-1 italic">
+            {data?.workspace.archived ? "(Archived)" : null}
+          </span>
         </Badge>
       </div>
 
@@ -869,13 +876,13 @@ export function ListPage(props: {
 
         <Tooltip>
           <TooltipTrigger asChild>
-            <>
+            <div>
               {(data?.updatedAt &&
                 "Updated " +
                   timeSince(data?.updatedAt ?? new Date()) +
                   " ago") ??
                 "Created " + timeSince(data?.createdAt ?? new Date()) + " ago"}
-            </>
+            </div>
           </TooltipTrigger>
           <TooltipContent>
             <p>
@@ -883,6 +890,14 @@ export function ListPage(props: {
             </p>
           </TooltipContent>
         </Tooltip>
+        {data?.archived ? (
+          <>
+            <p className="ml-3">•</p>
+            <Badge className="ml-3 not-italic" variant="destructive">
+              Archived
+            </Badge>
+          </>
+        ) : null}
       </div>
 
       {data != undefined ? (

@@ -16,11 +16,13 @@ import { type UseTRPCMutationResult } from "@trpc/react-query/shared";
 import { api } from "~/trpc/react";
 import {
   ArrowRight,
+  Forklift,
   GalleryVerticalEnd,
   Loader2,
   Pencil,
   Plus,
   RefreshCw,
+  Shovel,
   Shredder,
   Tag as TagIcon,
   Tags,
@@ -469,11 +471,11 @@ export function TagCard(
             <div className="mt-2 flex flex-wrap gap-1.5">
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <>
+                  <div>
                     {(props.updatedAt &&
                       "Updated " + timeSince(props.updatedAt) + " ago") ??
                       "Created " + timeSince(props.createdAt) + " ago"}
-                  </>
+                  </div>
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>
@@ -533,7 +535,7 @@ export function RecentTags({
     limit: 24,
     order: "DESC",
     sortBy: "updatedAt",
-    archived: workspace?.id ? undefined : false,
+    archived: workspace?.archived ? undefined : false,
     workspaceId: workspace?.id ?? undefined,
   });
   const [open, setOpen] = useState(false);
@@ -662,6 +664,7 @@ export function TagPage(props: {
   user?: User;
 }) {
   const utils = api.useUtils();
+  const router = useRouter();
 
   const tagId = props.id;
   const [editing, setEditing] = useState(false);
@@ -689,6 +692,7 @@ export function TagPage(props: {
         });
       },
     });
+  const archiveMutation = updateTag();
 
   const { data }: { data: Tag | undefined } = api.tag.get.useQuery(
     { id: parseInt(tagId ?? "0", 10) },
@@ -713,6 +717,28 @@ export function TagPage(props: {
 
   function handleOpenChange(openStatus: boolean) {
     setEditing(openStatus);
+  }
+  function handleArchivalToggle() {
+    if (data?.archived) {
+      void archiveMutation.mutate({
+        id: data?.id,
+        archived: false,
+      });
+
+      router.refresh();
+    } else if (data) {
+      void archiveMutation.mutate({
+        id: data?.id,
+        archived: true,
+      });
+      router.refresh();
+    } else {
+      toast({
+        title: "Failed to update tag",
+        description: "No tag selected.",
+        variant: "destructive",
+      });
+    }
   }
   return editing ? (
     <Dialog open={editing} onOpenChange={handleOpenChange}>
@@ -778,8 +804,49 @@ export function TagPage(props: {
               setEditing(true);
             }}
           >
-            <Pencil /> Edit Tag
+            <Pencil /> Edit
           </Button>
+          {data?.archived ? (
+            <Button
+              size="sm"
+              variant="secondary"
+              className="flex flex-shrink"
+              onClick={handleArchivalToggle}
+            >
+              <Forklift />
+              Excavate
+            </Button>
+          ) : (
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  className="flex flex-shrink"
+                >
+                  <Shovel />
+                  Bury
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Are you absolutely sure?</DialogTitle>
+                  <DialogDescription>
+                    This action cannot be undone. Are you sure you want to bury
+                    this tag? It will be hidden from the dashboard and other
+                    pages (except search) until you excavate it.
+                  </DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                  <DialogClose asChild>
+                    <Button type="button" onClick={handleArchivalToggle}>
+                      Confirm
+                    </Button>
+                  </DialogClose>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          )}
           <Dialog>
             <DeleteTag id={parseInt(props.id)} routePath="/search/tags">
               <DialogTrigger asChild>
@@ -789,7 +856,7 @@ export function TagPage(props: {
                   className="flex flex-shrink"
                 >
                   <Shredder />
-                  Shred Tag
+                  Shred
                 </Button>
               </DialogTrigger>
             </DeleteTag>
@@ -798,8 +865,11 @@ export function TagPage(props: {
       </div>
       <div className="mt-2 flex flex-wrap gap-2 text-sm">
         Trunk:{" "}
-        <Badge variant="outline">
-          {data?.workspace?.emoji ?? "❔"} {data?.workspace?.name}
+        <Badge variant={data?.workspace?.archived ? "destructive" : "outline"}>
+          {data?.workspace?.emoji ?? "❔"} {data?.workspace?.name}{" "}
+          <span className="ml-1 italic">
+            {data?.workspace?.archived ? "(Archived)" : null}
+          </span>
         </Badge>
       </div>
       <div className="font-muted flex flex-row space-x-2 text-sm italic">
@@ -823,11 +893,11 @@ export function TagPage(props: {
 
         <Tooltip>
           <TooltipTrigger asChild>
-            <>
+            <div>
               {(data?.updatedAt &&
                 "Updated " + timeSince(data?.updatedAt) + " ago") ??
                 "Created " + timeSince(data?.createdAt ?? new Date()) + " ago"}
-            </>
+            </div>
           </TooltipTrigger>
           <TooltipContent>
             <p>
@@ -835,6 +905,14 @@ export function TagPage(props: {
             </p>
           </TooltipContent>
         </Tooltip>
+        {data?.archived ? (
+          <>
+            <p className="ml-3">•</p>
+            <Badge className="ml-3 not-italic" variant="destructive">
+              Archived
+            </Badge>
+          </>
+        ) : null}
       </div>
       <Separator />
 

@@ -167,7 +167,10 @@ export const destinationRouter = createTRPCRouter({
           .leftJoin(
             tags,
             tagNames.length > 0
-              ? eq(destinationTags.tagId, tags.id)
+              ? and(
+                  eq(destinationTags.tagId, tags.id),
+                  eq(tags.archived, false),
+                )
               : sql`1 = 0`,
           )
           .leftJoin(
@@ -380,19 +383,22 @@ export const destinationRouter = createTRPCRouter({
           });
 
         const tagRows = [...newTagRows, ...existingTagRows];
-        await ctx.db
-          .insert(destinationTags)
-          .values(
-            tagRows
-              .filter((t) => !t.archived)
-              .map((tag) => {
-                return {
-                  destinationId: destinationRows[0]!.id,
-                  tagId: tag.id,
-                };
-              }),
-          )
-          .onConflictDoNothing();
+
+        if (tagRows.filter((t) => !t.archived).length > 0) {
+          await ctx.db
+            .insert(destinationTags)
+            .values(
+              tagRows
+                .filter((t) => !t.archived)
+                .map((tag) => {
+                  return {
+                    destinationId: destinationRows[0]!.id,
+                    tagId: tag.id,
+                  };
+                }),
+            )
+            .onConflictDoNothing();
+        }
       }
       return {
         success: true,
@@ -477,12 +483,14 @@ export const destinationRouter = createTRPCRouter({
                 },
               })
               .then((res) =>
-                res.map((tagRow) => {
-                  return {
-                    id: tagRow.tag!.id,
-                    text: tagRow.tag!.name,
-                  };
-                }),
+                res
+                  .filter((t) => !t.archived)
+                  .map((tagRow) => {
+                    return {
+                      id: tagRow.tag!.id,
+                      text: tagRow.tag!.name,
+                    };
+                  }),
               )
           : undefined,
       };

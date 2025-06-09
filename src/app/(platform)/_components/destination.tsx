@@ -13,12 +13,15 @@ import { api } from "~/trpc/react";
 import { TagInput, type Tag } from "emblor";
 import {
   ArrowRight,
+  Eraser,
+  Forklift,
   GalleryVerticalEnd,
   Loader2,
   MapPinPlus,
   Pencil,
   Plus,
   RefreshCw,
+  Shovel,
   Telescope,
 } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -651,7 +654,7 @@ export function RecentDestinations({
   } = api.destination.getMany.useQuery({
     limit: 3,
     order: "DESC",
-    archived: workspace?.id ? undefined : false,
+    archived: workspace?.archived ? undefined : false,
     workspaceId: workspace?.id ?? undefined,
   });
 
@@ -862,6 +865,7 @@ export function DestinationDialog(props: {
         });
       },
     });
+  const archiveMutation = updateDestination();
   const deleteDestination = api.destination.delete.useMutation({
     onSuccess: async () => {
       await utils.destination.invalidate();
@@ -889,6 +893,8 @@ export function DestinationDialog(props: {
     api.list.getMany.useQuery({
       limit: 100,
       sortBy: "updatedAt",
+      archived: false,
+      workspaceId: data?.workspace?.id,
     });
 
   function handleOpenChange(openStatus: boolean) {
@@ -943,6 +949,29 @@ export function DestinationDialog(props: {
       removeFromLists.mutate({
         lists: lists.map((l) => l.id),
         id: parseInt(props.id),
+      });
+    }
+  }
+
+  function handleArchivalToggle() {
+    if (data?.archived) {
+      void archiveMutation.mutate({
+        id: data?.id,
+        archived: false,
+      });
+
+      router.refresh();
+    } else if (data) {
+      void archiveMutation.mutate({
+        id: data?.id,
+        archived: true,
+      });
+      router.refresh();
+    } else {
+      toast({
+        title: "Failed to update map",
+        description: "No map selected.",
+        variant: "destructive",
       });
     }
   }
@@ -1015,8 +1044,15 @@ export function DestinationDialog(props: {
                 {data?.workspace ? (
                   <div className="flex flex-wrap gap-2">
                     Trunk:{" "}
-                    <Badge variant="outline">
-                      {data?.workspace.emoji ?? "❔"} {data?.workspace.name}
+                    <Badge
+                      variant={
+                        data?.workspace.archived ? "destructive" : "outline"
+                      }
+                    >
+                      {data?.workspace.emoji ?? "❔"} {data?.workspace.name}{" "}
+                      <span className="ml-1 italic">
+                        {data?.workspace.archived ? "(Archived)" : null}
+                      </span>
                     </Badge>
                   </div>
                 ) : null}
@@ -1049,6 +1085,14 @@ export function DestinationDialog(props: {
                       </TooltipContent>
                     </Tooltip>
                   ) : null}
+                  {data?.archived ? (
+                    <>
+                      <p className="ml-3">•</p>
+                      <Badge className="ml-3 not-italic" variant="destructive">
+                        Archived
+                      </Badge>
+                    </>
+                  ) : null}
                 </div>
 
                 <DialogFooter>
@@ -1065,7 +1109,8 @@ export function DestinationDialog(props: {
                             setEditing(true);
                           }}
                         >
-                          Edit Destination
+                          <Pencil />
+                          Edit
                         </Button>
                         <ListComboBox
                           defaultList={data.lists ?? []}
@@ -1073,9 +1118,58 @@ export function DestinationDialog(props: {
                           handleListAdds={addLists}
                           handleListRemovals={removeLists}
                         />
+
+                        {data?.archived ? (
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            className="flex flex-shrink"
+                            onClick={handleArchivalToggle}
+                          >
+                            <Forklift />
+                            Excavate
+                          </Button>
+                        ) : (
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <Button
+                                size="sm"
+                                variant="secondary"
+                                className="flex flex-shrink"
+                              >
+                                <Shovel />
+                                Bury
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                              <DialogHeader>
+                                <DialogTitle>
+                                  Are you absolutely sure?
+                                </DialogTitle>
+                                <DialogDescription>
+                                  This action cannot be undone. Are you sure you
+                                  want to bury this destination? It will be
+                                  hidden from the dashboard and other pages
+                                  until you excavate it.
+                                </DialogDescription>
+                              </DialogHeader>
+                              <DialogFooter>
+                                <DialogClose asChild>
+                                  <Button
+                                    type="button"
+                                    onClick={handleArchivalToggle}
+                                  >
+                                    Confirm
+                                  </Button>
+                                </DialogClose>
+                              </DialogFooter>
+                            </DialogContent>
+                          </Dialog>
+                        )}
+
                         <DialogTrigger asChild>
                           <Button size="sm" variant="destructive">
-                            Destroy Destination
+                            <Eraser /> Erase
                           </Button>
                         </DialogTrigger>
                       </div>

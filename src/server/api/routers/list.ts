@@ -95,16 +95,18 @@ export const listRouter = createTRPCRouter({
           });
 
         const tagRows = [...newTagRows, ...existingTagRows];
-        await ctx.db.insert(listTags).values(
-          tagRows
-            .filter((t) => !t.archived)
-            .map((tag) => {
-              return {
-                listId: listRows[0]!.id,
-                tagId: tag.id,
-              };
-            }),
-        );
+        if (tagRows.filter((t) => !t.archived).length > 0) {
+          await ctx.db.insert(listTags).values(
+            tagRows
+              .filter((t) => !t.archived)
+              .map((tag) => {
+                return {
+                  listId: listRows[0]!.id,
+                  tagId: tag.id,
+                };
+              }),
+          );
+        }
       }
       return {
         success: true,
@@ -170,7 +172,9 @@ export const listRouter = createTRPCRouter({
           )
           .leftJoin(
             tags,
-            tagNames.length > 0 ? eq(listTags.tagId, tags.id) : sql`1 = 0`,
+            tagNames.length > 0
+              ? and(eq(listTags.tagId, tags.id), eq(tags.archived, false))
+              : sql`1 = 0`,
           )
           .leftJoin(workspaces, eq(lists.workspaceId, workspaces.id))
           .where(
@@ -313,7 +317,13 @@ export const listRouter = createTRPCRouter({
         }
       }
       let listRows = null;
-      if (input.name || input.emoji || input.description) {
+      if (
+        input.name ||
+        input.emoji ||
+        input.description ||
+        input.workspaceId ||
+        input.archived != undefined
+      ) {
         listRows = await ctx.db
           .update(lists)
           .set({
@@ -568,12 +578,14 @@ export const listRouter = createTRPCRouter({
                 },
               })
               .then((res) =>
-                res.map((tagRow) => {
-                  return {
-                    id: tagRow.tag!.id,
-                    text: tagRow.tag!.name,
-                  };
-                }),
+                res
+                  .filter((t) => !t.archived)
+                  .map((tagRow) => {
+                    return {
+                      id: tagRow.tag!.id,
+                      text: tagRow.tag!.name,
+                    };
+                  }),
               )
           : undefined,
       };
