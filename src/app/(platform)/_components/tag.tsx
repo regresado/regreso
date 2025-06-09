@@ -313,16 +313,18 @@ export function TagForm(
                     <SelectGroup>
                       <SelectLabel>Trunk</SelectLabel>
 
-                      {props.workspaces?.map((workspace) => {
-                        return (
-                          <SelectItem
-                            value={workspace.id.toString()}
-                            key={workspace.id.toString()}
-                          >
-                            {workspace.name}
-                          </SelectItem>
-                        );
-                      })}
+                      {props.workspaces
+                        ?.filter((w) => !w.archived)
+                        .map((workspace) => {
+                          return (
+                            <SelectItem
+                              value={workspace.id.toString()}
+                              key={workspace.id.toString()}
+                            >
+                              {workspace.name}
+                            </SelectItem>
+                          );
+                        })}
                     </SelectGroup>
                   </SelectContent>
                 </Select>
@@ -531,6 +533,7 @@ export function RecentTags({
     limit: 24,
     order: "DESC",
     sortBy: "updatedAt",
+    archived: workspace?.id ? undefined : false,
     workspaceId: workspace?.id ?? undefined,
   });
   const [open, setOpen] = useState(false);
@@ -567,7 +570,11 @@ export function RecentTags({
                 </div>
               </Link>
 
-              <Button onClick={() => setOpen(true)} size="sm">
+              <Button
+                onClick={() => setOpen(true)}
+                disabled={workspace?.archived}
+                size="sm"
+              >
                 <Plus />
                 Create Tag
               </Button>

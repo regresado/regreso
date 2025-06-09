@@ -242,7 +242,6 @@ export function DestinationForm(
       );
     }
     if (detailsState.url) {
-      alert(123);
       form.setValue(
         "location",
         detailsState.url ?? destinationTypeForm.watch("location"),
@@ -347,6 +346,7 @@ export function DestinationForm(
                     <FormLabel>Type</FormLabel>
                     <Select
                       onValueChange={field.onChange}
+                      disabled={props.workspace?.archived}
                       defaultValue={field.value}
                     >
                       <FormControl>
@@ -381,6 +381,7 @@ export function DestinationForm(
                         <FormLabel>Location</FormLabel>
                         <FormControl>
                           <Input
+                            disabled={props.workspace?.archived}
                             placeholder="https://pelicans.dev"
                             {...field}
                           />
@@ -397,7 +398,8 @@ export function DestinationForm(
                     destinationTypeForm.watch("location") === "" ||
                     destinationTypeForm.watch("location") ===
                       form.watch("location") ||
-                    loading
+                    loading ||
+                    props.workspace?.archived
                   }
                 >
                   {loading ? (
@@ -513,16 +515,18 @@ export function DestinationForm(
                           <SelectGroup>
                             <SelectLabel>Trunk</SelectLabel>
 
-                            {props.workspaces?.map((workspace) => {
-                              return (
-                                <SelectItem
-                                  value={workspace.id.toString()}
-                                  key={workspace.id.toString()}
-                                >
-                                  {workspace.name}
-                                </SelectItem>
-                              );
-                            })}
+                            {props.workspaces
+                              ?.filter((w) => !w.archived)
+                              .map((workspace) => {
+                                return (
+                                  <SelectItem
+                                    value={workspace.id.toString()}
+                                    key={workspace.id.toString()}
+                                  >
+                                    {workspace.name}
+                                  </SelectItem>
+                                );
+                              })}
                           </SelectGroup>
                         </SelectContent>
                       </Select>
@@ -647,6 +651,7 @@ export function RecentDestinations({
   } = api.destination.getMany.useQuery({
     limit: 3,
     order: "DESC",
+    archived: workspace?.id ? undefined : false,
     workspaceId: workspace?.id ?? undefined,
   });
 
@@ -808,6 +813,11 @@ export function DestinationCard(
               {(props.workspace.emoji ?? "❔") + " " + props.workspace.name}
             </Badge>
           </Link>
+          {props.workspace.archived ? (
+            <Badge variant="destructive">Archived</Badge>
+          ) : props.archived ? (
+            <Badge variant="destructive">Archived</Badge>
+          ) : null}
         </div>
       </CardContent>
     </Card>

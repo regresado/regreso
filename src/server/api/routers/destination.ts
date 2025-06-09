@@ -45,6 +45,20 @@ export const destinationRouter = createTRPCRouter({
     .input(destinationFormSchema)
     .output(z.object({ success: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
+      if (input.workspaceId && input.workspaceId !== ctx.user.workspaceId) {
+        const workspace = await ctx.db.query.workspaces.findFirst({
+          where: and(
+            eq(workspaces.id, input.workspaceId),
+            eq(workspaces.userId, ctx.user.id),
+          ),
+        });
+        if (workspace && workspace.archived) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Cannot add destination to archived workspace",
+          });
+        }
+      }
       const destinationRows = await ctx.db
         .insert(destinations)
         .values({
@@ -89,16 +103,19 @@ export const destinationRouter = createTRPCRouter({
           .onConflictDoNothing()
           .returning({
             id: tags.id,
+            archived: tags.archived,
           });
 
         const tagRows = [...newTagRows, ...existingTagRows];
         await ctx.db.insert(destinationTags).values(
-          tagRows.map((tag) => {
-            return {
-              destinationId: destinationRows[0]!.id,
-              tagId: tag.id,
-            };
-          }),
+          tagRows
+            .filter((t) => !t.archived)
+            .map((tag) => {
+              return {
+                destinationId: destinationRows[0]!.id,
+                tagId: tag.id,
+              };
+            }),
         );
       }
       return {
@@ -180,8 +197,11 @@ export const destinationRouter = createTRPCRouter({
               input.type && input.type != "any"
                 ? eq(destinations.type, input.type)
                 : undefined,
-              input.archived
-                ? eq(destinations.archived, input.archived)
+              input.archived !== undefined
+                ? and(
+                    eq(destinations.archived, input.archived),
+                    eq(workspaces.archived, input.archived),
+                  )
                 : undefined,
               tagNames.length > 0
                 ? or(
@@ -289,6 +309,20 @@ export const destinationRouter = createTRPCRouter({
     .input(updateDestinationSchema)
     .output(z.object({ success: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
+      if (input.workspaceId && input.workspaceId !== ctx.user.workspaceId) {
+        const workspace = await ctx.db.query.workspaces.findFirst({
+          where: and(
+            eq(workspaces.id, input.workspaceId),
+            eq(workspaces.userId, ctx.user.id),
+          ),
+        });
+        if (workspace && workspace.archived) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Cannot add destination to archived workspace",
+          });
+        }
+      }
       const destinationRows = await ctx.db
         .update(destinations)
         .set({
@@ -342,18 +376,21 @@ export const destinationRouter = createTRPCRouter({
           .onConflictDoNothing()
           .returning({
             id: tags.id,
+            archived: tags.archived,
           });
 
         const tagRows = [...newTagRows, ...existingTagRows];
         await ctx.db
           .insert(destinationTags)
           .values(
-            tagRows.map((tag) => {
-              return {
-                destinationId: destinationRows[0]!.id,
-                tagId: tag.id,
-              };
-            }),
+            tagRows
+              .filter((t) => !t.archived)
+              .map((tag) => {
+                return {
+                  destinationId: destinationRows[0]!.id,
+                  tagId: tag.id,
+                };
+              }),
           )
           .onConflictDoNothing();
       }
@@ -479,6 +516,7 @@ export const destinationRouter = createTRPCRouter({
         where: and(
           inArray(lists.id, input.lists),
           eq(lists.userId, ctx.user.id),
+          eq(lists.archived, false),
         ),
       });
 

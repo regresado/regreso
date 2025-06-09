@@ -33,6 +33,21 @@ export const tagRouter = createTRPCRouter({
     .input(tagFormSchema)
     .output(z.object({ success: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
+      if (input.workspaceId && input.workspaceId !== ctx.user.workspaceId) {
+        const workspace = await ctx.db.query.workspaces.findFirst({
+          where: and(
+            eq(workspaces.id, input.workspaceId),
+            eq(workspaces.userId, ctx.user.id),
+          ),
+        });
+        if (workspace && workspace.archived) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Cannot add tag to archived workspace",
+          });
+        }
+      }
+
       if (input.color?.includes("url(")) {
         throw new TRPCError({
           code: "BAD_REQUEST",
@@ -105,7 +120,12 @@ export const tagRouter = createTRPCRouter({
         @@ websearch_to_tsquery  ('english', ${input.searchString})`
                 : undefined,
             ),
-            input.archived ? eq(tags.archived, input.archived) : undefined,
+            input.archived !== undefined
+              ? and(
+                  eq(tags.archived, input.archived),
+                  eq(workspaces.archived, input.archived),
+                )
+              : undefined,
             eq(tags.userId, ctx.user.id),
             input.workspaceId
               ? eq(tags.workspaceId, input.workspaceId)
@@ -181,6 +201,20 @@ export const tagRouter = createTRPCRouter({
     .input(updateTagSchema)
     .output(z.object({ success: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
+      if (input.workspaceId && input.workspaceId !== ctx.user.workspaceId) {
+        const workspace = await ctx.db.query.workspaces.findFirst({
+          where: and(
+            eq(workspaces.id, input.workspaceId),
+            eq(workspaces.userId, ctx.user.id),
+          ),
+        });
+        if (workspace && workspace.archived) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Cannot add tag to archived workspace",
+          });
+        }
+      }
       await ctx.db
         .update(tags)
         .set({

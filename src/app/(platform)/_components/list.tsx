@@ -15,6 +15,7 @@ import { TagInput, type Tag } from "emblor";
 import {
   ArrowRight,
   Flame,
+  Forklift,
   GalleryVerticalEnd,
   ListPlus,
   Loader2,
@@ -22,6 +23,7 @@ import {
   Pencil,
   Plus,
   RefreshCw,
+  Shovel,
   Star,
   StarOff,
 } from "lucide-react";
@@ -237,6 +239,11 @@ export function ListCard(props: List) {
                   {(props.workspace.emoji ?? "❔") + " " + props.workspace.name}
                 </Badge>
               </Link>
+              {props.workspace.archived ? (
+                <Badge variant="destructive">Archived</Badge>
+              ) : props.archived ? (
+                <Badge variant="destructive">Archived</Badge>
+              ) : null}
             </div>
           </CardContent>
         </div>
@@ -442,16 +449,18 @@ export function ListForm(
                     <SelectGroup>
                       <SelectLabel>Trunk</SelectLabel>
 
-                      {props.workspaces?.map((workspace) => {
-                        return (
-                          <SelectItem
-                            value={workspace.id.toString()}
-                            key={workspace.id.toString()}
-                          >
-                            {workspace.name}
-                          </SelectItem>
-                        );
-                      })}
+                      {props.workspaces
+                        ?.filter((w) => !w.archived)
+                        .map((workspace) => {
+                          return (
+                            <SelectItem
+                              value={workspace.id.toString()}
+                              key={workspace.id.toString()}
+                            >
+                              {workspace.name}
+                            </SelectItem>
+                          );
+                        })}
                     </SelectGroup>
                   </SelectContent>
                 </Select>
@@ -510,6 +519,7 @@ export function RecentLists({
     limit: 3,
     order: "DESC",
     sortBy: "updatedAt",
+    archived: workspace?.id ? undefined : false,
     workspaceId: workspace?.id ?? undefined,
   });
   const [open, setOpen] = useState(false);
@@ -544,7 +554,12 @@ export function RecentLists({
                 </div>
               </Link>
 
-              <Button id="create-map" onClick={() => setOpen(true)} size="sm">
+              <Button
+                id="create-map"
+                disabled={workspace?.archived}
+                onClick={() => setOpen(true)}
+                size="sm"
+              >
                 <ListPlus />
                 Create Map
               </Button>
@@ -616,6 +631,7 @@ export function ListPage(props: {
   user?: User;
 }) {
   const utils = api.useUtils();
+  const router = useRouter();
 
   const listId = props.id;
   const [editing, setEditing] = useState(false);
@@ -642,6 +658,7 @@ export function ListPage(props: {
       },
     });
   const favoriteListMutation = updateList();
+  const archiveMutation = updateList();
 
   const { data }: { data: List | undefined } = api.list.get.useQuery(
     { id: parseInt(listId ?? "0", 10) },
@@ -662,6 +679,28 @@ export function ListPage(props: {
 
   function handleOpenChange(openStatus: boolean) {
     setEditing(openStatus);
+  }
+  function handleArchivalToggle() {
+    if (data?.archived) {
+      void archiveMutation.mutate({
+        id: data?.id,
+        archived: false,
+      });
+
+      router.refresh();
+    } else if (data) {
+      void archiveMutation.mutate({
+        id: data?.id,
+        archived: true,
+      });
+      router.refresh();
+    } else {
+      toast({
+        title: "Failed to update map",
+        description: "No map selected.",
+        variant: "destructive",
+      });
+    }
   }
   return editing ? (
     <Dialog open={editing} onOpenChange={handleOpenChange}>
@@ -745,14 +784,55 @@ export function ListPage(props: {
               setEditing(true);
             }}
           >
-            <Pencil /> Edit Map
+            <Pencil /> Edit
           </Button>
+          {data?.archived ? (
+            <Button
+              size="sm"
+              variant="secondary"
+              className="flex flex-shrink"
+              onClick={handleArchivalToggle}
+            >
+              <Forklift />
+              Retrieve
+            </Button>
+          ) : (
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button
+                  size="sm"
+                  variant="secondary" 
+                  className="flex flex-shrink"
+                >
+                  <Shovel />
+                  Bury
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Are you absolutely sure?</DialogTitle>
+                  <DialogDescription>
+                    This action cannot be undone. Are you sure you want to bury
+                    this map? It will be hidden from the dashboard and other
+                    pages until you excavate it.
+                  </DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                  <DialogClose asChild>
+                    <Button type="button" onClick={handleArchivalToggle}>
+                      Confirm
+                    </Button>
+                  </DialogClose>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          )}
           <Dialog>
             <DeleteList id={parseInt(props.id)} routePath="/search/maps">
               <DialogTrigger asChild>
                 <Button size="sm" variant="destructive">
                   <Flame />
-                  Burn Map
+                  Burn
                 </Button>
               </DialogTrigger>
             </DeleteList>

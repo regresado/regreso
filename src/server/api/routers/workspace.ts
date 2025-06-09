@@ -108,7 +108,7 @@ export const workspaceRouter = createTRPCRouter({
           @@ websearch_to_tsquery  ('english', ${input.searchString})`
                   : undefined,
               ),
-              input.archived
+              input.archived !== undefined
                 ? eq(workspaces.archived, input.archived)
                 : undefined,
               eq(workspaces.userId, ctx.user.id),
@@ -225,6 +225,12 @@ export const workspaceRouter = createTRPCRouter({
     .input(z.object({ id: z.number() }))
     .output(z.object({ success: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
+      if (input.id == ctx.user.workspaceId) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Cannot delete a user's default workspace.",
+        });
+      }
       await ctx.db
         .delete(workspaces)
         .where(

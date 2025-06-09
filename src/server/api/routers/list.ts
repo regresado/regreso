@@ -35,6 +35,20 @@ export const listRouter = createTRPCRouter({
     .input(listFormSchema)
     .output(z.object({ success: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
+      if (input.workspaceId && input.workspaceId !== ctx.user.workspaceId) {
+        const workspace = await ctx.db.query.workspaces.findFirst({
+          where: and(
+            eq(workspaces.id, input.workspaceId),
+            eq(workspaces.userId, ctx.user.id),
+          ),
+        });
+        if (workspace && workspace.archived) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Cannot add list to archived workspace",
+          });
+        }
+      }
       const listRows = await ctx.db
         .insert(lists)
         .values({
@@ -77,16 +91,19 @@ export const listRouter = createTRPCRouter({
           .onConflictDoNothing()
           .returning({
             id: tags.id,
+            archived: tags.archived,
           });
 
         const tagRows = [...newTagRows, ...existingTagRows];
         await ctx.db.insert(listTags).values(
-          tagRows.map((tag) => {
-            return {
-              listId: listRows[0]!.id,
-              tagId: tag.id,
-            };
-          }),
+          tagRows
+            .filter((t) => !t.archived)
+            .map((tag) => {
+              return {
+                listId: listRows[0]!.id,
+                tagId: tag.id,
+              };
+            }),
         );
       }
       return {
@@ -165,7 +182,12 @@ export const listRouter = createTRPCRouter({
             @@ websearch_to_tsquery  ('english', ${input.searchString})`
                   : undefined,
               ),
-              input.archived ? eq(lists.archived, input.archived) : undefined,
+              input.archived != undefined
+                ? and(
+                    eq(lists.archived, input.archived),
+                    eq(workspaces.archived, input.archived),
+                  )
+                : undefined,
               tagNames.length > 0
                 ? or(
                     inArray(tags.name, tagNames),
@@ -276,6 +298,20 @@ export const listRouter = createTRPCRouter({
     .input(updateListSchema)
     .output(z.object({ success: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
+      if (input.workspaceId && input.workspaceId !== ctx.user.workspaceId) {
+        const workspace = await ctx.db.query.workspaces.findFirst({
+          where: and(
+            eq(workspaces.id, input.workspaceId),
+            eq(workspaces.userId, ctx.user.id),
+          ),
+        });
+        if (workspace && workspace.archived) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Cannot add list to archived workspace",
+          });
+        }
+      }
       let listRows = null;
       if (input.name || input.emoji || input.description) {
         listRows = await ctx.db
@@ -356,7 +392,7 @@ export const listRouter = createTRPCRouter({
               })
             : []),
         ];
-        let newTagRows: { id: number }[] = [];
+        let newTagRows: { id: number; archived: boolean }[] = [];
         if (newTagValues.length > 0) {
           newTagRows = await ctx.db
             .insert(tags)
@@ -364,6 +400,7 @@ export const listRouter = createTRPCRouter({
             .onConflictDoNothing()
             .returning({
               id: tags.id,
+              archived: tags.archived,
             });
         }
 
@@ -402,12 +439,14 @@ export const listRouter = createTRPCRouter({
           await ctx.db
             .insert(listTags)
             .values(
-              tagRows.map((tag) => {
-                return {
-                  listId: listRows[0]!.id,
-                  tagId: tag.id,
-                };
-              }),
+              tagRows
+                .filter((t) => !t.archived)
+                .map((tag) => {
+                  return {
+                    listId: listRows[0]!.id,
+                    tagId: tag.id,
+                  };
+                }),
             )
             .onConflictDoNothing();
         }
@@ -559,6 +598,12 @@ export const listRouter = createTRPCRouter({
         throw new TRPCError({
           code: "FORBIDDEN",
           message: "List not found or access denied",
+        });
+      }
+      if (list.archived) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Cannot add to archived list.",
         });
       }
 

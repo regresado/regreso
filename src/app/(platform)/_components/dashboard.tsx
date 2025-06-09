@@ -19,6 +19,7 @@ import type { User, Workspace } from "~/server/models";
 import { timeSince } from "~/lib/utils";
 
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
+import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -58,10 +59,15 @@ export function WelcomeCard({
     <TiltCard>
       <Card>
         <CardHeader className="px-3 pb-4 xs:px-6 xs:pt-6 sm:px-3 sm:pt-4 lg:px-6 lg:pt-6">
-          <CardTitle className="leading-relaxed">
+          <CardTitle className="flex flex-row items-center leading-relaxed">
             {workspace
               ? `${workspace.emoji} ${workspace.name}`
               : `👋 Welcome ${user?.name ?? " to Regreso"},`}
+            {workspace && workspace.id == user?.workspaceId ? (
+              <Badge variant="secondary" className="ml-3">
+                Default
+              </Badge>
+            ) : null}
           </CardTitle>
           <CardDescription className={workspace ? "mt-8" : undefined}>
             {workspace
@@ -148,6 +154,7 @@ export function WelcomeCard({
           <Separator className={workspace ? "mt-0" : undefined} />
           <RecentWorkspacesDropdown
             workspace={workspace}
+            user={user}
             recentWorkspaces={workspaces ?? []}
             isFetchingWorkspaces={isFetchingWorkspaces}
           />

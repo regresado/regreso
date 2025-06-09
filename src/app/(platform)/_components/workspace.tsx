@@ -23,6 +23,7 @@ import {
 import { useForm } from "react-hook-form";
 import { type z } from "zod";
 import {
+  User,
   workspaceFormSchema,
   type updateWorkspaceSchema,
   type Workspace,
@@ -60,7 +61,9 @@ import {
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
@@ -297,10 +300,12 @@ export function WorkspaceForm(props: WorkspaceFormProps) {
 
 export function RecentWorkspacesDropdown({
   workspace,
+  user,
   recentWorkspaces,
   isFetchingWorkspaces,
 }: {
   workspace?: Workspace;
+  user?: User;
   recentWorkspaces: Workspace[];
   isFetchingWorkspaces?: boolean;
 }) {
@@ -421,12 +426,34 @@ export function RecentWorkspacesDropdown({
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="0">All Workspaces</SelectItem>
-            {recentWorkspaces.map((workspace) => (
-              <SelectItem key={workspace.id} value={workspace.id.toString()}>
-                {workspace.name}
-              </SelectItem>
-            ))}
+            <SelectGroup>
+              <SelectItem value="0">All Workspaces</SelectItem>
+              {recentWorkspaces
+                .filter((w) => !w.archived)
+                .map((workspace) => (
+                  <SelectItem
+                    key={workspace.id}
+                    value={workspace.id.toString()}
+                  >
+                    {workspace.name}
+                  </SelectItem>
+                ))}
+              {recentWorkspaces.filter((w) => w.archived).length > 0 ? (
+                <>
+                  <SelectLabel>Buried</SelectLabel>
+                  {recentWorkspaces
+                    .filter((w) => w.archived)
+                    .map((workspace) => (
+                      <SelectItem
+                        key={workspace.id}
+                        value={workspace.id.toString()}
+                      >
+                        {workspace.name}
+                      </SelectItem>
+                    ))}
+                </>
+              ) : null}
+            </SelectGroup>
           </SelectContent>
         </Select>
         <Button size="sm" onClick={() => setOpen(true)}>
@@ -459,15 +486,18 @@ export function RecentWorkspacesDropdown({
             >
               <Pencil /> Edit
             </Button>
-            <Button
-              size="sm"
-              variant="outline"
-              className="flex flex-shrink"
-              onClick={handleMakingWorkspaceDefault}
-            >
-              <Heart />
-              Make Default
-            </Button>
+            {workspace.id !== user?.workspaceId ? (
+              <Button
+                size="sm"
+                variant="outline"
+                className="flex flex-shrink"
+                disabled={workspace?.archived}
+                onClick={handleMakingWorkspaceDefault}
+              >
+                <Heart />
+                Make Default
+              </Button>
+            ) : null}
             {workspace.archived ? (
               <Button
                 size="sm"
@@ -484,6 +514,7 @@ export function RecentWorkspacesDropdown({
                   <Button
                     size="sm"
                     variant="secondary"
+                    disabled={workspace.id == user?.workspaceId}
                     className="flex flex-shrink"
                   >
                     <Shovel />
@@ -516,6 +547,7 @@ export function RecentWorkspacesDropdown({
                   <Button
                     size="sm"
                     variant="destructive"
+                    disabled={workspace.id == user?.workspaceId}
                     className="flex flex-shrink"
                   >
                     <Flame />
