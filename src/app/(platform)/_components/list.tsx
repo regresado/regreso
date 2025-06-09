@@ -239,9 +239,7 @@ export function ListCard(props: List) {
                   {(props.workspace.emoji ?? "❔") + " " + props.workspace.name}
                 </Badge>
               </Link>
-              {props.workspace.archived ? (
-                <Badge variant="destructive">Archived</Badge>
-              ) : props.archived ? (
+              {props.workspace.archived ? null : props.archived ? (
                 <Badge variant="destructive">Archived</Badge>
               ) : null}
             </div>
