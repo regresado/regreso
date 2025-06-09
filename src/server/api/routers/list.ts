@@ -42,7 +42,7 @@ export const listRouter = createTRPCRouter({
             eq(workspaces.userId, ctx.user.id),
           ),
         });
-        if (workspace && workspace.archived) {
+        if (workspace?.archived) {
           throw new TRPCError({
             code: "FORBIDDEN",
             message: "Cannot add list to archived workspace",
@@ -305,7 +305,7 @@ export const listRouter = createTRPCRouter({
             eq(workspaces.userId, ctx.user.id),
           ),
         });
-        if (workspace && workspace.archived) {
+        if (workspace?.archived) {
           throw new TRPCError({
             code: "FORBIDDEN",
             message: "Cannot add list to archived workspace",

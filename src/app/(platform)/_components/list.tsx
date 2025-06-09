@@ -801,7 +801,7 @@ export function ListPage(props: {
               <DialogTrigger asChild>
                 <Button
                   size="sm"
-                  variant="secondary" 
+                  variant="secondary"
                   className="flex flex-shrink"
                 >
                   <Shovel />

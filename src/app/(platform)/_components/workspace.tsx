@@ -23,7 +23,7 @@ import {
 import { useForm } from "react-hook-form";
 import { type z } from "zod";
 import {
-  User,
+  type User,
   workspaceFormSchema,
   type updateWorkspaceSchema,
   type Workspace,
