@@ -484,7 +484,7 @@ export const destinationRouter = createTRPCRouter({
               })
               .then((res) =>
                 res
-                  .filter((t) => !t.tag.archived)
+                  .filter((t) => !t.tag?.archived)
                   .map((tagRow) => {
                     return {
                       id: tagRow.tag!.id,
