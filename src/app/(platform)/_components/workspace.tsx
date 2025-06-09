@@ -377,14 +377,11 @@ export function RecentWorkspacesDropdown({
         id: workspace.id,
         archived: false,
       });
-
-      router.refresh();
     } else if (workspace) {
       void archiveMutation.mutate({
         id: workspace.id,
         archived: true,
-      });
-      router.refresh();
+      }); 
     } else {
       toast({
         title: "Failed to update trunk",

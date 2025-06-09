@@ -723,15 +723,12 @@ export function TagPage(props: {
       void archiveMutation.mutate({
         id: data?.id,
         archived: false,
-      });
-
-      router.refresh();
+      }); 
     } else if (data) {
       void archiveMutation.mutate({
         id: data?.id,
         archived: true,
       });
-      router.refresh();
     } else {
       toast({
         title: "Failed to update tag",
