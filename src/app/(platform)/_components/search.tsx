@@ -552,7 +552,7 @@ export function SearchForm({ searchType }: { searchType: "maps" | "pins" }) {
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-          </div>
+        </div>
         </form>
       </Form>
       <div className="flex flex-col space-y-4 px-1">
