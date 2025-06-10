@@ -633,7 +633,6 @@ export function ListPage(props: {
   user?: User;
 }) {
   const utils = api.useUtils();
-  const router = useRouter();
 
   const listId = props.id;
   const [editing, setEditing] = useState(false);

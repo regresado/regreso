@@ -664,8 +664,7 @@ export function TagPage(props: {
   user?: User;
 }) {
   const utils = api.useUtils();
-  const router = useRouter();
-
+ 
   const tagId = props.id;
   const [editing, setEditing] = useState(false);
   const [tab, setTab] = useState<"pins" | "lists">("pins");
