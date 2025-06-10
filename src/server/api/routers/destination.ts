@@ -30,6 +30,7 @@ import {
   lists,
   listTags,
   tags,
+  workspaces,
 } from "~/server/db/schema";
 
 export const destinationRouter = createTRPCRouter({
@@ -44,12 +45,27 @@ export const destinationRouter = createTRPCRouter({
     .input(destinationFormSchema)
     .output(z.object({ success: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
+      if (input.workspaceId && input.workspaceId !== ctx.user.workspaceId) {
+        const workspace = await ctx.db.query.workspaces.findFirst({
+          where: and(
+            eq(workspaces.id, input.workspaceId),
+            eq(workspaces.userId, ctx.user.id),
+          ),
+        });
+        if (workspace?.archived) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Cannot add destination to archived workspace",
+          });
+        }
+      }
       const destinationRows = await ctx.db
         .insert(destinations)
         .values({
           userId: ctx.user.id,
           name: input.name,
           body: input.body,
+          workspaceId: input.workspaceId ?? ctx.user.workspaceId ?? 0,
           type: input.type,
           location: input.location,
         })
@@ -78,6 +94,7 @@ export const destinationRouter = createTRPCRouter({
             input.tags.map((tag) => {
               return {
                 userId: ctx.user.id,
+                workspaceId: input.workspaceId ?? ctx.user.workspaceId ?? 0,
                 name: tag.text,
                 shortcut: tag.text.toLowerCase().replace(/\s/g, "-"),
               };
@@ -86,16 +103,19 @@ export const destinationRouter = createTRPCRouter({
           .onConflictDoNothing()
           .returning({
             id: tags.id,
+            archived: tags.archived,
           });
 
         const tagRows = [...newTagRows, ...existingTagRows];
         await ctx.db.insert(destinationTags).values(
-          tagRows.map((tag) => {
-            return {
-              destinationId: destinationRows[0]!.id,
-              tagId: tag.id,
-            };
-          }),
+          tagRows
+            .filter((t) => !t.archived)
+            .map((tag) => {
+              return {
+                destinationId: destinationRows[0]!.id,
+                tagId: tag.id,
+              };
+            }),
         );
       }
       return {
@@ -127,9 +147,11 @@ export const destinationRouter = createTRPCRouter({
         const dests = await ctx.db
           .select({
             destination: destinations,
+            workspace: workspaces,
             count: sql<number>`count(*) over()`,
           })
           .from(destinations)
+          .leftJoin(workspaces, eq(destinations.workspaceId, workspaces.id))
           .leftJoin(
             destinationLists,
             listIds.length > 0 || tagNames.length > 0
@@ -145,7 +167,10 @@ export const destinationRouter = createTRPCRouter({
           .leftJoin(
             tags,
             tagNames.length > 0
-              ? eq(destinationTags.tagId, tags.id)
+              ? and(
+                  eq(destinationTags.tagId, tags.id),
+                  eq(tags.archived, false),
+                )
               : sql`1 = 0`,
           )
           .leftJoin(
@@ -175,6 +200,12 @@ export const destinationRouter = createTRPCRouter({
               input.type && input.type != "any"
                 ? eq(destinations.type, input.type)
                 : undefined,
+              input.archived !== undefined
+                ? and(
+                    eq(destinations.archived, input.archived),
+                    eq(workspaces.archived, input.archived),
+                  )
+                : undefined,
               tagNames.length > 0
                 ? or(
                     inArray(tags.name, tagNames),
@@ -187,9 +218,12 @@ export const destinationRouter = createTRPCRouter({
                 ? inArray(destinationLists.listId, listIds)
                 : undefined,
               eq(destinations.userId, ctx.user.id),
+              input.workspaceId
+                ? eq(destinations.workspaceId, input.workspaceId)
+                : undefined,
             ),
           )
-          .groupBy(destinations.id)
+          .groupBy(destinations.id, workspaces.id)
           .having(
             and(
               tagNames.length > 0
@@ -204,12 +238,13 @@ export const destinationRouter = createTRPCRouter({
             ),
           )
           .orderBy(
-            input.order == "ASC"
-              ? asc(destinations[input.sortBy ?? "createdAt"])
-              : desc(destinations[input.sortBy ?? "createdAt"]),
+            (input.order == "ASC" ? asc : desc)(
+              destinations[input.sortBy ?? "createdAt"],
+            ),
           )
           .limit(input.limit)
           .offset(input.offset);
+
         const destTags = await ctx.db
           .select()
           .from(destinationTags)
@@ -222,8 +257,16 @@ export const destinationRouter = createTRPCRouter({
           );
 
         const returnDestinations = dests.map((dest) => {
+          if (!dest.workspace) {
+            throw new TRPCError({
+              code: "INTERNAL_SERVER_ERROR",
+              message: "Workspace not found for destination.",
+            });
+          }
           const destination = {
             id: dest.destination.id,
+            workspace: dest.workspace,
+            archived: dest.destination.archived,
             userId: dest.destination.userId,
             createdAt: dest.destination.createdAt,
             updatedAt: dest.destination.updatedAt,
@@ -246,6 +289,7 @@ export const destinationRouter = createTRPCRouter({
           };
           return destination;
         });
+
         return {
           items: returnDestinations,
           count:
@@ -268,6 +312,20 @@ export const destinationRouter = createTRPCRouter({
     .input(updateDestinationSchema)
     .output(z.object({ success: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
+      if (input.workspaceId && input.workspaceId !== ctx.user.workspaceId) {
+        const workspace = await ctx.db.query.workspaces.findFirst({
+          where: and(
+            eq(workspaces.id, input.workspaceId),
+            eq(workspaces.userId, ctx.user.id),
+          ),
+        });
+        if (workspace?.archived) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Cannot add destination to archived workspace",
+          });
+        }
+      }
       const destinationRows = await ctx.db
         .update(destinations)
         .set({
@@ -275,11 +333,16 @@ export const destinationRouter = createTRPCRouter({
           body: input.body,
           type: input.type,
           location: input.location,
+          workspaceId: input.workspaceId ?? undefined,
+          archived: input.archived ?? false,
         })
         .where(
           and(
             eq(destinations.id, input.id),
             eq(destinations.userId, ctx.user.id),
+            input.archived !== false
+              ? eq(destinations.archived, false)
+              : undefined,
           ),
         )
         .returning({
@@ -307,6 +370,7 @@ export const destinationRouter = createTRPCRouter({
             input.tags.map((tag) => {
               return {
                 userId: ctx.user.id,
+                workspaceId: input.workspaceId ?? ctx.user.workspaceId ?? 0,
                 name: tag.text,
                 shortcut: tag.text.toLowerCase().replace(/\s/g, "-"),
               };
@@ -315,20 +379,26 @@ export const destinationRouter = createTRPCRouter({
           .onConflictDoNothing()
           .returning({
             id: tags.id,
+            archived: tags.archived,
           });
 
         const tagRows = [...newTagRows, ...existingTagRows];
-        await ctx.db
-          .insert(destinationTags)
-          .values(
-            tagRows.map((tag) => {
-              return {
-                destinationId: destinationRows[0]!.id,
-                tagId: tag.id,
-              };
-            }),
-          )
-          .onConflictDoNothing();
+
+        if (tagRows.filter((t) => !t.archived).length > 0) {
+          await ctx.db
+            .insert(destinationTags)
+            .values(
+              tagRows
+                .filter((t) => !t.archived)
+                .map((tag) => {
+                  return {
+                    destinationId: destinationRows[0]!.id,
+                    tagId: tag.id,
+                  };
+                }),
+            )
+            .onConflictDoNothing();
+        }
       }
       return {
         success: true,
@@ -375,6 +445,9 @@ export const destinationRouter = createTRPCRouter({
             eq(destinations.id, input.id),
             eq(destinations.userId, ctx.user.id),
           ),
+          with: {
+            workspace: true,
+          },
         });
       if (!dest) {
         throw new TRPCError({
@@ -410,12 +483,14 @@ export const destinationRouter = createTRPCRouter({
                 },
               })
               .then((res) =>
-                res.map((tagRow) => {
-                  return {
-                    id: tagRow.tag!.id,
-                    text: tagRow.tag!.name,
-                  };
-                }),
+                res
+                  .filter((t) => !t.tag?.archived)
+                  .map((tagRow) => {
+                    return {
+                      id: tagRow.tag!.id,
+                      text: tagRow.tag!.name,
+                    };
+                  }),
               )
           : undefined,
       };
@@ -449,6 +524,7 @@ export const destinationRouter = createTRPCRouter({
         where: and(
           inArray(lists.id, input.lists),
           eq(lists.userId, ctx.user.id),
+          eq(lists.archived, false),
         ),
       });
 
@@ -483,7 +559,10 @@ export const destinationRouter = createTRPCRouter({
       });
 
       if (!destination) {
-        throw new Error("Destination not found or does not belong to the user");
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Destination not found or does not belong to the user",
+        });
       }
 
       const validLists = await ctx.db.query.lists.findMany({

@@ -20,6 +20,7 @@ import {
   lists,
   listTags,
   tags,
+  workspaces,
 } from "~/server/db/schema";
 
 export const listRouter = createTRPCRouter({
@@ -34,9 +35,24 @@ export const listRouter = createTRPCRouter({
     .input(listFormSchema)
     .output(z.object({ success: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
+      if (input.workspaceId && input.workspaceId !== ctx.user.workspaceId) {
+        const workspace = await ctx.db.query.workspaces.findFirst({
+          where: and(
+            eq(workspaces.id, input.workspaceId),
+            eq(workspaces.userId, ctx.user.id),
+          ),
+        });
+        if (workspace?.archived) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Cannot add list to archived workspace",
+          });
+        }
+      }
       const listRows = await ctx.db
         .insert(lists)
         .values({
+          workspaceId: input.workspaceId ?? ctx.user.workspaceId ?? 0,
           userId: ctx.user.id,
           name: input.name,
           description: input.description,
@@ -66,6 +82,7 @@ export const listRouter = createTRPCRouter({
             input.tags.map((tag) => {
               return {
                 userId: ctx.user.id,
+                workspaceId: input.workspaceId ?? ctx.user.workspaceId ?? 0,
                 name: tag.text,
                 shortcut: tag.text.toLowerCase().replace(/\s/g, "-"),
               };
@@ -74,17 +91,22 @@ export const listRouter = createTRPCRouter({
           .onConflictDoNothing()
           .returning({
             id: tags.id,
+            archived: tags.archived,
           });
 
         const tagRows = [...newTagRows, ...existingTagRows];
-        await ctx.db.insert(listTags).values(
-          tagRows.map((tag) => {
-            return {
-              listId: listRows[0]!.id,
-              tagId: tag.id,
-            };
-          }),
-        );
+        if (tagRows.filter((t) => !t.archived).length > 0) {
+          await ctx.db.insert(listTags).values(
+            tagRows
+              .filter((t) => !t.archived)
+              .map((tag) => {
+                return {
+                  listId: listRows[0]!.id,
+                  tagId: tag.id,
+                };
+              }),
+          );
+        }
       }
       return {
         success: true,
@@ -119,7 +141,10 @@ export const listRouter = createTRPCRouter({
                   "latest_created",
                 ),
             })
+
             .from(lists)
+            .where(eq(lists.userId, ctx.user.id))
+
             .leftJoin(destinationLists, eq(lists.id, destinationLists.listId))
             .leftJoin(
               destinations,
@@ -137,6 +162,7 @@ export const listRouter = createTRPCRouter({
             latestCreatedAt: sql<Date | null>`${stats.latestCreatedAt}`.as(
               "updated_at",
             ),
+            workspace: workspaces,
           })
           .from(lists)
           .leftJoin(stats, eq(lists.id, stats.listId))
@@ -146,8 +172,11 @@ export const listRouter = createTRPCRouter({
           )
           .leftJoin(
             tags,
-            tagNames.length > 0 ? eq(listTags.tagId, tags.id) : sql`1 = 0`,
+            tagNames.length > 0
+              ? and(eq(listTags.tagId, tags.id), eq(tags.archived, false))
+              : sql`1 = 0`,
           )
+          .leftJoin(workspaces, eq(lists.workspaceId, workspaces.id))
           .where(
             and(
               and(
@@ -157,6 +186,12 @@ export const listRouter = createTRPCRouter({
             @@ websearch_to_tsquery  ('english', ${input.searchString})`
                   : undefined,
               ),
+              input.archived != undefined
+                ? and(
+                    eq(lists.archived, input.archived),
+                    eq(workspaces.archived, input.archived),
+                  )
+                : undefined,
               tagNames.length > 0
                 ? or(
                     inArray(tags.name, tagNames),
@@ -164,8 +199,12 @@ export const listRouter = createTRPCRouter({
                   )
                 : undefined,
               eq(lists.userId, ctx.user.id),
+              input.workspaceId
+                ? eq(lists.workspaceId, input.workspaceId)
+                : undefined,
             ),
           )
+
           .groupBy(
             lists.id,
             lists.name,
@@ -174,23 +213,16 @@ export const listRouter = createTRPCRouter({
             lists.createdAt,
             stats.size,
             stats.latestCreatedAt,
+            workspaces.id,
           )
           .orderBy(
-            input.order === "ASC"
-              ? asc(
-                  input.sortBy === "size"
-                    ? stats.size
-                    : input.sortBy === "updatedAt"
-                      ? stats.latestCreatedAt
-                      : lists.createdAt,
-                )
-              : desc(
-                  input.sortBy === "size"
-                    ? stats.size
-                    : input.sortBy === "updatedAt"
-                      ? stats.latestCreatedAt
-                      : lists.createdAt,
-                ),
+            (input.order === "ASC" ? asc : desc)(
+              input.sortBy === "size"
+                ? stats.size
+                : input.sortBy === "updatedAt"
+                  ? stats.latestCreatedAt
+                  : lists[input.sortBy ?? "createdAt"],
+            ),
           )
           .limit(input.limit)
           .offset(input.offset);
@@ -207,6 +239,12 @@ export const listRouter = createTRPCRouter({
           );
 
         const returnLists: List[] = lsts.map((list) => {
+          if (!list.workspace) {
+            throw new TRPCError({
+              code: "INTERNAL_SERVER_ERROR",
+              message: "Workspace not found for list.",
+            });
+          }
           return {
             tags: lstTags
               .filter((tag) => tag.list_tag.listId == list.list.id)
@@ -234,14 +272,16 @@ export const listRouter = createTRPCRouter({
                   )?.[0] ?? null)
                 : null
               : null,
+            workspace: list.workspace,
           };
         });
-        if (!lsts || lsts.length === 0) {
-          throw new TRPCError({
-            code: "NOT_FOUND",
-            message: "No lists found",
-          });
+        if (!lsts) {
+          return {
+            items: [],
+            count: 0,
+          };
         }
+
         return {
           items: returnLists,
           count:
@@ -262,16 +302,44 @@ export const listRouter = createTRPCRouter({
     .input(updateListSchema)
     .output(z.object({ success: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
+      if (input.workspaceId && input.workspaceId !== ctx.user.workspaceId) {
+        const workspace = await ctx.db.query.workspaces.findFirst({
+          where: and(
+            eq(workspaces.id, input.workspaceId),
+            eq(workspaces.userId, ctx.user.id),
+          ),
+        });
+        if (workspace?.archived) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Cannot add list to archived workspace",
+          });
+        }
+      }
       let listRows = null;
-      if (input.name || input.emoji || input.description) {
+      if (
+        input.name ||
+        input.emoji ||
+        input.description ||
+        input.workspaceId ||
+        input.archived != undefined
+      ) {
         listRows = await ctx.db
           .update(lists)
           .set({
             name: input.name,
             description: input.description,
             emoji: input.emoji,
+            workspaceId: input.workspaceId ?? undefined,
+            archived: input.archived ?? false,
           })
-          .where(and(eq(lists.id, input.id), eq(lists.userId, ctx.user.id)))
+          .where(
+            and(
+              eq(lists.id, input.id),
+              eq(lists.userId, ctx.user.id),
+              input.archived !== false ? eq(lists.archived, false) : undefined,
+            ),
+          )
           .returning({
             id: lists.id,
           });
@@ -317,6 +385,7 @@ export const listRouter = createTRPCRouter({
             ? input.tags.map((tag) => {
                 return {
                   userId: ctx.user.id,
+                  workspaceId: input.workspaceId ?? ctx.user.workspaceId ?? 0,
                   name: tag.text,
                   shortcut: tag.text.toLowerCase().replace(/\s/g, "-"),
                 };
@@ -326,13 +395,14 @@ export const listRouter = createTRPCRouter({
             ? input.newTags.map((tag) => {
                 return {
                   userId: ctx.user.id,
+                  workspaceId: input.workspaceId ?? ctx.user.workspaceId ?? 0,
                   name: tag,
                   shortcut: tag.toLowerCase().replace(/\s/g, "-"),
                 };
               })
             : []),
         ];
-        let newTagRows: { id: number }[] = [];
+        let newTagRows: { id: number; archived: boolean }[] = [];
         if (newTagValues.length > 0) {
           newTagRows = await ctx.db
             .insert(tags)
@@ -340,6 +410,7 @@ export const listRouter = createTRPCRouter({
             .onConflictDoNothing()
             .returning({
               id: tags.id,
+              archived: tags.archived,
             });
         }
 
@@ -378,12 +449,14 @@ export const listRouter = createTRPCRouter({
           await ctx.db
             .insert(listTags)
             .values(
-              tagRows.map((tag) => {
-                return {
-                  listId: listRows[0]!.id,
-                  tagId: tag.id,
-                };
-              }),
+              tagRows
+                .filter((t) => !t.archived)
+                .map((tag) => {
+                  return {
+                    listId: listRows[0]!.id,
+                    tagId: tag.id,
+                  };
+                }),
             )
             .onConflictDoNothing();
         }
@@ -430,6 +503,7 @@ export const listRouter = createTRPCRouter({
           emoji: lists.emoji,
           createdAt: lists.createdAt,
           userId: lists.userId,
+          archived: lists.archived,
           count: sql<number>`count(*) over()`,
           size: sql<number>`COUNT(${destinationLists}.id)`,
           updatedAt: sql<Date | null>`(
@@ -438,11 +512,13 @@ export const listRouter = createTRPCRouter({
                 JOIN ${destinationLists} ON ${destinations.id} = ${destinationLists.destinationId}
                 WHERE ${destinationLists.listId} = ${lists.id}
               )`,
+          workspace: workspaces,
         })
         .from(lists)
         .leftJoin(destinationLists, eq(lists.id, destinationLists.listId))
+        .leftJoin(workspaces, eq(lists.workspaceId, workspaces.id))
         .where(and(eq(lists.id, input.id), eq(lists.userId, ctx.user.id)))
-        .groupBy(lists.id)
+        .groupBy(lists.id, workspaces.id)
         .limit(1);
 
       if (!lstData || lstData.length === 0 || !lstData[0]) {
@@ -452,6 +528,12 @@ export const listRouter = createTRPCRouter({
         });
       }
 
+      if (!lstData[0].workspace) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Workspace not found for list",
+        });
+      }
       const lst: List | undefined =
         lstData.length > 0
           ? {
@@ -464,6 +546,7 @@ export const listRouter = createTRPCRouter({
                 typeof lstData[0].updatedAt == "string"
                   ? new Date(lstData[0].updatedAt)
                   : lstData[0].updatedAt,
+              workspace: lstData[0].workspace,
             }
           : undefined;
 
@@ -495,12 +578,14 @@ export const listRouter = createTRPCRouter({
                 },
               })
               .then((res) =>
-                res.map((tagRow) => {
-                  return {
-                    id: tagRow.tag!.id,
-                    text: tagRow.tag!.name,
-                  };
-                }),
+                res
+                  .filter((t) => !t.tag?.archived)
+                  .map((tagRow) => {
+                    return {
+                      id: tagRow.tag!.id,
+                      text: tagRow.tag!.name,
+                    };
+                  }),
               )
           : undefined,
       };
@@ -525,6 +610,12 @@ export const listRouter = createTRPCRouter({
         throw new TRPCError({
           code: "FORBIDDEN",
           message: "List not found or access denied",
+        });
+      }
+      if (list.archived) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Cannot add to archived list.",
         });
       }
 
