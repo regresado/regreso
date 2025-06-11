@@ -97,7 +97,7 @@ importers:
         version: 1.2.7(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@t3-oss/env-nextjs':
         specifier: ^0.13.6
-        version: 0.13.8(arktype@2.1.20)(typescript@5.8.3)(zod@3.25.57)
+        version: 0.13.8(arktype@2.1.20)(typescript@5.8.3)(zod@3.25.61)
       '@tanstack/react-query':
         specifier: ^5.80.6
         version: 5.80.6(react@18.3.1)
@@ -256,7 +256,7 @@ importers:
         version: 1.0.7(tailwindcss@3.4.17)
       trpc-to-openapi:
         specifier: ^2.1.5
-        version: 2.1.5(@trpc/server@11.0.4(typescript@5.8.3))(zod-openapi@4.2.3(zod@3.25.57))(zod@3.25.57)
+        version: 2.1.5(@trpc/server@11.0.4(typescript@5.8.3))(zod-openapi@4.2.3(zod@3.25.61))(zod@3.25.61)
       uploadthing:
         specifier: ^7.7.2
         version: 7.7.2(express@5.1.0)(h3@1.15.1)(next@15.3.3(@babel/core@7.26.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(tailwindcss@3.4.17)
@@ -267,8 +267,8 @@ importers:
         specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       zod:
-        specifier: ^3.25.57
-        version: 3.25.57
+        specifier: ^3.25.61
+        version: 3.25.61
     devDependencies:
       '@ianvs/prettier-plugin-sort-imports':
         specifier: ^4.4.2
@@ -5539,8 +5539,8 @@ packages:
   tailwind-merge@2.6.0:
     resolution: {integrity: sha512-P+Vu1qXfzediirmHOC3xKGAYeZtPcV9g76X+xg2FD4tYgR71ewMA35Y3sCz3zhiN/dwefRpJX0yBcgwi1fXNQA==}
 
-  tailwind-merge@3.3.0:
-    resolution: {integrity: sha512-fyW/pEfcQSiigd5SNn0nApUOxx0zB/dm6UDU/rEwc2c3sX2smWUNbapHv+QRqLGVp9GWX3THIa7MUGPo+YkDzQ==}
+  tailwind-merge@3.3.1:
+    resolution: {integrity: sha512-gBXpgUm/3rp1lMZZrM/w7D8GKqshif0zAymAhbCyIt8KMe+0v9DQ7cdYLR4FHH/cKpdTXb+A/tKKU3eolfsI+g==}
 
   tailwindcss-animate@1.0.7:
     resolution: {integrity: sha512-bl6mpH3T7I3UFxuvDEXLxy/VuFxBk5bbzplh7tXI68mwMokNYd1t9qPBHlnyTwfa4JGC4zP516I1hYYtQ/vspA==}
@@ -5913,8 +5913,8 @@ packages:
     peerDependencies:
       zod: ^3.21.4
 
-  zod@3.25.57:
-    resolution: {integrity: sha512-6tgzLuwVST5oLUxXTmBqoinKMd3JeesgbgseXeFasKKj8Q1FCZrHnbqJOyiEvr4cVAlbug+CgIsmJ8cl/pU5FA==}
+  zod@3.25.61:
+    resolution: {integrity: sha512-fzfJgUw78LTNnHujj9re1Ov/JJQkRZZGDMcYqSx7Hp4rPOkKywaFHq0S6GoHeXs0wGNE/sIOutkXgnwzrVOGCQ==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -7757,19 +7757,19 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@t3-oss/env-core@0.13.8(arktype@2.1.20)(typescript@5.8.3)(zod@3.25.57)':
+  '@t3-oss/env-core@0.13.8(arktype@2.1.20)(typescript@5.8.3)(zod@3.25.61)':
     optionalDependencies:
       arktype: 2.1.20
       typescript: 5.8.3
-      zod: 3.25.57
+      zod: 3.25.61
 
-  '@t3-oss/env-nextjs@0.13.8(arktype@2.1.20)(typescript@5.8.3)(zod@3.25.57)':
+  '@t3-oss/env-nextjs@0.13.8(arktype@2.1.20)(typescript@5.8.3)(zod@3.25.61)':
     dependencies:
-      '@t3-oss/env-core': 0.13.8(arktype@2.1.20)(typescript@5.8.3)(zod@3.25.57)
+      '@t3-oss/env-core': 0.13.8(arktype@2.1.20)(typescript@5.8.3)(zod@3.25.61)
     optionalDependencies:
       arktype: 2.1.20
       typescript: 5.8.3
-      zod: 3.25.57
+      zod: 3.25.61
 
   '@tanstack/query-core@5.80.6': {}
 
@@ -8828,7 +8828,7 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       react-easy-sort: 1.6.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      tailwind-merge: 3.3.0
+      tailwind-merge: 3.3.1
     transitivePeerDependencies:
       - '@types/react'
       - '@types/react-dom'
@@ -11497,7 +11497,7 @@ snapshots:
 
   tailwind-merge@2.6.0: {}
 
-  tailwind-merge@3.3.0: {}
+  tailwind-merge@3.3.1: {}
 
   tailwindcss-animate@1.0.7(tailwindcss@3.4.17):
     dependencies:
@@ -11563,14 +11563,14 @@ snapshots:
 
   trough@2.2.0: {}
 
-  trpc-to-openapi@2.1.5(@trpc/server@11.0.4(typescript@5.8.3))(zod-openapi@4.2.3(zod@3.25.57))(zod@3.25.57):
+  trpc-to-openapi@2.1.5(@trpc/server@11.0.4(typescript@5.8.3))(zod-openapi@4.2.3(zod@3.25.61))(zod@3.25.61):
     dependencies:
       '@trpc/server': 11.0.4(typescript@5.8.3)
       co-body: 6.2.0
       h3: 1.15.1
       openapi3-ts: 4.4.0
-      zod: 3.25.57
-      zod-openapi: 4.2.3(zod@3.25.57)
+      zod: 3.25.61
+      zod-openapi: 4.2.3(zod@3.25.61)
     optionalDependencies:
       '@rollup/rollup-linux-x64-gnu': 4.6.1
 
@@ -11941,10 +11941,10 @@ snapshots:
 
   yocto-queue@0.1.0: {}
 
-  zod-openapi@4.2.3(zod@3.25.57):
+  zod-openapi@4.2.3(zod@3.25.61):
     dependencies:
-      zod: 3.25.57
+      zod: 3.25.61
 
-  zod@3.25.57: {}
+  zod@3.25.61: {}
 
   zwitch@2.0.4: {}
