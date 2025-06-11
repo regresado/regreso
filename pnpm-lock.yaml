@@ -219,8 +219,8 @@ importers:
         specifier: ^3.4.7
         version: 3.4.7
       posthog-js:
-        specifier: ^1.249.4
-        version: 1.249.5(@rrweb/types@2.0.0-alpha.17)
+        specifier: ^1.250.1
+        version: 1.250.1(@rrweb/types@2.0.0-alpha.17)
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -3194,8 +3194,8 @@ packages:
     resolution: {integrity: sha512-yCEafptTtb4bk7GLEQoM8KVJpxAfdBJYaXyzQEgQQQgYrZiDp8SJmGKlYza6CYjEDNstAdNdKA3UuoULlEbS6w==}
     engines: {node: '>=12.13'}
 
-  core-js@3.41.0:
-    resolution: {integrity: sha512-SJ4/EHwS36QMJd6h/Rg+GyR4A5xE0FSI3eZ+iBVpfqf1x0eTSg1smWLHrA+2jQThZSh97fmSgFSU8B61nxosxA==}
+  core-js@3.43.0:
+    resolution: {integrity: sha512-N6wEbTTZSYOY2rYAn85CuvWWkCK6QweMn7/4Nr3w+gDBeBhk/x4EJeY6FPo4QzDoJZxVTv8U7CMvgWk6pOHHqA==}
 
   cors@2.8.5:
     resolution: {integrity: sha512-KIHbLJqu73RGr/hnbrO9uBeixNGuvSQjul/jdFvS/KFSIH1hWVd1ng7zOHx+YrEfInLG7q4n6GHQ9cDtxv/P6g==}
@@ -4889,8 +4889,8 @@ packages:
     resolution: {integrity: sha512-Jtc2612XINuBjIl/QTWsV5UvE8UHuNblcO3vVADSrKsrc6RqGX6lOW1cEo3CM2v0XG4Nat8nI+YM7/f26VxXLw==}
     engines: {node: '>=12'}
 
-  posthog-js@1.249.5:
-    resolution: {integrity: sha512-ynB2bcSZz91xF36Aun2OgAvJ37WPjp8hrUHplZJTdJKhaX7j63CePR+Ved6NVO4YqwhCOVqepxwGGJXG4ROBeA==}
+  posthog-js@1.250.1:
+    resolution: {integrity: sha512-Dl9BQjPa5FFVUauLSX/8HP6naRfU605GQYq+oAHFqwyv20NQDCHT0uRtFT1x2EYrY0kIQdd0d/rOY6Tg4wgqEg==}
     peerDependencies:
       '@rrweb/types': 2.0.0-alpha.17
       rrweb-snapshot: 2.0.0-alpha.17
@@ -4900,8 +4900,8 @@ packages:
       rrweb-snapshot:
         optional: true
 
-  preact@10.26.5:
-    resolution: {integrity: sha512-fmpDkgfGU6JYux9teDWLhj9mKN55tyepwYbxHgQuIxbWQzgFg5vk7Mrrtfx7xRxq798ynkY4DDDxZr235Kk+4w==}
+  preact@10.26.9:
+    resolution: {integrity: sha512-SSjF9vcnF27mJK1XyFMNJzFd5u3pQiATFqoaDy03XuN00u4ziveVVEGt5RKJrDR8MHE/wJo9Nnad56RLzS2RMA==}
 
   prelude-ls@1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
@@ -8637,7 +8637,7 @@ snapshots:
     dependencies:
       is-what: 4.1.16
 
-  core-js@3.41.0: {}
+  core-js@3.43.0: {}
 
   cors@2.8.5:
     dependencies:
@@ -10698,16 +10698,16 @@ snapshots:
 
   postgres@3.4.7: {}
 
-  posthog-js@1.249.5(@rrweb/types@2.0.0-alpha.17):
+  posthog-js@1.250.1(@rrweb/types@2.0.0-alpha.17):
     dependencies:
-      core-js: 3.41.0
+      core-js: 3.43.0
       fflate: 0.4.8
-      preact: 10.26.5
+      preact: 10.26.9
       web-vitals: 4.2.4
     optionalDependencies:
       '@rrweb/types': 2.0.0-alpha.17
 
-  preact@10.26.5: {}
+  preact@10.26.9: {}
 
   prelude-ls@1.2.1: {}
 
