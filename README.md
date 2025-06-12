@@ -1,7 +1,7 @@
 ## 🗺️ Regreso - Find your way back
 
-> [!Important]
-> Visit the Regreso wiki to view an [overview](https://github.com/joshpinto6/regreso/wiki/Feature-Comparison-Table) of Regreso functional capabilities as well as a UI [showcase](https://github.com/joshpinto6/regreso/wiki/UI-Showcase). If Regreso interests you, **consider giving it a star [on GitHub](https://regreso.netlify.app/repository)!**
+> [!Tip]
+> Visit the wiki to view a [feature overview](https://github.com/joshpinto6/regreso/wiki/Feature-Comparison-Table) or [UI showcase](https://github.com/joshpinto6/regreso/wiki/UI-Showcase). If Regreso interests you, **consider leaving a star!!**
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/9186e8eb-17c0-4d34-bdd9-e2add4200741/deploy-status)](https://app.netlify.com/sites/regreso/deploys)
 [![wakatime](https://wakatime.com/badge/user/7482ea9d-3085-4e9b-95ad-1ca78a14d948/project/2972fea6-6fe2-4f55-afb8-a47ff01540ad.svg)](https://wakatime.com/badge/user/7482ea9d-3085-4e9b-95ad-1ca78a14d948/project/2972fea6-6fe2-4f55-afb8-a47ff01540ad)
@@ -11,11 +11,15 @@
 
 ## 👋 Introduction
 
-Regreso is an open source application that allows you to create, sync, manage, and find "destinations" (bookmarked links, files, and resources) you wish to "return" to later.
+Regreso is an open source tools which allows you to create, find, and manage bookmarked links, files, and resources you wish to "return" to later.
 
-Destinations may be added to "maps", which enable graphing and visualizing relationships using tags, and eventually "journies" (saved sessions), and "trunks" which will allow one to separate maps by subject, topic, or project.
+These destinations may be organized into "maps", enabling graphing and visualization of relationships, "tags", project or topic-centered "trunk" workspaces, and eventually session "journies".
 
-## 📌 Quick Links
+**🤔 Philosophy:**
+
+Regreso aims to create a new form of anti-productivity application which encourages the rejection of traditional notetaking, project management, and organization products.
+
+## 💥 Quick Links
 
 - [Website](https://regreso.netlify.app)
 - [Dashboard](https://regreso.netlify.app/dashboard)
@@ -27,14 +31,6 @@ Destinations may be added to "maps", which enable graphing and visualizing relat
 
 https://github.com/user-attachments/assets/96565cff-49d1-4a43-8629-4c17b4dc6669
 
-## 🚀 Development
-
-To fork/extend Regreso, it is recommended that you use Supabase or any other Postgres database provider. To develop locally, you can run the `start-database.sh` file to easily create a new Postgres database with Docker. Alternatively, the `setup.sql` provides the full database schema.
-
-Many environment variables are also required for Regreso development. These are also documented in the `.env.example` file.
-
-To install dependencies, run `pnpm install` and to build/start server, use `pnpm run dev` or `pnpm run build && pnpm run start`.
-
 ## 🤝 Contributing
 
 Regreso is licensed under the [MIT license](LICENSE.md), a permissive license which allows you to modify, fork, extend, or redistribute the source code.
@@ -43,6 +39,13 @@ We accept contributions of new features and bug fixes through [Pull Requests](/p
 
 **For security reports, please [submit](/security) a private vulnerability disclosure with the relevant information!**
 
+## 🚀 Development
+
+To fork/extend Regreso, it is recommended that you use Supabase or any other Postgres database provider. To develop locally, you can run the `start-database.sh` file to easily create a new Postgres database with Docker. Alternatively, the `setup.sql` provides the full database schema.
+
+Many environment variables are also required for Regreso development. These are also documented in the `.env.example` file.
+
+To install dependencies, run `pnpm install` and to build/start server, use `pnpm run dev` or `pnpm run build && pnpm run start`.
 ## ⚙️ Tech Overview
 
 This project uses the [T3 Stack](https://create.t3.gg/) made by [@t3-oss](https://github.com/t3-oss):
