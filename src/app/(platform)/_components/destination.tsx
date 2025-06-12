@@ -35,8 +35,7 @@ import {
   type Workspace,
 } from "~/server/models";
 
-import { cn } from "~/lib/utils";
-import { timeSince } from "~/lib/utils";
+import { cn, timeSince } from "~/lib/utils";
 import { useMediaQuery } from "~/hooks/use-media-query";
 
 import { Badge } from "~/components/ui/badge";
@@ -853,7 +852,7 @@ export function DestinationDialog(props: {
         await utils.destination.invalidate();
         if (typeof callback === "function") {
           callback();
-        } 
+        }
       },
       onError: (error) => {
         toast({

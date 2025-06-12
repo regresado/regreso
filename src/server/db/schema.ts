@@ -339,20 +339,28 @@ export const destinationFeeds = createTable(
       .notNull()
       .references(() => users.id),
     workspaceId: integer("workspace_id").references(() => workspaces.id),
-    visibility: varchar("visibility", { length: 256 }).notNull(),
+    visibility: varchar({enum:["public", "private", "password"]}).notNull(),
     jsonQuery: jsonb("json_query").notNull().$type<{
-      type?: string | null;
+      type?: "location" | "note" | "any" | null;
       tags?: string[];
       sortBy?: "createdAt" | "updatedAt" | "name";
       order?: "ASC" | "DESC";
       lists?: number[];
       searchString?: string | null;
       location?: string | null;
-      limit?: number;
+      limit?: number | undefined;
       offset?: number;
       endDate?: Date | null;
       startDate?: Date | null;
     }>(),
+		createdAt: timestamp("created_at", { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+		updatedAt: timestamp("updated_at", { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull()
+      .$onUpdate(() => new Date()),
+		archived: boolean().default(false).notNull()
   },
   (feed) => ({
     uniqueFeedName: unique().on(feed.workspaceId, feed.name),

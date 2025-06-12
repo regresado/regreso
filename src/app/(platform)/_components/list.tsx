@@ -23,7 +23,7 @@ import {
   Pencil,
   Plus,
   RefreshCw,
-	Rss,
+  Rss,
   Shovel,
   Star,
   StarOff,
@@ -893,28 +893,27 @@ export function ListPage(props: {
             </Badge>
           </>
         ) : null}
-				        
-        <Button
-           variant="link"
-           className="ml-2 p-0"
-           onClick={() => {
-             void navigator.clipboard.writeText(
-               window.location.hostname +
-                 (window.location.port ? ":" + window.location.port : "") +
-                 "/map/" +
-                 props.id +
-                 "/feed.xml",
-             );
-             toast({
-               title: "Copied Feed URL",
-               description: "The feed URL has been copied to your clipboard.",
-            });
-           }}
-         >
-          <Rss />
-           Copy Feed URL
-         </Button>
 
+        <Button
+          variant="link"
+          className="ml-2 p-0"
+          onClick={() => {
+            void navigator.clipboard.writeText(
+              window.location.hostname +
+                (window.location.port ? ":" + window.location.port : "") +
+                "/map/" +
+                props.id +
+                "/feed.xml",
+            );
+            toast({
+              title: "Copied Feed URL",
+              description: "The feed URL has been copied to your clipboard.",
+            });
+          }}
+        >
+          <Rss />
+          Copy Feed URL
+        </Button>
       </div>
 
       {data != undefined ? (

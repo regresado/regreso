@@ -4,37 +4,38 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import {
-  useDraggable,
-  useDroppable,
-  type Active,
-  type Over,
-} from "@dnd-kit/core";
+import { useDroppable } from "@dnd-kit/core";
+import data from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type TRPCClientErrorLike } from "@trpc/client";
 import { type UseTRPCMutationResult } from "@trpc/react-query/shared";
 import { api } from "~/trpc/react";
+import { TagInput, type Tag } from "emblor";
 import {
   ArrowRight,
+  Flame,
   Forklift,
   GalleryVerticalEnd,
+  ListPlus,
   Loader2,
+  Map,
   Pencil,
   Plus,
   RefreshCw,
+  Rss,
   Shovel,
-  Shredder,
-  Tag as TagIcon,
-  Tags,
+  Star,
+  StarOff,
 } from "lucide-react";
 import { motion, useAnimation } from "motion/react";
 import { useForm } from "react-hook-form";
 import { type z } from "zod";
 import {
-  tagFormSchema,
+  feedFormSchema,
   type Destination,
-  type Tag,
-  type updateTagSchema,
+  type Feed,
+  type updateFeedSchema,
   type User,
   type Workspace,
 } from "~/server/models";
@@ -63,7 +64,6 @@ import {
   FormLabel,
   FormMessage,
 } from "~/components/ui/form";
-import { GradientPicker } from "~/components/ui/gradient-picker";
 import { Input } from "~/components/ui/input";
 import {
   Pagination,
@@ -89,7 +89,6 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { Separator } from "~/components/ui/separator";
-import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { Textarea } from "~/components/ui/textarea";
 import {
   Tooltip,
@@ -100,117 +99,120 @@ import { toast } from "~/components/hooks/use-toast";
 import { TiltCard } from "~/components/tilt-card";
 
 import { DestinationCard } from "./destination";
-import { ListCard } from "./list";
 
-const getRandomDelay = () => -(Math.random() * 0.7 + 0.05);
-const randomDuration = () => Math.random() * 0.07 + 0.23;
 
-function getContrastTextColor(color: string) {
-  const gradientMatch = /(#[0-9a-fA-F]{3,6}|rgba?\([^)]+\))/.exec(color);
-  const baseColor = (gradientMatch ? gradientMatch[1] : color) ?? "#ffffff";
+export function FeedCard(props: Feed) {
 
-  const hex = baseColor.replace("#", "").trim();
+  return (
+        <Card>
+                <CardHeader className="px-3 pb-2 pt-4 text-sm leading-tight">
+            <CardTitle className="truncate">
+              <Link href={`/map/${props.id}`}>
+                <span className="mr-2 leading-tight">
+                  {props?.emoji ?? "❔"}
+                </span>
+                {props.name ?? "Unnamed Feed"}
+              </Link>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2 px-3 pb-3 pt-0 text-sm">
+            <p className="text-muted-foreground">
+              {props.description ?? "No description provided."}
+            </p>
 
-  let r = 255,
-    g = 255,
-    b = 255;
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              <Tooltip>
+                <TooltipTrigger>
+                  {(props.updatedAt &&
+                    "Updated " + timeSince(props.updatedAt) + " ago") ??
+                    "Created " + timeSince(props.createdAt) + " ago"}
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>
+                    {props.updatedAt?.toISOString() ??
+                      props.createdAt.toISOString()}
+                  </p>
+                </TooltipContent>
+              </Tooltip>
 
-  if (baseColor.startsWith("rgb")) {
-    const rgbMatch = /rgba?\(([^)]+)\)/.exec(baseColor);
-    if (rgbMatch?.[1]) {
-      const [rr, gg, bb] = rgbMatch[1].split(",").map(Number);
-      r = rr ?? 255;
-      g = gg ?? 255;
-      b = bb ?? 255;
-    }
-  } else if (hex && hex.length === 3) {
-    r = hex[0] ? parseInt(hex[0] + hex[0], 16) : 255;
-    g = hex[1] ? parseInt(hex[1] + hex[1], 16) : 255;
-    b = hex[2] ? parseInt(hex[2] + hex[2], 16) : 255;
-  } else if (hex && hex.length === 6) {
-    r = parseInt(hex.slice(0, 2), 16);
-    g = parseInt(hex.slice(2, 4), 16);
-    b = parseInt(hex.slice(4, 6), 16);
-  }
+              <p>•</p>
 
-  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-  return luminance > 0.6 ? "#000000" : "#ffffff";
+              {props.size != null && props.size != undefined && (
+                <p className="font-muted mr-0.5 text-sm">
+                  {props.size} destination{props.size == 1 ? null : "s"}
+                </p>
+              )}
+
+                           <Link href={`/box/${props.workspace.id}`}>
+                <Badge variant="outline">
+                  {(props.workspace.emoji ?? "❔") + " " + props.workspace.name}
+                </Badge>
+              </Link>
+              {props.workspace.archived ? null : props.archived ? (
+                <Badge variant="destructive">Archived</Badge>
+              ) : null}
+            </div>
+          </CardContent>
+  
+      </Card>
+
+  );
 }
 
-const variants = {
-  start: (i: number) => ({
-    rotate: i % 2 === 0 ? [-1, 1.3, 0] : [1, -1.4, 0],
-    transition: {
-      delay: getRandomDelay(),
-      repeat: Infinity,
-      duration: randomDuration(),
-    },
-  }),
-  reset: {
-    rotate: 0,
-  },
-};
-
-type TagFormProps =
+type FeedFormProps =
   | {
-      tagMutation: (callback?: () => void) => UseTRPCMutationResult<
+      feedMutation: (callback?: () => void) => UseTRPCMutationResult<
         { success: boolean },
         TRPCClientErrorLike<{
-          input: z.infer<typeof updateTagSchema>;
+          input: z.infer<typeof updateFeedSchema>;
           output: { success: boolean };
           transformer: true;
           errorShape: { message: string };
         }>,
-        z.infer<typeof updateTagSchema>,
+        z.infer<typeof updateFeedSchema>,
         unknown
       >;
       update: true;
       updateId: number;
-      defaultValues?: z.infer<typeof tagFormSchema>;
+      defaultValues?: z.infer<typeof feedFormSchema>;
     }
   | {
-      tagMutation: (callback?: () => void) => UseTRPCMutationResult<
+      feedMutation: (callback?: () => void) => UseTRPCMutationResult<
         { success: boolean },
         TRPCClientErrorLike<{
-          input: z.infer<typeof updateTagSchema>;
+          input: z.infer<typeof updateFeedSchema>;
           output: { success: boolean };
           transformer: true;
           errorShape: { message: string };
         }>,
-        z.infer<typeof tagFormSchema>,
+        z.infer<typeof feedFormSchema>,
         unknown
       >;
       update: false;
-      defaultValues?: z.infer<typeof tagFormSchema>;
+      defaultValues?: z.infer<typeof feedFormSchema>;
     };
 
-export function TagForm(
-  props: TagFormProps & {
+export function FeedForm(
+  props: FeedFormProps & {
     workspace?: Workspace;
     user?: User;
     workspaces?: Workspace[];
   },
 ) {
-  const form = useForm<z.infer<typeof tagFormSchema>>({
-    resolver: zodResolver(tagFormSchema),
-    defaultValues: {
+  const form = useForm<z.infer<typeof feedFormSchema>>({
+      defaultValues: {
       name: props.defaultValues?.name ?? "",
-      shortcut: props.defaultValues?.shortcut ?? "",
-      color: props.defaultValues?.color ?? undefined,
       description: props.defaultValues?.description ?? "",
+            emoji: props.defaultValues?.emoji ?? "🗺️",
       workspaceId:
-        props.defaultValues?.workspaceId ??
-        props.workspace?.id ??
-        props.user?.workspaceId ??
-        undefined,
-    } as z.infer<typeof tagFormSchema>,
+       0,			visibility: props.defaultValues?.visibility ?? "public"
+    } as z.infer<typeof feedFormSchema>,
   });
-
-  const submitMutation = props.tagMutation(() => {
+  const submitMutation = props.feedMutation(() => {
     form.reset();
-  });
+      });
 
-  function onSubmit(data: z.infer<typeof tagFormSchema>) {
+  function onSubmit(data: z.infer<typeof feedFormSchema>) {
     if (props.update) {
       if (!props.updateId) {
         return;
@@ -227,18 +229,32 @@ export function TagForm(
         <div className="flex w-full flex-row items-end gap-4">
           <FormField
             control={form.control}
-            name="color"
-            render={({ field }) => (
+            name="emoji"
+            render={() => (
               <FormItem className="flex flex-col">
-                <FormLabel>Color</FormLabel>
+                <FormLabel>Emoji</FormLabel>
                 <FormControl>
-                  <GradientPicker
-                    className="w-full truncate"
-                    background={field.value ?? ""}
-                    setBackground={(newVal) => {
-                      field.onChange(newVal);
-                    }}
-                  />
+                  <>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button variant="outline">
+                          {form.watch("emoji") != undefined &&
+                          form.watch("emoji").length > 0
+                            ? form.watch("emoji")
+                            : "❔"}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="p-0">
+                        <Picker
+                          data={data}
+                          value={form.watch("emoji")}
+                          onEmojiSelect={(emoji: { native: string }) => {
+                            form.setValue("emoji", emoji.native);
+                          }}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -251,29 +267,13 @@ export function TagForm(
               <FormItem className="grow">
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="geese resources" {...field} />
+                  <Input placeholder="Bird Articles" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
         </div>
-        <FormField
-          control={form.control}
-          name="shortcut"
-          render={({ field }) => (
-            <FormItem className="grow">
-              <FormLabel>Shortcut</FormLabel>
-              <FormControl>
-                <Input placeholder="geese" {...field} />
-              </FormControl>
-              <FormMessage />
-              <FormDescription>
-                This is the tag shortcut, used to quickly apply this tag.
-              </FormDescription>
-            </FormItem>
-          )}
-        />
 
         <FormField
           control={form.control}
@@ -283,7 +283,7 @@ export function TagForm(
               <FormLabel>Description</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Resources about geese, not pelicans"
+                  placeholder="A feed which can be accessed and consumed through RSS."
                   className="resize-none"
                   {...field}
                 />
@@ -292,6 +292,7 @@ export function TagForm(
             </FormItem>
           )}
         />
+ 
         <div className="flex flex-row items-end justify-end gap-4">
           <FormField
             control={form.control}
@@ -346,7 +347,7 @@ export function TagForm(
                   <Pencil />
                 )}
 
-                {submitMutation.isPending ? "Updating Tag..." : "Update Tag"}
+                {submitMutation.isPending ? "Updating Feed..." : "Update Feed"}
               </>
             ) : (
               <>
@@ -356,7 +357,7 @@ export function TagForm(
                   <Plus />
                 )}
 
-                {submitMutation.isPending ? "Creating Tag..." : "Create Tag"}
+                {submitMutation.isPending ? "Creating Feed..." : "Create Feed"}
               </>
             )}
           </Button>
@@ -366,157 +367,7 @@ export function TagForm(
   );
 }
 
-export function TagCard(
-  props: Tag & {
-    setDragEnd?: React.Dispatch<
-      React.SetStateAction<{ over: Over; active: Active } | null>
-    >;
-    dragEnd?: { over: Over | null; active: Active | null };
-  },
-) {
-  const controls = useAnimation();
-
-  const utils = api.useUtils();
-
-  const addToWorkspace = api.tag.update.useMutation({
-    onSuccess: async () => {
-      await utils.destination.invalidate();
-      toast({
-        title: "Tag added to workspace",
-        description: "Tag has been added to the selected workspace.",
-      });
-    },
-    onError: (error) => {
-      toast({
-        title: "Failed to add tag to workspace",
-        description: error.message,
-        variant: "destructive",
-      });
-    },
-  });
-
-  const { isOver, setNodeRef: setNodeDropRef } = useDroppable({
-    id: props.id,
-  });
-  const { dragEnd, setDragEnd, id } = props;
-  useEffect(() => {
-    if (
-      dragEnd &&
-      setDragEnd &&
-      dragEnd.over &&
-      dragEnd.active &&
-      dragEnd.active.id == id
-    ) {
-      addToWorkspace.mutate({
-        id,
-        workspaceId:
-          typeof dragEnd.over.id === "number"
-            ? dragEnd.over.id
-            : parseInt(String(dragEnd.over.id)),
-      });
-      setDragEnd(null);
-    }
-  }, [dragEnd, setDragEnd, addToWorkspace, id]);
-  const {
-    attributes,
-    listeners,
-    transform,
-    setNodeRef: setNodeDragRef,
-  } = useDraggable({
-    id: props.id,
-  });
-  const style = transform
-    ? {
-        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-      }
-    : undefined;
-  useEffect(() => {
-    if (isOver) {
-      void controls.start("start");
-    } else {
-      controls.stop();
-      controls.set("reset");
-    }
-  }, [isOver, controls]);
-
-  return (
-    <motion.div custom={1} variants={variants} animate={controls}>
-      <Card ref={setNodeDragRef} style={style} {...listeners} {...attributes}>
-        <div ref={setNodeDropRef}>
-          <CardHeader className="flex flex-row items-end px-3 pb-2 pt-4 text-sm leading-tight">
-            <div
-              className="circle mr-1.5 flex h-4 w-4 overflow-hidden rounded-full"
-              style={{ background: props.color ?? "hsl(var(--secondary))" }}
-            >
-              <div
-                className="circle m-auto h-1.5 w-1.5 overflow-hidden rounded-full"
-                style={{
-                  background:
-                    getContrastTextColor(props?.color ?? "#ffffff") ??
-                    "hsl(var(--secondary))",
-                }}
-              ></div>
-            </div>
-            <CardTitle className="truncate">
-              <Link href={`/tag/${props.id}`}>
-                {props.name ?? "Unnamed Tag"}
-              </Link>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2 px-3 pb-3 pt-0 text-sm">
-            <p className="text-muted-foreground">
-              {props.description ?? "No description provided."}
-            </p>
-
-            <div className="mt-2 flex flex-wrap gap-1.5">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div>
-                    {(props.updatedAt &&
-                      "Updated " + timeSince(props.updatedAt) + " ago") ??
-                      "Created " + timeSince(props.createdAt) + " ago"}
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>
-                    {props.updatedAt?.toISOString() ??
-                      props.createdAt.toISOString()}
-                  </p>
-                </TooltipContent>
-              </Tooltip>
-
-              <p>•</p>
-
-              {props.destinationCount != null &&
-                props.destinationCount != undefined && (
-                  <p className="font-muted mr-2 text-sm">
-                    {props.destinationCount} destination
-                    {props.destinationCount == 1 ? null : "s"}
-                  </p>
-                )}
-              <p>•</p>
-
-              {props.listCount != null && props.listCount != undefined && (
-                <p className="font-muted mr-2 text-sm">
-                  {props.listCount} map{props.listCount == 1 ? null : "s"}
-                </p>
-              )}
-              <Link href={`/box/${props.workspace?.id}`}>
-                <Badge variant="outline">
-                  {(props.workspace?.emoji ?? "❔") +
-                    " " +
-                    props.workspace?.name}
-                </Badge>
-              </Link>
-            </div>
-          </CardContent>
-        </div>
-      </Card>
-    </motion.div>
-  );
-}
-
-export function RecentTags({
+export function RecentFeeds({
   workspace,
   user,
   workspaces,
@@ -528,22 +379,23 @@ export function RecentTags({
   const utils = api.useUtils();
 
   const {
-    data: recentTags = { items: [], count: 0 },
+    data: recentFeeds = { items: [], count: 0 },
     refetch,
     isFetching,
-  } = api.tag.getMany.useQuery({
-    limit: 24,
+  } = api.feed.getMany.useQuery({
+    limit: 3,
     order: "DESC",
     sortBy: "updatedAt",
     archived: workspace?.archived ? undefined : false,
     workspaceId: workspace?.id ?? undefined,
+
   });
   const [open, setOpen] = useState(false);
 
-  const createTag = (callback?: () => void) =>
-    api.tag.create.useMutation({
+  const createFeed = (callback?: () => void) =>
+    api.feed.create.useMutation({
       onSuccess: async () => {
-        await utils.tag.invalidate();
+        await utils.feed.invalidate();
         if (typeof callback === "function") {
           callback();
         }
@@ -551,7 +403,7 @@ export function RecentTags({
       },
       onError: (error) => {
         toast({
-          title: "Failed to create tag",
+          title: "Failed to create feed",
           description: error.message,
           variant: "destructive",
         });
@@ -562,53 +414,35 @@ export function RecentTags({
     <Dialog open={open} onOpenChange={() => setOpen(false)}>
       <TiltCard>
         <Card>
-          <CardHeader className="xs:px-6 xs:pb-6 sm:px-3 sm:pb-4 md:px-6 md:pb-6">
-            <CardTitle className="flex flex-row flex-wrap items-center justify-between gap-4">
-              <Link
-                href={`/search/tags${workspace ? "?workspace=" + workspace.id : ""}`}
-              >
+          <CardHeader>
+            <CardTitle className="flex flex-row items-center justify-between">
+              <Link href="/search/feeds">
                 <div className="flex items-center">
-                  <Tags className="mr-2 h-5 w-5" /> Recent Tags
+                  <Map className="mr-2 h-5 w-5" /> Popular Feeds
                 </div>
               </Link>
 
               <Button
-                onClick={() => setOpen(true)}
                 disabled={workspace?.archived}
+                onClick={() => setOpen(true)}
                 size="sm"
               >
-                <Plus />
-                Create Tag
+                <ListPlus />
+                Create Feed
               </Button>
             </CardTitle>
           </CardHeader>
-          <CardContent className="xs:px-6 sm:px-3 md:px-6">
-            <div className="flex flex-row flex-wrap gap-1.5 pb-6">
-              {recentTags.items.length > 0 ? (
-                recentTags.items.map((tg) => {
-                  return (
-                    <Link href={`/tag/${tg.id}`} key={tg.id} className="w-fit">
-                      <Badge
-                        variant="secondary"
-                        style={{
-                          background: tg.color ?? "hsl(var(--secondary))",
-                          color: tg.color
-                            ? getContrastTextColor(tg.color)
-                            : undefined,
-                        }}
-                      >
-                        {tg.name}
-                      </Badge>
-                    </Link>
-                  );
-                })
-              ) : (
-                <p className="text-sm text-muted-foreground">
-                  🏷 No tags found. Try creating one and come back!
-                </p>
-              )}
-            </div>
-            <div className="flex gap-2">
+          <CardContent className="space-y-4 px-6">
+            {recentFeeds.items.length > 0 ? (
+              recentFeeds.items.map((fd: Feed) => {
+                return <FeedCard key={fd.id} {...fd} />;
+              })
+            ) : (
+              <p className="text-sm text-muted-foreground">
+               📡 No feeds found. Try creating one and come back!
+              </p>
+            )}
+            <div className="flex space-x-2">
               <Button
                 size="sm"
                 variant="secondary"
@@ -616,7 +450,7 @@ export function RecentTags({
                 asChild
               >
                 <Link
-                  href={`/search/tags${workspace ? "?workspace=" + workspace.id : ""}`}
+                  href={`/search/feeds${workspace ? "?workspace=" + workspace.id : ""}`}
                 >
                   <GalleryVerticalEnd />
                   See All
@@ -641,16 +475,16 @@ export function RecentTags({
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <TagIcon /> Create Tag
+            <ListPlus /> Create Feed
           </DialogTitle>
         </DialogHeader>
         <main className="flex flex-1 flex-col space-y-6 pt-0">
-          <TagForm
-            update={false}
-            tagMutation={createTag}
-            workspaces={workspaces}
-            user={user}
+          <FeedForm
             workspace={workspace}
+            user={user}
+            workspaces={workspaces}
+            update={false}
+            feedMutation={createFeed}
           />
         </main>
       </DialogContent>
@@ -658,25 +492,23 @@ export function RecentTags({
   );
 }
 
-export function TagPage(props: {
+export function FeedPage(props: {
   id: string;
   workspaces?: Workspace[];
   user?: User;
 }) {
   const utils = api.useUtils();
 
-  const tagId = props.id;
+  const feedId = props.id;
   const [editing, setEditing] = useState(false);
-  const [tab, setTab] = useState<"pins" | "lists">("pins");
-  const [pageNumber, setPageNumber] = useState(1);
 
-  const updateTag = (callback?: () => void) =>
-    api.tag.update.useMutation({
+  const updateFeed = (callback?: () => void) =>
+    api.feed.update.useMutation({
       onSuccess: async () => {
-        await utils.tag.invalidate();
+        await utils.feed.invalidate();
         toast({
-          title: "Tag updated",
-          description: "Successfully updated tag properties.",
+          title: "Feed updated",
+          description: "Successfully updated feed properties.",
         });
         if (typeof callback === "function") {
           callback();
@@ -685,34 +517,27 @@ export function TagPage(props: {
       },
       onError: (error) => {
         toast({
-          title: "Failed to update tag",
+          title: "Failed to update feed",
           description: error.message,
           variant: "destructive",
         });
       },
     });
-  const archiveMutation = updateTag();
 
-  const { data }: { data: Tag | undefined } = api.tag.get.useQuery(
-    { id: parseInt(tagId ?? "0", 10) },
-    { enabled: !!tagId },
+  const archiveMutation = updateFeed();
+
+  const { data }: { data: Feed | undefined } = api.feed.get.useQuery(
+    { id: parseInt(feedId ?? "0", 10) },
+    { enabled: !!feedId },
   );
+
+  const [pageNumber, setPageNumber] = useState(1);
 
   const {
     data: searchResults = { count: 0, items: [] },
     refetch,
     isFetching,
-  } = tab == "pins"
-    ? api.destination.getMany.useQuery({
-        tags: [data?.name ?? ""],
-        offset: Math.round(pageNumber - 1) * 6,
-        limit: 6,
-      })
-    : api.list.getMany.useQuery({
-        tags: [data?.name ?? ""],
-        offset: Math.round(pageNumber - 1) * 6,
-        limit: 6,
-      });
+  } = api.destination.getMany.useQuery(data?.query ?? {limit: 0});
 
   function handleOpenChange(openStatus: boolean) {
     setEditing(openStatus);
@@ -730,8 +555,8 @@ export function TagPage(props: {
       });
     } else {
       toast({
-        title: "Failed to update tag",
-        description: "No tag selected.",
+        title: "Failed to update feed",
+        description: "No feed selected.",
         variant: "destructive",
       });
     }
@@ -740,31 +565,25 @@ export function TagPage(props: {
     <Dialog open={editing} onOpenChange={handleOpenChange}>
       <DialogContent className="overflow-y-auto md:max-h-[500px] md:max-w-[700px] lg:max-w-[800px]">
         <DialogHeader>
-          <DialogTitle>Edit Map</DialogTitle>
+          <DialogTitle>Edit Feed</DialogTitle>
         </DialogHeader>
         {editing && data != undefined ? (
-          <TagForm
-            update={true}
+          <FeedForm
             workspaces={props.workspaces}
             user={props.user}
+            update={true}
             defaultValues={
               {
                 name: data.name ?? "",
                 description: data.description ?? "",
-                color: data.color ?? undefined,
-                shortcut: data.shortcut ?? "",
-                workspaceId: data.workspace?.id ?? undefined,
-              } as z.infer<typeof tagFormSchema>
+                emoji: data.emoji ?? "🗺️",
+                visibility: "private",
+								workspaceId: data.workspace.id ?? undefined,
+								query: { limit: 0}
+              } as z.infer<typeof feedFormSchema>
             }
             updateId={parseInt(props.id)}
-            tagMutation={(callback) =>
-              updateTag(() => {
-                void utils.tag.get.invalidate({ id: parseInt(props.id) });
-                if (callback) {
-                  callback();
-                }
-              })
-            }
+						feedMutation={updateFeed}
           />
         ) : null}
       </DialogContent>
@@ -774,27 +593,16 @@ export function TagPage(props: {
       <div className="flex w-full flex-row flex-wrap items-center justify-between gap-4">
         <div className="space-y-1">
           <div className="flex items-center">
-            <div
-              className="circle mr-2 flex h-6 w-6 items-center justify-center overflow-hidden rounded-full"
-              style={{ background: data?.color ?? "hsl(var(--secondary))" }}
-            >
-              <div
-                className="circle m-auto h-2.5 w-2.5 overflow-hidden rounded-full"
-                style={{
-                  background:
-                    getContrastTextColor(data?.color ?? "#ffffff") ??
-                    "hsl(var(--secondary))",
-                }}
-              ></div>
-            </div>
-            <h1>{data?.name ?? "Unnamed Tag"}</h1>
+            <span className="mr-2 text-2xl">{data?.emoji ?? "❔"}</span>
+
+            <h1>{data?.name ?? "Unnamed Feed"}</h1>
           </div>
           <p className="text-sm text-muted-foreground">
             {data?.description ?? "No description provided."}
           </p>
         </div>
-        <div className="flex flex-row flex-wrap gap-2">
-          <Button
+        <div className="flex flex-row gap-2">
+                  <Button
             size="sm"
             onClick={() => {
               setEditing(true);
@@ -829,7 +637,7 @@ export function TagPage(props: {
                   <DialogTitle>Are you absolutely sure?</DialogTitle>
                   <DialogDescription>
                     This action cannot be undone. Are you sure you want to bury
-                    this tag? It will be hidden from the dashboard and other
+                    this feed? It will be hidden from the dashboard and other
                     pages (except search) until you excavate it.
                   </DialogDescription>
                 </DialogHeader>
@@ -844,44 +652,33 @@ export function TagPage(props: {
             </Dialog>
           )}
           <Dialog>
-            <DeleteTag id={parseInt(props.id)} routePath="/search/tags">
+            <DeleteFeed id={parseInt(props.id)} routePath="/search/feeds">
               <DialogTrigger asChild>
-                <Button
-                  size="sm"
-                  variant="destructive"
-                  className="flex flex-shrink"
-                >
-                  <Shredder />
-                  Shred
+                <Button size="sm" variant="destructive">
+                  <Flame />
+                  Burn
                 </Button>
               </DialogTrigger>
-            </DeleteTag>
+            </DeleteFeed>
           </Dialog>
         </div>
       </div>
+    
       <div className="mt-2 flex flex-wrap gap-2 text-sm">
         Trunk:{" "}
-        <Badge variant={data?.workspace?.archived ? "destructive" : "outline"}>
-          {data?.workspace?.emoji ?? "❔"} {data?.workspace?.name}{" "}
+        <Badge variant={data?.workspace.archived ? "destructive" : "outline"}>
+          {data?.workspace.emoji ?? "❔"} {data?.workspace.name}{" "}
           <span className="ml-1 italic">
-            {data?.workspace?.archived ? "(Archived)" : null}
+            {data?.workspace.archived ? "(Archived)" : null}
           </span>
         </Badge>
       </div>
+
       <div className="font-muted flex flex-row space-x-2 text-sm italic">
-        {data?.listCount ? (
+        {data?.size != undefined ? (
           <div className="flex flex-row space-x-2 pr-2">
             <p className="font-muted text-sm not-italic">
-              {data?.listCount} map{data?.listCount > 0 ? "s" : null}
-            </p>
-            <p>•</p>
-          </div>
-        ) : null}
-        {data?.destinationCount ? (
-          <div className="flex flex-row space-x-2 pr-2">
-            <p className="font-muted text-sm not-italic">
-              {data?.destinationCount} destination
-              {data?.destinationCount > 0 ? "s" : null}
+              {data?.size} destinations{" "}
             </p>
             <p>•</p>
           </div>
@@ -891,7 +688,9 @@ export function TagPage(props: {
           <TooltipTrigger asChild>
             <div>
               {(data?.updatedAt &&
-                "Updated " + timeSince(data?.updatedAt) + " ago") ??
+                "Updated " +
+                  timeSince(data?.updatedAt ?? new Date()) +
+                  " ago") ??
                 "Created " + timeSince(data?.createdAt ?? new Date()) + " ago"}
             </div>
           </TooltipTrigger>
@@ -910,64 +709,21 @@ export function TagPage(props: {
           </>
         ) : null}
       </div>
-      <Separator />
-
-      <Tabs
-        value={tab}
-        onValueChange={(val: string) => {
-          setTab(val as "pins" | "lists");
-        }}
-        defaultValue="pins"
-        className="w-full"
-      >
-        <TabsList className="h-30 flex w-full flex-row flex-wrap items-center justify-center gap-2 lg:grid lg:grid-cols-2">
-          <TabsTrigger value="pins" className="w-full lg:w-auto">
-            Destinations
-            <Badge variant="secondary" className="ml-2">
-              {data?.destinationCount}
-            </Badge>
-          </TabsTrigger>
-          <TabsTrigger value="maps" className="w-full lg:w-auto">
-            Maps
-            <Badge variant="secondary" className="ml-2">
-              {data?.listCount}
-            </Badge>
-          </TabsTrigger>
-        </TabsList>
-      </Tabs>
 
       {data != undefined ? (
         <div className="block space-y-4">
+          <Separator />
           {searchResults.items.length > 0 ? (
-            tab == "pins" ? (
-              searchResults.items.map((dest) => {
-                if (
-                  dest &&
-                  "location" in dest &&
-                  "type" in dest &&
-                  "body" in dest
-                ) {
-                  return (
-                    <DestinationCard key={dest.id} {...(dest as Destination)} />
-                  );
-                }
-                return null;
-              })
-            ) : (
-              searchResults.items.map((lst) => {
-                if (lst && "name" in lst && "description" in lst) {
-                  return <ListCard key={lst.id} {...lst} />;
-                }
-                return null;
-              })
-            )
+            searchResults.items.map((dest: Destination) => {
+              return <DestinationCard key={dest.id} {...dest} />;
+            })
           ) : isFetching ? (
             <p className="justify-center text-sm text-muted-foreground">
-              🔍 Searching {tab == "pins" ? "destinations" : "maps"}...
+              🔍 Searching...
             </p>
           ) : (
             <p className="text-sm text-muted-foreground">
-              🌌 No {tab == "pins" ? "destinations" : "maps"} found. Try{" "}
+              🌌 No destinations found. Try{" "}
               <Link href="/dashboard">creating one</Link> and come back!
             </p>
           )}
@@ -1083,7 +839,7 @@ export function TagPage(props: {
   );
 }
 
-export function DeleteTag({
+export function DeleteFeed({
   id,
   children,
   routePath,
@@ -1096,14 +852,14 @@ export function DeleteTag({
 
   const utils = api.useUtils();
 
-  const deleteTag = api.tag.delete.useMutation({
+  const deleteFeed = api.feed.delete.useMutation({
     onSuccess: async () => {
-      await utils.tag.invalidate();
+      await utils.feed.invalidate();
       router.push(routePath);
     },
     onError: (error) => {
       toast({
-        title: "Failed to delete tag",
+        title: "Failed to delete feed",
         description: error.message,
         variant: "destructive",
       });
@@ -1117,7 +873,7 @@ export function DeleteTag({
           <DialogTitle>Are you absolutely sure?</DialogTitle>
           <DialogDescription>
             This action cannot be undone. Are you sure you want to permanently
-            delete this tag?
+            delete this feed?
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
@@ -1125,7 +881,7 @@ export function DeleteTag({
             <Button
               type="button"
               onClick={() => {
-                deleteTag.mutate({ id: parseInt(id.toString()) });
+                deleteFeed.mutate({ id: parseInt(id.toString()) });
               }}
             >
               Confirm

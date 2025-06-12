@@ -14,7 +14,7 @@ export default async function Page({
   params: Promise<{ searchType: string }>;
 }) {
   return (
-    <div className="grid grid-cols-1 space-y-4 p-4">
+    <div className="center flex flex-col items-center p-4">
       <SearchPage
         searchType={
           (await params).searchType as "pins" | "maps" | "tags" | "boxes"
