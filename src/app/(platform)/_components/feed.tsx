@@ -159,12 +159,32 @@ export function FeedCard(props: Feed) {
   );
 }
 
-type FeedFormProps<TInput> =
+type CreateFeedInput = z.infer<typeof feedFormSchema>;
+type UpdateFeedInput = z.infer<typeof updateFeedSchema>;
+
+type MutationFn<T> = (callback?: () => void) => UseTRPCMutationResult<
+  { success: boolean },
+  TRPCClientErrorLike<{
+    input: T;
+    output: { success: boolean };
+    transformer: true;
+    errorShape: { message: string };
+  }>,
+  T,
+  unknown
+>;
+
+type FeedFormProps =
   | {
       feedMutation: (callback?: () => void) => UseTRPCMutationResult<
         { success: boolean },
-        TRPCClientErrorLike<any>,
-        TInput,
+        TRPCClientErrorLike<{
+          input: UpdateFeedInput;
+          output: { success: boolean };
+          transformer: true;
+          errorShape: { message: string };
+        }>,
+        UpdateFeedInput,
         unknown
       >;
       update: true;
@@ -174,16 +194,21 @@ type FeedFormProps<TInput> =
   | {
       feedMutation: (callback?: () => void) => UseTRPCMutationResult<
         { success: boolean },
-        TRPCClientErrorLike<any>,
-        TInput,
+        TRPCClientErrorLike<{
+          input: CreateFeedInput;
+          output: { success: boolean };
+          transformer: true;
+          errorShape: { message: string };
+        }>,
+        CreateFeedInput,
         unknown
       >;
       update: false;
       defaultValues?: z.infer<typeof feedFormSchema>;
     };
 
-export function FeedForm<TInput>(
-  props: FeedFormProps<TInput> & {
+export function FeedForm(
+  props: FeedFormProps & {
     workspace?: Workspace;
     user?: User;
     workspaces?: Workspace[];
@@ -196,7 +221,6 @@ export function FeedForm<TInput>(
       emoji: props.defaultValues?.emoji ?? "🗺️",
       workspaceId: props.defaultValues?.workspaceId ?? 0,
       visibility: props.defaultValues?.visibility ?? "public",
-      // Always provide a default query object
       query: props.defaultValues?.query ?? { limit: 0 }
     } as z.infer<typeof feedFormSchema>,
   });
@@ -209,10 +233,8 @@ export function FeedForm<TInput>(
       if (!props.updateId) {
         return;
       }
-      // @ts-expect-error: TInput may differ, but we trust the caller
       submitMutation.mutate({ ...data, id: props.updateId });
     } else {
-      // @ts-expect-error: TInput may differ, but we trust the caller
       submitMutation.mutate({ ...data, id: 0 });
     }
   }
@@ -478,7 +500,7 @@ export function RecentFeeds({
             user={user}
             workspaces={workspaces}
             update={false}
-            feedMutation={createFeed as any}
+            feedMutation={createFeed as MutationFn<CreateFeedInput>}
             defaultValues={{
               name: "",
               description: "",
@@ -585,7 +607,7 @@ export function FeedPage(props: {
               } as z.infer<typeof feedFormSchema>
             }
             updateId={parseInt(props.id)}
-            feedMutation={updateFeed as any}
+            feedMutation={updateFeed as MutationFn<UpdateFeedInput>}
           />
         ) : null}
       </DialogContent>
@@ -767,22 +789,14 @@ export function FeedPage(props: {
                           Math.ceil(searchResults.count / 6),
                         ]
                 ).map((page) => {
-                  if (page === "...") {
+                  if (typeof page === "number") {
                     return (
-                      <PopoverTrigger key={page}>
-                        <PaginationItem>
-                          <PaginationEllipsis />
-                        </PaginationItem>
-                      </PopoverTrigger>
-                    );
-                  } else if (typeof page === "number") {
-                    return (
-                      <PaginationItem key={page}>
+                      <PaginationItem key={page} className="font-semibold">
                         <PaginationLink
                           href="#"
-                          isActive={pageNumber == page}
                           onClick={() => {
                             setPageNumber(page);
+
                             void refetch();
                           }}
                         >
@@ -791,48 +805,27 @@ export function FeedPage(props: {
                       </PaginationItem>
                     );
                   }
-                })}
 
-                <PopoverContent className="w-[200px]">
-                  <div className="flex flex-row items-center gap-2 text-sm">
-                    Page:
-                    <Input
-                      type="number"
-                      value={pageNumber}
-                      onChange={(event) => {
-                        setPageNumber(parseInt(event.target.value));
-                      }}
-                    />
-                    <Button
-                      size="icon"
-                      type="submit"
-                      className="h-8 min-w-8"
+                  return (
+                    <PaginationItem key={page} className="pointer-events-none">
+                      <PaginationEllipsis />
+                    </PaginationItem>
+                  );
+                })}
+                {pageNumber != Math.ceil(searchResults.count / 6) &&
+                !isFetching ? (
+                  <PaginationItem>
+                    <PaginationNext
+                      href="#"
                       onClick={() => {
+                        setPageNumber(pageNumber + 1);
+
                         void refetch();
                       }}
-                    >
-                      {isFetching ? (
-                        <Loader2 className="animate-spin" />
-                      ) : (
-                        <ArrowRight />
-                      )}
-                    </Button>
-                  </div>
-                </PopoverContent>
+                    />
+                  </PaginationItem>
+                ) : null}
               </Popover>
-
-              {pageNumber != Math.ceil(searchResults.count / 6) &&
-              !isFetching ? (
-                <PaginationItem>
-                  <PaginationNext
-                    href="#"
-                    onClick={() => {
-                      setPageNumber(pageNumber + 1);
-                      void refetch();
-                    }}
-                  />
-                </PaginationItem>
-              ) : null}
             </PaginationContent>
           </Pagination>
         </div>
