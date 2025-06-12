@@ -180,21 +180,15 @@ export const feedRouter = createTRPCRouter({
           });
         }
       }
-      let feedRows = null;
-      if (
-        input.name ||
-        input.emoji ||
-        input.description ||
-        input.workspaceId ||
-        input.archived != undefined
-      ) {
-        feedRows = await ctx.db
+
+        await ctx.db
           .update(destinationFeeds)
           .set({
             name: input.name,
             description: input.description,
             emoji: input.emoji,
             workspaceId: input.workspaceId ?? undefined,
+            visibility: input.visibility,
             archived: input.archived ?? false,
           })
           .where(
@@ -209,15 +203,7 @@ export const feedRouter = createTRPCRouter({
           .returning({
             id: destinationFeeds.id,
           });
-      } else {
-        feedRows = await ctx.db.query.destinationFeeds.findMany({
-          columns: { id: true },
-          where: and(
-            eq(destinationFeeds.id, input.id),
-            eq(destinationFeeds.userId, ctx.user.id),
-          ),
-        });
-      }
+      
       return {
         success: true,
       };

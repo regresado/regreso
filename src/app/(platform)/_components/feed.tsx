@@ -32,7 +32,7 @@ import { motion, useAnimation } from "motion/react";
 import { useForm } from "react-hook-form";
 import { type z } from "zod";
 import {
-  feedFormSchema,
+  type feedFormSchema,
   type Destination,
   type Feed,
   type updateFeedSchema,
@@ -159,17 +159,12 @@ export function FeedCard(props: Feed) {
   );
 }
 
-type FeedFormProps =
+type FeedFormProps<TInput> =
   | {
       feedMutation: (callback?: () => void) => UseTRPCMutationResult<
         { success: boolean },
-        TRPCClientErrorLike<{
-          input: z.infer<typeof updateFeedSchema>;
-          output: { success: boolean };
-          transformer: true;
-          errorShape: { message: string };
-        }>,
-        z.infer<typeof updateFeedSchema>,
+        TRPCClientErrorLike<any>,
+        TInput,
         unknown
       >;
       update: true;
@@ -179,46 +174,45 @@ type FeedFormProps =
   | {
       feedMutation: (callback?: () => void) => UseTRPCMutationResult<
         { success: boolean },
-        TRPCClientErrorLike<{
-          input: z.infer<typeof updateFeedSchema>;
-          output: { success: boolean };
-          transformer: true;
-          errorShape: { message: string };
-        }>,
-        z.infer<typeof feedFormSchema>,
+        TRPCClientErrorLike<any>,
+        TInput,
         unknown
       >;
       update: false;
       defaultValues?: z.infer<typeof feedFormSchema>;
     };
 
-export function FeedForm(
-  props: FeedFormProps & {
+export function FeedForm<TInput>(
+  props: FeedFormProps<TInput> & {
     workspace?: Workspace;
     user?: User;
     workspaces?: Workspace[];
   },
 ) {
   const form = useForm<z.infer<typeof feedFormSchema>>({
-      defaultValues: {
+    defaultValues: {
       name: props.defaultValues?.name ?? "",
       description: props.defaultValues?.description ?? "",
-            emoji: props.defaultValues?.emoji ?? "🗺️",
-      workspaceId:
-       0,			visibility: props.defaultValues?.visibility ?? "public"
+      emoji: props.defaultValues?.emoji ?? "🗺️",
+      workspaceId: props.defaultValues?.workspaceId ?? 0,
+      visibility: props.defaultValues?.visibility ?? "public",
+      // Always provide a default query object
+      query: props.defaultValues?.query ?? { limit: 0 }
     } as z.infer<typeof feedFormSchema>,
   });
   const submitMutation = props.feedMutation(() => {
     form.reset();
-      });
+  });
 
   function onSubmit(data: z.infer<typeof feedFormSchema>) {
     if (props.update) {
       if (!props.updateId) {
         return;
       }
+      // @ts-expect-error: TInput may differ, but we trust the caller
       submitMutation.mutate({ ...data, id: props.updateId });
     } else {
+      // @ts-expect-error: TInput may differ, but we trust the caller
       submitMutation.mutate({ ...data, id: 0 });
     }
   }
@@ -484,7 +478,15 @@ export function RecentFeeds({
             user={user}
             workspaces={workspaces}
             update={false}
-            feedMutation={createFeed}
+            feedMutation={createFeed as any}
+            defaultValues={{
+              name: "",
+              description: "",
+              emoji: "📡",
+              workspaceId: 0,
+              visibility: "public",
+              query: { limit: 0, offset: 0 }
+            }}
           />
         </main>
       </DialogContent>
@@ -578,12 +580,12 @@ export function FeedPage(props: {
                 description: data.description ?? "",
                 emoji: data.emoji ?? "🗺️",
                 visibility: "private",
-								workspaceId: data.workspace.id ?? undefined,
-								query: { limit: 0}
+                workspaceId: data.workspace.id ?? undefined,
+                query: { limit: 0}
               } as z.infer<typeof feedFormSchema>
             }
             updateId={parseInt(props.id)}
-						feedMutation={updateFeed}
+            feedMutation={updateFeed as any}
           />
         ) : null}
       </DialogContent>

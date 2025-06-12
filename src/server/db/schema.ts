@@ -1,5 +1,3 @@
-import { use } from "react";
-
 import { relations, sql, type InferSelectModel } from "drizzle-orm";
 import {
   boolean,
@@ -506,7 +504,7 @@ export const workspacesRelations = relations(workspaces, ({ one, many }) => ({
 
 export const destinationFeedsRelations = relations(
   destinationFeeds,
-  ({ one, many }) => ({
+  ({ one }) => ({
     workspace: one(workspaces, {
       fields: [destinationFeeds.workspaceId],
       references: [workspaces.id],
