@@ -1,8 +1,5 @@
 ## 🗺️ Regreso - Find your way back
 
-> [!Tip]
-> Visit the wiki to view a [feature overview](https://github.com/joshpinto6/regreso/wiki/Feature-Comparison-Table) or [UI showcase](https://github.com/joshpinto6/regreso/wiki/UI-Showcase). If Regreso interests you, **consider leaving a star!!**
-
 [![Netlify Status](https://api.netlify.com/api/v1/badges/9186e8eb-17c0-4d34-bdd9-e2add4200741/deploy-status)](https://app.netlify.com/sites/regreso/deploys)
 [![wakatime](https://wakatime.com/badge/user/7482ea9d-3085-4e9b-95ad-1ca78a14d948/project/2972fea6-6fe2-4f55-afb8-a47ff01540ad.svg)](https://wakatime.com/badge/user/7482ea9d-3085-4e9b-95ad-1ca78a14d948/project/2972fea6-6fe2-4f55-afb8-a47ff01540ad)
 ![MIT License](https://img.shields.io/github/license/joshpinto6/regreso)
@@ -11,13 +8,16 @@
 
 ## 👋 Introduction
 
-Regreso is an open source tools which allows you to create, find, and manage bookmarked links, files, and resources you wish to "return" to later.
+Regreso is an open source tool for creating, finding, and managing links, files, and resources you wish to "return" to later.
 
 These destinations may be organized into "maps", enabling graphing and visualization of relationships, "tags", project or topic-centered "trunk" workspaces, and eventually session "journies".
 
+> [!Note]
+> Visit the wiki for a [feature overview](https://github.com/joshpinto6/regreso/wiki/Feature-Comparison-Table) or [UI showcase](https://github.com/joshpinto6/regreso/wiki/UI-Showcase). If it interests you, leave a ⭐!
+
 **🤔 Philosophy:**
 
-Regreso aims to create a new form of anti-productivity application which encourages the rejection of traditional notetaking, project management, and organization products.
+Regreso aims to create a new form of anti-productivity application which encourages the rejection of traditional notetaking, project management, and organization products. Acting as an extension of the user's mind, Regreso aims to provide maximum freedom, extensibility, and customization.
 
 ## 💥 Quick Links
 
