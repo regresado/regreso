@@ -105,8 +105,8 @@ importers:
         specifier: ^2.22.0
         version: 2.22.0(@tiptap/core@2.14.0(@tiptap/pm@2.14.0))(@tiptap/extension-code-block@2.14.0(@tiptap/core@2.14.0(@tiptap/pm@2.14.0))(@tiptap/pm@2.14.0))(@tiptap/pm@2.14.0)(highlight.js@11.11.1)(lowlight@3.3.0)
       '@tiptap/extension-color':
-        specifier: ^2.14.0
-        version: 2.14.0(@tiptap/core@2.14.0(@tiptap/pm@2.14.0))(@tiptap/extension-text-style@2.14.0(@tiptap/core@2.14.0(@tiptap/pm@2.14.0)))
+        specifier: ^2.22.0
+        version: 2.22.0(@tiptap/core@2.14.0(@tiptap/pm@2.14.0))(@tiptap/extension-text-style@2.14.0(@tiptap/core@2.14.0(@tiptap/pm@2.14.0)))
       '@tiptap/extension-heading':
         specifier: ^2.14.0
         version: 2.14.0(@tiptap/core@2.14.0(@tiptap/pm@2.14.0))
@@ -2444,8 +2444,8 @@ packages:
     peerDependencies:
       '@tiptap/core': ^2.7.0
 
-  '@tiptap/extension-color@2.14.0':
-    resolution: {integrity: sha512-sY+eWIbkCMAwOGH7pQ1ZuNqkqMaaHE+TsJwA7bQ6VhI2gGhhqGjT/DfmJMUen8FSdzuPoWlgtuXXCeOO6FOduw==}
+  '@tiptap/extension-color@2.22.0':
+    resolution: {integrity: sha512-8aXNQQR3BPDedSkJLKjX/LvgyfV82pmydf2lN/FXEOtxWT5gId8I3ivI+5vsJdjUY34CUCUMILdXK6wClLTGuw==}
     peerDependencies:
       '@tiptap/core': ^2.7.0
       '@tiptap/extension-text-style': ^2.7.0
@@ -7855,7 +7855,7 @@ snapshots:
     dependencies:
       '@tiptap/core': 2.14.0(@tiptap/pm@2.14.0)
 
-  '@tiptap/extension-color@2.14.0(@tiptap/core@2.14.0(@tiptap/pm@2.14.0))(@tiptap/extension-text-style@2.14.0(@tiptap/core@2.14.0(@tiptap/pm@2.14.0)))':
+  '@tiptap/extension-color@2.22.0(@tiptap/core@2.14.0(@tiptap/pm@2.14.0))(@tiptap/extension-text-style@2.14.0(@tiptap/core@2.14.0(@tiptap/pm@2.14.0)))':
     dependencies:
       '@tiptap/core': 2.14.0(@tiptap/pm@2.14.0)
       '@tiptap/extension-text-style': 2.14.0(@tiptap/core@2.14.0(@tiptap/pm@2.14.0))
