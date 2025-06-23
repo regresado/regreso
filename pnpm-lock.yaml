@@ -114,8 +114,8 @@ importers:
         specifier: ^2.22.0
         version: 2.22.0(@tiptap/core@2.22.0(@tiptap/pm@2.22.0))(@tiptap/pm@2.22.0)
       '@tiptap/extension-image':
-        specifier: ^2.22.0
-        version: 2.22.0(@tiptap/core@2.22.0(@tiptap/pm@2.22.0))
+        specifier: ^2.22.3
+        version: 2.22.3(@tiptap/core@2.22.0(@tiptap/pm@2.22.0))
       '@tiptap/extension-link':
         specifier: ^2.22.0
         version: 2.22.0(@tiptap/core@2.22.0(@tiptap/pm@2.22.0))(@tiptap/pm@2.22.0)
@@ -2506,8 +2506,8 @@ packages:
       '@tiptap/core': ^2.7.0
       '@tiptap/pm': ^2.7.0
 
-  '@tiptap/extension-image@2.22.0':
-    resolution: {integrity: sha512-c4/BhpFIj9AP2LpSmDj3F7xi1+KEIOzFKu8hYTcrnyJS4PNn/ivmhxmVX7CcniHaO69by7FlOQx/hNhWQ3dUEA==}
+  '@tiptap/extension-image@2.22.3':
+    resolution: {integrity: sha512-JO8n5YOqOs+bckPZZ3qJFFLpRbYlu4N52n/7Do0XmxEMWaa3fLcR0Rsa1v3X4dGH2T5cKQ475dWSpJQRc+x07w==}
     peerDependencies:
       '@tiptap/core': ^2.7.0
 
@@ -7947,7 +7947,7 @@ snapshots:
       '@tiptap/core': 2.22.0(@tiptap/pm@2.22.0)
       '@tiptap/pm': 2.22.0
 
-  '@tiptap/extension-image@2.22.0(@tiptap/core@2.22.0(@tiptap/pm@2.22.0))':
+  '@tiptap/extension-image@2.22.3(@tiptap/core@2.22.0(@tiptap/pm@2.22.0))':
     dependencies:
       '@tiptap/core': 2.22.0(@tiptap/pm@2.22.0)
 
