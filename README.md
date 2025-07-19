@@ -1,4 +1,4 @@
-## 🗺️ Regreso - Find your way back
+## 🐿️ Regreso - Find your way back
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/9186e8eb-17c0-4d34-bdd9-e2add4200741/deploy-status)](https://app.netlify.com/sites/regreso/deploys)
 [![wakatime](https://wakatime.com/badge/user/7482ea9d-3085-4e9b-95ad-1ca78a14d948/project/2972fea6-6fe2-4f55-afb8-a47ff01540ad.svg)](https://wakatime.com/badge/user/7482ea9d-3085-4e9b-95ad-1ca78a14d948/project/2972fea6-6fe2-4f55-afb8-a47ff01540ad)
@@ -8,7 +8,7 @@
 
 ## 👋 Introduction
 
-Regreso is an open source tool for creating, finding, and managing links, files, and resources you wish to "return" to later.
+Regreso is an open source tool for creating, finding, and managing the links, files, and resources you wish to "return" to later.
 
 These destinations may be organized into "maps", enabling graphing and visualization of relationships, "tags", project or topic-centered "trunk" workspaces, and eventually session "journies".
 
@@ -46,6 +46,11 @@ To fork/extend Regreso, it is recommended that you use Supabase or any other Pos
 Many environment variables are also required for Regreso development. These are also documented in the `.env.example` file.
 
 To install dependencies, run `pnpm install` and to build/start server, use `pnpm run dev` or `pnpm run build && pnpm run start`.
+
+### 🗺️ Roadmap 
+
+Regreso has a detailed roadmap hosted as a github [project](/projects). Additionally, key upcoming work includes rss compatibility, local support, a mobile app, and auth/api overhaul. Follow open pull requests to keep up with progress!
+
 ## ⚙️ Tech Overview
 
 This project uses the [T3 Stack](https://create.t3.gg/) made by [@t3-oss](https://github.com/t3-oss):
