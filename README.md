@@ -2,9 +2,9 @@
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/9186e8eb-17c0-4d34-bdd9-e2add4200741/deploy-status)](https://app.netlify.com/sites/regreso/deploys)
 [![wakatime](https://wakatime.com/badge/user/7482ea9d-3085-4e9b-95ad-1ca78a14d948/project/2972fea6-6fe2-4f55-afb8-a47ff01540ad.svg)](https://wakatime.com/badge/user/7482ea9d-3085-4e9b-95ad-1ca78a14d948/project/2972fea6-6fe2-4f55-afb8-a47ff01540ad)
-![MIT License](https://img.shields.io/github/license/joshpinto6/regreso)
-![Closed Pull Request Count](https://img.shields.io/github/issues-pr-closed/joshpinto6/regreso)
-![GitHub Repo stars](https://img.shields.io/github/stars/joshpinto6/regreso)
+![MIT License](https://img.shields.io/github/license/matmanna/regreso)
+![Closed Pull Request Count](https://img.shields.io/github/issues-pr-closed/matmanna/regreso)
+![GitHub Repo stars](https://img.shields.io/github/stars/matmanna/regreso)
 
 ## 👋 Introduction
 
@@ -13,7 +13,7 @@ Regreso is an open source tool for creating, finding, and managing the links, fi
 These destinations may be organized into "maps", enabling graphing and visualization of relationships, "tags", project or topic-centered "trunk" workspaces, and eventually session "journies".
 
 > [!Note]
-> Visit the wiki for a [feature overview](https://github.com/joshpinto6/regreso/wiki/Feature-Comparison-Table) or [UI showcase](https://github.com/joshpinto6/regreso/wiki/UI-Showcase). If it interests you, leave a ⭐!
+> Visit the wiki for a [feature overview](https://github.com/matmanna/regreso/wiki/Feature-Comparison-Table) or [UI showcase](https://github.com/matmanna/regreso/wiki/UI-Showcase). If it interests you, leave a ⭐!
 
 **🤔 Philosophy:**
 
