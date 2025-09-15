@@ -242,7 +242,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <table>
   <tbody>
     <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/matmanna"><img src="https://avatars.githubusercontent.com/u/91392083?v=4?s=100" width="100px;" alt="Mat Manna"/><br /><sub><b>Mat Manna</b></sub></a><br /><a href="https://github.com/regresado/regreso/issues?q=author%3Amatmanna" title="Bug reports">🐛</a> <a href="#blog-matmanna" title="Blogposts">📝</a> <a href="https://github.com/regresado/regreso/commits?author=matmanna" title="Code">💻</a> <a href="#projectManagement-matmanna" title="Project Management">📆</a> <a href="#infra-matmanna" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#ideas-matmanna" title="Ideas, Planning, & Feedback">🤔</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/matmanna"><img src="https://avatars.githubusercontent.com/u/91392083?v=4?s=100" width="100px;" alt="Mat Manna"/><br /><sub><b>Mat Manna</b></sub></a><br /><a href="https://github.com/regresado/regreso/issues?q=author%3Amatmanna" title="Bug reports">🐛</a> <a href="#blog-matmanna" title="Blogposts">📝</a> <a href="https://github.com/regresado/regreso/commits?author=matmanna" title="Code">💻</a> <a href="#projectManagement-matmanna" title="Project Management">📆</a> <a href="#infra-matmanna" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#ideas-matmanna" title="Ideas, Planning, & Feedback">🤔</a> <a href="#design-matmanna" title="Design">🎨</a></td>
     </tr>
   </tbody>
   <tfoot>
