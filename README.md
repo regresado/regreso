@@ -3,6 +3,7 @@
 [![Netlify Status](https://api.netlify.com/api/v1/badges/9186e8eb-17c0-4d34-bdd9-e2add4200741/deploy-status)](https://app.netlify.com/sites/regreso/deploys)
 [![wakatime](https://wakatime.com/badge/user/7482ea9d-3085-4e9b-95ad-1ca78a14d948/project/2972fea6-6fe2-4f55-afb8-a47ff01540ad.svg)](https://wakatime.com/badge/user/7482ea9d-3085-4e9b-95ad-1ca78a14d948/project/2972fea6-6fe2-4f55-afb8-a47ff01540ad)
 ![MIT License](https://img.shields.io/github/license/matmanna/regreso)
+[![All Contributors](https://img.shields.io/github/all-contributors/regresado/regreso?color=ee8449&style=flat-square)](#-acknowledgements)
 ![Closed Pull Request Count](https://img.shields.io/github/issues-pr-closed/matmanna/regreso)
 ![GitHub Repo stars](https://img.shields.io/github/stars/matmanna/regreso)
 
@@ -232,3 +233,32 @@ Authentication (
 - [Million](https://million.dev/) Lint
 
 ## 🙌 Acknowledgements
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/matmanna"><img src="https://avatars.githubusercontent.com/u/91392083?v=4?s=100" width="100px;" alt="Mat Manna"/><br /><sub><b>Mat Manna</b></sub></a><br /><a href="https://github.com/regresado/regreso/commits?author=matmanna" title="Code">💻</a> <a href="https://github.com/regresado/regreso/issues?q=author%3Amatmanna" title="Bug reports">🐛</a> <a href="#blog-matmanna" title="Blogposts">📝</a> <a href="#content-matmanna" title="Content">🖋</a> <a href="#infra-matmanna" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/regresado/regreso/commits?author=matmanna" title="Documentation">📖</a> <a href="#design-matmanna" title="Design">🎨</a> <a href="#ideas-matmanna" title="Ideas, Planning, & Feedback">🤔</a> <a href="#maintenance-matmanna" title="Maintenance">🚧</a> <a href="#projectManagement-matmanna" title="Project Management">📆</a> <a href="#video-matmanna" title="Videos">📹</a></td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td align="center" size="13px" colspan="7">
+        <img src="https://raw.githubusercontent.com/all-contributors/all-contributors-cli/1b8533af435da9854653492b1327a23a4dbd0a10/assets/logo-small.svg">
+          <a href="https://all-contributors.js.org/docs/en/bot/usage">Add your contributions</a>
+        </img>
+      </td>
+    </tr>
+  </tfoot>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
