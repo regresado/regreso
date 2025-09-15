@@ -39,7 +39,7 @@ const FeatureCard = ({ feature }: { feature: Feature }) => {
     () => ({
       delay: 0,
       duration: 0.3,
-      ease: "easeInOut",
+     ease: [0.25, 0.1, 0.25, 1],
     }),
     [],
   );
