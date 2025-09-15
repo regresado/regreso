@@ -232,3 +232,14 @@ Authentication (
 - [Million](https://million.dev/) Lint
 
 ## 🙌 Acknowledgements
+
+Regreso abides by the All Contributors specification, recognizing all of those who advance the project forward. We express gratitude to the following:
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
