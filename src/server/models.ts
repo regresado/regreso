@@ -15,6 +15,7 @@ export interface User {
   registeredPasskey: boolean;
   registeredTOTP: boolean;
   registeredSecurityKey: boolean;
+	aiTaggingInstance: string | null;
 }
 
 export interface SessionFlags {

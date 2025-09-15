@@ -1,64 +1,69 @@
 "use server";
 
-import { parse } from "node-html-parser";
-
-export async function getWebDetailsAction(
-  _prev: ActionResult,
-  formData: FormData,
-): Promise<ActionResult> {
-  const url = formData.get("location");
-  if (typeof url !== "string") {
-    return {
-      error: "Invalid URL",
-      url: undefined,
-      title: [undefined],
-      description: [undefined],
-    };
-  }
-  const htmlResponse = await fetch(
-    url.startsWith("http") ? url : "https://" + url,
-    { signal: AbortSignal.timeout(1200) },
-  )
-    .then((res) => res.text())
-    .catch((_err) => {
-      return "Failed to fetch URL";
-    });
-
-  if (htmlResponse === "Failed to fetch URL") {
-    return {
-      error: htmlResponse,
-      url: url.startsWith("http") ? url : "https://" + url,
-      title: ["New Destination"],
-      description: [""],
-    };
-  }
-
-  const doc = parse(htmlResponse);
-  const title = [
-    doc.querySelector("title")?.text,
-    doc.querySelector('meta[property="og:title"]')?.getAttribute("content"),
-    doc.querySelector('meta[name="twitter:title"]')?.getAttribute("content"),
-  ];
-  const description = [
-    doc.querySelector('meta[name="description"]')?.getAttribute("content"),
-    doc
-      .querySelector('meta[property="og:description"]')
-      ?.getAttribute("content"),
-    doc
-      .querySelector('meta[name="twitter:description"]')
-      ?.getAttribute("content"),
-  ];
-
-  return {
-    url: url.startsWith("http") ? url : "https://" + url,
-    title,
-    description,
-  };
-}
+import { getWebDetails, SiteTagger } from "@regreso/utils";
 
 type ActionResult = {
   url: string | undefined;
   title: (string | undefined)[];
   description: (string | undefined)[];
   error?: string;
+  tags?: string[];
 };
+
+export async function getWebDetailsAction(
+  _prev: ActionResult,
+  formData: FormData,
+): Promise<ActionResult> {
+  const url = formData.get("location");
+  const aiTaggingInstance = formData.get("aiTaggingInstance");
+
+  let webDetails: ActionResult = {
+    url: url?.toString(),
+    title: ["Unknown Destination", undefined, undefined],
+    description: ["", undefined, undefined],
+  };
+
+  if (!url) {
+    return { ...webDetails, error: "No URL provided" };
+  }
+
+  try {
+    webDetails = await getWebDetails(url.toString());
+  } catch (error) {
+    return { ...webDetails, error: "Failed to fetch web details" };
+  }
+
+  if (aiTaggingInstance && aiTaggingInstance.toString().length > 0) {
+    try {
+      const tagger = new SiteTagger({
+        maxTags: 3,
+        aiInstance: aiTaggingInstance.toString(),
+        maxRetries: 2,
+      });
+
+      const result = await tagger.generateTags({
+        url: url.toString(),
+        headline:
+          webDetails.title[0] ||
+          webDetails.title[1] ||
+          webDetails.title[2] ||
+          "",
+        description:
+          webDetails.description[0] ||
+          webDetails.description[1] ||
+          webDetails.description[2] ||
+          "",
+      });
+
+      if (result.success) {
+        return { ...webDetails, tags: result.tags };
+      } else {
+        return { ...webDetails, error: "Failed to generate tags" };
+      }
+    } catch (e) {
+      return { ...webDetails, error: "Failed to generate tags" };
+    }
+  }
+
+  return { ...webDetails, tags: [] };
+}
