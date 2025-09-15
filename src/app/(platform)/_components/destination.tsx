@@ -101,7 +101,7 @@ import { getWebDetailsAction } from "~/app/(platform)/dashboard/actions";
 const destinationTypes = ["location", "note", "file"] as const;
 
 const destinationTypeSchema = z.object({
-	aiTaggingInstance: z.string().optional(),
+  aiTaggingInstance: z.string().optional(),
   type: z.enum(destinationTypes),
   location: z
     .string()
@@ -169,12 +169,12 @@ export function DestinationForm(
   });
 
   const destinationTypeForm = useForm<z.infer<typeof destinationTypeSchema>>({
-		resolver: zodResolver(destinationTypeSchema),
+    resolver: zodResolver(destinationTypeSchema),
     defaultValues: {
       type: (props.defaultValues?.type as "note" | "location") ?? "location",
       location: props.defaultValues?.location ?? "",
-			aiTaggingInstance: props.user?.aiTaggingInstance ?? ""
-		},
+      aiTaggingInstance: props.user?.aiTaggingInstance ?? "",
+    },
   });
 
   const form = useForm<z.infer<typeof destinationFormSchema>>({
@@ -337,8 +337,8 @@ export function DestinationForm(
   return (
     <>
       <Form {...destinationTypeForm}>
-					<form
-						action={action}
+        <form
+          action={action}
           onSubmit={async (e) => {
             if (!isDestinationTypeValid) {
               e.preventDefault();
@@ -359,24 +359,23 @@ export function DestinationForm(
             <div
               className={`w-${destinationTypeForm.watch("type") === "location" ? "1/3" : "full"} min-w-[100px]`}
             >
-							<FormField 
-								control={destinationTypeForm.control}
-								name="aiTaggingInstance"								
-								render={({ field }) => (
-									<FormItem
-									className="hidden">
-										<FormLabel>AI Instance URL</FormLabel>
-										<FormControl>
-											<Input
-												disabled={props.workspace?.archived}
-												placeholder="https://ai.pelicans.dev"
-												{...field}
-											/>
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-								/>
+              <FormField
+                control={destinationTypeForm.control}
+                name="aiTaggingInstance"
+                render={({ field }) => (
+                  <FormItem className="hidden">
+                    <FormLabel>AI Instance URL</FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled={props.workspace?.archived}
+                        placeholder="https://ai.pelicans.dev"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={destinationTypeForm.control}
                 name="type"
@@ -888,7 +887,7 @@ export function DestinationDialog(props: {
         await utils.destination.invalidate();
         if (typeof callback === "function") {
           callback();
-        } 
+        }
       },
       onError: (error) => {
         toast({
