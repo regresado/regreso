@@ -7,6 +7,15 @@
 ![Closed Pull Request Count](https://img.shields.io/github/issues-pr-closed/matmanna/regreso)
 ![GitHub Repo stars](https://img.shields.io/github/stars/matmanna/regreso)
 
+## 📖 Table of Contents
+
+- [👋 Introduction](#-introduction)
+- [💥 Quick Links](#-quick-links)
+- [📺 Demo Video](#-demo-video)
+- [🌟 Features](#-features)
+- [🚀 Development](#-development)
+- [🙌 Acknowledgements](#-acknowledgements)
+
 ## 👋 Introduction
 
 Regreso is an open source tool for creating, finding, and managing the links, files, and resources you wish to "return" to later.
@@ -22,11 +31,11 @@ Regreso aims to create a new form of anti-productivity application which encoura
 
 ## 💥 Quick Links
 
-- [Website](https://regreso.netlify.app)
+- [Landing Page](https://regreso.netlify.app)
 - [Dashboard](https://regreso.netlify.app/dashboard)
 - [Guide](https://regreso.netlify.app/guide)
 - [Wiki](https://regreso.netlify.app/wiki)
-- [Roadmap](https://regreso.netlify.app/roadmap)
+- [Raycast Extension Client](https://github.com/regresado/raycasting)
 
 ## 📺 Demo Video
 
@@ -34,13 +43,13 @@ https://github.com/user-attachments/assets/96565cff-49d1-4a43-8629-4c17b4dc6669
 
 ## 🌟 Features
 
-- 📌 Destinations (locations or notes) and 🗺 Maps (lists)
+- 📌 Destinations (links) and 🗺 Maps (lists)
 - 🔎 Powerful text or tag- based search ([#50](https://github.com/regresado/regreso/pull/50))
 - 💼 Workspaces and archival ([#111](https://github.com/regresado/regreso/pull/111))
-- 🔑 Email/GitHub Auth + 2FA (webauthn) ([#8](https://github.com/regresado/regreso/pull/8)
-- 👋 Knowledge, landing, and blog website ([#28](https://github.com/regresado/regreso/pull/28))
+- 🔑 Email, GitHub SSO, webauthn 2FA ([#8](https://github.com/regresado/regreso/pull/8))
+- 👋 Knowledge, landing, blog website ([#28](https://github.com/regresado/regreso/pull/28))
 - 🧠 AI-powered auto-tagging ([#336](https://github.com/regresado/regreso/pull/336))
-- 🌘 Light/dark UI modes and custom theme ([#27](https://github.com/regresado/regreso/pull/27))
+- 🌘 Light/dark UI modes ([#27](https://github.com/regresado/regreso/pull/27))
 - 🔌 Simple REST API ([#83](https://github.com/regresado/regreso/pull/83))
 - 📚 GitHub Wiki-based [documentation](https://github.com/regresado/regreso/wiki)
 - 📈 PostHog Analytics ([#85](https://github.com/regresado/regreso/pull/85))
@@ -66,7 +75,7 @@ To install dependencies, run `pnpm install` and to build/start server, use `pnpm
 
 Regreso has a detailed roadmap hosted as a github [project](/projects). Additionally, key upcoming work includes rss compatibility, local support, a mobile app, and auth/api overhaul. Follow open pull requests to keep up with progress!
 
-## 🔨 Built with
+### 🔨 Built with
 
 - Framework: Next.js 15 + App Router + Typescript
 - Design System: Tailwind + Radix UI + shadcn-ui
