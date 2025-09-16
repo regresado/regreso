@@ -3,7 +3,7 @@
 import React, { memo, useMemo } from "react";
 
 import { Code, Database, Zap } from "lucide-react";
-import { motion } from "motion/react";
+import { motion, type Easing } from "motion/react";
 
 type Feature = {
   icon: JSX.Element;
@@ -39,7 +39,7 @@ const FeatureCard = ({ feature }: { feature: Feature }) => {
     () => ({
       delay: 0,
       duration: 0.3,
-     ease: [0.25, 0.1, 0.25, 1],
+      ease: "easeInOut" as Easing,
     }),
     [],
   );

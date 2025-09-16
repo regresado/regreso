@@ -34,17 +34,17 @@ https://github.com/user-attachments/assets/96565cff-49d1-4a43-8629-4c17b4dc6669
 
 ## 🌟 Features
 
-- Destinations (locations or notes) and Maps (lists)
-- Powerful text or tag- based search ([#50](https://github.com/regresado/regreso/pull/50))
-- Workspace categorization and archival ([#111](https://github.com/regresado/regreso/pull/111))
-- Email/GitHub Auth, 2FA (webauthn) ([#8](https://github.com/regresado/regreso/pull/8)
-- Knowledge, landing, and blog website ([#28](https://github.com/regresado/regreso/pull/28))
-- AI-powered auto-tagging ([#336](https://github.com/regresado/regreso/pull/336))
-- Light/dark UI modes and custom theme ([#27](https://github.com/regresado/regreso/pull/27))
-- Simple REST API ([#83](https://github.com/regresado/regreso/pull/83))
-- GitHub Wiki-based [documentation](https://github.com/regresado/regreso/wiki)
-- PostHog Analytics ([#85](https://github.com/regresado/regreso/pull/85))
-- [Raycast Extension](https://github.com/regresado/raycasting) client
+- 📌 Destinations (locations or notes) and 🗺 Maps (lists)
+- 🔎 Powerful text or tag- based search ([#50](https://github.com/regresado/regreso/pull/50))
+- 💼 Workspaces and archival ([#111](https://github.com/regresado/regreso/pull/111))
+- 🔑 Email/GitHub Auth + 2FA (webauthn) ([#8](https://github.com/regresado/regreso/pull/8)
+- 👋 Knowledge, landing, and blog website ([#28](https://github.com/regresado/regreso/pull/28))
+- 🧠 AI-powered auto-tagging ([#336](https://github.com/regresado/regreso/pull/336))
+- 🌘 Light/dark UI modes and custom theme ([#27](https://github.com/regresado/regreso/pull/27))
+- 🔌 Simple REST API ([#83](https://github.com/regresado/regreso/pull/83))
+- 📚 GitHub Wiki-based [documentation](https://github.com/regresado/regreso/wiki)
+- 📈 PostHog Analytics ([#85](https://github.com/regresado/regreso/pull/85))
+- ⌨ [Raycast Extension](https://github.com/regresado/raycasting) client
 
 ## 🤝 Contributing
 
