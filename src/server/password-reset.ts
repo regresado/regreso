@@ -73,6 +73,7 @@ export async function validatePasswordResetSessionToken(
     registeredTOTP: resetSession.user.totpCredentials.length > 0,
     registeredPasskey: resetSession.user.passkeyCredentials.length > 0,
     avatarUrl: resetSession.user.avatarUrl,
+    aiTaggingInstance: resetSession.user.aiTaggingInstance,
     workspaceId: resetSession.user.workspaceId,
   };
   if (
