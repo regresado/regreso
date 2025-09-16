@@ -101,6 +101,7 @@ import { getWebDetailsAction } from "~/app/(platform)/dashboard/actions";
 const destinationTypes = ["location", "note", "file"] as const;
 
 const destinationTypeSchema = z.object({
+  aiTaggingInstance: z.string().optional(),
   type: z.enum(destinationTypes),
   location: z
     .string()
@@ -164,14 +165,15 @@ export function DestinationForm(
     url: undefined,
     title: [undefined],
     description: [undefined],
+    tags: [],
   });
 
   const destinationTypeForm = useForm<z.infer<typeof destinationTypeSchema>>({
     resolver: zodResolver(destinationTypeSchema),
-
     defaultValues: {
       type: (props.defaultValues?.type as "note" | "location") ?? "location",
       location: props.defaultValues?.location ?? "",
+      aiTaggingInstance: props.user?.aiTaggingInstance ?? "",
     },
   });
 
@@ -243,6 +245,22 @@ export function DestinationForm(
         "body",
         `<p class="text-node">${descriptions[0] ?? ""}</p>`,
       );
+      if (detailsState.tags && detailsState.tags.length > 0) {
+        const newTags = detailsState.tags.map((tag) => ({
+          id: tag.toLowerCase().replace(/\s+/g, "-"),
+          text: tag,
+        }));
+        setTags((prevTags) => {
+          const combinedTags = [...prevTags];
+          newTags.forEach((newTag) => {
+            if (!combinedTags.find((tag) => tag.text === newTag.text)) {
+              combinedTags.push(newTag);
+            }
+          });
+          return combinedTags;
+        });
+        form.setValue("tags", [...form.getValues("tags"), ...newTags]);
+      }
     }
     if (detailsState.url) {
       form.setValue(
@@ -341,6 +359,23 @@ export function DestinationForm(
             <div
               className={`w-${destinationTypeForm.watch("type") === "location" ? "1/3" : "full"} min-w-[100px]`}
             >
+              <FormField
+                control={destinationTypeForm.control}
+                name="aiTaggingInstance"
+                render={({ field }) => (
+                  <FormItem className="hidden">
+                    <FormLabel>AI Instance URL</FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled={props.workspace?.archived}
+                        placeholder="https://ai.pelicans.dev"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={destinationTypeForm.control}
                 name="type"
@@ -852,7 +887,7 @@ export function DestinationDialog(props: {
         await utils.destination.invalidate();
         if (typeof callback === "function") {
           callback();
-        } 
+        }
       },
       onError: (error) => {
         toast({

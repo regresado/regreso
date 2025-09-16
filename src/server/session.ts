@@ -66,6 +66,7 @@ export async function validateSessionToken(
       result[0]!.securityKeyCredentials ??
       result[0]!.passkeyCredentials
     ),
+    aiTaggingInstance: result[0]!.user.aiTaggingInstance,
   };
   const session = result[0]!.session;
   if (Date.now() >= session.expiresAt.getTime()) {

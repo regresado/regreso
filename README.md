@@ -32,6 +32,20 @@ Regreso aims to create a new form of anti-productivity application which encoura
 
 https://github.com/user-attachments/assets/96565cff-49d1-4a43-8629-4c17b4dc6669
 
+## 🌟 Features
+
+- 📌 Destinations (locations or notes) and 🗺 Maps (lists)
+- 🔎 Powerful text or tag- based search ([#50](https://github.com/regresado/regreso/pull/50))
+- 💼 Workspaces and archival ([#111](https://github.com/regresado/regreso/pull/111))
+- 🔑 Email/GitHub Auth + 2FA (webauthn) ([#8](https://github.com/regresado/regreso/pull/8)
+- 👋 Knowledge, landing, and blog website ([#28](https://github.com/regresado/regreso/pull/28))
+- 🧠 AI-powered auto-tagging ([#336](https://github.com/regresado/regreso/pull/336))
+- 🌘 Light/dark UI modes and custom theme ([#27](https://github.com/regresado/regreso/pull/27))
+- 🔌 Simple REST API ([#83](https://github.com/regresado/regreso/pull/83))
+- 📚 GitHub Wiki-based [documentation](https://github.com/regresado/regreso/wiki)
+- 📈 PostHog Analytics ([#85](https://github.com/regresado/regreso/pull/85))
+- ⌨ [Raycast Extension](https://github.com/regresado/raycasting) client
+
 ## 🤝 Contributing
 
 Regreso is licensed under the [MIT license](LICENSE.md), a permissive license which allows you to modify, fork, extend, or redistribute the source code.
@@ -48,189 +62,19 @@ Many environment variables are also required for Regreso development. These are 
 
 To install dependencies, run `pnpm install` and to build/start server, use `pnpm run dev` or `pnpm run build && pnpm run start`.
 
-### 🗺️ Roadmap 
+### 🗺️ Roadmap
 
 Regreso has a detailed roadmap hosted as a github [project](/projects). Additionally, key upcoming work includes rss compatibility, local support, a mobile app, and auth/api overhaul. Follow open pull requests to keep up with progress!
 
-## ⚙️ Tech Overview
+## 🔨 Built with
 
-This project uses the [T3 Stack](https://create.t3.gg/) made by [@t3-oss](https://github.com/t3-oss):
-
-<ul>
-<li>
-<details>
-<summary> 
-<a href="https://nextjs.org/">Next.js</a> App Router
-</summary>
-<ul>
-<li>
-<a href="https://react.dev/">React</a>
-</li>
-<li>
-<a href="https://vercel.com/font">Geist</a> font typeface
-</li>
-</ul>
-</details>
-</li>
-
-<li> <a href="https://www.typescriptlang.org/">Typescript</a> with <a href="https://eslint.org/">ESLint</a> and <a href="https://prettier.io/">Prettier</a> for strong typing, linting, and formatting
-</li>
-</ul>
-
-<ul>
-<li>
-<details>
-<summary> 
-<a href="https://orm.drizzle.team/">Drizzle</a> ORM for Postgres (instead of Prisma)
-</summary>
-<ul>
-<li>
-<a href="https://www.postgresql.org/">PostgreSQL</a> database
-</li>
-<li>
-<a href="https://supabase.com">Supabase</a> postgres hosting
-</li>
-</ul>
-</details>
-</li>
-</ul>
-
-<ul>
-<li>
-<details>
-<summary> 
-<a href="https://tailwindcss.com/">Tailwind</a> CSS
-
-</summary>
-<ul>
-<li>
-<a href="https://postcss.org/">PostCSS</a> to install and manage Tailwind
-</li>
-</ul>
-</details>
-</li>
-</ul>
-
-<ul>
-<li>
-<details>
-<summary> 
-<a href="https://trpc.io/">tRPC</a> for typesafe API
-</summary>
-<ul>
-<li>
-<a href="https://zod.dev/">Zod</a> for schema validation
-</li>
-<li>
-<a href="https://www.npmjs.com/package/superjson/">Superjson</a> to serialize expressions
-</li>
-<li>
-<a href="https://www.npmjs.com/package/server-only/">Server Only</a> for marking modules
-</li>
-
-</ul>
-</details>
-</li>
-</ul>
-
-**With custom additions of:**
-
-<ul>
-<li>
-<details>
-<summary> 
-<strong>
-User Interface
-</strong>
-</summary>
-<ul>
-<li>
-<a href="https://ui.shadcn.com/">shadcn/ui</a> copy-pasted components
-</li>
-<li>
-<a href="https://www.radix-ui.com/">Radix UI</a> primitives
-</li>
-<li>
-<a href="https://www.npmjs.com/package/react-day-picker/">React Day Picker</a> calendar picker
-</li>
-<li>
-<a href="https://www.npmjs.com/package/tailwindcss-animate/">Tailwind CSS Animate</a>
-</li>
-<li>
-<a href="https://www.npmjs.com/package/next-themes/">Next Themes</a> UI mode abstraction
-</li>
-<li>
-<a href="https://ui.aceternity.com/">Aceternity UI</a> animated landing page features
-</li>
-<li>
-<a href="https://github.com/Aslam97/shadcn-minimal-tiptap/">Shadcn Minimal Tiptap</a> component
-</li>
-<li>
-<a href="https://emblor.jaleelbennett.com/introduction">Emblor</a> tag selections
-</li>
-<li>
-<a href="https://www.npmjs.com/package/react-day-picker">React Day Picker</a> calendar picker
-</li>
-<li>
-<a href="https://tiptap.dev">TipTap</a> rich text editor
-</li>
-<li>
-<a href="https://dndkit.com/">Dnd-Kit</a> drag-and-drop toolkit
-</li>
-<li>
-<a href="https://learn.missiveapp.com/open/emoji-mart/">Emoji Mart</a> picker
-</li>
-<li>
-<a href="https://motion.dev/">Motion</a> page animations
-</li>
-<li>
-<a href="https://ludicde.dev/">Lucide</a> icons
-</li>
-<li>
-<a href="https://boringavatars.com/">Boring</a> avatars
-</li>
-<li>
-<a href="https://gradient.page/picker">Gradient page</a> color/gradient picker
-</li>
-</ul>
-</details>
-</li>
-</ul>
-
-<ul>
-<li>
-<details>
-<summary> 
-<strong>
-Authentication (
-<a href="https://lucia-auth.com/">Lucia Auth</a> principles)
-</strong>
-</summary>
-<ul>
-<li>
-<a href="https://arcticjs.dev/">Arctic</a> OAuth 2.0 Providers
-</li>
-<li>
-<a href="https://oslojs.dev/">Oslo</a> auth packages
-</li>
-<li>
-<a href="https://node-rs.dev/">Node-RS</a> bindings for Argon2
-</li>
-<li>
-<a href="https://www.npmjs.com/package/uqr/">UQR</a> for TOTP QR Codes
-</li>
-<li>
-<a href="https://nodemailer.com/">Nodemailer</a> to send email verification messages
-</li>
-</ul>
-</details>
-</li>
-</ul>
-
-- [trpc-to-openapi](https://www.npmjs.com/package/trpc-to-openapi/) adapter
-- [UploadThing](https://uploadthing.com/) for user uplaods
-- [Posthog](https://posthog.com/) Analytics
-- [Million](https://million.dev/) Lint
+- Framework: Next.js 15 + App Router + Typescript
+- Design System: Tailwind + Radix UI + shadcn-ui
+- Backend: tRPC + Lucia Auth + Drizzle
+- Services: Upload Thing, Supabase, Netlify, PostHog
+- UI: TipTap, DND Kit, Emoji Mart, Boring Avatars, Lucide Icons
+- Libraties: React Query + Zod
+- DX: pnpm, Million Lint, All Contributors
 
 ## 🙌 Acknowledgements
 
