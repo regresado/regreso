@@ -100,7 +100,7 @@ importers:
         version: 0.1.8
       '@t3-oss/env-nextjs':
         specifier: ^0.13.6
-        version: 0.13.8(arktype@2.1.20)(typescript@5.8.3)(zod@3.25.67)
+        version: 0.13.8(arktype@2.1.20)(typescript@5.8.3)(zod@3.25.76)
       '@tanstack/react-query':
         specifier: ^5.89.0
         version: 5.89.0(react@18.3.1)
@@ -259,7 +259,7 @@ importers:
         version: 1.0.7(tailwindcss@3.4.17)
       trpc-to-openapi:
         specifier: ^2.1.5
-        version: 2.1.5(@trpc/server@11.0.4(typescript@5.8.3))(zod-openapi@4.2.3(zod@3.25.67))(zod@3.25.67)
+        version: 2.1.5(@trpc/server@11.0.4(typescript@5.8.3))(zod-openapi@4.2.3(zod@3.25.76))(zod@3.25.76)
       uploadthing:
         specifier: ^7.7.3
         version: 7.7.3(express@5.1.0)(h3@1.15.1)(next@15.3.4(@babel/core@7.26.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(tailwindcss@3.4.17)
@@ -270,8 +270,8 @@ importers:
         specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       zod:
-        specifier: ^3.25.67
-        version: 3.25.67
+        specifier: ^3.25.76
+        version: 3.25.76
     devDependencies:
       '@ianvs/prettier-plugin-sort-imports':
         specifier: ^4.4.2
@@ -6123,8 +6123,8 @@ packages:
     peerDependencies:
       zod: ^3.21.4
 
-  zod@3.25.67:
-    resolution: {integrity: sha512-idA2YXwpCdqUSKRCACDE6ItZD9TZzy3OZMtpfLoh6oPR47lipysRrJfjzMqFxQ3uJuUPyUeWe1r9vLH33xO/Qw==}
+  zod@3.25.76:
+    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -7978,19 +7978,19 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@t3-oss/env-core@0.13.8(arktype@2.1.20)(typescript@5.8.3)(zod@3.25.67)':
+  '@t3-oss/env-core@0.13.8(arktype@2.1.20)(typescript@5.8.3)(zod@3.25.76)':
     optionalDependencies:
       arktype: 2.1.20
       typescript: 5.8.3
-      zod: 3.25.67
+      zod: 3.25.76
 
-  '@t3-oss/env-nextjs@0.13.8(arktype@2.1.20)(typescript@5.8.3)(zod@3.25.67)':
+  '@t3-oss/env-nextjs@0.13.8(arktype@2.1.20)(typescript@5.8.3)(zod@3.25.76)':
     dependencies:
-      '@t3-oss/env-core': 0.13.8(arktype@2.1.20)(typescript@5.8.3)(zod@3.25.67)
+      '@t3-oss/env-core': 0.13.8(arktype@2.1.20)(typescript@5.8.3)(zod@3.25.76)
     optionalDependencies:
       arktype: 2.1.20
       typescript: 5.8.3
-      zod: 3.25.67
+      zod: 3.25.76
 
   '@tanstack/query-core@5.89.0': {}
 
@@ -11948,14 +11948,14 @@ snapshots:
 
   trough@2.2.0: {}
 
-  trpc-to-openapi@2.1.5(@trpc/server@11.0.4(typescript@5.8.3))(zod-openapi@4.2.3(zod@3.25.67))(zod@3.25.67):
+  trpc-to-openapi@2.1.5(@trpc/server@11.0.4(typescript@5.8.3))(zod-openapi@4.2.3(zod@3.25.76))(zod@3.25.76):
     dependencies:
       '@trpc/server': 11.0.4(typescript@5.8.3)
       co-body: 6.2.0
       h3: 1.15.1
       openapi3-ts: 4.4.0
-      zod: 3.25.67
-      zod-openapi: 4.2.3(zod@3.25.67)
+      zod: 3.25.76
+      zod-openapi: 4.2.3(zod@3.25.76)
     optionalDependencies:
       '@rollup/rollup-linux-x64-gnu': 4.6.1
 
@@ -12362,10 +12362,10 @@ snapshots:
 
   yocto-queue@0.1.0: {}
 
-  zod-openapi@4.2.3(zod@3.25.67):
+  zod-openapi@4.2.3(zod@3.25.76):
     dependencies:
-      zod: 3.25.67
+      zod: 3.25.76
 
-  zod@3.25.67: {}
+  zod@3.25.76: {}
 
   zwitch@2.0.4: {}
