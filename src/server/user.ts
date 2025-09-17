@@ -133,6 +133,7 @@ export async function createUser(
     registeredSecurityKey: false,
     emailVerified: false,
     avatarUrl: null,
+    aiTaggingInstance: "",
     registered2FA: false,
   };
 
@@ -171,6 +172,7 @@ export async function getUserFromGoogleId(
     registeredPasskey: userProfile.passkeyCredentials.length > 0,
     registeredSecurityKey: userProfile.securityKeyCredentials.length > 0,
     avatarUrl: userProfile.avatarUrl,
+    aiTaggingInstance: userProfile.aiTaggingInstance,
     registered2FA: false,
   };
   if (
@@ -216,6 +218,7 @@ export async function getUserFromGitHubId(
     registeredPasskey: userProfile.passkeyCredentials.length > 0,
     registeredSecurityKey: userProfile.securityKeyCredentials.length > 0,
     avatarUrl: userProfile.avatarUrl,
+    aiTaggingInstance: userProfile.aiTaggingInstance,
     registered2FA: false,
   };
   if (
@@ -344,6 +347,7 @@ export async function getUserFromEmail(email: string): Promise<User | null> {
     registeredPasskey: userResult.passkeyCredentials.length > 0,
     registeredSecurityKey: userResult.securityKeyCredentials.length > 0,
     avatarUrl: userResult.avatarUrl,
+    aiTaggingInstance: userResult.aiTaggingInstance,
     registered2FA: false,
   };
   if (

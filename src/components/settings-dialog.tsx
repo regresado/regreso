@@ -58,11 +58,7 @@ const data = {
     },
     {
       name: "Appearance",
-      render: (
-        <div>
-          Appearance <Badge className="ml-2">New</Badge>
-        </div>
-      ),
+      render: <div>Appearance</div>,
       icon: Paintbrush,
       url: "/settings/appearance",
     },
@@ -82,16 +78,9 @@ const data = {
     },
     {
       name: "Advanced",
-      render: (
-        <div>
-          Advanced{" "}
-          <Badge className="ml-2" variant="secondary">
-            Soon!
-          </Badge>
-        </div>
-      ),
+      render: <div>Advanced</div>,
       icon: Settings,
-      url: "#advanced",
+      url: "/settings/advanced",
     },
   ],
 };
