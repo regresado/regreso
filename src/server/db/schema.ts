@@ -30,6 +30,7 @@ export const users = createTable(
     recoveryCode: varchar("recovery_code").notNull(),
     avatarUrl: text("avatar_url"),
     bio: text("bio").default("Pelicans are epic"),
+    aiTaggingInstance: varchar("ai_tagging_instance", { length: 256 }),
     workspaceId: integer("workspace_id")
       .references(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

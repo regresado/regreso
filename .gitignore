@@ -59,3 +59,7 @@ src/app/(knowledge)/(content)/posts
 
 # Million Lint
 .million
+
+# vim
+Session.vim
+*.swp

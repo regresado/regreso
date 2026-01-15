@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { ChevronRightIcon, ExternalLink, Github, MenuIcon } from "lucide-react";
+import { ChevronRightIcon, ExternalLink, Github, Command, Package, MenuIcon } from "lucide-react";
 
 import { Button } from "~/components/ui/button";
 import {
@@ -475,11 +475,25 @@ export function Footer() {
 
             <div className="flex space-x-4">
               <Link
-                href="https://github.com/your-repo"
+                href="https://github.com/regresado/regreso"
                 aria-label="GitHub Repository for Regreso"
                 className="text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
               >
                 <Github className="h-6 w-6" />
+              </Link>
+               <Link
+                href="https://npmjs.com/package/@regreso/utils"
+                aria-label="Client Developer Utils package for Regreso"
+                className="text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
+              >
+                <Package className="h-6 w-6" />
+              </Link>
+               <Link
+                href="https://github.com/regresado/raycasting"
+                aria-label="Raycast Client for Regreso"
+                className="text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white"
+              >
+                <Command className="h-6 w-6" />
               </Link>
             </div>
           </div>
