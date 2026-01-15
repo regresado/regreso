@@ -21,7 +21,7 @@ export function getSortedPostsData(dir = "") {
       const matterResult = matter(fileContents);
 
       return {
-        id,
+        id: dir ? `${dir}/${id}` : id,
         ...matterResult.data,
       } as PostDataWithoutContent;
     })

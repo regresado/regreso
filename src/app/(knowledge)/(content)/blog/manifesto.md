@@ -5,6 +5,8 @@ image: "backpacking.svg"
 date: "2024-12-24"
 ---
 
+# The Regreso Manifesto
+
 > **This post is a Work In Progress. Expect it to be updated later.**
 
 #### Background
