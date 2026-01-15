@@ -8,6 +8,7 @@ import { Button } from "~/components/ui/button";
 
 export default async function Blog() {
   const allPostsData = getSortedPostsData("posts");
+  console.log(allPostsData);
   return (
     <div className="pt-24">
       <div className="align-center min-w-sm mx-auto max-w-3xl space-y-8">
