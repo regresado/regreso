@@ -127,6 +127,25 @@ export const userRouter = createTRPCRouter({
       await updateUserPassword(ctx.user.id, input.newPassword);
       return { success: true };
     }),
+  updateAITaggingInstance: protectedMutationProcedure
+    .meta({
+      openapi: { method: "PATCH", path: "/v1/user/ai-tagging-instance", protect: true },
+    })
+    .input(z.object({
+      instance: z.string().url().optional(),
+    }))
+    .output(z.object({ success: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db
+        .update(users)
+        .set({
+          aiTaggingInstance: input.instance,
+        })
+        .where(eq(users.id, ctx.user.id));
+
+      return { success: true };
+    }
+    ),
 
   // delete: protectedMutationProcedure
   //   .meta({
