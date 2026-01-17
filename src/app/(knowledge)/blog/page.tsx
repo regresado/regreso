@@ -21,7 +21,7 @@ export default async function Blog() {
         <section className="flex flex-col gap-3">
           {allPostsData.map(
             ({ id, date, title, description, image }, index) => (
-              <article key={id} className="flex flex-row flex-wrap w-full justify-center gap-4 border border-neutral-200 dark:border-neutral-400 p-2">
+              <article key={id} className="flex flex-row flex-wrap w-full justify-center gap-4 border-[2px] border-primary-300 dark:border-primary-800 p-2 rounded-lg">
                 {image && (
                   <div className="h-max-24 w-full md:w-24 rounded-lg border bg-neutral-200 dark:bg-neutral-400">
                     <Image
