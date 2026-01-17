@@ -15,6 +15,7 @@ export const env = createEnv({
     SMTP_HOST: z.string(),
     EMAIL_USER: z.string(),
     EMAIL_PASSWORD: z.string(),
+    HCAI_API_KEY: z.string(),
     UPLOADTHING_TOKEN: z.string(),
     VERCEL_URL: z.string().default("localhost:3000"),
     NODE_ENV: z
@@ -45,6 +46,7 @@ export const env = createEnv({
     SMTP_HOST: process.env.SMTP_HOST,
     EMAIL_USER: process.env.EMAIL_USER,
     EMAIL_PASSWORD: process.env.EMAIL_PASSWORD,
+    HCAI_API_KEY: process.env.HCAI_API_KEY,
     UPLOADTHING_TOKEN: process.env.UPLOADTHING_TOKEN,
     VERCEL_URL: process.env.VERCEL_URL,
     NODE_ENV: process.env.NODE_ENV,

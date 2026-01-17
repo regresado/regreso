@@ -56,6 +56,7 @@ export async function getWebDetailsAction(
       const tagger = new SiteTagger({
         maxTags: 3,
         aiInstance: aiTaggingInstance.toString(),
+        instanceAuthorization: aiTaggingInstance=="https://ai.hackclub.com" ? ("Bearer " + process.env.HCAI_API_KEY) : null,
         maxRetries: 2,
       });
 
@@ -79,6 +80,7 @@ export async function getWebDetailsAction(
         return { ...webDetails, error: "Failed to generate tags" };
       }
     } catch (e) {
+      console.error(e)
       return { ...webDetails, error: "Failed to generate tags: " + String(e) };
     }
   }
