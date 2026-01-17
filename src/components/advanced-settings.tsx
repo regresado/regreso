@@ -20,7 +20,6 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 import { BotIcon, RotateCcw } from "lucide-react";
 import { Switch } from "./ui/switch";
-import { Label } from "./ui/label";
 
 import {
   updateAdvancedAction,
@@ -63,7 +62,7 @@ export default function AdvancedSettings(props: { user: User }) {
         </AlertTitle>
         <AlertDescription>
           We understand that <del>clankers</del> <i>generative AI</i> offers both convience
-          and pitfalls. That's why Regreso offerrs thoughtful, <b>opt-in</b> AI features
+          and pitfalls. That&apos;s why Regreso offerrs thoughtful, <b>opt-in</b> AI features
           which give you maximum control. Use our default AI instance or provide your own.
         </AlertDescription>
       </Alert>

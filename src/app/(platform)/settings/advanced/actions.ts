@@ -6,7 +6,7 @@ import { eq } from "drizzle-orm";
 
 import { db } from "~/server/db";
 import { users } from "~/server/db/schema";
-import { ExpiringTokenBucket, RefillingTokenBucket } from "~/server/rate-limit";
+import { RefillingTokenBucket } from "~/server/rate-limit";
 import { globalPOSTRateLimit } from "~/server/request";
 import { getCurrentSession } from "~/server/session";
 
@@ -47,7 +47,7 @@ export async function updateAdvancedAction(
     await db
         .update(users)
         .set({
-            aiTaggingInstance: (instance && instance.toString() ) ? instance.toString() : "",
+            aiTaggingInstance: typeof instance == "string" ? instance.toString() : "",    
         })
         .where(eq(users.id, user.id));
 
