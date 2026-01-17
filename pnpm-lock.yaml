@@ -96,8 +96,8 @@ importers:
         specifier: ^1.2.7
         version: 1.2.7(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@regreso/utils':
-        specifier: ^0.2.4
-        version: 0.2.4
+        specifier: ^0.3.0
+        version: 0.3.0
       '@t3-oss/env-nextjs':
         specifier: ^0.13.6
         version: 0.13.8(typescript@5.8.3)(zod@3.25.76)
@@ -2337,8 +2337,8 @@ packages:
   '@radix-ui/rect@1.1.1':
     resolution: {integrity: sha512-HPwpGIzkl28mWyZqG52jiqDJ12waP11Pa1lGoiyUkIEuMLBP0oeK/C89esbXrxsky5we7dfd8U58nm0SgAWpVw==}
 
-  '@regreso/utils@0.2.4':
-    resolution: {integrity: sha512-fU0RfZjsbEWe0gjyZUiMfJl2pCusAQWSPIJmMEqhZ2eOS4TESP1WzLcHi0ijkF0ZBgnmY4EfsLzQvsuRAjkOFA==}
+  '@regreso/utils@0.3.0':
+    resolution: {integrity: sha512-zOHAMfGdexasoDRruwNABqQXyhBjXZArgInDPf9YE8DBiaT1BJy8owFmmviKOGaepD9jMT2k1YciI0b3FUV9xg==}
 
   '@remirror/core-constants@3.0.0':
     resolution: {integrity: sha512-42aWfPrimMfDKDi4YegyS7x+/0tlzaqwPQCULLanv3DMIlu96KTJR0fM5isWX2UViOqlGnX6YFgqWepcX+XMNg==}
@@ -7672,7 +7672,7 @@ snapshots:
 
   '@radix-ui/rect@1.1.1': {}
 
-  '@regreso/utils@0.2.4':
+  '@regreso/utils@0.3.0':
     dependencies:
       node-html-parser: 7.0.1
 

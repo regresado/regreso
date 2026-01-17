@@ -57,7 +57,7 @@ export async function getWebDetailsAction(
         maxTags: 3,
         aiInstance: aiTaggingInstance.toString(),
         instanceAuthorization: aiTaggingInstance=="https://ai.hackclub.com" ? ("Bearer " + process.env.HCAI_API_KEY) : null,
-        maxRetries: 2,
+        maxRetries: 0,
       });
 
       const result = await tagger.generateTags({
