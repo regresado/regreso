@@ -1,39 +1,59 @@
-## 🗺️ Regreso - Find your way back
-
-> [!Important]
-> Visit the Regreso wiki to view an [overview](https://github.com/joshpinto6/regreso/wiki/Feature-Comparison-Table) of Regreso functional capabilities as well as a UI [showcase](https://github.com/joshpinto6/regreso/wiki/UI-Showcase). If Regreso interests you, **consider giving it a star [on GitHub](https://regreso.netlify.app/repository)!**
+## 🐿️ Regreso - Find your way back
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/9186e8eb-17c0-4d34-bdd9-e2add4200741/deploy-status)](https://app.netlify.com/sites/regreso/deploys)
 [![wakatime](https://wakatime.com/badge/user/7482ea9d-3085-4e9b-95ad-1ca78a14d948/project/2972fea6-6fe2-4f55-afb8-a47ff01540ad.svg)](https://wakatime.com/badge/user/7482ea9d-3085-4e9b-95ad-1ca78a14d948/project/2972fea6-6fe2-4f55-afb8-a47ff01540ad)
-![MIT License](https://img.shields.io/github/license/joshpinto6/regreso)
-![Closed Pull Request Count](https://img.shields.io/github/issues-pr-closed/joshpinto6/regreso)
-![GitHub Repo stars](https://img.shields.io/github/stars/joshpinto6/regreso)
+![MIT License](https://img.shields.io/github/license/matmanna/regreso)
+[![All Contributors](https://img.shields.io/github/all-contributors/regresado/regreso?color=ee8449&style=flat-square)](#-acknowledgements)
+![Closed Pull Request Count](https://img.shields.io/github/issues-pr-closed/matmanna/regreso)
+![GitHub Repo stars](https://img.shields.io/github/stars/matmanna/regreso)
+
+## 📖 Table of Contents
+
+- [👋 Introduction](#-introduction)
+- [💥 Quick Links](#-quick-links)
+- [📺 Demo Video](#-demo-video)
+- [🌟 Features](#-features)
+- [🚀 Development](#-development)
+- [🙌 Acknowledgements](#-acknowledgements)
 
 ## 👋 Introduction
 
-Regreso is an open source application that allows you to create, sync, manage, and find "destinations" (bookmarked links, files, and resources) you wish to "return" to later.
+Regreso is an open source tool for creating, finding, and managing the links, files, and resources you wish to "return" to later.
 
-Destinations may be added to "maps", which enable graphing and visualizing relationships using tags, and eventually "journies" (saved sessions), and "trunks" which will allow one to separate maps by subject, topic, or project.
+These destinations may be organized into "maps", enabling graphing and visualization of relationships, "tags", project or topic-centered "trunk" workspaces, and eventually session "journies".
 
-## 📌 Quick Links
+> [!Note]
+> Visit the wiki for a [feature overview](https://github.com/matmanna/regreso/wiki/Feature-Comparison-Table) or [UI showcase](https://github.com/matmanna/regreso/wiki/UI-Showcase). If it interests you, leave a ⭐!
 
-- [Website](https://regreso.netlify.app)
+**🤔 Philosophy:**
+
+Regreso aims to create a new form of anti-productivity application which encourages the rejection of traditional notetaking, project management, and organization products. Acting as an extension of the user's mind, Regreso aims to provide maximum freedom, extensibility, and customization.
+
+## 💥 Quick Links
+
+- [Landing Page](https://regreso.netlify.app)
 - [Dashboard](https://regreso.netlify.app/dashboard)
 - [Guide](https://regreso.netlify.app/guide)
 - [Wiki](https://regreso.netlify.app/wiki)
-- [Roadmap](https://regreso.netlify.app/roadmap)
+- [Raycast Extension Client](https://github.com/regresado/raycasting)
 
 ## 📺 Demo Video
 
 https://github.com/user-attachments/assets/96565cff-49d1-4a43-8629-4c17b4dc6669
 
-## 🚀 Development
+## 🌟 Features
 
-To fork/extend Regreso, it is recommended that you use Supabase or any other Postgres database provider. To develop locally, you can run the `scripts/start-database.sh` file to easily create a new Postgres database with Docker. Alternatively, the `setup.sql` provides the full database schema.
-
-Many environment variables are also required for Regreso development. These are also documented in the `.env.example` file.
-
-To install dependencies, run `pnpm install` and to build/start server, use `pnpm run dev` or `pnpm run build && pnpm run start`.
+- 📌 Destinations (links) and 🗺 Maps (lists)
+- 🔎 Powerful text or tag- based search ([#50](https://github.com/regresado/regreso/pull/50))
+- 💼 Workspaces and archival ([#111](https://github.com/regresado/regreso/pull/111))
+- 🔑 Email, GitHub SSO, webauthn 2FA ([#8](https://github.com/regresado/regreso/pull/8))
+- 👋 Knowledge, landing, blog website ([#28](https://github.com/regresado/regreso/pull/28))
+- 🧠 AI-powered auto-tagging ([#336](https://github.com/regresado/regreso/pull/336))
+- 🌘 Light/dark UI modes ([#27](https://github.com/regresado/regreso/pull/27))
+- 🔌 Simple REST API ([#83](https://github.com/regresado/regreso/pull/83))
+- 📚 GitHub Wiki-based [documentation](https://github.com/regresado/regreso/wiki)
+- 📈 PostHog Analytics ([#85](https://github.com/regresado/regreso/pull/85))
+- ⌨ [Raycast Extension](https://github.com/regresado/raycasting) client
 
 ## 🤝 Contributing
 
@@ -43,184 +63,59 @@ We accept contributions of new features and bug fixes through [Pull Requests](/p
 
 **For security reports, please [submit](/security) a private vulnerability disclosure with the relevant information!**
 
-## ⚙️ Tech Overview
+## 🚀 Development
 
-This project uses the [T3 Stack](https://create.t3.gg/) made by [@t3-oss](https://github.com/t3-oss):
+To fork/extend Regreso, it is recommended that you use Supabase or any other Postgres database provider. To develop locally, you can run the `start-database.sh` file to easily create a new Postgres database with Docker. Alternatively, the `setup.sql` provides the full database schema.
 
-<ul>
-<li>
-<details>
-<summary> 
-<a href="https://nextjs.org/">Next.js</a> App Router
-</summary>
-<ul>
-<li>
-<a href="https://react.dev/">React</a>
-</li>
-<li>
-<a href="https://vercel.com/font">Geist</a> font typeface
-</li>
-</ul>
-</details>
-</li>
+Many environment variables are also required for Regreso development. These are also documented in the `.env.example` file.
 
-<li> <a href="https://www.typescriptlang.org/">Typescript</a> with <a href="https://eslint.org/">ESLint</a> and <a href="https://prettier.io/">Prettier</a> for strong typing, linting, and formatting
-</li>
-</ul>
+To install dependencies, run `pnpm install` and to build/start server, use `pnpm run dev` or `pnpm run build && pnpm run start`.
 
-<ul>
-<li>
-<details>
-<summary> 
-<a href="https://orm.drizzle.team/">Drizzle</a> ORM for Postgres (instead of Prisma)
-</summary>
-<ul>
-<li>
-<a href="https://www.postgresql.org/">PostgreSQL</a> database
-</li>
-<li>
-<a href="https://supabase.com">Supabase</a> postgres hosting
-</li>
-</ul>
-</details>
-</li>
-</ul>
+### 🗺️ Roadmap
 
-<ul>
-<li>
-<details>
-<summary> 
-<a href="https://tailwindcss.com/">Tailwind</a> CSS
+Regreso has a detailed roadmap hosted as a github [project](/projects). Additionally, key upcoming work includes rss compatibility, local support, a mobile app, and auth/api overhaul. Follow open pull requests to keep up with progress!
 
-</summary>
-<ul>
-<li>
-<a href="https://postcss.org/">PostCSS</a> to install and manage Tailwind
-</li>
-</ul>
-</details>
-</li>
-</ul>
+### 🔨 Built with
 
-<ul>
-<li>
-<details>
-<summary> 
-<a href="https://trpc.io/">tRPC</a> for typesafe API
-</summary>
-<ul>
-<li>
-<a href="https://zod.dev/">Zod</a> for schema validation
-</li>
-<li>
-<a href="https://www.npmjs.com/package/superjson/">Superjson</a> to serialize expressions
-</li>
-<li>
-<a href="https://www.npmjs.com/package/server-only/">Server Only</a> for marking modules
-</li>
-
-</ul>
-</details>
-</li>
-</ul>
-
-**With custom additions of:**
-
-<ul>
-<li>
-<details>
-<summary> 
-<strong>
-User Interface
-</strong>
-</summary>
-<ul>
-<li>
-<a href="https://ui.shadcn.com/">shadcn/ui</a> copy-pasted components
-</li>
-<li>
-<a href="https://www.radix-ui.com/">Radix UI</a> primitives
-</li>
-<li>
-<a href="https://www.npmjs.com/package/react-day-picker/">React Day Picker</a> calendar picker
-</li>
-<li>
-<a href="https://www.npmjs.com/package/tailwindcss-animate/">Tailwind CSS Animate</a>
-</li>
-<li>
-<a href="https://www.npmjs.com/package/next-themes/">Next Themes</a> UI mode abstraction
-</li>
-<li>
-<a href="https://ui.aceternity.com/">Aceternity UI</a> animated landing page features
-</li>
-<li>
-<a href="https://github.com/Aslam97/shadcn-minimal-tiptap/">Shadcn Minimal Tiptap</a> component
-</li>
-<li>
-<a href="https://emblor.jaleelbennett.com/introduction">Emblor</a> tag selections
-</li>
-<li>
-<a href="https://www.npmjs.com/package/react-day-picker">React Day Picker</a> calendar picker
-</li>
-<li>
-<a href="https://tiptap.dev">TipTap</a> rich text editor
-</li>
-<li>
-<a href="https://dndkit.com/">Dnd-Kit</a> drag-and-drop toolkit
-</li>
-<li>
-<a href="https://learn.missiveapp.com/open/emoji-mart/">Emoji Mart</a> picker
-</li>
-<li>
-<a href="https://motion.dev/">Motion</a> page animations
-</li>
-<li>
-<a href="https://ludicde.dev/">Lucide</a> icons
-</li>
-<li>
-<a href="https://boringavatars.com/">Boring</a> avatars
-</li>
-<li>
-<a href="https://gradient.page/picker">Gradient page</a> color/gradient picker
-</li>
-</ul>
-</details>
-</li>
-</ul>
-
-<ul>
-<li>
-<details>
-<summary> 
-<strong>
-Authentication (
-<a href="https://lucia-auth.com/">Lucia Auth</a> principles)
-</strong>
-</summary>
-<ul>
-<li>
-<a href="https://arcticjs.dev/">Arctic</a> OAuth 2.0 Providers
-</li>
-<li>
-<a href="https://oslojs.dev/">Oslo</a> auth packages
-</li>
-<li>
-<a href="https://node-rs.dev/">Node-RS</a> bindings for Argon2
-</li>
-<li>
-<a href="https://www.npmjs.com/package/uqr/">UQR</a> for TOTP QR Codes
-</li>
-<li>
-<a href="https://nodemailer.com/">Nodemailer</a> to send email verification messages
-</li>
-</ul>
-</details>
-</li>
-</ul>
-
-- [trpc-to-openapi](https://www.npmjs.com/package/trpc-to-openapi/) adapter
-- [UploadThing](https://uploadthing.com/) for user uplaods
-- [Posthog](https://posthog.com/) Analytics
-- [Million](https://million.dev/) Lint
+- Framework: Next.js 15 + App Router + Typescript
+- Design System: Tailwind + Radix UI + shadcn-ui
+- Backend: tRPC + Lucia Auth + Drizzle
+- Services: Upload Thing, Supabase, Netlify, PostHog
+- UI: TipTap, DND Kit, Emoji Mart, Boring Avatars, Lucide Icons
+- Libraties: React Query + Zod
+- DX: pnpm, Million Lint, All Contributors
 
 ## 🙌 Acknowledgements
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/matmanna"><img src="https://avatars.githubusercontent.com/u/91392083?v=4?s=100" width="100px;" alt="Mat Manna"/><br /><sub><b>Mat Manna</b></sub></a><br /><a href="https://github.com/regresado/regreso/commits?author=matmanna" title="Code">💻</a> <a href="https://github.com/regresado/regreso/issues?q=author%3Amatmanna" title="Bug reports">🐛</a> <a href="#blog-matmanna" title="Blogposts">📝</a> <a href="#content-matmanna" title="Content">🖋</a> <a href="#infra-matmanna" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/regresado/regreso/commits?author=matmanna" title="Documentation">📖</a> <a href="#design-matmanna" title="Design">🎨</a> <a href="#ideas-matmanna" title="Ideas, Planning, & Feedback">🤔</a> <a href="#maintenance-matmanna" title="Maintenance">🚧</a> <a href="#projectManagement-matmanna" title="Project Management">📆</a> <a href="#video-matmanna" title="Videos">📹</a></td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td align="center" size="13px" colspan="7">
+        <img src="https://raw.githubusercontent.com/all-contributors/all-contributors-cli/1b8533af435da9854653492b1327a23a4dbd0a10/assets/logo-small.svg">
+          <a href="https://all-contributors.js.org/docs/en/bot/usage">Add your contributions</a>
+        </img>
+      </td>
+    </tr>
+  </tfoot>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+
+### 🌠 Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=regresado/regreso,wallabag/wallabag,usememos/memos,linkwarden/linkwarden,karakeep-app/karakeep&type=date&logscale&legend=top-left)](https://www.star-history.com/#regresado/regreso&wallabag/wallabag&usememos/memos&linkwarden/linkwarden&karakeep-app/karakeep&type=date&logscale&legend=top-left)

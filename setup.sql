@@ -132,6 +132,7 @@ CREATE TABLE "regreso_user" (
 	"recovery_code" varchar NOT NULL,
 	"avatar_url" text,
 	"bio" text DEFAULT 'Pelicans are epic',
+	"ai_tagging_instance" varchar(256),
 	"workspace_id" integer DEFAULT 0,
 	CONSTRAINT "regreso_user_google_id_unique" UNIQUE("google_id"),
 	CONSTRAINT "regreso_user_github_id_unique" UNIQUE("github_id"),

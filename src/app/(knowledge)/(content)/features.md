@@ -11,5 +11,7 @@ Regreso is getting new updates nearly every day, but this list serves as a basic
 - Free Usage
 - Basic Searching
 - Tagging
+  - AI-tagging
 - Lists
+- Workspaces
 - GitHub SSO
