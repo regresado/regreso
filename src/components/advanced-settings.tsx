@@ -1,7 +1,6 @@
 "use client";
 
-import * as React from "react";
-
+import { useActionState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -32,6 +31,7 @@ import { Button } from "./ui/button";
 const FormSchema = z.object({
   enabled: z.boolean(),
   instance: z.string().url().optional(),
+  hey: z.string()
 });
 
 const initialState = {
@@ -39,31 +39,47 @@ const initialState = {
 };
 
 export default function AdvancedSettings(props: { user: User }) {
-  const [, action] = React.useActionState(updateAdvancedAction, initialState);
+  const [, action] = useActionState(updateAdvancedAction, initialState);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      enabled: (props.user.aiTaggingInstance != null && props.user.aiTaggingInstance.length > 0) ?? false,
+      enabled: (props.user.aiTaggingInstance != null && props.user.aiTaggingInstance.length > 0) ? true :false,
       instance: (props.user.aiTaggingInstance != null && props.user.aiTaggingInstance.length > 0) ? props.user.aiTaggingInstance : "https://ai.hackclub.com",
+      hey: "hi"
     },
   });
 
+  const {
+    trigger,
+    formState: { isValid },
+  } = form;
   return (
     <div className="space-y-6 px-3">
       <Alert>
         <BotIcon />
         <AlertTitle>
-          Hey there!
+          Hey there, human!
         </AlertTitle>
         <AlertDescription>
-          We understand that <del>clankers</del> <i>generative AI</i> offer both convience
+          We understand that <del>clankers</del> <i>generative AI</i> offers both convience
           and pitfalls. That's why Regreso offerrs thoughtful, <b>opt-in</b> AI features
-          which give you maximum control. Use our default instance or provide your own.
+          which give you maximum control. Use our default AI instance or provide your own.
         </AlertDescription>
       </Alert>
       <Form {...form}>
-        <form action={action}
+        <form
+        action={action}
+          onSubmit={async (e) => {
+                          console.log(form.getValues())
+
+            if (!isValid) {
+              e.preventDefault();
+              await trigger();
+              return;
+            }
+            e.currentTarget.requestSubmit();
+          }}
           className="flex w-full flex-col gap-6">
 
           <FormField
@@ -73,7 +89,15 @@ export default function AdvancedSettings(props: { user: User }) {
               <FormItem className="w-full">
 
                 <FormControl>
-                  <Switch id="ai-tagging-enabled" checked={field.value} onCheckedChange={field.onChange} />
+                  <Switch id="ai-tagging-enabled" checked={field.value} onCheckedChange={(ch) => {
+                    field.onChange(ch);
+                    if (ch) {
+                      form.setValue("instance", "https://ai.hackclub.com");
+                    }
+                    else {
+                      form.setValue("instance", "");
+                    }
+                  }} defaultChecked={props.user.aiTaggingInstance != null && props.user.aiTaggingInstance.length > 0} />
                 </FormControl>
                 <FormLabel className="ml-2" htmlFor="ai-tagging-enabled">Enable AI Tagging</FormLabel>
 
@@ -93,7 +117,7 @@ export default function AdvancedSettings(props: { user: User }) {
 
                   <FormControl>
                     <div className="flex flex-row items-center space-x-2 mb-1">
-                      <Input placeholder="https://ai.hackclub.com" value={field.value} onChange={field.onChange} />
+                      <Input placeholder="https://ai.hackclub.com" {...field} />
                       <Button variant="ghost" size="sm" onClick={() => { field.onChange("https://ai.hackclub.com"); }}>
                         <RotateCcw />
                       </Button>

@@ -3,7 +3,6 @@
 import { headers } from "next/headers";
 
 import { eq } from "drizzle-orm";
-import { UTApi } from "uploadthing/server";
 
 import { db } from "~/server/db";
 import { users } from "~/server/db/schema";
@@ -44,17 +43,11 @@ export async function updateAdvancedAction(
     }
 
     const instance = formData.get("instance");
-
-    if (typeof instance !== "string") {
-        return {
-            message: "Invalid or missing fields",
-        };
-    }
-
+ 
     await db
         .update(users)
         .set({
-            aiTaggingInstance: typeof instance === "string" ? instance : undefined,
+            aiTaggingInstance: (instance && instance.toString() ) ? instance.toString() : "",
         })
         .where(eq(users.id, user.id));
 
