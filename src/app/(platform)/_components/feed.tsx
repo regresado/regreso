@@ -32,10 +32,10 @@ import { motion, useAnimation } from "motion/react";
 import { useForm } from "react-hook-form";
 import { type z } from "zod";
 import {
-  listFormSchema,
+  type feedFormSchema,
   type Destination,
-  type List,
-  type updateListSchema,
+  type Feed,
+  type updateFeedSchema,
   type User,
   type Workspace,
 } from "~/server/models";
@@ -100,101 +100,18 @@ import { TiltCard } from "~/components/tilt-card";
 
 import { DestinationCard } from "./destination";
 
-const getRandomDelay = () => -(Math.random() * 0.7 + 0.05);
 
-const randomDuration = () => Math.random() * 0.07 + 0.23;
-
-const variants = {
-  start: (i: number) => ({
-    rotate: i % 2 === 0 ? [-1, 1.3, 0] : [1, -1.4, 0],
-    transition: {
-      delay: getRandomDelay(),
-      repeat: Infinity,
-      duration: randomDuration(),
-    },
-  }),
-  reset: {
-    rotate: 0,
-  },
-};
-
-export function ListCard(props: List) {
-  const controls = useAnimation();
-
-  // const utils = api.useUtils();
-
-  // const addToWorkspace = api.list.update.useMutation({
-  //   onSuccess: async () => {
-  //     await utils.destination.invalidate();
-  //     toast({
-  //       title: "List added to workspace",
-  //       description: "Destination has been added to the selected workspace.",
-  //     });
-  //   },
-  //   onError: (error) => {
-  //     toast({
-  //       title: "Failed to add list to workspace",
-  //       description: error.message,
-  //       variant: "destructive",
-  //     });
-  //   },
-  /* }); */
-
-  const { isOver, setNodeRef: setNodeDropRef } = useDroppable({
-    id: props.id,
-  });
-
-  // useEffect(() => {
-  // if (
-  //  dragEnd &&
-  //  setDragEnd &&
-  //  dragEnd.over &&
-  //  dragEnd.active &&
-  //  dragEnd.active.id == id
-  // ) {
-  // addToWorkspace.mutate({
-  //   id,
-  //   workspaceId:
-  //     typeof dragEnd.over.id === "number"
-  //       ? dragEnd.over.id
-  //       : parseInt(String(dragEnd.over.id)),
-  //  });
-  //  setDragEnd(null);
-  //  }
-  // }, [dragEnd, setDragEnd, addToWorkspace, id]);
-  // const {
-  //  attributes,
-  // listeners,
-  // transform,
-  // setNodeRef: setNodeDragRef,
-  //} = useDraggable({
-  //  id: props.id,
-  //});
-  // const style = transform
-  //  ? {
-  //      transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-  //    }
-  //  : undefined;
-  useEffect(() => {
-    if (isOver) {
-      void controls.start("start");
-    } else {
-      controls.stop();
-      controls.set("reset");
-    }
-  }, [isOver, controls]);
+export function FeedCard(props: Feed) {
 
   return (
-    <motion.div custom={1} variants={variants} animate={controls}>
-      <Card>
-        <div ref={setNodeDropRef}>
-          <CardHeader className="px-3 pb-2 pt-4 text-sm leading-tight">
+        <Card>
+                <CardHeader className="px-3 pb-2 pt-4 text-sm leading-tight">
             <CardTitle className="truncate">
               <Link href={`/map/${props.id}`}>
                 <span className="mr-2 leading-tight">
                   {props?.emoji ?? "❔"}
                 </span>
-                {props.name ?? "Unnamed Map"}
+                {props.name ?? "Unnamed Feed"}
               </Link>
             </CardTitle>
           </CardHeader>
@@ -226,16 +143,7 @@ export function ListCard(props: List) {
                 </p>
               )}
 
-              {props.tags && props.tags.length > 0
-                ? [...props.tags]
-                    .sort((a, b) => a.text.length - b.text.length)
-                    .map((tag) => (
-                      <Link href={`/tag/${tag.id}`} key={tag.id}>
-                        <Badge variant="secondary">{tag.text}</Badge>
-                      </Link>
-                    ))
-                : null}
-              <Link href={`/box/${props.workspace.id}`}>
+                           <Link href={`/box/${props.workspace.id}`}>
                 <Badge variant="outline">
                   {(props.workspace.emoji ?? "❔") + " " + props.workspace.name}
                 </Badge>
@@ -245,79 +153,82 @@ export function ListCard(props: List) {
               ) : null}
             </div>
           </CardContent>
-        </div>
+  
       </Card>
-    </motion.div>
+
   );
 }
 
-type ListFormProps =
+type CreateFeedInput = z.infer<typeof feedFormSchema>;
+type UpdateFeedInput = z.infer<typeof updateFeedSchema>;
+
+type MutationFn<T> = (callback?: () => void) => UseTRPCMutationResult<
+  { success: boolean },
+  TRPCClientErrorLike<{
+    input: T;
+    output: { success: boolean };
+    transformer: true;
+    errorShape: { message: string };
+  }>,
+  T,
+  unknown
+>;
+
+type FeedFormProps =
   | {
-      listMutation: (callback?: () => void) => UseTRPCMutationResult<
+      feedMutation: (callback?: () => void) => UseTRPCMutationResult<
         { success: boolean },
         TRPCClientErrorLike<{
-          input: z.infer<typeof updateListSchema>;
+          input: UpdateFeedInput;
           output: { success: boolean };
           transformer: true;
           errorShape: { message: string };
         }>,
-        z.infer<typeof updateListSchema>,
+        UpdateFeedInput,
         unknown
       >;
       update: true;
       updateId: number;
-      defaultValues?: z.infer<typeof listFormSchema>;
+      defaultValues?: z.infer<typeof feedFormSchema>;
     }
   | {
-      listMutation: (callback?: () => void) => UseTRPCMutationResult<
+      feedMutation: (callback?: () => void) => UseTRPCMutationResult<
         { success: boolean },
         TRPCClientErrorLike<{
-          input: z.infer<typeof updateListSchema>;
+          input: CreateFeedInput;
           output: { success: boolean };
           transformer: true;
           errorShape: { message: string };
         }>,
-        z.infer<typeof listFormSchema>,
+        CreateFeedInput,
         unknown
       >;
       update: false;
-      defaultValues?: z.infer<typeof listFormSchema>;
+      defaultValues?: z.infer<typeof feedFormSchema>;
     };
 
-export function ListForm(
-  props: ListFormProps & {
+export function FeedForm(
+  props: FeedFormProps & {
     workspace?: Workspace;
     user?: User;
     workspaces?: Workspace[];
   },
 ) {
-  const [tags, setTags] = useState<Tag[]>([]);
-  const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
-  const form = useForm<z.infer<typeof listFormSchema>>({
-    resolver: zodResolver(listFormSchema),
+  const form = useForm<z.infer<typeof feedFormSchema>>({
     defaultValues: {
       name: props.defaultValues?.name ?? "",
       description: props.defaultValues?.description ?? "",
-      tags: props.defaultValues?.tags ?? [],
       emoji: props.defaultValues?.emoji ?? "🗺️",
-      workspaceId:
-        props.defaultValues?.workspaceId ??
-        props.workspace?.id ??
-        props.user?.workspaceId ??
-        undefined,
-    } as z.infer<typeof listFormSchema>,
+      workspaceId: props.defaultValues?.workspaceId ?? 0,
+      visibility: props.defaultValues?.visibility ?? "public",
+      query: props.defaultValues?.query ?? { limit: 0 }
+    } as z.infer<typeof feedFormSchema>,
   });
-
-  useEffect(() => {
-    setTags(props.defaultValues?.tags ?? []);
-  }, [props.defaultValues?.tags]);
-
-  const submitMutation = props.listMutation(() => {
+  const submitMutation = props.feedMutation(() => {
     form.reset();
-    setTags([]);
   });
 
-  function onSubmit(data: z.infer<typeof listFormSchema>) {
+  function onSubmit(data: z.infer<typeof feedFormSchema>) {
     if (props.update) {
       if (!props.updateId) {
         return;
@@ -372,7 +283,7 @@ export function ListForm(
               <FormItem className="grow">
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Pelican Resources" {...field} />
+                  <Input placeholder="Bird Articles" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -388,7 +299,7 @@ export function ListForm(
               <FormLabel>Description</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="A list of resources for raising pelicans at home."
+                  placeholder="A feed which can be accessed and consumed through RSS."
                   className="resize-none"
                   {...field}
                 />
@@ -397,38 +308,7 @@ export function ListForm(
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="tags"
-          render={({ field }) => (
-            <FormItem className="flex flex-col items-start">
-              <FormLabel className="text-left">Tags</FormLabel>
-              <FormControl>
-                <>
-                  <TagInput
-                    {...field}
-                    placeholder="Enter some tags..."
-                    tags={tags}
-                    className="sm:min-w-[450px]"
-                    setTags={(newTags) => {
-                      setTags(newTags);
-                      form.setValue("tags", newTags as [Tag, ...Tag[]]);
-                    }}
-                    styleClasses={{
-                      input: "w-full sm:max-w-[350px]",
-                    }}
-                    activeTagIndex={activeTagIndex}
-                    setActiveTagIndex={setActiveTagIndex}
-                  />
-                </>
-              </FormControl>
-              <FormDescription>
-                All maps added to this map will be searchable using these tags.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+ 
         <div className="flex flex-row items-end justify-end gap-4">
           <FormField
             control={form.control}
@@ -483,7 +363,7 @@ export function ListForm(
                   <Pencil />
                 )}
 
-                {submitMutation.isPending ? "Updating Map..." : "Update Map"}
+                {submitMutation.isPending ? "Updating Feed..." : "Update Feed"}
               </>
             ) : (
               <>
@@ -493,7 +373,7 @@ export function ListForm(
                   <Plus />
                 )}
 
-                {submitMutation.isPending ? "Creating Map..." : "Create Map"}
+                {submitMutation.isPending ? "Creating Feed..." : "Create Feed"}
               </>
             )}
           </Button>
@@ -503,7 +383,7 @@ export function ListForm(
   );
 }
 
-export function RecentLists({
+export function RecentFeeds({
   workspace,
   user,
   workspaces,
@@ -515,22 +395,23 @@ export function RecentLists({
   const utils = api.useUtils();
 
   const {
-    data: recentLists = { items: [], count: 0 },
+    data: recentFeeds = { items: [], count: 0 },
     refetch,
     isFetching,
-  } = api.list.getMany.useQuery({
+  } = api.feed.getMany.useQuery({
     limit: 3,
     order: "DESC",
     sortBy: "updatedAt",
     archived: workspace?.archived ? undefined : false,
     workspaceId: workspace?.id ?? undefined,
+
   });
   const [open, setOpen] = useState(false);
 
-  const createList = (callback?: () => void) =>
-    api.list.create.useMutation({
+  const createFeed = (callback?: () => void) =>
+    api.feed.create.useMutation({
       onSuccess: async () => {
-        await utils.list.invalidate();
+        await utils.feed.invalidate();
         if (typeof callback === "function") {
           callback();
         }
@@ -538,7 +419,7 @@ export function RecentLists({
       },
       onError: (error) => {
         toast({
-          title: "Failed to create map",
+          title: "Failed to create feed",
           description: error.message,
           variant: "destructive",
         });
@@ -551,31 +432,30 @@ export function RecentLists({
         <Card>
           <CardHeader>
             <CardTitle className="flex flex-row items-center justify-between">
-              <Link href="/search/maps">
+              <Link href="/search/feeds">
                 <div className="flex items-center">
-                  <Map className="mr-2 h-5 w-5" /> Recent Maps
+                  <Map className="mr-2 h-5 w-5" /> Popular Feeds
                 </div>
               </Link>
 
               <Button
-                id="create-map"
                 disabled={workspace?.archived}
                 onClick={() => setOpen(true)}
                 size="sm"
               >
                 <ListPlus />
-                Create Map
+                Create Feed
               </Button>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 px-6">
-            {recentLists.items.length > 0 ? (
-              recentLists.items.map((lst: List) => {
-                return <ListCard key={lst.id} {...lst} />;
+            {recentFeeds.items.length > 0 ? (
+              recentFeeds.items.map((fd: Feed) => {
+                return <FeedCard key={fd.id} {...fd} />;
               })
             ) : (
               <p className="text-sm text-muted-foreground">
-                🗺️ No maps found. Try creating one and come back!
+               📡 No feeds found. Try creating one and come back!
               </p>
             )}
             <div className="flex space-x-2">
@@ -586,7 +466,7 @@ export function RecentLists({
                 asChild
               >
                 <Link
-                  href={`/search/maps${workspace ? "?workspace=" + workspace.id : ""}`}
+                  href={`/search/feeds${workspace ? "?workspace=" + workspace.id : ""}`}
                 >
                   <GalleryVerticalEnd />
                   See All
@@ -611,16 +491,24 @@ export function RecentLists({
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <ListPlus /> Create Map
+            <ListPlus /> Create Feed
           </DialogTitle>
         </DialogHeader>
         <main className="flex flex-1 flex-col space-y-6 pt-0">
-          <ListForm
+          <FeedForm
             workspace={workspace}
             user={user}
             workspaces={workspaces}
             update={false}
-            listMutation={createList}
+            feedMutation={createFeed as MutationFn<CreateFeedInput>}
+            defaultValues={{
+              name: "",
+              description: "",
+              emoji: "📡",
+              workspaceId: 0,
+              visibility: "public",
+              query: { limit: 0, offset: 0 }
+            }}
           />
         </main>
       </DialogContent>
@@ -628,23 +516,23 @@ export function RecentLists({
   );
 }
 
-export function ListPage(props: {
+export function FeedPage(props: {
   id: string;
   workspaces?: Workspace[];
   user?: User;
 }) {
   const utils = api.useUtils();
 
-  const listId = props.id;
+  const feedId = props.id;
   const [editing, setEditing] = useState(false);
 
-  const updateList = (callback?: () => void) =>
-    api.list.update.useMutation({
+  const updateFeed = (callback?: () => void) =>
+    api.feed.update.useMutation({
       onSuccess: async () => {
-        await utils.list.invalidate();
+        await utils.feed.invalidate();
         toast({
-          title: "Map updated",
-          description: "Successfully updated map properties.",
+          title: "Feed updated",
+          description: "Successfully updated feed properties.",
         });
         if (typeof callback === "function") {
           callback();
@@ -653,18 +541,18 @@ export function ListPage(props: {
       },
       onError: (error) => {
         toast({
-          title: "Failed to update map",
+          title: "Failed to update feed",
           description: error.message,
           variant: "destructive",
         });
       },
     });
-  const favoriteListMutation = updateList();
-  const archiveMutation = updateList();
 
-  const { data }: { data: List | undefined } = api.list.get.useQuery(
-    { id: parseInt(listId ?? "0", 10) },
-    { enabled: !!listId },
+  const archiveMutation = updateFeed();
+
+  const { data }: { data: Feed | undefined } = api.feed.get.useQuery(
+    { id: parseInt(feedId ?? "0", 10) },
+    { enabled: !!feedId },
   );
 
   const [pageNumber, setPageNumber] = useState(1);
@@ -673,11 +561,7 @@ export function ListPage(props: {
     data: searchResults = { count: 0, items: [] },
     refetch,
     isFetching,
-  } = api.destination.getMany.useQuery({
-    lists: [parseInt(listId)],
-    offset: Math.round(pageNumber - 1) * 6,
-    limit: 6,
-  });
+  } = api.destination.getMany.useQuery(data?.query ?? {limit: 0});
 
   function handleOpenChange(openStatus: boolean) {
     setEditing(openStatus);
@@ -695,8 +579,8 @@ export function ListPage(props: {
       });
     } else {
       toast({
-        title: "Failed to update map",
-        description: "No map selected.",
+        title: "Failed to update feed",
+        description: "No feed selected.",
         variant: "destructive",
       });
     }
@@ -705,10 +589,10 @@ export function ListPage(props: {
     <Dialog open={editing} onOpenChange={handleOpenChange}>
       <DialogContent className="overflow-y-auto md:max-h-[500px] md:max-w-[700px] lg:max-w-[800px]">
         <DialogHeader>
-          <DialogTitle>Edit Map</DialogTitle>
+          <DialogTitle>Edit Feed</DialogTitle>
         </DialogHeader>
         {editing && data != undefined ? (
-          <ListForm
+          <FeedForm
             workspaces={props.workspaces}
             user={props.user}
             update={true}
@@ -717,16 +601,13 @@ export function ListPage(props: {
                 name: data.name ?? "",
                 description: data.description ?? "",
                 emoji: data.emoji ?? "🗺️",
-                tags:
-                  data.tags?.map((tag) => ({
-                    id: tag.id.toString(),
-                    text: tag.text,
-                  })) ?? [],
+                visibility: "private",
                 workspaceId: data.workspace.id ?? undefined,
-              } as z.infer<typeof listFormSchema>
+                query: { limit: 0}
+              } as z.infer<typeof feedFormSchema>
             }
             updateId={parseInt(props.id)}
-            listMutation={updateList}
+            feedMutation={updateFeed as MutationFn<UpdateFeedInput>}
           />
         ) : null}
       </DialogContent>
@@ -738,46 +619,14 @@ export function ListPage(props: {
           <div className="flex items-center">
             <span className="mr-2 text-2xl">{data?.emoji ?? "❔"}</span>
 
-            <h1>{data?.name ?? "Unnamed Map"}</h1>
+            <h1>{data?.name ?? "Unnamed Feed"}</h1>
           </div>
           <p className="text-sm text-muted-foreground">
             {data?.description ?? "No description provided."}
           </p>
         </div>
         <div className="flex flex-row gap-2">
-          {data?.tags ? (
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => {
-                if (
-                  data?.tags &&
-                  !!data?.tags.find((t) => t.text == "favorite maps")
-                ) {
-                  favoriteListMutation.mutate({
-                    id: parseInt(props.id),
-                    removedTags: ["favorite maps"],
-                  });
-                } else {
-                  favoriteListMutation.mutate({
-                    id: parseInt(props.id),
-                    newTags: ["favorite maps"],
-                  });
-                }
-              }}
-            >
-              {!!data?.tags.find((t) => t.text == "favorite maps") ? (
-                <>
-                  <StarOff /> Unfavorite
-                </>
-              ) : (
-                <>
-                  <Star /> Favorite
-                </>
-              )}
-            </Button>
-          ) : null}
-          <Button
+                  <Button
             size="sm"
             onClick={() => {
               setEditing(true);
@@ -812,7 +661,7 @@ export function ListPage(props: {
                   <DialogTitle>Are you absolutely sure?</DialogTitle>
                   <DialogDescription>
                     This action cannot be undone. Are you sure you want to bury
-                    this map? It will be hidden from the dashboard and other
+                    this feed? It will be hidden from the dashboard and other
                     pages (except search) until you excavate it.
                   </DialogDescription>
                 </DialogHeader>
@@ -827,28 +676,18 @@ export function ListPage(props: {
             </Dialog>
           )}
           <Dialog>
-            <DeleteList id={parseInt(props.id)} routePath="/search/maps">
+            <DeleteFeed id={parseInt(props.id)} routePath="/search/feeds">
               <DialogTrigger asChild>
                 <Button size="sm" variant="destructive">
                   <Flame />
                   Burn
                 </Button>
               </DialogTrigger>
-            </DeleteList>
+            </DeleteFeed>
           </Dialog>
         </div>
       </div>
-      {data?.tags && data?.tags?.length > 0 ? (
-        <div className="mt-2 flex flex-wrap gap-2 text-sm">
-          Tags:{" "}
-          {data?.tags.map((tag) => (
-            <Badge key={tag.id} variant="secondary">
-              {tag.text}
-            </Badge>
-          ))}
-        </div>
-      ) : null}
-
+    
       <div className="mt-2 flex flex-wrap gap-2 text-sm">
         Trunk:{" "}
         <Badge variant={data?.workspace.archived ? "destructive" : "outline"}>
@@ -893,27 +732,6 @@ export function ListPage(props: {
             </Badge>
           </>
         ) : null}
-
-        <Button
-          variant="link"
-          className="ml-2 p-0"
-          onClick={() => {
-            void navigator.clipboard.writeText(
-              window.location.hostname +
-                (window.location.port ? ":" + window.location.port : "") +
-                "/map/" +
-                props.id +
-                "/feed.xml",
-            );
-            toast({
-              title: "Copied Feed URL",
-              description: "The feed URL has been copied to your clipboard.",
-            });
-          }}
-        >
-          <Rss />
-          Copy Feed URL
-        </Button>
       </div>
 
       {data != undefined ? (
@@ -971,22 +789,14 @@ export function ListPage(props: {
                           Math.ceil(searchResults.count / 6),
                         ]
                 ).map((page) => {
-                  if (page === "...") {
+                  if (typeof page === "number") {
                     return (
-                      <PopoverTrigger key={page}>
-                        <PaginationItem>
-                          <PaginationEllipsis />
-                        </PaginationItem>
-                      </PopoverTrigger>
-                    );
-                  } else if (typeof page === "number") {
-                    return (
-                      <PaginationItem key={page}>
+                      <PaginationItem key={page} className="font-semibold">
                         <PaginationLink
                           href="#"
-                          isActive={pageNumber == page}
                           onClick={() => {
                             setPageNumber(page);
+
                             void refetch();
                           }}
                         >
@@ -995,48 +805,27 @@ export function ListPage(props: {
                       </PaginationItem>
                     );
                   }
-                })}
 
-                <PopoverContent className="w-[200px]">
-                  <div className="flex flex-row items-center gap-2 text-sm">
-                    Page:
-                    <Input
-                      type="number"
-                      value={pageNumber}
-                      onChange={(event) => {
-                        setPageNumber(parseInt(event.target.value));
-                      }}
-                    />
-                    <Button
-                      size="icon"
-                      type="submit"
-                      className="h-8 min-w-8"
+                  return (
+                    <PaginationItem key={page} className="pointer-events-none">
+                      <PaginationEllipsis />
+                    </PaginationItem>
+                  );
+                })}
+                {pageNumber != Math.ceil(searchResults.count / 6) &&
+                !isFetching ? (
+                  <PaginationItem>
+                    <PaginationNext
+                      href="#"
                       onClick={() => {
+                        setPageNumber(pageNumber + 1);
+
                         void refetch();
                       }}
-                    >
-                      {isFetching ? (
-                        <Loader2 className="animate-spin" />
-                      ) : (
-                        <ArrowRight />
-                      )}
-                    </Button>
-                  </div>
-                </PopoverContent>
+                    />
+                  </PaginationItem>
+                ) : null}
               </Popover>
-
-              {pageNumber != Math.ceil(searchResults.count / 6) &&
-              !isFetching ? (
-                <PaginationItem>
-                  <PaginationNext
-                    href="#"
-                    onClick={() => {
-                      setPageNumber(pageNumber + 1);
-                      void refetch();
-                    }}
-                  />
-                </PaginationItem>
-              ) : null}
             </PaginationContent>
           </Pagination>
         </div>
@@ -1045,7 +834,7 @@ export function ListPage(props: {
   );
 }
 
-export function DeleteList({
+export function DeleteFeed({
   id,
   children,
   routePath,
@@ -1058,14 +847,14 @@ export function DeleteList({
 
   const utils = api.useUtils();
 
-  const deleteList = api.list.delete.useMutation({
+  const deleteFeed = api.feed.delete.useMutation({
     onSuccess: async () => {
-      await utils.list.invalidate();
+      await utils.feed.invalidate();
       router.push(routePath);
     },
     onError: (error) => {
       toast({
-        title: "Failed to delete map",
+        title: "Failed to delete feed",
         description: error.message,
         variant: "destructive",
       });
@@ -1079,7 +868,7 @@ export function DeleteList({
           <DialogTitle>Are you absolutely sure?</DialogTitle>
           <DialogDescription>
             This action cannot be undone. Are you sure you want to permanently
-            delete this map?
+            delete this feed?
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
@@ -1087,7 +876,7 @@ export function DeleteList({
             <Button
               type="button"
               onClick={() => {
-                deleteList.mutate({ id: parseInt(id.toString()) });
+                deleteFeed.mutate({ id: parseInt(id.toString()) });
               }}
             >
               Confirm

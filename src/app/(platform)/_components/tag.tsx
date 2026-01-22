@@ -664,7 +664,7 @@ export function TagPage(props: {
   user?: User;
 }) {
   const utils = api.useUtils();
- 
+
   const tagId = props.id;
   const [editing, setEditing] = useState(false);
   const [tab, setTab] = useState<"pins" | "lists">("pins");
@@ -722,7 +722,7 @@ export function TagPage(props: {
       void archiveMutation.mutate({
         id: data?.id,
         archived: false,
-      }); 
+      });
     } else if (data) {
       void archiveMutation.mutate({
         id: data?.id,
@@ -914,7 +914,7 @@ export function TagPage(props: {
 
       <Tabs
         value={tab}
-        onValueChange={(val) => {
+        onValueChange={(val: string) => {
           setTab(val as "pins" | "lists");
         }}
         defaultValue="pins"

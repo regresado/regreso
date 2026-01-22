@@ -35,7 +35,7 @@ import {
   type Workspace,
 } from "~/server/models";
 
-import { timeSince } from "~/lib/utils";
+import { cn, timeSince } from "~/lib/utils";
 import { useMediaQuery } from "~/hooks/use-media-query";
 
 import { Badge } from "~/components/ui/badge";
@@ -1142,6 +1142,7 @@ export function DestinationDialog(props: {
                           Edit
                         </Button>
                         <ListComboBox
+                          text="+ Add to Map"
                           defaultList={data.lists ?? []}
                           recentLists={searchResults.items ?? []}
                           handleListAdds={addLists}
@@ -1236,12 +1237,16 @@ export function DestinationDialog(props: {
   );
 }
 
-function ListComboBox({
+export function ListComboBox({
+  text = "+ Add to Map",
   defaultList,
   recentLists,
+  className,
   handleListAdds,
   handleListRemovals,
 }: {
+  text: string;
+  className?: string;
   defaultList: List[];
   recentLists: List[];
   handleListAdds: (status: List[] | null) => void;
@@ -1255,7 +1260,7 @@ function ListComboBox({
     return (
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button variant="outline" className="justify-start">
+          <Button variant="outline" className={cn("justify-start", className)}>
             {selectedList.length > 0 && selectedList[0] ? (
               <>
                 {selectedList[0].name}{" "}
@@ -1264,7 +1269,7 @@ function ListComboBox({
                   : null}{" "}
               </>
             ) : (
-              <> + Add to List</>
+              <>{text}</>
             )}
           </Button>
         </PopoverTrigger>
@@ -1291,7 +1296,7 @@ function ListComboBox({
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant="outline" className="justify-start">
+        <Button variant="outline" className={cn("justify-start", className)}>
           {selectedList.length > 0 && selectedList[0] ? (
             <>
               {selectedList[0].name}{" "}
@@ -1300,7 +1305,7 @@ function ListComboBox({
                 : null}{" "}
             </>
           ) : (
-            <> + Add to List</>
+            <>{text}</>
           )}
         </Button>
       </DrawerTrigger>
@@ -1331,7 +1336,7 @@ function StatusList({
 }) {
   return (
     <Command>
-      <CommandInput placeholder="Filter status..." />
+      <CommandInput placeholder="Filter maps..." />
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
         <CommandGroup>
