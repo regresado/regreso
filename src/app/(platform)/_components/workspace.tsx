@@ -381,7 +381,7 @@ export function RecentWorkspacesDropdown({
       void archiveMutation.mutate({
         id: workspace.id,
         archived: true,
-      }); 
+      });
     } else {
       toast({
         title: "Failed to update trunk",

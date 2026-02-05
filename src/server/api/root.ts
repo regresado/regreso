@@ -4,6 +4,7 @@ import { sessionRouter } from "~/server/api/routers/session";
 import { tagRouter } from "~/server/api/routers/tag";
 import { userRouter } from "~/server/api/routers/user";
 import { workspaceRouter } from "~/server/api/routers/workspace";
+import { feedRouter } from "~/server/api/routers/feed"
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 
 /**
@@ -18,6 +19,8 @@ export const appRouter = createTRPCRouter({
   workspace: workspaceRouter,
   tag: tagRouter,
   user: userRouter,
+		feed: feedRouter,
+
 });
 
 // export type definition of API

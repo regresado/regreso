@@ -1,3 +1,15 @@
+CREATE TABLE "regreso_destination_feed" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"name" varchar(256) NOT NULL,
+	"description" varchar(256),
+	"emoji" varchar(256),
+	"user_id" integer NOT NULL,
+	"workspace_id" integer,
+	"visibility" varchar(256) NOT NULL,
+	"json_query" jsonb NOT NULL,
+	CONSTRAINT "regreso_destination_feed_workspace_id_name_unique" UNIQUE("workspace_id","name")
+);
+
 CREATE TABLE "regreso_destination_list" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"destination_id" integer,
@@ -139,6 +151,8 @@ CREATE TABLE "regreso_workspace" (
 	CONSTRAINT "regreso_workspace_user_id_name_unique" UNIQUE("user_id","name")
 );
 
+ALTER TABLE "regreso_destination_feed" ADD CONSTRAINT "regreso_destination_feed_user_id_regreso_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."regreso_user"("id") ON DELETE no action ON UPDATE no action;
+ALTER TABLE "regreso_destination_feed" ADD CONSTRAINT "regreso_destination_feed_workspace_id_regreso_workspace_id_fk" FOREIGN KEY ("workspace_id") REFERENCES "public"."regreso_workspace"("id") ON DELETE no action ON UPDATE no action;
 ALTER TABLE "regreso_destination_list" ADD CONSTRAINT "regreso_destination_list_destination_id_regreso_destination_id_fk" FOREIGN KEY ("destination_id") REFERENCES "public"."regreso_destination"("id") ON DELETE cascade ON UPDATE cascade;
 ALTER TABLE "regreso_destination_list" ADD CONSTRAINT "regreso_destination_list_list_id_regreso_list_id_fk" FOREIGN KEY ("list_id") REFERENCES "public"."regreso_list"("id") ON DELETE cascade ON UPDATE cascade;
 ALTER TABLE "regreso_destination_tag" ADD CONSTRAINT "regreso_destination_tag_destination_id_regreso_destination_id_fk" FOREIGN KEY ("destination_id") REFERENCES "public"."regreso_destination"("id") ON DELETE cascade ON UPDATE cascade;

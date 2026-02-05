@@ -85,7 +85,6 @@ export interface Tag {
   updatedAt: Date | null;
   archived: boolean;
 }
-
 const destinationTypes = ["location", "note", "file"] as const;
 
 export const destinationFormSchema = z.object({
@@ -318,6 +317,8 @@ export const destinationSearchSchema = z.object({
   location: z.string().nullable().optional(),
   limit: z.number().max(30).optional().default(5),
   offset: z.number().optional().default(0),
+  endDate: z.date().nullable().optional(),
+  startDate: z.date().nullable().optional(),
   workspaceId: z.number().optional(),
   archived: z.boolean().optional(),
 });
@@ -372,3 +373,76 @@ export const tagSearchSchema = z.object({
   workspaceId: z.number().optional(),
   archived: z.boolean().optional(),
 });
+
+export const feedFormSchema = z.object({
+  name: z
+    .string()
+    .min(1, {
+      message: "The name must be at least 1 characters.",
+    })
+    .max(100, {
+      message: "The name must be less than 100 characters.",
+    }),
+  emoji: z.string().min(1).max(5, {
+    message: "The emoji must be 1 character.",
+  }),
+  description: z.string().min(0).max(200, {
+    message: "The description must be less than 200 characters.",
+  }),
+  workspaceId: z.number().optional(),
+  visibility: z.enum(["public", "private", "password"]),
+  query: destinationSearchSchema,
+});
+
+export const feedSchema = z.object({
+  id: z.number(),
+  userId: z.number(),
+  createdAt: z.date(),
+  updatedAt: z.date().nullable().optional(),
+  query: destinationSearchSchema,
+  visibility: z.enum(["public", "private", "password"]),
+  size: z.number().optional(),
+  name: z.string(),
+  emoji: z.string().nullable(),
+  workspace: workspaceSchema,
+  description: z.string().nullable(),
+  archived: z.boolean(),
+});
+
+export const updateFeedSchema = z.object({
+  id: z.number(),
+  ...feedFormSchema.partial().shape,
+  archived: z.boolean().optional(),
+});
+
+export const feedSearchSchema = z.object({
+  tags: z.array(z.string()).optional(),
+  sortBy: z
+    .enum(["createdAt", "updatedAt", "size", "name", "emoji", "complexity"])
+    .optional(),
+  order: z.enum(["ASC", "DESC"]).optional(),
+  visibility: z.enum(["public", "private", "password"]).optional(),
+  searchString: z.string().nullable().optional(),
+  limit: z.number().optional().default(5),
+  offset: z.number().optional().default(0),
+  workspaceId: z.number().optional(),
+  archived: z.boolean().optional(),
+});
+
+
+export interface Feed {
+  id: number;
+  name: string;
+  description: string | null;
+  emoji: string | null;
+  userId: number;
+  query: z.input<typeof destinationSearchSchema> ;
+  size?: number;
+  visibility: "public" | "private" | "password";
+  workspace: Workspace;
+  createdAt: Date;
+  updatedAt?: Date | null;
+  archived: boolean;
+}
+
+
