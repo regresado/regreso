@@ -115,3 +115,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+
+### 🌠 Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=regresado/regreso,wallabag/wallabag,usememos/memos,linkwarden/linkwarden,karakeep-app/karakeep&type=date&logscale&legend=top-left)](https://www.star-history.com/#regresado/regreso&wallabag/wallabag&usememos/memos&linkwarden/linkwarden&karakeep-app/karakeep&type=date&logscale&legend=top-left)
